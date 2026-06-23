@@ -32,6 +32,8 @@ from .analyzers.track_identity_detector import detect_track_identity
 from .analyzers.transition_quality_analyzer import analyze_transitions
 from .analyzers.translation_analyzer import analyze_translation
 from .analyzers.vocal_performance_analyzer import analyze_vocal
+from .bridge.applescript_bridge import generate_applescript
+from .bridge.exporter import export_actions
 from .creative import run_creative_engine
 from .doctrine.doctrine_engine import score_doctrine
 from .governance import run_governance
@@ -263,6 +265,8 @@ def write_artifacts(result: ProjectAnalysis, out_dir: str | Path) -> List[str]:
         json_files["plugin_scan.json"] = result.plugin_scan
     if result.source_audits:
         json_files["source_audits.json"] = result.source_audits
+    logic_actions = export_actions(result.mix_plan)
+    json_files["logic_actions.json"] = logic_actions
 
     for name, data in json_files.items():
         _dump_json(out / name, data)
@@ -293,5 +297,9 @@ def write_artifacts(result: ProjectAnalysis, out_dir: str | Path) -> List[str]:
     for name, text in md_files.items():
         _write_text(out / name, text)
         written.append(str(out / name))
+
+    # AppleScript scaffolding (mode C of the bridge — does not run automatically).
+    _write_text(out / "logic_actions.applescript", generate_applescript(logic_actions))
+    written.append(str(out / "logic_actions.applescript"))
 
     return written

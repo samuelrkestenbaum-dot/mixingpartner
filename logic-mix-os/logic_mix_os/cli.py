@@ -16,6 +16,9 @@ from . import __version__
 from .album import analyze_album
 from .analyzers.audio_loader import load_audio
 from .analyzers.reference_comparator import compare_to_reference
+from .bridge.applescript_bridge import generate_applescript, generate_shortcuts
+from .bridge.executor import dry_run
+from .bridge.exporter import export_actions
 from .memory import ProjectMemory
 from .pipeline import analyze, write_artifacts
 from .planners.next_pass_planner import generate_creative_hypotheses
@@ -209,6 +212,38 @@ def _run_regression(args) -> int:
     return 0
 
 
+def _run_export_actions(args) -> int:
+    with open(args.plan, "r", encoding="utf-8") as fh:
+        mix_plan = json.load(fh)
+    actions = export_actions(mix_plan)
+    if args.format == "applescript":
+        out = generate_applescript(actions)
+    elif args.format == "shortcuts":
+        out = json.dumps(generate_shortcuts(actions), indent=2)
+    else:
+        out = json.dumps(actions, indent=2)
+    if args.out:
+        Path(args.out).write_text(out + "\n", encoding="utf-8")
+        print(f"Wrote {len(actions)} actions to {args.out} ({args.format})")
+    else:
+        print(out)
+    return 0
+
+
+def _run_bridge_dryrun(args) -> int:
+    with open(args.plan, "r", encoding="utf-8") as fh:
+        mix_plan = json.load(fh)
+    actions = export_actions(mix_plan)
+    log = dry_run(actions, review_mode=args.review_mode)
+    print(json.dumps(log["summary"], indent=2))
+    if log["blocked"]:
+        print("\nBlocked (kill-switch / risk class 5):")
+        for b in log["blocked"]:
+            print(f"  - {b['track']}: {b['reason']}")
+    print(f"\nReview mode: {log['review_mode']} — nothing was executed (dry run).")
+    return 0
+
+
 def _run_audit(args) -> int:
     manifest = _load_manifest(args.manifest)
     result = analyze(args.stems, manifest, bounce_path=args.bounce)
@@ -397,6 +432,19 @@ def build_parser() -> argparse.ArgumentParser:
     add_common(au)
     au.add_argument("--bounce", help="Optional stereo bounce")
     au.set_defaults(func=_run_audit)
+
+    ea = sub.add_parser("export-actions", help="Export the mix plan as executable actions (bridge)")
+    ea.add_argument("--plan", required=True, help="Path to mix_plan.json")
+    ea.add_argument("--format", default="json", choices=["json", "applescript", "shortcuts"])
+    ea.add_argument("--out", help="Optional output path")
+    ea.set_defaults(func=_run_export_actions)
+
+    bd = sub.add_parser("bridge-dryrun", help="Dry-run the action list (no Logic session is touched)")
+    bd.add_argument("--plan", required=True, help="Path to mix_plan.json")
+    bd.add_argument("--review-mode", default="approve_before_apply",
+                    choices=["observe_only", "recommend_only", "checklist_only",
+                             "approve_before_apply", "safe_auto_apply", "manual_only"])
+    bd.set_defaults(func=_run_bridge_dryrun)
 
     return p
 

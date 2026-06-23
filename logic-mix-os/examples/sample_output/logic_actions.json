@@ -1,0 +1,92 @@
+[
+  {
+    "id": "lead_vocal:send",
+    "track": "Lead Vocal",
+    "type": "set_send",
+    "plugin": "Aux Send",
+    "settings": "Short room or slapback only, very low send (~-24 dB). Keep it close.",
+    "risk_class": 2,
+    "reason": "Place 'Lead Vocal' in the intimate depth layer.",
+    "validation": "Check depth/space after bounce."
+  },
+  {
+    "id": "lead_vocal:plugin:0",
+    "track": "Lead Vocal",
+    "type": "insert_plugin",
+    "plugin": "Channel EQ",
+    "settings": "High-pass ~80 Hz. Cut ~250 Hz by 1-2 dB (mud). Avoid large 12 kHz+ air boosts (keeps the vocal human, not glossy).",
+    "risk_class": 2,
+    "reason": "Clean low-end build-up and keep believable presence without hype.",
+    "validation": "A/B against the static baseline."
+  },
+  {
+    "id": "lead_vocal:plugin:1",
+    "track": "Lead Vocal",
+    "type": "insert_plugin",
+    "plugin": "Compressor",
+    "settings": "Vintage Opto, target 2-3 dB gain reduction, slow-ish attack.",
+    "risk_class": 2,
+    "reason": "Stabilise the vocal while preserving the performance (invisible compression).",
+    "validation": "A/B against the static baseline."
+  },
+  {
+    "id": "lead_vocal:automation:0",
+    "track": "Lead Vocal",
+    "type": "automation",
+    "plugin": "gain (clip gain + fader)",
+    "settings": "Ride phrase endings +0.5 to +1 dB where the lyric drops, before adding compression.",
+    "risk_class": 2,
+    "reason": "Ramone-style vocal belief: performance rides before brute-force compression.",
+    "validation": "Check the gesture lands across the section boundary."
+  },
+  {
+    "id": "piano:send",
+    "track": "Piano",
+    "type": "set_send",
+    "plugin": "Aux Send",
+    "settings": "Short chamber, low send (~-18 dB).",
+    "risk_class": 2,
+    "reason": "Place 'Piano' in the foreground depth layer.",
+    "validation": "Check depth/space after bounce."
+  },
+  {
+    "id": "piano:plugin:0",
+    "track": "Piano",
+    "type": "insert_plugin",
+    "plugin": "Channel EQ",
+    "settings": "Cut 250-400 Hz by 1-2 dB.",
+    "risk_class": 2,
+    "reason": "Reduce low-mid mud build-up.",
+    "validation": "A/B against the static baseline."
+  },
+  {
+    "id": "bass:send",
+    "track": "Bass",
+    "type": "set_send",
+    "plugin": "Aux Send",
+    "settings": "Short chamber, low send (~-18 dB).",
+    "risk_class": 2,
+    "reason": "Place 'Bass' in the foreground depth layer.",
+    "validation": "Check depth/space after bounce."
+  },
+  {
+    "id": "bass:plugin:0",
+    "track": "Bass",
+    "type": "insert_plugin",
+    "plugin": "Channel EQ",
+    "settings": "High-pass ~30 Hz; control 200-350 Hz if boxy.",
+    "risk_class": 2,
+    "reason": "Tighten the low end without thinning the body.",
+    "validation": "A/B against the static baseline."
+  },
+  {
+    "id": "bass:plugin:1",
+    "track": "Bass",
+    "type": "insert_plugin",
+    "plugin": "Compressor",
+    "settings": "Vintage Opto, gentle 2-4 dB GR for consistent sustain.",
+    "risk_class": 2,
+    "reason": "Even out the low-end foundation.",
+    "validation": "A/B against the static baseline."
+  }
+]

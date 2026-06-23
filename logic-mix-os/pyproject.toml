@@ -36,6 +36,7 @@ logic-mix-os = "logic_mix_os.cli:main"
 packages = [
     "logic_mix_os",
     "logic_mix_os.analyzers",
+    "logic_mix_os.bridge",
     "logic_mix_os.doctrine",
     "logic_mix_os.planners",
     "logic_mix_os.renderers",
@@ -44,6 +45,7 @@ packages = [
 
 [tool.setuptools.package-data]
 "logic_mix_os" = ["schemas/*.json", "doctrine/*.json"]
+"logic_mix_os.bridge" = ["*.md"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
