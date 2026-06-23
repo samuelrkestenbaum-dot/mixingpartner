@@ -51,13 +51,21 @@ _TRUTH_ALIGNMENT = {
 
 
 # --------------------------------------------------------------------------- #
-def _truth_lean(truth: str) -> str:
+def truth_lean(truth: str) -> str:
+    """Classify a song's emotional truth as intimate / big / neutral.
+
+    Public so the creative engine can weight variant scoring by emotional truth.
+    """
     t = (truth or "").lower()
     if any(w in t for w in _INTIMATE_WORDS):
         return "intimate"
     if any(w in t for w in _BIG_WORDS):
         return "big"
     return "neutral"
+
+
+# Backwards-compatible alias.
+_truth_lean = truth_lean
 
 
 def emotional_truth_lock(intent: Dict) -> Dict:

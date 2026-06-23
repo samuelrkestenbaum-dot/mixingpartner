@@ -18,17 +18,28 @@ def render_creative(creative: Dict) -> str:
     out.append(f"- {svd.get('recommendation')}")
     out.append("")
 
+    ctx = creative.get("context", {})
+    if ctx:
+        sig = ", ".join(f"{k} {ctx[k]:.2f}" for k in
+                        ("contrast_deficit", "overcrowding", "masking_pressure", "vocal_risk",
+                         "loop_pressure", "width_room") if k in ctx)
+        out.append(f"_Scoring evidence for this song: {sig} (lean: {ctx.get('lean')})._")
+        out.append("")
+
     out.append("## Variant Branches")
     out.append("")
     for branch in creative.get("branches", []):
         out.append(f"### {branch['problem']}")
         out.append("")
-        out.append("| Variant | Kind | Overall | Vocal belief | Contrast | Translation | Verdict |")
-        out.append("|---|---|---|---|---|---|---|")
+        out.append("| Variant | Kind | Overall | Vocal belief | Contrast | Translation | Why (top signal) | Verdict |")
+        out.append("|---|---|---|---|---|---|---|---|")
         for v in branch["variants"]:
             s = v["scores"]
+            ev = s.get("evidence", [])
+            top = max(ev, key=lambda e: e["value"]) if ev else None
+            why = f"{top['signal']}={top['value']}" if top else "—"
             out.append(f"| {v['name']} | `{v['kind']}` | {s['overall_score']} | {s['vocal_belief_score']} "
-                       f"| {s['section_contrast_score']} | {s['translation_risk']} | {s['overall_verdict']} |")
+                       f"| {s['section_contrast_score']} | {s['translation_risk']} | {why} | {s['overall_verdict']} |")
         out.append("")
         win = branch.get("winning")
         if win:

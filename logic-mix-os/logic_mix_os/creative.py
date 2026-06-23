@@ -13,6 +13,7 @@ from __future__ import annotations
 from typing import Dict, List, Optional
 
 from .constants import LOOP_SAMPLE_KINDS
+from .governance import truth_lean
 
 # --- Section 58: creative adjustment library --------------------------------
 ADJUSTMENT_LIBRARY = {
@@ -213,19 +214,118 @@ def generate_variants(problem: Dict, result, mode: str = "dramatic_contrast") ->
     return variants
 
 
-def score_variant(variant: Dict, result) -> Dict:
-    base = dict(_KIND_SCORES.get(variant["kind"], _KIND_SCORES["depth_cleanup"]))
+def _clamp01(x: float) -> float:
+    return max(0.0, min(1.0, x))
 
-    # Context adjustments.
-    lead_masked = any(
-        e["classification"] == "bad_masking" and any("vocal" in el.lower() for el in e["elements"])
-        for e in result.masking_report.get("events", [])
+
+def build_context(result) -> Dict:
+    """Evidence signals (0..1) the variant scorer responds to.
+
+    Computed once per project so the same creative move scores differently in
+    different songs (and across problem branches), instead of a fixed lookup.
+    """
+    ds = result.doctrine_score
+    records = result.records
+    report = result.masking_report
+    events = report.get("events", [])
+    n = len(records) or 1
+    fg_frac = sum(1 for r in records if r["depth_default"] in {"intimate", "foreground"}) / n
+    width_crowd = sum(1 for e in events if e["classification"] == "width_crowding")
+    crit = report.get("summary", {}).get("critical_count", 0)
+    lift_fail = sum(1 for s in result.section_analysis if "warning" in s.get("contrast_vs_previous", {}))
+    lead = next((r for r in records if r["instrument_identity"] == "lead_vocal"), None)
+    vocal_masked = any(
+        e["classification"] == "bad_masking" and lead and lead["name"] in e["elements"] for e in events
     )
-    if variant["kind"] == "width_bloom" and lead_masked:
-        base["vocal_belief"] -= 8  # widening while the vocal is already crowded is risky
+    wide_loops = sum(1 for r in records if r["source_kind"] in LOOP_SAMPLE_KINDS and r.get("stereo_width", 0) > 0.55)
+    static = ds.get("static_mix_score") if ds.get("static_mix_score") is not None else 70.0
+    dynamic = ds.get("dynamic_mix_score") if ds.get("dynamic_mix_score") is not None else 70.0
+    vocal_cen = ds.get("vocal_centrality_score") if ds.get("vocal_centrality_score") is not None else 70.0
+    mix_width = (result.mix_metrics or {}).get("stereo_width", 0.4)
+    lean = truth_lean(result.project.intent.get("singular_emotional_truth", ""))
+
+    return {
+        "contrast_deficit": _clamp01((70 - dynamic) / 70.0 + 0.25 * lift_fail),
+        "overcrowding": _clamp01(max(0.0, fg_frac - 0.5) / 0.5 * 0.8 + 0.2 * width_crowd),
+        "masking_pressure": _clamp01(crit / 3.0),
+        "vocal_risk": _clamp01((85 - vocal_cen) / 40.0 + (0.3 if vocal_masked else 0.0)),
+        "loop_pressure": _clamp01(0.5 * wide_loops),
+        "width_room": _clamp01(1.0 - mix_width * 1.6),
+        "static_dynamic_gap": _clamp01((static - dynamic) / 40.0),
+        "intimate": 1.0 if lean == "intimate" else 0.0,
+        "lean": lean,
+    }
+
+
+# Which context signal measures how badly a song needs each problem solved.
+_PROBLEM_SIGNAL = {
+    "chorus_lift": "contrast_deficit",
+    "density": "overcrowding",
+    "depth": "overcrowding",
+    "loop": "loop_pressure",
+    "vocal_belief": "vocal_risk",
+}
+
+
+def score_variant(variant: Dict, ctx: Dict) -> Dict:
+    """Score a variant against the song's actual evidence (not a fixed table)."""
+    kind = variant["kind"]
+    base = dict(_KIND_SCORES.get(kind, _KIND_SCORES["depth_cleanup"]))
+    evidence: List[Dict] = []
+
+    def note(sig: str):
+        evidence.append({"signal": sig, "value": round(ctx[sig], 2)})
+
+    # How much this song needs the problem this variant addresses.
+    sev = ctx.get(_PROBLEM_SIGNAL.get(variant["problem"], ""), 0.3)
+    fit_bonus = sev * 10.0
+
+    if kind == "width_bloom":
+        gain = ctx["contrast_deficit"] * 8 + ctx["width_room"] * 6
+        base["contrast"] += gain
+        base["excitement"] += gain * 0.6
+        base["vocal_belief"] -= ctx["masking_pressure"] * 16 + ctx["intimate"] * 18 + ctx["overcrowding"] * 8
+        base["translation"] = "high" if (ctx["width_room"] < 0.3 or ctx["overcrowding"] > 0.6) else "medium"
+        for s in ("contrast_deficit", "width_room", "masking_pressure", "intimate", "overcrowding"):
+            note(s)
+    elif kind == "subtractive_drop":
+        base["contrast"] += ctx["overcrowding"] * 12 + ctx["masking_pressure"] * 12 - (1 - ctx["overcrowding"]) * 8
+        base["halee"] += ctx["overcrowding"] * 8
+        base["vocal_belief"] += ctx["masking_pressure"] * 8
+        for s in ("overcrowding", "masking_pressure"):
+            note(s)
+    elif kind == "vocal_ride":
+        gain = ctx["vocal_risk"] * 16
+        base["vocal_belief"] += gain
+        base["ramone"] += gain * 0.6
+        note("vocal_risk")
+    elif kind == "drum_room_bloom":
+        base["contrast"] += ctx["contrast_deficit"] * 8
+        base["vocal_belief"] -= ctx["overcrowding"] * 10
+        for s in ("contrast_deficit", "overcrowding"):
+            note(s)
+    elif kind == "depth_cleanup":
+        gain = ctx["overcrowding"] * 12
+        base["halee"] += gain
+        base["vocal_belief"] += gain * 0.6
+        base["contrast"] += gain * 0.5
+        note("overcrowding")
+    elif kind == "loop_deconstruct":
+        gain = ctx["loop_pressure"] * 12
+        base["halee"] += gain
+        base["vocal_belief"] += gain * 0.5
+        note("loop_pressure")
+    elif kind == "intimacy_pass":
+        gain = ctx["intimate"] * 14 + ctx["static_dynamic_gap"] * 10
+        base["vocal_belief"] += gain * 0.4
+        base["ramone"] += gain * 0.3
+        for s in ("intimate", "static_dynamic_gap"):
+            note(s)
 
     numeric = ["technical", "halee", "ramone", "contrast", "vocal_belief", "excitement", "taste"]
-    overall = sum(base[k] for k in numeric) / len(numeric) - _RISK_PENALTY[base["translation"]]
+    for k in numeric:
+        base[k] = max(0.0, min(100.0, base[k]))
+    overall = sum(base[k] for k in numeric) / len(numeric) - _RISK_PENALTY[base["translation"]] + fit_bonus
     overall = round(max(0.0, min(100.0, overall)), 1)
 
     verdict = "promising" if overall >= 80 else ("worth testing" if overall >= 70 else "marginal")
@@ -233,19 +333,26 @@ def score_variant(variant: Dict, result) -> Dict:
         verdict += " — check vocal wash"
 
     return {
-        "technical_score": base["technical"],
-        "halee_score": base["halee"],
-        "ramone_score": base["ramone"],
-        "section_contrast_score": base["contrast"],
-        "vocal_belief_score": base["vocal_belief"],
-        "listener_excitement_score": base["excitement"],
-        "taste_alignment_score": base["taste"],
+        "technical_score": round(base["technical"], 1),
+        "halee_score": round(base["halee"], 1),
+        "ramone_score": round(base["ramone"], 1),
+        "section_contrast_score": round(base["contrast"], 1),
+        "vocal_belief_score": round(base["vocal_belief"], 1),
+        "listener_excitement_score": round(base["excitement"], 1),
+        "taste_alignment_score": round(base["taste"], 1),
         "translation_risk": base["translation"],
         "mono_compatibility": base["mono"],
         "reversibility": "non_destructive",
+        "problem_need": round(sev, 2),
         "overall_score": overall,
         "overall_verdict": verdict,
+        "evidence": evidence,
     }
+
+
+def _top_evidence(scores: Dict) -> Optional[Dict]:
+    ev = scores.get("evidence", [])
+    return max(ev, key=lambda e: e["value"]) if ev else None
 
 
 def winning_variant(scored_variants: List[Dict]) -> Optional[Dict]:
@@ -253,24 +360,27 @@ def winning_variant(scored_variants: List[Dict]) -> Optional[Dict]:
         return None
     best = max(scored_variants, key=lambda v: v["scores"]["overall_score"])
     rejected = [v for v in scored_variants if v["variant_id"] != best["variant_id"]]
+    top = _top_evidence(best["scores"])
+    why = f" (driven by {top['signal']}={top['value']})" if top else ""
     return {
         "winning_variant": best["variant_id"],
         "keep_moves": best["changes"],
         "reject_moves": [c for v in rejected for c in v["changes"]],
         "reason": f"'{best['name']}' scored {best['scores']['overall_score']} "
-                  f"({best['scores']['overall_verdict']}); strongest on its intended axis without breaking vocal belief.",
+                  f"({best['scores']['overall_verdict']}); best fit for this song's evidence{why}.",
     }
 
 
 def run_creative_engine(result, mode: str = "dramatic_contrast") -> Dict:
     if mode not in SEARCH_MODES:
         mode = "dramatic_contrast"
+    ctx = build_context(result)
     problems = detect_creative_problems(result)
     branches: List[Dict] = []
     for problem in problems:
         variants = generate_variants(problem, result, mode)
         for v in variants:
-            v["scores"] = score_variant(v, result)
+            v["scores"] = score_variant(v, ctx)
         branches.append({
             "problem": problem["problem"],
             "problem_id": problem["id"],
@@ -280,6 +390,7 @@ def run_creative_engine(result, mode: str = "dramatic_contrast") -> Dict:
     return {
         "search_mode": mode,
         "search_mode_bias": SEARCH_MODES[mode]["bias"],
+        "context": ctx,
         "static_baseline": static_baseline(result),
         "static_vs_dynamic": static_vs_dynamic(result),
         "adjustment_library": ADJUSTMENT_LIBRARY,

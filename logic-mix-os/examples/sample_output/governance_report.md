@@ -7,10 +7,10 @@
 
 ## Governed Variant Selection
 
-- **Chorus does not lift enough emotionally.** → winner `chorus_lift_B` (truth 82, taste emotion/craft/identity 83/85/86)
-- **Arrangement is crowded; hierarchy is unclear.** → winner `density_B` (truth 82, taste emotion/craft/identity 83/85/86)
-- **An imported loop behaves like a finished record inside the record.** → winner `loop_B` (truth 82, taste emotion/craft/identity 83/85/86)
-- **Too many elements occupy the foreground.** → winner `depth_A` (truth 82, taste emotion/craft/identity 79/84/85)
+- **Chorus does not lift enough emotionally.** → winner `chorus_lift_B` (truth 82, taste emotion/craft/identity 84/85/86)
+- **Arrangement is crowded; hierarchy is unclear.** → winner `density_B` (truth 82, taste emotion/craft/identity 84/85/86)
+- **An imported loop behaves like a finished record inside the record.** → winner `loop_B` (truth 82, taste emotion/craft/identity 84/85/86)
+- **Too many elements occupy the foreground.** → winner `depth_A` (truth 82, taste emotion/craft/identity 81/84/85)
 - **Vocal could feel more believable and present.** → winner `vocal_A` (truth 84, taste emotion/craft/identity 85/84/88)
 
 ## Anti-Template
@@ -21,14 +21,13 @@
 
 - **first time fan**: The chorus does not yet feel earned — contrast into it is weak.
 - **producer**: The Splice Texture Loop is exciting but too identifiable as a loop.
-- **mixer**: 2 critical masking conflict(s); low-mid/foreground sharing to resolve.
+- **mixer**: 1 critical masking conflict(s); low-mid/foreground sharing to resolve.
 - **artist**: Make sure the bridge/chorus still serves: 'A big chorus that must not bury the vocal.'.
 - **playlist listener**: Hook/chorus should land within the first 30s and feel distinct from the verse.
 
 ## Stop Conditions
 
 - Should stop iterating: **False**
-  - not yet: static mix stable
   - not yet: dynamic movement working
   - not yet: translation safe
 

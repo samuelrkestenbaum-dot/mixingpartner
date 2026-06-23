@@ -5,21 +5,21 @@
     "Do not let the chorus become a wall of sound.",
     "Do not let stock loops dominate the song identity."
   ],
-  "overall_diagnosis": "Overall mix readiness 70.7/100. Static balance 64.0/100; dynamic movement 23.4/100. The mix is more balanced than it is alive — invest in section contrast and rides, not more EQ. 1 mute/chop candidate(s) flagged; subtraction may help more than addition.",
+  "overall_diagnosis": "Overall mix readiness 71.8/100. Static balance 72.0/100; dynamic movement 23.4/100. The mix is more balanced than it is alive — invest in section contrast and rides, not more EQ. 1 mute/chop candidate(s) flagged; subtraction may help more than addition.",
   "halee_score": 67.6,
   "ramone_score": 86.0,
   "section_contrast_score": 82,
   "depth_hierarchy_score": 65.3,
   "vocal_centrality_score": 90.0,
-  "static_mix_score": 64.0,
+  "static_mix_score": 72.0,
   "dynamic_mix_score": 23.4,
-  "overall_mix_readiness_score": 70.7,
+  "overall_mix_readiness_score": 71.8,
   "biggest_risks": [
     "Chorus 1 may not lift enough relative to the previous section (only +0.3 dB and -0.02 width). Target roughly +3 to +5 dB and +0.05 to +0.10 width via supporting elements and automation, not master level.",
     "Dynamic movement is weak (23.4/100)."
   ],
   "best_opportunities": [
-    "Resolve 2 critical masking conflict(s) by depth placement and subtraction.",
+    "Resolve 1 critical masking conflict(s) by depth placement and subtraction.",
     "Create real section contrast with automation (bloom/intimacy) instead of master level."
   ],
   "per_track_actions": [

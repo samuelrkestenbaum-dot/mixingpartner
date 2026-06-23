@@ -4,19 +4,19 @@
 
 ## Overall Diagnosis
 
-Overall mix readiness 70.7/100. Static balance 64.0/100; dynamic movement 23.4/100. The mix is more balanced than it is alive — invest in section contrast and rides, not more EQ. 1 mute/chop candidate(s) flagged; subtraction may help more than addition.
+Overall mix readiness 71.8/100. Static balance 72.0/100; dynamic movement 23.4/100. The mix is more balanced than it is alive — invest in section contrast and rides, not more EQ. 1 mute/chop candidate(s) flagged; subtraction may help more than addition.
 
 ## Scores
 
 | Dimension | Score | |
 |---|---|---|
-| Overall mix readiness | 70.7/100 | `██████████████░░░░░░` |
+| Overall mix readiness | 71.8/100 | `██████████████░░░░░░` |
 | Roy Halee (physical space) | 67.6/100 | `██████████████░░░░░░` |
 | Phil Ramone (vocal centrality) | 86.0/100 | `█████████████████░░░` |
 | Vocal centrality | 90.0/100 | `██████████████████░░` |
 | Depth hierarchy | 65.3/100 | `█████████████░░░░░░░` |
 | Section contrast | 82/100 | `████████████████░░░░` |
-| Static mix | 64.0/100 | `█████████████░░░░░░░` |
+| Static mix | 72.0/100 | `██████████████░░░░░░` |
 | Dynamic mix | 23.4/100 | `█████░░░░░░░░░░░░░░░` |
 
 **The Halee test:** Can the listener visualize musicians in a real physical space?  
@@ -29,7 +29,7 @@ Overall mix readiness 70.7/100. Static balance 64.0/100; dynamic movement 23.4/1
 
 ## Best Opportunities
 
-- Resolve 2 critical masking conflict(s) by depth placement and subtraction.
+- Resolve 1 critical masking conflict(s) by depth placement and subtraction.
 - Create real section contrast with automation (bloom/intimacy) instead of master level.
 
 ## Top Recommended Moves
