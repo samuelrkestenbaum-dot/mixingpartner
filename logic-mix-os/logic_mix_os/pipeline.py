@@ -44,6 +44,7 @@ from .planners.next_pass_planner import generate_creative_hypotheses, plan_next_
 from .planners.role_classifier import classify_roles
 from .project import Project
 from .renderers import checklist_renderer, creative_renderer, markdown_renderer
+from .renderers.html_dashboard import render_dashboard
 
 
 @dataclass
@@ -301,5 +302,9 @@ def write_artifacts(result: ProjectAnalysis, out_dir: str | Path) -> List[str]:
     # AppleScript scaffolding (mode C of the bridge — does not run automatically).
     _write_text(out / "logic_actions.applescript", generate_applescript(logic_actions))
     written.append(str(out / "logic_actions.applescript"))
+
+    # Self-contained local HTML dashboard (the section-50 screen map).
+    _write_text(out / "dashboard.html", render_dashboard(result))
+    written.append(str(out / "dashboard.html"))
 
     return written

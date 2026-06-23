@@ -11,14 +11,54 @@
       "name": "Lead Vocal"
     },
     {
-      "id": "source:piano",
+      "id": "source:acoustic_guitar",
       "type": "source",
-      "name": "Piano"
+      "name": "Acoustic Guitar"
     },
     {
-      "id": "stem:piano",
+      "id": "stem:acoustic_guitar",
       "type": "stem",
-      "name": "Piano"
+      "name": "Acoustic Guitar"
+    },
+    {
+      "id": "source:electric_guitar_1",
+      "type": "source",
+      "name": "Electric Guitar 1"
+    },
+    {
+      "id": "stem:electric_guitar_1",
+      "type": "stem",
+      "name": "Electric Guitar 1"
+    },
+    {
+      "id": "source:electric_guitar_2",
+      "type": "source",
+      "name": "Electric Guitar 2"
+    },
+    {
+      "id": "stem:electric_guitar_2",
+      "type": "stem",
+      "name": "Electric Guitar 2"
+    },
+    {
+      "id": "source:synth_pad",
+      "type": "source",
+      "name": "Synth Pad"
+    },
+    {
+      "id": "stem:synth_pad",
+      "type": "stem",
+      "name": "Synth Pad"
+    },
+    {
+      "id": "source:splice_texture_loop",
+      "type": "source",
+      "name": "Splice Texture Loop"
+    },
+    {
+      "id": "stem:splice_texture_loop",
+      "type": "stem",
+      "name": "Splice Texture Loop"
     },
     {
       "id": "source:bass",
@@ -29,6 +69,26 @@
       "id": "stem:bass",
       "type": "stem",
       "name": "Bass"
+    },
+    {
+      "id": "source:kick",
+      "type": "source",
+      "name": "Kick"
+    },
+    {
+      "id": "stem:kick",
+      "type": "stem",
+      "name": "Kick"
+    },
+    {
+      "id": "source:snare",
+      "type": "source",
+      "name": "Snare"
+    },
+    {
+      "id": "stem:snare",
+      "type": "stem",
+      "name": "Snare"
     },
     {
       "id": "bounce:mixdown",
@@ -86,11 +146,43 @@
       "to": "bounce:mixdown"
     },
     {
-      "from": "source:piano",
-      "to": "stem:piano"
+      "from": "source:acoustic_guitar",
+      "to": "stem:acoustic_guitar"
     },
     {
-      "from": "stem:piano",
+      "from": "stem:acoustic_guitar",
+      "to": "bounce:mixdown"
+    },
+    {
+      "from": "source:electric_guitar_1",
+      "to": "stem:electric_guitar_1"
+    },
+    {
+      "from": "stem:electric_guitar_1",
+      "to": "bounce:mixdown"
+    },
+    {
+      "from": "source:electric_guitar_2",
+      "to": "stem:electric_guitar_2"
+    },
+    {
+      "from": "stem:electric_guitar_2",
+      "to": "bounce:mixdown"
+    },
+    {
+      "from": "source:synth_pad",
+      "to": "stem:synth_pad"
+    },
+    {
+      "from": "stem:synth_pad",
+      "to": "bounce:mixdown"
+    },
+    {
+      "from": "source:splice_texture_loop",
+      "to": "stem:splice_texture_loop"
+    },
+    {
+      "from": "stem:splice_texture_loop",
       "to": "bounce:mixdown"
     },
     {
@@ -99,6 +191,22 @@
     },
     {
       "from": "stem:bass",
+      "to": "bounce:mixdown"
+    },
+    {
+      "from": "source:kick",
+      "to": "stem:kick"
+    },
+    {
+      "from": "stem:kick",
+      "to": "bounce:mixdown"
+    },
+    {
+      "from": "source:snare",
+      "to": "stem:snare"
+    },
+    {
+      "from": "stem:snare",
       "to": "bounce:mixdown"
     },
     {

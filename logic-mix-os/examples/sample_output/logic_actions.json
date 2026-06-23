@@ -40,24 +40,144 @@
     "validation": "Check the gesture lands across the section boundary."
   },
   {
-    "id": "piano:send",
-    "track": "Piano",
+    "id": "acoustic_guitar:send",
+    "track": "Acoustic Guitar",
     "type": "set_send",
     "plugin": "Aux Send",
     "settings": "Short chamber, low send (~-18 dB).",
     "risk_class": 2,
-    "reason": "Place 'Piano' in the foreground depth layer.",
+    "reason": "Place 'Acoustic Guitar' in the foreground depth layer.",
     "validation": "Check depth/space after bounce."
   },
   {
-    "id": "piano:plugin:0",
-    "track": "Piano",
+    "id": "acoustic_guitar:plugin:0",
+    "track": "Acoustic Guitar",
     "type": "insert_plugin",
     "plugin": "Channel EQ",
     "settings": "Cut 250-400 Hz by 1-2 dB.",
     "risk_class": 2,
     "reason": "Reduce low-mid mud build-up.",
     "validation": "A/B against the static baseline."
+  },
+  {
+    "id": "electric_guitar_1:send",
+    "track": "Electric Guitar 1",
+    "type": "set_send",
+    "plugin": "Aux Send",
+    "settings": "Short chamber, low send (~-18 dB).",
+    "risk_class": 2,
+    "reason": "Place 'Electric Guitar 1' in the foreground depth layer.",
+    "validation": "Check depth/space after bounce."
+  },
+  {
+    "id": "electric_guitar_1:plugin:0",
+    "track": "Electric Guitar 1",
+    "type": "insert_plugin",
+    "plugin": "Channel EQ",
+    "settings": "Cut 250-400 Hz by 1-2 dB.",
+    "risk_class": 2,
+    "reason": "Reduce low-mid mud build-up.",
+    "validation": "A/B against the static baseline."
+  },
+  {
+    "id": "electric_guitar_2:send",
+    "track": "Electric Guitar 2",
+    "type": "set_send",
+    "plugin": "Aux Send",
+    "settings": "Short chamber, low send (~-18 dB).",
+    "risk_class": 2,
+    "reason": "Place 'Electric Guitar 2' in the foreground depth layer.",
+    "validation": "Check depth/space after bounce."
+  },
+  {
+    "id": "electric_guitar_2:plugin:0",
+    "track": "Electric Guitar 2",
+    "type": "insert_plugin",
+    "plugin": "Channel EQ",
+    "settings": "Cut 250-400 Hz by 1-2 dB.",
+    "risk_class": 2,
+    "reason": "Reduce low-mid mud build-up.",
+    "validation": "A/B against the static baseline."
+  },
+  {
+    "id": "synth_pad:send",
+    "track": "Synth Pad",
+    "type": "set_send",
+    "plugin": "Aux Send",
+    "settings": "Hall or long plate, higher send (~-10 dB), filtered and diffuse.",
+    "risk_class": 2,
+    "reason": "Place 'Synth Pad' in the background depth layer.",
+    "validation": "Check depth/space after bounce."
+  },
+  {
+    "id": "synth_pad:plugin:0",
+    "track": "Synth Pad",
+    "type": "insert_plugin",
+    "plugin": "Channel EQ",
+    "settings": "High-pass ~250 Hz; low-pass the top if it is purely atmospheric.",
+    "risk_class": 2,
+    "reason": "Filter felt elements so they support without crowding.",
+    "validation": "A/B against the static baseline."
+  },
+  {
+    "id": "synth_pad:automation:0",
+    "track": "Synth Pad",
+    "type": "automation",
+    "plugin": "filter cutoff / send",
+    "settings": "Open the filter and lift the reverb send only in chorus sections; pull back in verses.",
+    "risk_class": 2,
+    "reason": "Use the element as movement (felt), not a constant heard layer.",
+    "validation": "Check the gesture lands across the section boundary."
+  },
+  {
+    "id": "splice_texture_loop:send",
+    "track": "Splice Texture Loop",
+    "type": "set_send",
+    "plugin": "Aux Send",
+    "settings": "Hall or long plate, higher send (~-10 dB), filtered and diffuse.",
+    "risk_class": 2,
+    "reason": "Place 'Splice Texture Loop' in the background depth layer.",
+    "validation": "Check depth/space after bounce."
+  },
+  {
+    "id": "splice_texture_loop:plugin:0",
+    "track": "Splice Texture Loop",
+    "type": "insert_plugin",
+    "plugin": "Direction Mixer",
+    "settings": "Narrow stereo width to ~35-50%.",
+    "risk_class": 3,
+    "reason": "Felt/atmospheric element should not occupy the same width as heard elements.",
+    "validation": "A/B against the static baseline."
+  },
+  {
+    "id": "splice_texture_loop:plugin:1",
+    "track": "Splice Texture Loop",
+    "type": "insert_plugin",
+    "plugin": "Channel EQ",
+    "settings": "High-pass ~250 Hz; low-pass the top if it is purely atmospheric.",
+    "risk_class": 2,
+    "reason": "Filter felt elements so they support without crowding.",
+    "validation": "A/B against the static baseline."
+  },
+  {
+    "id": "splice_texture_loop:plugin:2",
+    "track": "Splice Texture Loop",
+    "type": "arrangement",
+    "plugin": "(arrangement)",
+    "settings": "Consider chopping into transition gestures and muting the continuous bed; reserve for pre-chorus/bridge.",
+    "risk_class": 4,
+    "reason": "Re-contextualise the imported loop instead of running it as a finished record inside the record.",
+    "validation": "A/B against the static baseline."
+  },
+  {
+    "id": "splice_texture_loop:automation:0",
+    "track": "Splice Texture Loop",
+    "type": "automation",
+    "plugin": "filter cutoff / send",
+    "settings": "Open the filter and lift the reverb send only in chorus sections; pull back in verses.",
+    "risk_class": 2,
+    "reason": "Use the element as movement (felt), not a constant heard layer.",
+    "validation": "Check the gesture lands across the section boundary."
   },
   {
     "id": "bass:send",
@@ -87,6 +207,56 @@
     "settings": "Vintage Opto, gentle 2-4 dB GR for consistent sustain.",
     "risk_class": 2,
     "reason": "Even out the low-end foundation.",
+    "validation": "A/B against the static baseline."
+  },
+  {
+    "id": "bass:plugin:2",
+    "track": "Bass",
+    "type": "insert_plugin",
+    "plugin": "Channel EQ",
+    "settings": "Carve a small dip where the kick thumps (complementary to kick).",
+    "risk_class": 2,
+    "reason": "Resolve kick/bass low-end conflict by carving, not stacking.",
+    "validation": "A/B against the static baseline."
+  },
+  {
+    "id": "kick:send",
+    "track": "Kick",
+    "type": "set_send",
+    "plugin": "Aux Send",
+    "settings": "Short chamber, low send (~-18 dB).",
+    "risk_class": 2,
+    "reason": "Place 'Kick' in the foreground depth layer.",
+    "validation": "Check depth/space after bounce."
+  },
+  {
+    "id": "kick:plugin:0",
+    "track": "Kick",
+    "type": "insert_plugin",
+    "plugin": "Channel EQ",
+    "settings": "Shape sub (~50-70 Hz) vs beater (~3-5 kHz); leave room for bass.",
+    "risk_class": 2,
+    "reason": "Define the kick without masking the bass.",
+    "validation": "A/B against the static baseline."
+  },
+  {
+    "id": "snare:send",
+    "track": "Snare",
+    "type": "set_send",
+    "plugin": "Aux Send",
+    "settings": "Short chamber, low send (~-18 dB).",
+    "risk_class": 2,
+    "reason": "Place 'Snare' in the foreground depth layer.",
+    "validation": "Check depth/space after bounce."
+  },
+  {
+    "id": "snare:plugin:0",
+    "track": "Snare",
+    "type": "insert_plugin",
+    "plugin": "Channel EQ",
+    "settings": "Light tonal shaping only; preserve transient detail and room realism.",
+    "risk_class": 2,
+    "reason": "Halee naturalism: keep the kit believable.",
     "validation": "A/B against the static baseline."
   }
 ]

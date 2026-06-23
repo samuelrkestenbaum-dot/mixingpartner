@@ -9,7 +9,7 @@
       "filename_clues": [
         "lead vocal"
       ],
-      "spectral_profile": "centroid 1417 Hz; dominant band: low_mid",
+      "spectral_profile": "centroid 1448 Hz; dominant band: low_mid",
       "transient_profile": "sharp, percussive transients",
       "stereo_profile": "centred / near-mono"
     },
@@ -26,27 +26,131 @@
     "manual_override": null
   },
   {
-    "track_id": "piano",
-    "name": "Piano",
-    "instrument_identity": "piano",
-    "identity_family": "keys",
+    "track_id": "acoustic_guitar",
+    "name": "Acoustic Guitar",
+    "instrument_identity": "acoustic_guitar",
+    "identity_family": "guitars",
     "confidence": 0.7,
     "evidence": {
       "filename_clues": [
-        "piano"
+        "acoustic guitar"
       ],
-      "spectral_profile": "centroid 675 Hz; dominant band: low_mid",
-      "transient_profile": "slow attack / sustained, low transient density",
-      "stereo_profile": "centred / near-mono"
+      "spectral_profile": "centroid 565 Hz; dominant band: low_mid",
+      "transient_profile": "moderate transient articulation",
+      "stereo_profile": "wide stereo image"
     },
     "alternate_candidates": [
       {
         "instrument_identity": "pad",
-        "confidence": 0.22
+        "confidence": 0.24
       },
       {
         "instrument_identity": "organ",
-        "confidence": 0.21
+        "confidence": 0.18
+      }
+    ],
+    "manual_override": null
+  },
+  {
+    "track_id": "electric_guitar_1",
+    "name": "Electric Guitar 1",
+    "instrument_identity": "electric_guitar",
+    "identity_family": "guitars",
+    "confidence": 0.7,
+    "evidence": {
+      "filename_clues": [
+        "electric guitar"
+      ],
+      "spectral_profile": "centroid 513 Hz; dominant band: low_mid",
+      "transient_profile": "moderate transient articulation",
+      "stereo_profile": "wide stereo image"
+    },
+    "alternate_candidates": [
+      {
+        "instrument_identity": "pad",
+        "confidence": 0.24
+      },
+      {
+        "instrument_identity": "organ",
+        "confidence": 0.18
+      }
+    ],
+    "manual_override": null
+  },
+  {
+    "track_id": "electric_guitar_2",
+    "name": "Electric Guitar 2",
+    "instrument_identity": "electric_guitar",
+    "identity_family": "guitars",
+    "confidence": 0.7,
+    "evidence": {
+      "filename_clues": [
+        "electric guitar"
+      ],
+      "spectral_profile": "centroid 615 Hz; dominant band: low_mid",
+      "transient_profile": "sharp, percussive transients",
+      "stereo_profile": "wide stereo image"
+    },
+    "alternate_candidates": [
+      {
+        "instrument_identity": "pad",
+        "confidence": 0.24
+      },
+      {
+        "instrument_identity": "backing_vocal",
+        "confidence": 0.17
+      }
+    ],
+    "manual_override": null
+  },
+  {
+    "track_id": "synth_pad",
+    "name": "Synth Pad",
+    "instrument_identity": "pad",
+    "identity_family": "synth",
+    "confidence": 0.7,
+    "evidence": {
+      "filename_clues": [
+        "pad"
+      ],
+      "spectral_profile": "centroid 411 Hz; dominant band: low_mid",
+      "transient_profile": "sharp, percussive transients",
+      "stereo_profile": "moderate stereo width"
+    },
+    "alternate_candidates": [
+      {
+        "instrument_identity": "kick",
+        "confidence": 0.18
+      },
+      {
+        "instrument_identity": "piano",
+        "confidence": 0.17
+      }
+    ],
+    "manual_override": null
+  },
+  {
+    "track_id": "splice_texture_loop",
+    "name": "Splice Texture Loop",
+    "instrument_identity": "texture",
+    "identity_family": "texture",
+    "confidence": 0.7,
+    "evidence": {
+      "filename_clues": [
+        "texture"
+      ],
+      "spectral_profile": "centroid 8412 Hz; dominant band: high",
+      "transient_profile": "sharp, percussive transients",
+      "stereo_profile": "wide stereo image"
+    },
+    "alternate_candidates": [
+      {
+        "instrument_identity": "overhead",
+        "confidence": 0.25
+      },
+      {
+        "instrument_identity": "hi_hat",
+        "confidence": 0.25
       }
     ],
     "manual_override": null
@@ -61,18 +165,70 @@
       "filename_clues": [
         "bass"
       ],
-      "spectral_profile": "centroid 225 Hz; dominant band: low",
+      "spectral_profile": "centroid 214 Hz; dominant band: low",
       "transient_profile": "slow attack / sustained, low transient density",
       "stereo_profile": "centred / near-mono"
     },
     "alternate_candidates": [
       {
         "instrument_identity": "kick",
-        "confidence": 0.25
+        "confidence": 0.23
       },
       {
         "instrument_identity": "pad",
-        "confidence": 0.13
+        "confidence": 0.14
+      }
+    ],
+    "manual_override": null
+  },
+  {
+    "track_id": "kick",
+    "name": "Kick",
+    "instrument_identity": "kick",
+    "identity_family": "drums",
+    "confidence": 0.7,
+    "evidence": {
+      "filename_clues": [
+        "kick"
+      ],
+      "spectral_profile": "centroid 187 Hz; dominant band: low",
+      "transient_profile": "slow attack / sustained, low transient density",
+      "stereo_profile": "centred / near-mono"
+    },
+    "alternate_candidates": [
+      {
+        "instrument_identity": "bass_guitar",
+        "confidence": 0.22
+      },
+      {
+        "instrument_identity": "pad",
+        "confidence": 0.14
+      }
+    ],
+    "manual_override": null
+  },
+  {
+    "track_id": "snare",
+    "name": "Snare",
+    "instrument_identity": "snare",
+    "identity_family": "drums",
+    "confidence": 0.7,
+    "evidence": {
+      "filename_clues": [
+        "snare"
+      ],
+      "spectral_profile": "centroid 7718 Hz; dominant band: high",
+      "transient_profile": "slow attack / sustained, low transient density",
+      "stereo_profile": "centred / near-mono"
+    },
+    "alternate_candidates": [
+      {
+        "instrument_identity": "cymbal",
+        "confidence": 0.27
+      },
+      {
+        "instrument_identity": "hi_hat",
+        "confidence": 0.18
       }
     ],
     "manual_override": null

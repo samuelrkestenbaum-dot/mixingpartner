@@ -1,0 +1,177 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Logic Mix OS — Dense Chorus With Loops</title><style>
+:root{--bg:#0f1216;--panel:#171c23;--ink:#e6edf3;--muted:#8b98a5;--line:#222a33;
+--good:#3fb950;--warn:#d29922;--bad:#f85149;--accent:#58a6ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);
+font:14px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+header{padding:24px 28px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5}
+h1{margin:0 0 4px;font-size:20px}h2{font-size:15px;margin:0 0 12px;color:var(--accent);
+text-transform:uppercase;letter-spacing:.05em}.muted{color:var(--muted)}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}nav a{color:var(--muted);
+text-decoration:none;font-size:12px;padding:3px 8px;border:1px solid var(--line);border-radius:12px}
+nav a:hover{color:var(--ink);border-color:var(--accent)}
+main{padding:24px 28px;max-width:1100px}section.card{background:var(--panel);
+border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin-bottom:20px}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;
+padding:6px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600}.bar{height:8px;background:#0a0d11;border-radius:6px;overflow:hidden;min-width:120px}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,#1f6feb,#58a6ff)}
+.scoregrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.score{background:#0d1117;border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.score b{font-size:20px}.big{font-size:42px;font-weight:700}.flag{color:var(--warn)}
+.bad{color:var(--bad)}.good{color:var(--good)}.pill{display:inline-block;padding:1px 7px;border:1px solid var(--line);
+border-radius:10px;font-size:11px;color:var(--muted)}pre{white-space:pre-wrap;background:#0d1117;
+border:1px solid var(--line);border-radius:8px;padding:14px;font-size:12px;overflow:auto}
+ul{margin:6px 0;padding-left:20px}li{margin:2px 0}
+</style></head>
+<body><header>
+      <h1>Logic Mix OS — Dense Chorus With Loops</h1>
+      <div class="muted">Tempo 92 · Key E minor ·
+        9 tracks · 2 sections</div>
+      <div class="muted">A big chorus that must not bury the vocal.</div>
+      <div class="big">70.7<span class="muted" style="font-size:16px">/100 ready</span></div>
+      <nav><a href="#scores">Scores</a><a href="#sections">Sections</a><a href="#tracks">Tracks</a><a href="#masking">Masking</a><a href="#nextpass">Next Pass</a><a href="#automation">Automation</a><a href="#translation">Translation</a><a href="#audits">Audits</a><a href="#creative">Creative</a><a href="#governance">Governance</a><a href="#checklist">Checklist</a></nav>
+    </header><main><section class="card" id="scores"><h2>Scores</h2><div class="scoregrid"><div class="score"><div class="muted">Roy Halee (space)</div><b>67.6</b><div class="bar"><i style="width:67.6%"></i></div></div><div class="score"><div class="muted">Phil Ramone (vocal)</div><b>86.0</b><div class="bar"><i style="width:86.0%"></i></div></div><div class="score"><div class="muted">Vocal centrality</div><b>90.0</b><div class="bar"><i style="width:90.0%"></i></div></div><div class="score"><div class="muted">Depth hierarchy</div><b>65.3</b><div class="bar"><i style="width:65.3%"></i></div></div><div class="score"><div class="muted">Section contrast</div><b>82</b><div class="bar"><i style="width:82.0%"></i></div></div><div class="score"><div class="muted">Static mix</div><b>64.0</b><div class="bar"><i style="width:64.0%"></i></div></div><div class="score"><div class="muted">Dynamic mix</div><b>23.4</b><div class="bar"><i style="width:23.4%"></i></div></div><div class="score"><div class="muted">Translation</div><b>61.0</b><div class="bar"><i style="width:61.0%"></i></div></div><div class="score"><div class="muted">Mono</div><b>84.0</b><div class="bar"><i style="width:84.0%"></i></div></div></div></section><section class="card" id="sections"><h2>Section Map</h2><table><thead><tr><th>Section</th><th>Goal</th><th>RMS</th><th>Width</th><th>Bright</th><th>Density</th><th>Fwd</th><th></th></tr></thead><tbody><tr><td>Verse 1</td><td>intimacy</td><td>-16.2</td><td>0.47</td><td>0.97</td><td>1.00</td><td>7 <span class="bad">CROWDED</span></td><td></td></tr><tr><td>Chorus 1</td><td>release</td><td>-16.0</td><td>0.45</td><td>0.95</td><td>1.00</td><td>4</td><td><span class="flag">no lift</span></td></tr></tbody></table></section><section class="card" id="tracks"><h2>Tracks — Identity / Source / Role / Depth</h2><table><thead><tr><th>Track</th><th>Identity</th><th>Source kind</th><th>Felt/Heard</th><th>Sacredness</th><th>Depth</th></tr></thead><tbody><tr><td>Lead Vocal</td><td>lead_vocal <span class="pill">0.70</span></td><td>comped_audio_track</td><td>heard</td><td>sacred</td><td>intimate</td></tr><tr><td>Acoustic Guitar</td><td>acoustic_guitar <span class="pill">0.70</span></td><td>live_audio_recording</td><td>heard</td><td>important</td><td>foreground</td></tr><tr><td>Electric Guitar 1</td><td>electric_guitar <span class="pill">0.70</span></td><td>live_audio_recording</td><td>heard</td><td>important</td><td>foreground</td></tr><tr><td>Electric Guitar 2</td><td>electric_guitar <span class="pill">0.70</span></td><td>live_audio_recording</td><td>heard</td><td>important</td><td>foreground</td></tr><tr><td>Synth Pad</td><td>pad <span class="pill">0.70</span></td><td>synth_bounce</td><td>felt</td><td>decorative</td><td>background</td></tr><tr><td>Splice Texture Loop</td><td>texture <span class="pill">0.70</span></td><td>splice_sample</td><td>felt</td><td>decorative</td><td>background</td></tr><tr><td>Bass</td><td>bass_guitar <span class="pill">0.70</span></td><td>live_audio_recording</td><td>structural</td><td>important</td><td>foreground</td></tr><tr><td>Kick</td><td>kick <span class="pill">0.70</span></td><td>live_audio_recording</td><td>structural</td><td>important</td><td>foreground</td></tr><tr><td>Snare</td><td>snare <span class="pill">0.70</span></td><td>live_audio_recording</td><td>structural</td><td>important</td><td>foreground</td></tr></tbody></table></section><section class="card" id="masking"><h2>Masking (hierarchy)</h2><table><thead><tr><th>Elements</th><th>Range</th><th>Section</th><th>Type</th><th>Recommendation</th></tr></thead><tbody><tr><td>Kick, Bass</td><td>40Hz-150Hz</td><td>verse_1</td><td><span class="bad">low_end_conflict</span></td><td>Carve complementary space (e.g. bass dipped where kick thumps), or sidechain the bass subtly to the kick. Avoid stacking both at the same Hz.</td></tr><tr><td>Acoustic Guitar, Electric Guitar 1, Electric Guitar 2</td><td>full-band (stereo image)</td><td>verse_1</td><td>width_crowding</td><td>Narrow or push some of these to the midground/background, or reserve the widest placement for the single most important element.</td></tr><tr><td>Kick, Bass</td><td>40Hz-150Hz</td><td>chorus_1</td><td><span class="bad">low_end_conflict</span></td><td>Carve complementary space (e.g. bass dipped where kick thumps), or sidechain the bass subtly to the kick. Avoid stacking both at the same Hz.</td></tr></tbody></table></section><section class="card" id="nextpass"><h2>Next Pass</h2><ol><li><b>Vocal belief</b> — Ride the lead vocal phrase-by-phrase before adding compression.</li><li><b>Section contrast</b> — Chorus 1 do not lift enough. Create lift through supporting elements and automation (bloom on entry, intimacy in verses), not master level.</li><li><b>Stereo loop / width control</b> — Splice Texture Loop appear full-width/foregrounded. Narrow to ~35-50%, filter, or push to the background so they are felt, not heard.</li><li><b>Depth cleanup</b> — Too many elements occupy the foreground. Move supporting guitars/keys/pads to the midground instead of EQ-ing everything.</li><li><b>Low-end definition</b> — Kick and bass share sub energy. Carve complementary space or sidechain the bass subtly to the kick.</li></ol></section><section class="card" id="automation"><h2>Automation Narrative</h2><table><thead><tr><th>Section</th><th>Gesture</th><th>Moves</th></tr></thead><tbody><tr><td>Verse 1</td><td>verse_intimacy</td><td>Pull reverb sends down; Narrow stereo image; Ride vocal +0.5 to +1.5 dB; Reduce background texture level</td></tr><tr><td>Chorus 1</td><td>final_chorus_release</td><td>Widest point of the song; Most open depth field; Longest emotional reverb tails; Largest vocal support stack</td></tr><tr><td>Per-track rides</td><td>track_rides</td><td>Phrase-level rides +0.5 to +1.5 dB before compression.; Open and lift only in choruses; pull back in verses.; Open and lift only in choruses; pull back in verses.</td></tr></tbody></table></section><section class="card" id="translation"><h2>Translation · Mono · Listener Experience</h2><p class="muted">Translation score 61.0/100 · Mono score 84.0/100</p><table><thead><tr><th>Profile</th><th>Severity</th><th>Risks</th></tr></thead><tbody><tr><td>headphones</td><td><span class="good">low</span></td><td>—</td></tr><tr><td>airpods_earbuds</td><td><span class="good">low</span></td><td>—</td></tr><tr><td>car</td><td><span class="flag">moderate</span></td><td>Upper-mid/high energy may turn harsh in a car.</td></tr><tr><td>phone_speaker</td><td><span class="bad">high</span></td><td>Thin presence band: the vocal/lyric may get lost on a phone speaker.</td></tr><tr><td>laptop_speakers</td><td><span class="good">low</span></td><td>—</td></tr><tr><td>studio_monitors</td><td><span class="good">low</span></td><td>—</td></tr><tr><td>mono_bluetooth_speaker</td><td><span class="flag">moderate</span></td><td>Stereo collapse risk in mono (Splice Texture Loop); ~-1.7 dB level change.</td></tr><tr><td>club_pa</td><td><span class="flag">moderate</span></td><td>Sibilance can become piercing on a large PA.</td></tr></tbody></table><p class="muted">The chorus does not yet feel earned — contrast into it is weak.</p><ul><li><b>Verse 1</b> (neutral): sets the scene; dense — lots happening at once</li><li><b>Chorus 1</b> (may zone out): expected to lift but feels similar to the previous section; dense — lots happening at once</li></ul></section><section class="card" id="audits"><h2>Source-Aware Audit</h2><ul><li><b>Lead Vocal</b> <span class="pill">live_track</span><ul><li>Preserve the human feel; integrate with shared room/depth rather than flattening dynamics.</li></ul></li><li><b>Acoustic Guitar</b> <span class="pill">live_track</span><ul><li>Inconsistent phrase energy: use clip gain + phrase rides before compression (do not compress harder).</li><li>Preserve the human feel; integrate with shared room/depth rather than flattening dynamics.</li></ul></li><li><b>Electric Guitar 1</b> <span class="pill">live_track</span><ul><li>Inconsistent phrase energy: use clip gain + phrase rides before compression (do not compress harder).</li><li>Preserve the human feel; integrate with shared room/depth rather than flattening dynamics.</li></ul></li><li><b>Electric Guitar 2</b> <span class="pill">live_track</span><ul><li>Inconsistent phrase energy: use clip gain + phrase rides before compression (do not compress harder).</li><li>Preserve the human feel; integrate with shared room/depth rather than flattening dynamics.</li></ul></li><li><b>Synth Pad</b> <span class="pill">synth_patch</span> <span class="bad">[printed bounce — MIDI-level changes need a re-render]</span><ul><li>High-pass the pad (~150-250 Hz); it is a felt element and is clouding the low-mids.</li><li>This is a software-instrument bounce: note/patch/envelope changes require re-rendering from the MIDI, then print to audio for validation.</li></ul></li><li><b>Splice Texture Loop</b> <span class="pill">sample_loop</span> <span class="bad">[full-width loop, loop is brighter than the vocal, mastered/compressed loop tone]</span><ul><li>Narrow to ~35%, high-pass ~250 Hz, push to background except at transitions.</li><li>This loop is acting like a finished record inside your record. Chop into transition gestures and re-contextualise into the song&#x27;s depth, tone, and groove.</li></ul></li><li><b>Bass</b> <span class="pill">live_track</span><ul><li>Preserve the human feel; integrate with shared room/depth rather than flattening dynamics.</li></ul></li><li><b>Kick</b> <span class="pill">live_track</span><ul><li>Inconsistent phrase energy: use clip gain + phrase rides before compression (do not compress harder).</li><li>Preserve the human feel; integrate with shared room/depth rather than flattening dynamics.</li></ul></li><li><b>Snare</b> <span class="pill">live_track</span><ul><li>Inconsistent phrase energy: use clip gain + phrase rides before compression (do not compress harder).</li><li>Preserve the human feel; integrate with shared room/depth rather than flattening dynamics.</li></ul></li></ul></section><section class="card" id="creative"><h2>Creative Variants</h2><div><p><b>Chorus does not lift enough emotionally.</b></p><table><thead><tr><th>Variant</th><th>Kind</th><th>Overall</th><th>Vocal belief</th><th>Translation</th><th>Verdict</th></tr></thead><tbody><tr><td>Width Bloom</td><td>width_bloom</td><td>75.7</td><td>74</td><td>medium</td><td>worth testing — check vocal wash</td></tr><tr><td>Subtractive Drop</td><td>subtractive_drop</td><td>85.3</td><td>86</td><td>low</td><td>promising</td></tr><tr><td>Vocal-Ride Lift</td><td>vocal_ride</td><td>82.9</td><td>92</td><td>low</td><td>promising</td></tr><tr><td>Drum Room Bloom</td><td>drum_room_bloom</td><td>81.4</td><td>76</td><td>low</td><td>promising</td></tr></tbody></table><p><b>Arrangement is crowded; hierarchy is unclear.</b></p><table><thead><tr><th>Variant</th><th>Kind</th><th>Overall</th><th>Vocal belief</th><th>Translation</th><th>Verdict</th></tr></thead><tbody><tr><td>Depth Cleanup</td><td>depth_cleanup</td><td>81.1</td><td>86</td><td>low</td><td>promising</td></tr><tr><td>Subtractive Simplify</td><td>subtractive_drop</td><td>85.3</td><td>86</td><td>low</td><td>promising</td></tr></tbody></table><p><b>An imported loop behaves like a finished record inside the record.</b></p><table><thead><tr><th>Variant</th><th>Kind</th><th>Overall</th><th>Vocal belief</th><th>Translation</th><th>Verdict</th></tr></thead><tbody><tr><td>Loop Deconstruct</td><td>loop_deconstruct</td><td>81.9</td><td>85</td><td>low</td><td>promising</td></tr><tr><td>Loop as Accent</td><td>subtractive_drop</td><td>85.3</td><td>86</td><td>low</td><td>promising</td></tr></tbody></table><p><b>Too many elements occupy the foreground.</b></p><table><thead><tr><th>Variant</th><th>Kind</th><th>Overall</th><th>Vocal belief</th><th>Translation</th><th>Verdict</th></tr></thead><tbody><tr><td>Depth Cleanup</td><td>depth_cleanup</td><td>81.1</td><td>86</td><td>low</td><td>promising</td></tr></tbody></table><p><b>Vocal could feel more believable and present.</b></p><table><thead><tr><th>Variant</th><th>Kind</th><th>Overall</th><th>Vocal belief</th><th>Translation</th><th>Verdict</th></tr></thead><tbody><tr><td>Phrase Rides</td><td>vocal_ride</td><td>82.9</td><td>92</td><td>low</td><td>promising</td></tr><tr><td>Verse Intimacy</td><td>intimacy_pass</td><td>81.1</td><td>90</td><td>low</td><td>promising</td></tr></tbody></table></div></section><section class="card" id="governance"><h2>Governance &amp; Taste</h2><p>Emotional truth <span class="pill">neutral</span>: A big chorus that must not bury the vocal.</p><p class='muted'>Listener panel</p><ul><li><b>first time fan</b>: The chorus does not yet feel earned — contrast into it is weak.</li><li><b>producer</b>: The Splice Texture Loop is exciting but too identifiable as a loop.</li><li><b>mixer</b>: 2 critical masking conflict(s); low-mid/foreground sharing to resolve.</li><li><b>artist</b>: Make sure the bridge/chorus still serves: &#x27;A big chorus that must not bury the vocal.&#x27;.</li><li><b>playlist listener</b>: Hook/chorus should land within the first 30s and feel distinct from the verse.</li></ul><p>Stop iterating: <b>False</b></p></section><section class="card" id="checklist"><h2>Logic Action Checklist</h2><pre># Logic Action Checklist
+
+&gt; **Non-destructive only.** Duplicate tracks / save presets before changes. No source audio is overwritten. Approve creative or source-level moves before applying.
+
+**Preferred order of operations:** automation → level and panning → depth placement → subtractive EQ → compression → additive EQ → saturation / excitement → last-resort enhancement.
+
+## Lead Vocal
+
+*heard element in the intimate layer. Low-mid mud is elevated.*
+
+- **Depth:** intimate · **Role:** heard
+- **Reverb / send:** Short room or slapback only, very low send (~-24 dB). Keep it close.
+
+1. **Channel EQ** — High-pass ~80 Hz. Cut ~250 Hz by 1-2 dB (mud). Avoid large 12 kHz+ air boosts (keeps the vocal human, not glossy).
+   - _Why:_ Clean low-end build-up and keep believable presence without hype.
+   - _Risk:_ Class 2 (reversible mix recommendation)
+2. **Compressor** — Vintage Opto, target 2-3 dB gain reduction, slow-ish attack.
+   - _Why:_ Stabilise the vocal while preserving the performance (invisible compression).
+   - _Risk:_ Class 2 (reversible mix recommendation)
+3. **Automation**
+   - gain (clip gain + fader): Ride phrase endings +0.5 to +1 dB where the lyric drops, before adding compression.
+     _Why:_ Ramone-style vocal belief: performance rides before brute-force compression.
+
+## Acoustic Guitar
+
+*heard element in the foreground layer. Low-mid mud is elevated.*
+
+- **Depth:** foreground · **Role:** heard
+- **Reverb / send:** Short chamber, low send (~-18 dB).
+
+1. **Channel EQ** — Cut 250-400 Hz by 1-2 dB.
+   - _Why:_ Reduce low-mid mud build-up.
+   - _Risk:_ Class 2 (reversible mix recommendation)
+
+## Electric Guitar 1
+
+*heard element in the foreground layer. Low-mid mud is elevated.*
+
+- **Depth:** foreground · **Role:** heard
+- **Reverb / send:** Short chamber, low send (~-18 dB).
+
+1. **Channel EQ** — Cut 250-400 Hz by 1-2 dB.
+   - _Why:_ Reduce low-mid mud build-up.
+   - _Risk:_ Class 2 (reversible mix recommendation)
+
+## Electric Guitar 2
+
+*heard element in the foreground layer. Low-mid mud is elevated.*
+
+- **Depth:** foreground · **Role:** heard
+- **Reverb / send:** Short chamber, low send (~-18 dB).
+
+1. **Channel EQ** — Cut 250-400 Hz by 1-2 dB.
+   - _Why:_ Reduce low-mid mud build-up.
+   - _Risk:_ Class 2 (reversible mix recommendation)
+
+## Synth Pad
+
+*felt element in the background layer. Low-mid mud is elevated.*
+
+- **Depth:** background · **Role:** felt
+- **Reverb / send:** Hall or long plate, higher send (~-10 dB), filtered and diffuse.
+
+1. **Channel EQ** — High-pass ~250 Hz; low-pass the top if it is purely atmospheric.
+   - _Why:_ Filter felt elements so they support without crowding.
+   - _Risk:_ Class 2 (reversible mix recommendation)
+2. **Automation**
+   - filter cutoff / send: Open the filter and lift the reverb send only in chorus sections; pull back in verses.
+     _Why:_ Use the element as movement (felt), not a constant heard layer.
+
+## Splice Texture Loop
+
+*felt element in the background layer. Wider than a felt element should be.*
+
+- **Depth:** background · **Role:** felt
+- **Reverb / send:** Hall or long plate, higher send (~-10 dB), filtered and diffuse.
+
+1. **Direction Mixer** — Narrow stereo width to ~35-50%.
+   - _Why:_ Felt/atmospheric element should not occupy the same width as heard elements.
+   - _Risk:_ Class 3 (reversible Logic action requiring approval)
+2. **Channel EQ** — High-pass ~250 Hz; low-pass the top if it is purely atmospheric.
+   - _Why:_ Filter felt elements so they support without crowding.
+   - _Risk:_ Class 2 (reversible mix recommendation)
+3. **(arrangement)** — Consider chopping into transition gestures and muting the continuous bed; reserve for pre-chorus/bridge.
+   - _Why:_ Re-contextualise the imported loop instead of running it as a finished record inside the record.
+   - _Risk:_ Class 4 (source-level creative change requiring explicit approval)
+4. **Automation**
+   - filter cutoff / send: Open the filter and lift the reverb send only in chorus sections; pull back in verses.
+     _Why:_ Use the element as movement (felt), not a constant heard layer.
+- ⚠️ Imported loop: do not let it dominate the song identity. Non-destructive duplicate before chopping.
+
+## Bass
+
+*structural element in the foreground layer.*
+
+- **Depth:** foreground · **Role:** structural
+- **Reverb / send:** Short chamber, low send (~-18 dB).
+
+1. **Channel EQ** — High-pass ~30 Hz; control 200-350 Hz if boxy.
+   - _Why:_ Tighten the low end without thinning the body.
+   - _Risk:_ Class 2 (reversible mix recommendation)
+2. **Compressor** — Vintage Opto, gentle 2-4 dB GR for consistent sustain.
+   - _Why:_ Even out the low-end foundation.
+   - _Risk:_ Class 2 (reversible mix recommendation)
+3. **Channel EQ** — Carve a small dip where the kick thumps (complementary to kick).
+   - _Why:_ Resolve kick/bass low-end conflict by carving, not stacking.
+   - _Risk:_ Class 2 (reversible mix recommendation)
+
+## Kick
+
+*structural element in the foreground layer.*
+
+- **Depth:** foreground · **Role:** structural
+- **Reverb / send:** Short chamber, low send (~-18 dB).
+
+1. **Channel EQ** — Shape sub (~50-70 Hz) vs beater (~3-5 kHz); leave room for bass.
+   - _Why:_ Define the kick without masking the bass.
+   - _Risk:_ Class 2 (reversible mix recommendation)
+
+## Snare
+
+*structural element in the foreground layer.*
+
+- **Depth:** foreground · **Role:** structural
+- **Reverb / send:** Short chamber, low send (~-18 dB).
+
+1. **Channel EQ** — Light tonal shaping only; preserve transient detail and room realism.
+   - _Why:_ Halee naturalism: keep the kit believable.
+   - _Risk:_ Class 2 (reversible mix recommendation)
+
+## Mute / Chop Candidates
+
+_Subtraction often helps more than addition. Non-destructive (duplicate first)._
+
+- **Electric Guitar 2** (section `verse_1`) — Width crowding in &#x27;verse_1&#x27;: reserve the widest placement for one element; push or mute the rest. _Risk: Class 3._
+
+## Source-Material Warnings
+
+- **Synth Pad**: Printed instrument bounce: note/patch/envelope changes require re-rendering from the original MIDI, not audio editing.
+- **Splice Texture Loop**: Imported loop/sample: verify it is not accepted at full width in the foreground by default. Re-contextualise into the song&#x27;s depth and tone.
+- **Splice Texture Loop**: Stereo image is wide; consider narrowing and placing it in the midground/background rather than full-width foreground.
+- **Splice Texture Loop**: Low crest factor suggests the loop is pre-compressed/mastered; it may make live tracks feel small next to it.
+</pre></section></main></body></html>

@@ -212,6 +212,16 @@ def _run_regression(args) -> int:
     return 0
 
 
+def _run_dashboard(args) -> int:
+    from .renderers.html_dashboard import render_dashboard
+    manifest = _load_manifest(args.manifest)
+    result = analyze(args.stems, manifest, bounce_path=args.bounce)
+    out = args.out or "dashboard.html"
+    Path(out).write_text(render_dashboard(result), encoding="utf-8")
+    print(f"Wrote {out} — open with file:// in a browser (local-first, no server).")
+    return 0
+
+
 def _run_cowork(args) -> int:
     from .cowork import build_context, list_commands, run_command
     if args.list:
@@ -462,6 +472,11 @@ def build_parser() -> argparse.ArgumentParser:
                     choices=["observe_only", "recommend_only", "checklist_only",
                              "approve_before_apply", "safe_auto_apply", "manual_only"])
     bd.set_defaults(func=_run_bridge_dryrun)
+
+    db = sub.add_parser("dashboard", help="Generate a local static HTML control-room dashboard")
+    add_common(db)
+    db.add_argument("--bounce", help="Optional stereo bounce")
+    db.set_defaults(func=_run_dashboard)
 
     cw = sub.add_parser("cowork", help="Claude Cowork command surface (registry of bounded commands)")
     cw.add_argument("--list", action="store_true", help="List available commands")

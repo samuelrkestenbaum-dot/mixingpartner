@@ -22,6 +22,10 @@ _Emotional goal: release_
 - Largest vocal support stack
 - Avoid over-limiting the release
 
+> ⚠️ Chorus 1 may not lift enough relative to the previous section (only +0.3 dB and -0.02 width). Target roughly +3 to +5 dB and +0.05 to +0.10 width via supporting elements and automation, not master level.
+
 ## Per-track rides  ·  `track_rides`
 
 - **Lead Vocal** — gain: Phrase-level rides +0.5 to +1.5 dB before compression.
+- **Synth Pad** — filter cutoff / reverb send: Open and lift only in choruses; pull back in verses.
+- **Splice Texture Loop** — filter cutoff / reverb send: Open and lift only in choruses; pull back in verses.

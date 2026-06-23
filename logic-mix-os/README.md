@@ -64,26 +64,48 @@ A ready-made example of the output lives in [`examples/sample_output/`](examples
 
 ## CLI
 
+**Analysis & plan**
+
 | Command | Purpose |
 |---|---|
-| `analyze` | Full analysis + mix plan + all artifacts |
+| `analyze` | Full analysis → every JSON/Markdown artifact + dashboard |
 | `detect-identities` | Source-material + instrument-identity detection |
 | `analyze-sections` | Per-section metrics + contrast |
-| `generate-plan` | Generate the mix plan (recomputes analysis) |
-| `render-checklist --plan mix_plan.json` | Render the Logic checklist from a saved plan |
-| `validate-output --output ./output/...` | Validate an output directory against the schemas |
-| `compare-reference --bounce a.wav --reference b.wav` | Reference-track delta report |
-| `suggest-creative-variants --plan mix_plan.json` | Non-destructive creative hypotheses (stub) |
+| `generate-plan` | Generate the mix plan |
+| `render-checklist --plan mix_plan.json` | Logic checklist from a saved plan |
+| `validate-output --output DIR` | Validate an output directory against the schemas |
+| `compare-reference --bounce a.wav --reference b.wav` | Reference-track delta |
+| `audit` | Source-aware auditors (live / synth / sampler / loop) |
 | `status` | Operator "control room" status surface (text) |
-| `regression [--fixtures ./fixtures] [--update-golden]` | Golden-output + doctrine regression suite |
+| `dashboard` | Local self-contained HTML control room (the §50 screen map) |
+
+**Creative & governance**
+
+| Command | Purpose |
+|---|---|
+| `creative [--mode]` | Variant branches (A/B/C/D) + scoring + governed winners |
+| `governance` | Truth lock, listener panel, stop conditions |
+| `mixer-feedback --tone` | Diagnosis as mixer-facing feedback (5 tones) |
+| `suggest-creative-variants --plan mix_plan.json` | Quick creative hypotheses |
+
+**Memory, album, orchestration, bridge**
+
+| Command | Purpose |
+|---|---|
+| `memory-record --memory-dir --name` | Record a mix pass (score deltas + ledger) |
+| `memory-show --memory-dir` | Mix-pass history, taste profile, ledger size |
+| `feedback --memory-dir --label` | Record taste feedback → taste profile |
+| `album --projects DIR` | Album-level coherence across songs |
+| `cowork --list` / `cowork --name CMD` | Claude Cowork command surface (32 commands) |
+| `export-actions --plan --format json\|applescript\|shortcuts` | Bridge export |
+| `bridge-dryrun --plan [--review-mode]` | Simulate applying actions (never executes) |
+| `regression [--fixtures] [--update-golden]` | Golden-output + doctrine regression |
 
 Common flags: `--stems`, `--manifest`, `--out`, plus optional `--bounce` and `--reference`.
 
-`status` is the CLI realisation of the section-50 "mix control room": one surface
-showing scores, the section map (with per-section forward-element crowding), the
-masking summary, and the next recommended action. The graphical dashboard is
-deferred to a later milestone (see Roadmap) — per the spec, the product is the
-decision system, not the UI.
+The `dashboard` command writes a single self-contained `dashboard.html` (inline
+CSS, no JS, no server, no network) realising the section-50 control room — open
+it with `file://`. `status` is the terminal-native equivalent.
 
 ## Inputs
 
@@ -212,18 +234,38 @@ bypass approval:
 | 4 | source-level creative change requiring explicit approval |
 | 5 | destructive / identity-changing — **never auto-applied** |
 
-## Roadmap
+## Build status (the full system)
 
-This MVP is the deterministic decision core. The staged plan (per the spec):
+Built in coherent, tested layers following the spec's build-priority rule (§53):
+decision-system depth first, then orchestration, then the execution bridge, then
+the UI. All of the following are implemented and tested:
 
-- **MVP (this)** — local analyzer + doctrine engine + Logic checklist + next-pass + regression suite.
-- **v2 — Source-aware session intelligence** — MIDI/synth/sampler auditors, render dependency graph, sample provenance, plugin scanner.
-- **v3 — Dynamic narrative + reference intelligence** — automation narrative planner, reference profile library, translation simulation, lyric/vocal/groove analysis.
-- **v4 — Memory, taste, album, Cowork ops** — mix-pass history, decision ledger, taste calibration, album coherence, approval workflow.
-- **v5 — Logic bridge + assisted execution** — AppleScript/Shortcuts/accessibility bridges, checklist executor, helper Audio Units (Mix Probe, Depth Layer Meter).
+- **Core decision system** — source material, identity, roles, felt/heard,
+  sacredness, sections + contrast, depth layers, masking-as-hierarchy, Halee/
+  Ramone doctrine scoring, Logic actions, automation, next pass.
+- **Expanded analysis (§25/29/30/31)** — translation, mono/phase, arrangement
+  density, listener experience, transition quality, groove, harmonic/key, vocal
+  performance, lyric alignment.
+- **Creative engine (§55–67)** — static baseline + static-vs-dynamic, A/B/C/D
+  variant branching with scoring, search modes, winning-variant merge.
+- **Governance / taste (§68–84)** — emotional-truth lock, taste triangle,
+  false-progress / overfit / anti-template detectors, reference sanity, listener
+  panel, stop conditions, kill-switches, review modes, mixer-communication tones.
+- **Session intelligence (§34–36)** — provenance, render dependency graph,
+  plugin scanner.
+- **Memory (§32/38/39)** — mix-pass history, decision ledger, taste calibration,
+  reference profiles (file-backed, non-destructive).
+- **Album coherence (§40)** — "one album or N productions?"
+- **Source-aware auditors (§19–21)** — live / synth-MIDI / sampler / loop.
+- **Logic bridge (§41–42)** — action export, AppleScript/Shortcuts codegen,
+  dry-run executor (**never executes** here), helper-AU spec.
+- **Cowork command surface (§43)** — 32 bounded commands.
+- **UI (§50)** — local self-contained HTML dashboard + terminal `status`.
 
-**The graphical UI screen map (spec section 50) is intentionally deferred.** The
-spec's own MVP exclusions (52.1) list a "complex visual dashboard" as out of
-scope, and the build-priority rule (53) is explicit: *don't let UI distract from
-the deeper product — the product is the decision system, not the bridge.* The
-`status` command provides the equivalent operator surface in the terminal today.
+### What remains environment-bound
+
+The Logic bridge is real code but **dry-run only** on this platform: actually
+driving Logic Pro requires macOS + the Logic AppleScript/accessibility surface,
+and the helper Audio Units (Mix Probe, Depth Layer Meter, …) must be compiled
+with the macOS Audio SDKs. Those are specified and scaffolded; they cannot run
+or be tested here. Everything else runs locally with `numpy` alone.
