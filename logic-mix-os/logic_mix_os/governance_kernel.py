@@ -13,7 +13,9 @@ Pure, deterministic, local. No DAW, no network, no execution.
 from __future__ import annotations
 
 import hashlib
-from typing import Dict, List, Optional
+from typing import Callable, Dict, List, Optional
+
+from .governance_ledger import GovernanceLedger
 
 # --- Authority ladder (music-specific) -------------------------------------
 AUTHORITY_CLASSES = {
@@ -137,11 +139,56 @@ def _rollback_for(cls: int, action: Dict):
 
 
 class GovernanceKernel:
-    """Holds the action ledger + operator review state."""
+    """Holds the action ledger + operator review state.
 
-    def __init__(self):
+    The in-memory ``_ledger`` (a list of full receipts) is the live working
+    state. The optional persisted ``GovernanceLedger`` is a separate, append-only,
+    hash-chained audit trail (``governance_ledger.jsonl``). When a ledger path is
+    given, a fresh kernel reconstructs its authority state from the persisted
+    events so gating survives a process restart.
+    """
+
+    def __init__(self, ledger_path: Optional[str] = None, actor: str = "operator",
+                 clock: Optional[Callable[[], str]] = None):
         self._ledger: List[Dict] = []
         self._counter = 0
+        self._actor = actor
+        self._events = GovernanceLedger(ledger_path, clock)
+        if len(self._events):
+            self._reconstruct_from_events()
+
+    # -- reconstruction (process-restart durability) ------------------------
+    def _reconstruct_from_events(self) -> None:
+        """Replay persisted events into minimal-but-functional receipts."""
+        for e in self._events.entries():
+            etype, action_id = e["event_type"], e.get("action_id")
+            if etype == "propose":
+                self._ledger.append({
+                    "action_id": action_id,
+                    "receipt_id": e.get("receipt_id"),
+                    "authority_class": e.get("authority_class"),
+                    "approval_required": bool(e.get("approval_required")),
+                    "decision": e.get("decision"),
+                    "status": e.get("status"),
+                    "approved": False,
+                    "approval_receipt": None,
+                    "reconstructed": True,
+                })
+                if action_id and action_id.startswith("act_"):
+                    try:
+                        self._counter = max(self._counter, int(action_id.split("_")[1]))
+                    except (ValueError, IndexError):
+                        pass
+            elif etype == "approve":
+                r = self._find(action_id)
+                if r is not None:
+                    r["approved"] = True
+                    r["approval_receipt"] = {"approver": e.get("actor"), "note": e.get("reason"),
+                                             "reconstructed": True}
+            elif etype == "applied":
+                r = self._find(action_id)
+                if r is not None:
+                    r["status"] = "applied"
 
     # -- proposal -----------------------------------------------------------
     def propose(self, action: Dict) -> Dict:
@@ -197,6 +244,11 @@ class GovernanceKernel:
             "approval_receipt": None,
         }
         self._ledger.append(receipt)
+        self._events.append(
+            "propose", action_id=action_id, receipt_id=receipt_id, authority_class=cls,
+            decision=decision, approval_required=approval_required, status=receipt["status"],
+            actor=self._actor, reason=detail["classification_reason"],
+        )
         return receipt
 
     # -- approval / apply ---------------------------------------------------
@@ -208,12 +260,15 @@ class GovernanceKernel:
         if r is None:
             return {"ok": False, "reason": f"unknown action {action_id}"}
         if r["authority_class"] == 5:
+            self._log_event("blocked_approval_attempt", r, approver,
+                            "Class 5 is forbidden and cannot be approved.")
             return {"ok": False, "reason": "Class 5 is forbidden and cannot be approved."}
         r["approved"] = True
         r["approval_receipt"] = {
             "approver": approver, "note": note,
             "approval_id": "appr_" + _h(f"{action_id}|{approver}|{note}"),
         }
+        self._log_event("approve", r, approver, note or "approved")
         return {"ok": True, "approval_receipt": r["approval_receipt"]}
 
     def mark_applied(self, action_id: str) -> Dict:
@@ -221,17 +276,42 @@ class GovernanceKernel:
         if r is None:
             return {"ok": False, "reason": f"unknown action {action_id}"}
         cls = r["authority_class"]
+        self._log_event("mark_applied_attempt", r, self._actor, "apply requested")
         if cls >= 5:
-            return {"ok": False, "reason": "Class 5 is blocked; never applied."}
+            reason = "Class 5 is blocked; never applied."
+            self._log_event("mark_applied_refused", r, self._actor, reason)
+            return {"ok": False, "reason": reason}
         if cls >= 3:
-            return {"ok": False, "reason": "Class 3+ is dry-run/spec only in this environment — not applied."}
+            reason = "Class 3+ is dry-run/spec only in this environment — not applied."
+            self._log_event("mark_applied_refused", r, self._actor, reason)
+            return {"ok": False, "reason": reason}
         if r["approval_required"] and not r["approved"]:
-            return {"ok": False, "reason": "Approval receipt required before this action can be applied."}
+            reason = "Approval receipt required before this action can be applied."
+            self._log_event("mark_applied_refused", r, self._actor, reason)
+            return {"ok": False, "reason": reason}
         r["status"] = "applied"
+        self._log_event("applied", r, self._actor, "applied")
         return {"ok": True, "status": "applied"}
+
+    # -- audit-trail helpers -----------------------------------------------
+    def _log_event(self, event_type: str, receipt: Dict, actor: str, reason: str) -> Dict:
+        return self._events.append(
+            event_type, action_id=receipt["action_id"], receipt_id=receipt.get("receipt_id"),
+            authority_class=receipt["authority_class"], decision=receipt.get("decision"),
+            approval_required=receipt.get("approval_required"), status=receipt.get("status"),
+            actor=actor, reason=reason,
+        )
 
     def ledger(self) -> List[Dict]:
         return self._ledger
+
+    def events(self) -> List[Dict]:
+        """The persisted (or in-memory) hash-chained audit events."""
+        return self._events.entries()
+
+    def verify_ledger(self) -> Dict:
+        """Verify the tamper-evidence chain of the governance event ledger."""
+        return self._events.verify()
 
 
 # --- convenience -----------------------------------------------------------
