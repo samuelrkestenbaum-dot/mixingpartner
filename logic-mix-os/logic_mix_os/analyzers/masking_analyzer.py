@@ -19,12 +19,18 @@ DOCTRINE_RULE = (
 )
 
 
-def analyze_masking(records: List[Dict], sections: List[Dict]) -> Dict:
+def analyze_masking(records: List[Dict], sections: List[Dict], section_metrics: Optional[Dict] = None) -> Dict:
     """``records`` is a list of per-track dicts assembled by the pipeline.
 
     Required keys: track_id, name, instrument_identity, identity_family,
     perceptual_role, depth_default, depth_by_section, band_energy,
     vocal_presence_energy, stereo_width.
+
+    ``section_metrics`` (optional) is the per-track, per-section metric map from
+    :func:`section_analyzer.compute_section_track_metrics`. When supplied, energy/
+    width/activity are read per section, so masking varies by section and a stem
+    that is silent in a section cannot trigger a conflict there. Without it, the
+    analyzer falls back to whole-stem values (numpy-only safe).
     """
     section_ids = [s["section_id"] for s in sections] if sections else ["full"]
     events: List[Dict] = []
@@ -34,7 +40,7 @@ def analyze_masking(records: List[Dict], sections: List[Dict]) -> Dict:
 
     for sid in section_ids:
         # --- vocal vs forward harmonic/melodic elements -------------------
-        if lead is not None and _depth(lead, sid) in FORWARD_DEPTHS:
+        if lead is not None and _depth(lead, sid) in FORWARD_DEPTHS and _active(section_metrics, lead, sid):
             for r in records:
                 if r is lead:
                     continue
@@ -43,7 +49,9 @@ def analyze_masking(records: List[Dict], sections: List[Dict]) -> Dict:
                     "electric_guitar", "synth", "backing_vocal", "strings",
                 }:
                     continue
-                ev = _vocal_conflict(lead, r, sid)
+                if not _active(section_metrics, r, sid):
+                    continue
+                ev = _vocal_conflict(lead, r, sid, section_metrics)
                 if ev:
                     events.append(ev)
                     if ev["classification"] == "bad_masking":
@@ -55,8 +63,8 @@ def analyze_masking(records: List[Dict], sections: List[Dict]) -> Dict:
             (r for r in records if r["instrument_identity"] in {"bass_guitar", "synth_bass"}),
             None,
         )
-        if kick and bass:
-            ev = _low_end_conflict(kick, bass, sid)
+        if kick and bass and _active(section_metrics, kick, sid) and _active(section_metrics, bass, sid):
+            ev = _low_end_conflict(kick, bass, sid, section_metrics)
             if ev:
                 events.append(ev)
                 risk[bass["track_id"]] = max(risk[bass["track_id"]], ev["overlap"])
@@ -65,8 +73,9 @@ def analyze_masking(records: List[Dict], sections: List[Dict]) -> Dict:
         wide = [
             r for r in records
             if _depth(r, sid) in FORWARD_DEPTHS
-            and r.get("stereo_width", 0) > 0.5
+            and (_width(section_metrics, r, sid)) > 0.5
             and r["perceptual_role"] in HEARD_ROLES
+            and _active(section_metrics, r, sid)
         ]
         if len(wide) >= 3:
             events.append(_width_crowding(wide, sid))
@@ -89,8 +98,39 @@ def _depth(record: Dict, section_id: str) -> str:
     return record.get("depth_by_section", {}).get(section_id, record.get("depth_default", "midground"))
 
 
-def _vocal_conflict(lead: Dict, other: Dict, sid: str) -> Optional[Dict]:
-    overlap = round(min(lead.get("vocal_presence_energy", 0.0), other.get("vocal_presence_energy", 0.0)), 4)
+def _sec_entry(section_metrics: Optional[Dict], record: Dict, sid: str) -> Optional[Dict]:
+    if not section_metrics:
+        return None
+    return section_metrics.get(record["track_id"], {}).get(sid)
+
+
+def _active(section_metrics: Optional[Dict], record: Dict, sid: str) -> bool:
+    entry = _sec_entry(section_metrics, record, sid)
+    return entry.get("active", True) if entry is not None else True
+
+
+def _band_low(section_metrics: Optional[Dict], record: Dict, sid: str) -> float:
+    entry = _sec_entry(section_metrics, record, sid)
+    bands = entry["band_energy"] if entry is not None else record.get("band_energy", {})
+    return bands.get("low", 0.0)
+
+
+def _vp(section_metrics: Optional[Dict], record: Dict, sid: str) -> float:
+    entry = _sec_entry(section_metrics, record, sid)
+    if entry is not None:
+        return entry.get("vocal_presence_energy", 0.0)
+    return record.get("vocal_presence_energy", 0.0)
+
+
+def _width(section_metrics: Optional[Dict], record: Dict, sid: str) -> float:
+    entry = _sec_entry(section_metrics, record, sid)
+    if entry is not None:
+        return entry.get("stereo_width", 0.0)
+    return record.get("stereo_width", 0.0)
+
+
+def _vocal_conflict(lead: Dict, other: Dict, sid: str, section_metrics: Optional[Dict] = None) -> Optional[Dict]:
+    overlap = round(min(_vp(section_metrics, lead, sid), _vp(section_metrics, other, sid)), 4)
     if overlap < 0.05:
         return None
     other_depth = _depth(other, sid)
@@ -133,8 +173,8 @@ def _vocal_conflict(lead: Dict, other: Dict, sid: str) -> Optional[Dict]:
     }
 
 
-def _low_end_conflict(kick: Dict, bass: Dict, sid: str) -> Optional[Dict]:
-    overlap = round(min(kick["band_energy"].get("low", 0.0), bass["band_energy"].get("low", 0.0)), 4)
+def _low_end_conflict(kick: Dict, bass: Dict, sid: str, section_metrics: Optional[Dict] = None) -> Optional[Dict]:
+    overlap = round(min(_band_low(section_metrics, kick, sid), _band_low(section_metrics, bass, sid)), 4)
     if overlap < 0.2:
         return None
     return {

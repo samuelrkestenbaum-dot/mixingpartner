@@ -25,7 +25,7 @@ from .analyzers.plugin_scanner import scan_plugins
 from .analyzers.provenance import analyze_provenance
 from .analyzers.reference_comparator import compare_to_reference
 from .analyzers.render_graph import build_render_graph
-from .analyzers.section_analyzer import analyze_sections
+from .analyzers.section_analyzer import analyze_sections, compute_section_track_metrics
 from .analyzers.source_auditors import audit_all
 from .analyzers.source_material_detector import detect_source_material
 from .analyzers.track_identity_detector import detect_track_identity
@@ -137,12 +137,17 @@ def analyze(
 
     # Mixdown + sections.
     mixdown = project.build_mixdown(bounce_path)
+    section_track_metrics: Dict = {}
     if mixdown is not None:
         result.mix_metrics = compute_metrics(mixdown.samples, mixdown.sample_rate)
         result.section_analysis = analyze_sections(project.sections, mixdown, lead_vocal_loaded)
+        # Per-track, per-section metrics so masking varies by section (Layer 1).
+        section_track_metrics = compute_section_track_metrics(
+            loaded_by_id, project.sections, mixdown.duration
+        )
 
-    # Masking, then fold per-track masking risk back into track_analysis.
-    result.masking_report = analyze_masking(records, result.section_analysis)
+    # Masking (section-aware), then fold per-track masking risk back into track_analysis.
+    result.masking_report = analyze_masking(records, result.section_analysis, section_track_metrics)
     risk = result.masking_report.get("per_track_masking_risk", {})
     for entry in result.track_analysis:
         entry["metrics"]["masking_risk"] = risk.get(entry["track_id"])

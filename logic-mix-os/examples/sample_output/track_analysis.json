@@ -247,7 +247,7 @@
       "harshness_indicator": 0.0,
       "sibilance_indicator": 0.0,
       "vocal_presence_energy": 0.0,
-      "masking_risk": 0.714,
+      "masking_risk": 0.713,
       "path": "fixtures/dense_chorus_with_loops/stems/Bass.wav"
     }
   },

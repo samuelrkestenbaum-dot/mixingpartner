@@ -3,27 +3,6 @@
   "events": [
     {
       "elements": [
-        "Kick",
-        "Bass"
-      ],
-      "frequency_range": "40Hz-150Hz",
-      "section": "verse_1",
-      "depth_layers": [
-        "foreground",
-        "foreground"
-      ],
-      "perceptual_roles": [
-        "structural",
-        "structural"
-      ],
-      "classification": "low_end_conflict",
-      "severity": "critical",
-      "overlap": 0.7142,
-      "reason": "Kick and bass share substantial sub energy (overlap 0.71).",
-      "recommendation": "Carve complementary space (e.g. bass dipped where kick thumps), or sidechain the bass subtly to the kick. Avoid stacking both at the same Hz."
-    },
-    {
-      "elements": [
         "Acoustic Guitar",
         "Electric Guitar 1",
         "Electric Guitar 2"
@@ -63,7 +42,7 @@
       ],
       "classification": "low_end_conflict",
       "severity": "critical",
-      "overlap": 0.7142,
+      "overlap": 0.7127,
       "reason": "Kick and bass share substantial sub energy (overlap 0.71).",
       "recommendation": "Carve complementary space (e.g. bass dipped where kick thumps), or sidechain the bass subtly to the kick. Avoid stacking both at the same Hz."
     }
@@ -75,14 +54,14 @@
     "electric_guitar_2": 0.0,
     "synth_pad": 0.0,
     "splice_texture_loop": 0.0,
-    "bass": 0.714,
+    "bass": 0.713,
     "kick": 0.0,
     "snare": 0.0
   },
   "summary": {
-    "critical_count": 2,
+    "critical_count": 1,
     "moderate_count": 1,
     "blend_count": 0,
-    "total_events": 3
+    "total_events": 2
   }
 }

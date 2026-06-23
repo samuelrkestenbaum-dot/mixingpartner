@@ -27,7 +27,7 @@
       "governance": {
         "emotional_truth_alignment": 82,
         "taste_triangle": {
-          "emotion": 83,
+          "emotion": 84,
           "craft": 85,
           "identity": 86,
           "verdict": "keep"
@@ -47,7 +47,7 @@
       "governance": {
         "emotional_truth_alignment": 82,
         "taste_triangle": {
-          "emotion": 83,
+          "emotion": 84,
           "craft": 85,
           "identity": 86,
           "verdict": "keep"
@@ -67,7 +67,7 @@
       "governance": {
         "emotional_truth_alignment": 82,
         "taste_triangle": {
-          "emotion": 83,
+          "emotion": 84,
           "craft": 85,
           "identity": 86,
           "verdict": "keep"
@@ -87,7 +87,7 @@
       "governance": {
         "emotional_truth_alignment": 82,
         "taste_triangle": {
-          "emotion": 79,
+          "emotion": 81,
           "craft": 84,
           "identity": 85,
           "verdict": "keep"
@@ -128,14 +128,13 @@
   "listener_panel": {
     "first_time_fan": "The chorus does not yet feel earned — contrast into it is weak.",
     "producer": "The Splice Texture Loop is exciting but too identifiable as a loop.",
-    "mixer": "2 critical masking conflict(s); low-mid/foreground sharing to resolve.",
+    "mixer": "1 critical masking conflict(s); low-mid/foreground sharing to resolve.",
     "artist": "Make sure the bridge/chorus still serves: 'A big chorus that must not bury the vocal.'.",
     "playlist_listener": "Hook/chorus should land within the first 30s and feel distinct from the verse."
   },
   "stop_conditions": {
     "should_stop": false,
     "reasons": [
-      "not yet: static mix stable",
       "not yet: dynamic movement working",
       "not yet: translation safe"
     ],
