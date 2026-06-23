@@ -151,6 +151,48 @@ def _run_status(args) -> int:
     return 0
 
 
+def _run_creative(args) -> int:
+    manifest = _load_manifest(args.manifest)
+    result = analyze(args.stems, manifest, bounce_path=args.bounce, creative_mode=args.mode)
+    write_artifacts(result, args.out)
+    c = result.creative
+    print(f"Creative engine (mode: {c['search_mode']})")
+    print(f"Static vs dynamic: {c['static_vs_dynamic']['recommendation']}")
+    governed = {b["problem_id"]: b for b in result.governance.get("governed_branches", [])}
+    for branch in c["branches"]:
+        win = branch.get("winning", {})
+        gov = governed.get(branch["problem_id"], {})
+        print(f"\n• {branch['problem']}")
+        for v in branch["variants"]:
+            print(f"    {v['name']:<20} overall {v['scores']['overall_score']:<5} ({v['scores']['overall_verdict']})")
+        print(f"    → top-scored: {win.get('winning_variant')}  |  governed pick: {gov.get('governed_winner')}")
+    return 0
+
+
+def _run_governance(args) -> int:
+    manifest = _load_manifest(args.manifest)
+    result = analyze(args.stems, manifest, bounce_path=args.bounce)
+    write_artifacts(result, args.out)
+    g = result.governance
+    truth = g["emotional_truth_lock"]
+    print(f"Emotional truth ({truth.get('lean')}): {truth.get('statement') or '—'}")
+    print("\nListener panel:")
+    for who, note in g["listener_panel"].items():
+        print(f"  {who}: {note}")
+    print(f"\nStop iterating: {g['stop_conditions']['should_stop']}")
+    for r in g["stop_conditions"]["reasons"]:
+        print(f"  - {r}")
+    return 0
+
+
+def _run_mixer_feedback(args) -> int:
+    manifest = _load_manifest(args.manifest)
+    result = analyze(args.stems, manifest, bounce_path=args.bounce)
+    fb = result.governance["mixer_feedback"]
+    print(fb.get(args.tone, fb["collaborative"]))
+    return 0
+
+
 def _run_regression(args) -> int:
     report = run_regression_suite(args.fixtures, update_golden=args.update_golden)
     if args.update_golden:
@@ -225,6 +267,25 @@ def build_parser() -> argparse.ArgumentParser:
     rg.add_argument("--fixtures", default="./fixtures", help="Fixtures directory")
     rg.add_argument("--update-golden", action="store_true", help="(Re)write golden snapshots instead of comparing")
     rg.set_defaults(func=_run_regression)
+
+    cv = sub.add_parser("creative", help="Creative experimentation engine (variants + governance)")
+    add_common(cv)
+    cv.add_argument("--bounce", help="Optional stereo bounce")
+    cv.add_argument("--mode", help="Search mode (conservative, halee_depth, ramone_vocal_truth, "
+                                   "dramatic_contrast, deconstructive, experimental)")
+    cv.set_defaults(func=_run_creative)
+
+    gv = sub.add_parser("governance", help="Taste protection: truth lock, listener panel, stop conditions")
+    add_common(gv)
+    gv.add_argument("--bounce", help="Optional stereo bounce")
+    gv.set_defaults(func=_run_governance)
+
+    mf = sub.add_parser("mixer-feedback", help="Render diagnosis as mixer-facing feedback in a chosen tone")
+    add_common(mf)
+    mf.add_argument("--bounce", help="Optional stereo bounce")
+    mf.add_argument("--tone", default="collaborative",
+                    choices=["collaborative", "producer", "direct", "technical", "do_not"])
+    mf.set_defaults(func=_run_mixer_feedback)
 
     return p
 

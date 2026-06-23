@@ -1,0 +1,209 @@
+{
+  "search_mode": "ramone_vocal_truth",
+  "search_mode_bias": "vocal rides, phrase emotion, clarity, restraint",
+  "static_baseline": {
+    "mix_state": "static_baseline",
+    "status": "locked",
+    "purpose": "Stable technical and musical balance before creative variants.",
+    "locked_elements": [
+      "lead vocal intelligibility",
+      "kick/bass relationship",
+      "basic tonal balance",
+      "core depth hierarchy",
+      "essential lyric audibility"
+    ]
+  },
+  "static_vs_dynamic": {
+    "static_mix_score": 80.0,
+    "dynamic_mix_score": 52.7,
+    "diagnosis": "balanced but static",
+    "recommendation": "Stop EQ-ing the static mix. Build dynamic movement: pre-chorus narrowing, chorus bloom, final-chorus width release, vocal phrase rides."
+  },
+  "adjustment_library": {
+    "space": [
+      "short chamber intimacy",
+      "plate bloom",
+      "hall tail reveal",
+      "room send lift",
+      "pre-delay expansion",
+      "dry-to-wet transition",
+      "delay throw",
+      "slapback intimacy",
+      "reverb ducking",
+      "shared-room glue"
+    ],
+    "width": [
+      "narrow verse / wide chorus",
+      "mono texture in verse / stereo in chorus",
+      "side-channel filtering",
+      "background widening",
+      "foreground narrowing",
+      "support-stack widening",
+      "stereo loop collapse",
+      "mid-side contrast"
+    ],
+    "tonal": [
+      "dark verse / bright chorus",
+      "filter opening",
+      "low-pass background textures",
+      "air lift only on emotional phrases",
+      "low-mid warmth automation",
+      "telephone bridge",
+      "thin-to-full transition"
+    ],
+    "dynamics": [
+      "vocal phrase rides",
+      "parallel compression bloom",
+      "drum room lift",
+      "bass sustain increase",
+      "chorus bus glue",
+      "bridge compression pressure",
+      "final chorus release from compression"
+    ],
+    "arrangement": [
+      "mute decorative layer",
+      "dropout before chorus",
+      "introduce texture only at transition",
+      "deconstruct full loop into gestures",
+      "remove duplicate midrange element",
+      "bring harmony forward for one line",
+      "save strongest layer for final chorus"
+    ],
+    "source_design": [
+      "shorten synth release",
+      "open synth filter by section",
+      "change oscillator brightness",
+      "reduce MIDI velocity",
+      "humanize MIDI timing",
+      "alter sampler envelope",
+      "chop Splice loop",
+      "reverse sample tail",
+      "pitch sample down an octave",
+      "formant shift vocal texture",
+      "turn full loop into one-shot accents",
+      "print alternate synth tone"
+    ]
+  },
+  "branches": [
+    {
+      "problem": "Vocal could feel more believable and present.",
+      "problem_id": "vocal_belief",
+      "variants": [
+        {
+          "variant_id": "vocal_A",
+          "problem": "vocal_belief",
+          "kind": "vocal_ride",
+          "name": "Phrase Rides",
+          "creative_hypothesis": "Ride phrase endings before any compression so the words land.",
+          "changes": [
+            "Clip gain + fader rides on phrase ends +0.5 to +1.5 dB"
+          ],
+          "tracks_affected": [
+            "Lead Vocal"
+          ],
+          "risk": "Time-consuming.",
+          "reversibility": "non_destructive_duplicate_track",
+          "validation": [
+            "every word believable"
+          ],
+          "expected_strength": "vocal belief",
+          "scores": {
+            "technical_score": 84,
+            "halee_score": 84,
+            "ramone_score": 92,
+            "section_contrast_score": 70,
+            "vocal_belief_score": 92,
+            "listener_excitement_score": 70,
+            "taste_alignment_score": 88,
+            "translation_risk": "low",
+            "mono_compatibility": "low",
+            "reversibility": "non_destructive",
+            "overall_score": 82.9,
+            "overall_verdict": "promising"
+          },
+          "governance": {
+            "emotional_truth_alignment": 88,
+            "taste_triangle": {
+              "emotion": 85,
+              "craft": 84,
+              "identity": 88,
+              "verdict": "keep"
+            },
+            "constraint_violations": [],
+            "false_progress": null,
+            "emotional_overfit": null,
+            "vetoed": false,
+            "verdict": "keep"
+          }
+        },
+        {
+          "variant_id": "vocal_B",
+          "problem": "vocal_belief",
+          "kind": "intimacy_pass",
+          "name": "Verse Intimacy",
+          "creative_hypothesis": "Pull verse reverb sends down and keep the vocal close; bloom only at the chorus.",
+          "changes": [
+            "Lower verse vocal sends",
+            "Bloom sends at chorus"
+          ],
+          "tracks_affected": [
+            "Lead Vocal"
+          ],
+          "risk": "Verses may feel dry — A/B vs baseline.",
+          "reversibility": "non_destructive_duplicate_track",
+          "validation": [
+            "verse intimacy vs chorus openness"
+          ],
+          "expected_strength": "intimacy",
+          "scores": {
+            "technical_score": 82,
+            "halee_score": 85,
+            "ramone_score": 88,
+            "section_contrast_score": 72,
+            "vocal_belief_score": 90,
+            "listener_excitement_score": 64,
+            "taste_alignment_score": 87,
+            "translation_risk": "low",
+            "mono_compatibility": "low",
+            "reversibility": "non_destructive",
+            "overall_score": 81.1,
+            "overall_verdict": "promising"
+          },
+          "governance": {
+            "emotional_truth_alignment": 90,
+            "taste_triangle": {
+              "emotion": 81,
+              "craft": 82,
+              "identity": 87,
+              "verdict": "keep"
+            },
+            "constraint_violations": [],
+            "false_progress": null,
+            "emotional_overfit": null,
+            "vetoed": false,
+            "verdict": "keep"
+          }
+        }
+      ],
+      "winning": {
+        "winning_variant": "vocal_A",
+        "keep_moves": [
+          "Clip gain + fader rides on phrase ends +0.5 to +1.5 dB"
+        ],
+        "reject_moves": [
+          "Lower verse vocal sends",
+          "Bloom sends at chorus"
+        ],
+        "reason": "'Phrase Rides' scored 82.9 (promising); strongest on its intended axis without breaking vocal belief."
+      }
+    }
+  ],
+  "guardrails": [
+    "Always preserve a static baseline.",
+    "Never destructively alter source tracks.",
+    "Never judge creative variants only by loudness.",
+    "Never let novelty override vocal belief.",
+    "Always compare creative variants to the song's emotional truth."
+  ],
+  "philosophy": "A mix is not finished when it is balanced. It is finished when the static balance supports the song and the dynamic movement makes the song feel inevitable. The best mix is the version where the song feels most inevitable, not the most processed."
+}
