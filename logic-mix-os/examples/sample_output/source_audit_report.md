@@ -4,30 +4,30 @@ _Different Logic objects afford different fixes; recommendations are source-spec
 
 ## Lead Vocal  ·  `live_track` (comped_audio_track)
 
-- Preserve the human feel; integrate with shared room/depth rather than flattening dynamics.
+- Keep the vocal as the emotional centre — phrase rides before heavier compression.
 
-_Preferred moves:_ clip gain before compression, phrase-level rides, light tuning only where distraction occurs, preserve transient character, use room/depth to integrate the performance
+_Preferred moves:_ clip gain before compression, phrase-level rides, light tuning only where it distracts, de-ess surgically, integrate with shared room/depth
 
 ## Acoustic Guitar  ·  `live_track` (live_audio_recording)
 
-- Inconsistent phrase energy: use clip gain + phrase rides before compression (do not compress harder).
-- Preserve the human feel; integrate with shared room/depth rather than flattening dynamics.
+- Cut 250-400 Hz low-mid build-up.
+- Set source tone and depth before processing; preserve pick/strum transients with light leveling, not heavy compression.
 
-_Preferred moves:_ clip gain before compression, phrase-level rides, light tuning only where distraction occurs, preserve transient character, use room/depth to integrate the performance
+_Preferred moves:_ set source tone first, control noise/handling, light leveling (not heavy compression), preserve pick/strum transients, place with depth
 
 ## Electric Guitar 1  ·  `live_track` (live_audio_recording)
 
-- Inconsistent phrase energy: use clip gain + phrase rides before compression (do not compress harder).
-- Preserve the human feel; integrate with shared room/depth rather than flattening dynamics.
+- Cut 250-400 Hz low-mid build-up.
+- Set source tone and depth before processing; preserve pick/strum transients with light leveling, not heavy compression.
 
-_Preferred moves:_ clip gain before compression, phrase-level rides, light tuning only where distraction occurs, preserve transient character, use room/depth to integrate the performance
+_Preferred moves:_ set source tone first, control noise/handling, light leveling (not heavy compression), preserve pick/strum transients, place with depth
 
 ## Electric Guitar 2  ·  `live_track` (live_audio_recording)
 
-- Inconsistent phrase energy: use clip gain + phrase rides before compression (do not compress harder).
-- Preserve the human feel; integrate with shared room/depth rather than flattening dynamics.
+- Cut 250-400 Hz low-mid build-up.
+- Set source tone and depth before processing; preserve pick/strum transients with light leveling, not heavy compression.
 
-_Preferred moves:_ clip gain before compression, phrase-level rides, light tuning only where distraction occurs, preserve transient character, use room/depth to integrate the performance
+_Preferred moves:_ set source tone first, control noise/handling, light leveling (not heavy compression), preserve pick/strum transients, place with depth
 
 ## Synth Pad  ·  `synth_patch` (synth_bounce)
 
@@ -49,20 +49,21 @@ _Preferred moves:_ narrow stereo width, filter lows or highs, chop into smaller 
 
 ## Bass  ·  `live_track` (live_audio_recording)
 
-- Preserve the human feel; integrate with shared room/depth rather than flattening dynamics.
+- Even out low-end sustain with gentle optical compression (consistency, not pumping).
+- Carve complementary low-end space against the kick rather than stacking at the same frequency.
 
-_Preferred moves:_ clip gain before compression, phrase-level rides, light tuning only where distraction occurs, preserve transient character, use room/depth to integrate the performance
+_Preferred moves:_ gentle optical leveling for consistent sustain, complementary EQ vs the kick, source-tone shaping, preserve note definition
 
 ## Kick  ·  `live_track` (live_audio_recording)
 
-- Inconsistent phrase energy: use clip gain + phrase rides before compression (do not compress harder).
-- Preserve the human feel; integrate with shared room/depth rather than flattening dynamics.
+- Define sub vs beater (~50-70 Hz vs 2-5 kHz); check kick/overhead phase; leave headroom for the bass.
+- Use bus/parallel compression for punch instead of squashing the transients.
 
-_Preferred moves:_ clip gain before compression, phrase-level rides, light tuning only where distraction occurs, preserve transient character, use room/depth to integrate the performance
+_Preferred moves:_ transient shaping, overhead/room balance, phase & bleed checks, tuning/ring control, bus/parallel compression for punch, preserve transient detail
 
 ## Snare  ·  `live_track` (live_audio_recording)
 
-- Inconsistent phrase energy: use clip gain + phrase rides before compression (do not compress harder).
-- Preserve the human feel; integrate with shared room/depth rather than flattening dynamics.
+- Control ring/tuning and balance top vs bottom; check the snare's phase in the overheads.
+- Use bus/parallel compression for punch instead of squashing the transients.
 
-_Preferred moves:_ clip gain before compression, phrase-level rides, light tuning only where distraction occurs, preserve transient character, use room/depth to integrate the performance
+_Preferred moves:_ transient shaping, overhead/room balance, phase & bleed checks, tuning/ring control, bus/parallel compression for punch, preserve transient detail

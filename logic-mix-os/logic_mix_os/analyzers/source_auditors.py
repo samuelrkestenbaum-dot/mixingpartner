@@ -17,6 +17,24 @@ from ..doctrine import load_doctrine
 LIVE_KINDS = {"live_audio_recording", "comped_audio_track", "di_audio_track", "amp_recording"}
 SYNTH_KINDS = {"software_instrument_bounce", "synth_bounce"}
 
+# Preferred moves for a live recording, by instrument family. Phrase rides /
+# clip gain belong to performance-pitched sources (vocals, and lightly to
+# guitars/keys/bass) — NOT to drums, which want transient/room/phase work.
+_LIVE_MOVES = {
+    "vocal": ["clip gain before compression", "phrase-level rides", "light tuning only where it distracts",
+              "de-ess surgically", "integrate with shared room/depth"],
+    "drums": ["transient shaping", "overhead/room balance", "phase & bleed checks", "tuning/ring control",
+              "bus/parallel compression for punch", "preserve transient detail"],
+    "percussion": ["balance level and panning", "control room/bleed", "preserve transients", "place with depth"],
+    "bass": ["gentle optical leveling for consistent sustain", "complementary EQ vs the kick",
+             "source-tone shaping", "preserve note definition"],
+    "guitars": ["set source tone first", "control noise/handling", "light leveling (not heavy compression)",
+                "preserve pick/strum transients", "place with depth"],
+    "keys": ["harmonic support", "control low-mids", "preserve performance dynamics/pedal", "place with depth"],
+    "strings": ["sustained support", "control low-mids", "shared room and depth"],
+    "default": ["set source tone", "control noise", "light leveling before compression", "place with depth"],
+}
+
 
 def audit_all(records: List[Dict]) -> Dict:
     lead_brightness = next(
@@ -49,6 +67,7 @@ def _base(record: Dict, auditor_type: str) -> Dict:
         "track_id": record["track_id"],
         "source_kind": record["source_kind"],
         "instrument_identity": record["instrument_identity"],
+        "identity_family": record.get("identity_family"),
         "auditor_type": auditor_type,
         "checks": {
             "crest_factor_db": m.get("crest_factor_db"),
@@ -65,19 +84,74 @@ def _base(record: Dict, auditor_type: str) -> Dict:
     }
 
 
+def _drum_recs(ident: str, harsh: float) -> List[str]:
+    """Drum-appropriate advice — never phrase rides / 'phrase energy'."""
+    recs: List[str] = []
+    if ident == "kick":
+        recs.append("Define sub vs beater (~50-70 Hz vs 2-5 kHz); check kick/overhead phase; leave headroom for the bass.")
+    elif ident == "snare":
+        recs.append("Control ring/tuning and balance top vs bottom; check the snare's phase in the overheads.")
+    elif ident in {"hi_hat", "cymbal"}:
+        recs.append("High-pass spill and tame harshness gently; preserve transient sheen.")
+    elif ident in {"overhead", "drum_room"}:
+        recs.append("Set the kit's depth and width here and check phase against the close mics — this is where the Halee room lives.")
+    else:
+        recs.append("Shape transients and balance room/overheads; preserve punch.")
+    if harsh > 0.45 and ident in {"hi_hat", "cymbal", "overhead", "drum_room"}:
+        recs.append("Smooth 2-4 kHz harshness rather than dulling the whole top.")
+    recs.append("Use bus/parallel compression for punch instead of squashing the transients.")
+    return recs
+
+
 def _audit_live(record: Dict) -> Dict:
+    """Live-recording audit, branched by instrument family.
+
+    A live recording is a performance, but the *right* performance fix depends on
+    what it is: vocals want phrase rides + clip gain before compression; drums
+    want transient/room/phase work (not rides); bass wants sustain consistency;
+    guitars/keys want source tone + light leveling.
+    """
     a = _base(record, "live_track")
-    a["preferred_moves"] = [
-        "clip gain before compression", "phrase-level rides", "light tuning only where distraction occurs",
-        "preserve transient character", "use room/depth to integrate the performance",
-    ]
+    fam = record.get("identity_family", "unknown")
+    ident = record["instrument_identity"]
     m = record.get("metrics", {})
-    if (m.get("crest_factor_db") or 0) > 14:
-        a["recommendations"].append("Inconsistent phrase energy: use clip gain + phrase rides before compression "
-                                    "(do not compress harder).")
-    if (m.get("sibilance_indicator") or 0) > 0.45 and record["instrument_identity"] in {"lead_vocal", "backing_vocal"}:
-        a["recommendations"].append("De-ess surgically (DeEsser 2) rather than dulling the whole top.")
-    a["recommendations"].append("Preserve the human feel; integrate with shared room/depth rather than flattening dynamics.")
+    crest = m.get("crest_factor_db") or 0.0
+    sib = m.get("sibilance_indicator") or 0.0
+    mud = m.get("mud_indicator") or 0.0
+    harsh = m.get("harshness_indicator") or 0.0
+
+    a["preferred_moves"] = _LIVE_MOVES.get(fam, _LIVE_MOVES["default"])
+    recs: List[str] = []
+
+    if fam == "vocal":
+        if crest > 14:
+            recs.append("Inconsistent phrase energy: use clip gain + phrase rides before compression "
+                        "(do not compress harder).")
+        if sib > 0.45:
+            recs.append("De-ess surgically (DeEsser 2) rather than dulling the whole top.")
+        recs.append("Keep the vocal as the emotional centre — phrase rides before heavier compression.")
+    elif fam in {"drums", "percussion"}:
+        recs += _drum_recs(ident, harsh)
+    elif fam == "bass":
+        recs.append("Even out low-end sustain with gentle optical compression (consistency, not pumping).")
+        recs.append("Carve complementary low-end space against the kick rather than stacking at the same frequency.")
+        if mud > 0.45:
+            recs.append("Trim 200-350 Hz if the low-mids are boxy.")
+    elif fam == "guitars":
+        if mud > 0.45:
+            recs.append("Cut 250-400 Hz low-mid build-up.")
+        recs.append("Set source tone and depth before processing; preserve pick/strum transients with light "
+                    "leveling, not heavy compression.")
+    elif fam == "keys":
+        if mud > 0.45:
+            recs.append("Control 250-500 Hz where it clouds the vocal.")
+        recs.append("Support harmonically; preserve performance dynamics and pedal, and place it with depth.")
+    elif fam == "strings":
+        recs.append("Sustained support: control low-mids and place it with shared room and depth.")
+    else:
+        recs.append("Set source tone, control noise, and place it with depth; light leveling before compression.")
+
+    a["recommendations"] = recs
     return a
 
 

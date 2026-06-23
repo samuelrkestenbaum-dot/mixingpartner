@@ -5,6 +5,7 @@
       "track_id": "lead_vocal",
       "source_kind": "comped_audio_track",
       "instrument_identity": "lead_vocal",
+      "identity_family": "vocal",
       "auditor_type": "live_track",
       "checks": {
         "crest_factor_db": 8.903,
@@ -16,14 +17,14 @@
         "low_energy": 0.0716
       },
       "recommendations": [
-        "Preserve the human feel; integrate with shared room/depth rather than flattening dynamics."
+        "Keep the vocal as the emotional centre — phrase rides before heavier compression."
       ],
       "preferred_moves": [
         "clip gain before compression",
         "phrase-level rides",
-        "light tuning only where distraction occurs",
-        "preserve transient character",
-        "use room/depth to integrate the performance"
+        "light tuning only where it distracts",
+        "de-ess surgically",
+        "integrate with shared room/depth"
       ],
       "red_flags": []
     },
@@ -32,6 +33,7 @@
       "track_id": "acoustic_guitar",
       "source_kind": "live_audio_recording",
       "instrument_identity": "acoustic_guitar",
+      "identity_family": "guitars",
       "auditor_type": "live_track",
       "checks": {
         "crest_factor_db": 21.844,
@@ -43,15 +45,15 @@
         "low_energy": 0.0
       },
       "recommendations": [
-        "Inconsistent phrase energy: use clip gain + phrase rides before compression (do not compress harder).",
-        "Preserve the human feel; integrate with shared room/depth rather than flattening dynamics."
+        "Cut 250-400 Hz low-mid build-up.",
+        "Set source tone and depth before processing; preserve pick/strum transients with light leveling, not heavy compression."
       ],
       "preferred_moves": [
-        "clip gain before compression",
-        "phrase-level rides",
-        "light tuning only where distraction occurs",
-        "preserve transient character",
-        "use room/depth to integrate the performance"
+        "set source tone first",
+        "control noise/handling",
+        "light leveling (not heavy compression)",
+        "preserve pick/strum transients",
+        "place with depth"
       ],
       "red_flags": []
     },
@@ -60,6 +62,7 @@
       "track_id": "electric_guitar_1",
       "source_kind": "live_audio_recording",
       "instrument_identity": "electric_guitar",
+      "identity_family": "guitars",
       "auditor_type": "live_track",
       "checks": {
         "crest_factor_db": 21.483,
@@ -71,15 +74,15 @@
         "low_energy": 0.0
       },
       "recommendations": [
-        "Inconsistent phrase energy: use clip gain + phrase rides before compression (do not compress harder).",
-        "Preserve the human feel; integrate with shared room/depth rather than flattening dynamics."
+        "Cut 250-400 Hz low-mid build-up.",
+        "Set source tone and depth before processing; preserve pick/strum transients with light leveling, not heavy compression."
       ],
       "preferred_moves": [
-        "clip gain before compression",
-        "phrase-level rides",
-        "light tuning only where distraction occurs",
-        "preserve transient character",
-        "use room/depth to integrate the performance"
+        "set source tone first",
+        "control noise/handling",
+        "light leveling (not heavy compression)",
+        "preserve pick/strum transients",
+        "place with depth"
       ],
       "red_flags": []
     },
@@ -88,6 +91,7 @@
       "track_id": "electric_guitar_2",
       "source_kind": "live_audio_recording",
       "instrument_identity": "electric_guitar",
+      "identity_family": "guitars",
       "auditor_type": "live_track",
       "checks": {
         "crest_factor_db": 21.873,
@@ -99,15 +103,15 @@
         "low_energy": 0.0
       },
       "recommendations": [
-        "Inconsistent phrase energy: use clip gain + phrase rides before compression (do not compress harder).",
-        "Preserve the human feel; integrate with shared room/depth rather than flattening dynamics."
+        "Cut 250-400 Hz low-mid build-up.",
+        "Set source tone and depth before processing; preserve pick/strum transients with light leveling, not heavy compression."
       ],
       "preferred_moves": [
-        "clip gain before compression",
-        "phrase-level rides",
-        "light tuning only where distraction occurs",
-        "preserve transient character",
-        "use room/depth to integrate the performance"
+        "set source tone first",
+        "control noise/handling",
+        "light leveling (not heavy compression)",
+        "preserve pick/strum transients",
+        "place with depth"
       ],
       "red_flags": []
     },
@@ -116,6 +120,7 @@
       "track_id": "synth_pad",
       "source_kind": "synth_bounce",
       "instrument_identity": "pad",
+      "identity_family": "synth",
       "auditor_type": "synth_patch",
       "checks": {
         "crest_factor_db": 10.803,
@@ -147,6 +152,7 @@
       "track_id": "splice_texture_loop",
       "source_kind": "splice_sample",
       "instrument_identity": "texture",
+      "identity_family": "texture",
       "auditor_type": "sample_loop",
       "checks": {
         "crest_factor_db": 7.301,
@@ -182,6 +188,7 @@
       "track_id": "bass",
       "source_kind": "live_audio_recording",
       "instrument_identity": "bass_guitar",
+      "identity_family": "bass",
       "auditor_type": "live_track",
       "checks": {
         "crest_factor_db": 8.547,
@@ -193,14 +200,14 @@
         "low_energy": 0.7142
       },
       "recommendations": [
-        "Preserve the human feel; integrate with shared room/depth rather than flattening dynamics."
+        "Even out low-end sustain with gentle optical compression (consistency, not pumping).",
+        "Carve complementary low-end space against the kick rather than stacking at the same frequency."
       ],
       "preferred_moves": [
-        "clip gain before compression",
-        "phrase-level rides",
-        "light tuning only where distraction occurs",
-        "preserve transient character",
-        "use room/depth to integrate the performance"
+        "gentle optical leveling for consistent sustain",
+        "complementary EQ vs the kick",
+        "source-tone shaping",
+        "preserve note definition"
       ],
       "red_flags": []
     },
@@ -209,6 +216,7 @@
       "track_id": "kick",
       "source_kind": "live_audio_recording",
       "instrument_identity": "kick",
+      "identity_family": "drums",
       "auditor_type": "live_track",
       "checks": {
         "crest_factor_db": 19.106,
@@ -220,15 +228,16 @@
         "low_energy": 0.8146
       },
       "recommendations": [
-        "Inconsistent phrase energy: use clip gain + phrase rides before compression (do not compress harder).",
-        "Preserve the human feel; integrate with shared room/depth rather than flattening dynamics."
+        "Define sub vs beater (~50-70 Hz vs 2-5 kHz); check kick/overhead phase; leave headroom for the bass.",
+        "Use bus/parallel compression for punch instead of squashing the transients."
       ],
       "preferred_moves": [
-        "clip gain before compression",
-        "phrase-level rides",
-        "light tuning only where distraction occurs",
-        "preserve transient character",
-        "use room/depth to integrate the performance"
+        "transient shaping",
+        "overhead/room balance",
+        "phase & bleed checks",
+        "tuning/ring control",
+        "bus/parallel compression for punch",
+        "preserve transient detail"
       ],
       "red_flags": []
     },
@@ -237,6 +246,7 @@
       "track_id": "snare",
       "source_kind": "live_audio_recording",
       "instrument_identity": "snare",
+      "identity_family": "drums",
       "auditor_type": "live_track",
       "checks": {
         "crest_factor_db": 31.899,
@@ -248,15 +258,16 @@
         "low_energy": 0.0064
       },
       "recommendations": [
-        "Inconsistent phrase energy: use clip gain + phrase rides before compression (do not compress harder).",
-        "Preserve the human feel; integrate with shared room/depth rather than flattening dynamics."
+        "Control ring/tuning and balance top vs bottom; check the snare's phase in the overheads.",
+        "Use bus/parallel compression for punch instead of squashing the transients."
       ],
       "preferred_moves": [
-        "clip gain before compression",
-        "phrase-level rides",
-        "light tuning only where distraction occurs",
-        "preserve transient character",
-        "use room/depth to integrate the performance"
+        "transient shaping",
+        "overhead/room balance",
+        "phase & bleed checks",
+        "tuning/ring control",
+        "bus/parallel compression for punch",
+        "preserve transient detail"
       ],
       "red_flags": []
     }
