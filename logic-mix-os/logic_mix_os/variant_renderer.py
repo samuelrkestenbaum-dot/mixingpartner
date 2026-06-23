@@ -266,8 +266,10 @@ def loudness_match(samples: np.ndarray, sr: int, target_lufs: float) -> np.ndarr
     match must not be undone by a clamp. This is what prevents 'louder = better'.
     """
     cur = dsp.integrated_loudness(samples, sr)
-    gain = 10.0 ** ((target_lufs - cur) / 20.0)
-    return np.asarray(samples, dtype=np.float64) * gain
+    out = np.asarray(samples, dtype=np.float64)
+    if not np.isfinite(cur) or not np.isfinite(target_lufs):
+        return out  # silence (or undefined loudness) cannot be matched
+    return out * (10.0 ** ((target_lufs - cur) / 20.0))
 
 
 def _presence_ratio(vocal: Optional[LoadedAudio], mix: LoadedAudio) -> Optional[float]:
