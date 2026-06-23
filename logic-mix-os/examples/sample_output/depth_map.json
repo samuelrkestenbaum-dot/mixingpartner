@@ -1,0 +1,101 @@
+[
+  {
+    "track_id": "lead_vocal",
+    "name": "Lead Vocal",
+    "instrument_identity": "lead_vocal",
+    "default_depth": "intimate",
+    "depth_by_section": {
+      "verse_1": "intimate",
+      "chorus_1": "foreground"
+    },
+    "reason": "Emotional centre: intimate in verses, foreground in choruses; never buried."
+  },
+  {
+    "track_id": "acoustic_guitar",
+    "name": "Acoustic Guitar",
+    "instrument_identity": "acoustic_guitar",
+    "default_depth": "foreground",
+    "depth_by_section": {
+      "verse_1": "foreground",
+      "chorus_1": "midground"
+    },
+    "reason": "Heard element supporting the emotional centre; clear but not competing with the vocal."
+  },
+  {
+    "track_id": "electric_guitar_1",
+    "name": "Electric Guitar 1",
+    "instrument_identity": "electric_guitar",
+    "default_depth": "foreground",
+    "depth_by_section": {
+      "verse_1": "foreground",
+      "chorus_1": "midground"
+    },
+    "reason": "Heard element supporting the emotional centre; clear but not competing with the vocal."
+  },
+  {
+    "track_id": "electric_guitar_2",
+    "name": "Electric Guitar 2",
+    "instrument_identity": "electric_guitar",
+    "default_depth": "foreground",
+    "depth_by_section": {
+      "verse_1": "foreground",
+      "chorus_1": "midground"
+    },
+    "reason": "Heard element supporting the emotional centre; clear but not competing with the vocal."
+  },
+  {
+    "track_id": "synth_pad",
+    "name": "Synth Pad",
+    "instrument_identity": "pad",
+    "default_depth": "background",
+    "depth_by_section": {
+      "verse_1": "background",
+      "chorus_1": "midground"
+    },
+    "reason": "Felt element: lives behind the heard elements, deeper and more filtered."
+  },
+  {
+    "track_id": "splice_texture_loop",
+    "name": "Splice Texture Loop",
+    "instrument_identity": "texture",
+    "default_depth": "background",
+    "depth_by_section": {
+      "verse_1": "background",
+      "chorus_1": "midground"
+    },
+    "reason": "Felt element: lives behind the heard elements, deeper and more filtered."
+  },
+  {
+    "track_id": "bass",
+    "name": "Bass",
+    "instrument_identity": "bass_guitar",
+    "default_depth": "foreground",
+    "depth_by_section": {
+      "verse_1": "foreground",
+      "chorus_1": "foreground"
+    },
+    "reason": "Heard element supporting the emotional centre; clear but not competing with the vocal."
+  },
+  {
+    "track_id": "kick",
+    "name": "Kick",
+    "instrument_identity": "kick",
+    "default_depth": "foreground",
+    "depth_by_section": {
+      "verse_1": "foreground",
+      "chorus_1": "foreground"
+    },
+    "reason": "Heard element supporting the emotional centre; clear but not competing with the vocal."
+  },
+  {
+    "track_id": "snare",
+    "name": "Snare",
+    "instrument_identity": "snare",
+    "default_depth": "foreground",
+    "depth_by_section": {
+      "verse_1": "foreground",
+      "chorus_1": "foreground"
+    },
+    "reason": "Heard element supporting the emotional centre; clear but not competing with the vocal."
+  }
+]

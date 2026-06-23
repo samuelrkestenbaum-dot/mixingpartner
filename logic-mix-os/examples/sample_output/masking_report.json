@@ -1,0 +1,88 @@
+{
+  "doctrine_rule": "Only flag masking as critical when competing elements occupy the same depth layer and perceptual role. Allow controlled overlap when one element is midground/background or classified as felt.",
+  "events": [
+    {
+      "elements": [
+        "Kick",
+        "Bass"
+      ],
+      "frequency_range": "40Hz-150Hz",
+      "section": "verse_1",
+      "depth_layers": [
+        "foreground",
+        "foreground"
+      ],
+      "perceptual_roles": [
+        "structural",
+        "structural"
+      ],
+      "classification": "low_end_conflict",
+      "severity": "critical",
+      "overlap": 0.7142,
+      "reason": "Kick and bass share substantial sub energy (overlap 0.71).",
+      "recommendation": "Carve complementary space (e.g. bass dipped where kick thumps), or sidechain the bass subtly to the kick. Avoid stacking both at the same Hz."
+    },
+    {
+      "elements": [
+        "Acoustic Guitar",
+        "Electric Guitar 1",
+        "Electric Guitar 2"
+      ],
+      "frequency_range": "full-band (stereo image)",
+      "section": "verse_1",
+      "depth_layers": [
+        "foreground",
+        "foreground",
+        "foreground"
+      ],
+      "perceptual_roles": [
+        "heard",
+        "heard",
+        "heard"
+      ],
+      "classification": "width_crowding",
+      "severity": "moderate",
+      "overlap": 0.798,
+      "reason": "3 wide, forward elements share the stereo image in section 'verse_1'. The mix may feel crowded even if levels balance.",
+      "recommendation": "Narrow or push some of these to the midground/background, or reserve the widest placement for the single most important element."
+    },
+    {
+      "elements": [
+        "Kick",
+        "Bass"
+      ],
+      "frequency_range": "40Hz-150Hz",
+      "section": "chorus_1",
+      "depth_layers": [
+        "foreground",
+        "foreground"
+      ],
+      "perceptual_roles": [
+        "structural",
+        "structural"
+      ],
+      "classification": "low_end_conflict",
+      "severity": "critical",
+      "overlap": 0.7142,
+      "reason": "Kick and bass share substantial sub energy (overlap 0.71).",
+      "recommendation": "Carve complementary space (e.g. bass dipped where kick thumps), or sidechain the bass subtly to the kick. Avoid stacking both at the same Hz."
+    }
+  ],
+  "per_track_masking_risk": {
+    "lead_vocal": 0.0,
+    "acoustic_guitar": 0.0,
+    "electric_guitar_1": 0.0,
+    "electric_guitar_2": 0.0,
+    "synth_pad": 0.0,
+    "splice_texture_loop": 0.0,
+    "bass": 0.714,
+    "kick": 0.0,
+    "snare": 0.0
+  },
+  "summary": {
+    "critical_count": 2,
+    "moderate_count": 1,
+    "blend_count": 0,
+    "total_events": 3
+  }
+}

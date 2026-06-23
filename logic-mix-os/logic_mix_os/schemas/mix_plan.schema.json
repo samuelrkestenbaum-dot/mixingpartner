@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Mix Plan",
+  "type": "object",
+  "required": [
+    "song_title",
+    "per_track_actions",
+    "per_section_actions",
+    "automation_plan",
+    "mute_candidates",
+    "warnings",
+    "next_pass"
+  ],
+  "properties": {
+    "song_title": { "type": "string" },
+    "singular_emotional_truth": { "type": "string" },
+    "negative_constraints": { "type": "array" },
+    "overall_diagnosis": { "type": "string" },
+    "halee_score": { "type": ["number", "null"] },
+    "ramone_score": { "type": ["number", "null"] },
+    "section_contrast_score": { "type": ["number", "null"] },
+    "depth_hierarchy_score": { "type": ["number", "null"] },
+    "vocal_centrality_score": { "type": ["number", "null"] },
+    "static_mix_score": { "type": ["number", "null"] },
+    "dynamic_mix_score": { "type": ["number", "null"] },
+    "overall_mix_readiness_score": { "type": ["number", "null"] },
+    "biggest_risks": { "type": "array" },
+    "best_opportunities": { "type": "array" },
+    "per_track_actions": { "type": "array" },
+    "per_section_actions": { "type": "array" },
+    "automation_plan": { "type": "array" },
+    "mute_candidates": { "type": "array" },
+    "reference_deltas": { "type": "object" },
+    "source_material_warnings": { "type": "array" },
+    "production_vs_mix_boundaries": { "type": "array" },
+    "warnings": { "type": "array" },
+    "next_pass": { "type": "array" }
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "tracks": [
+    {
+      "name": "Acoustic Guitar",
+      "source_kind": "live_audio_recording",
+      "instrument_identity": "acoustic_guitar",
+      "identity_family": "guitars",
+      "confidence": 0.7,
+      "perceptual_role": "heard",
+      "sacredness": "important",
+      "default_depth": "foreground"
+    },
+    {
+      "name": "Bass",
+      "source_kind": "live_audio_recording",
+      "instrument_identity": "bass_guitar",
+      "identity_family": "bass",
+      "confidence": 0.7,
+      "perceptual_role": "structural",
+      "sacredness": "important",
+      "default_depth": "foreground"
+    },
+    {
+      "name": "Electric Guitar 1",
+      "source_kind": "live_audio_recording",
+      "instrument_identity": "electric_guitar",
+      "identity_family": "guitars",
+      "confidence": 0.7,
+      "perceptual_role": "heard",
+      "sacredness": "important",
+      "default_depth": "foreground"
+    },
+    {
+      "name": "Electric Guitar 2",
+      "source_kind": "live_audio_recording",
+      "instrument_identity": "electric_guitar",
+      "identity_family": "guitars",
+      "confidence": 0.7,
+      "perceptual_role": "heard",
+      "sacredness": "important",
+      "default_depth": "foreground"
+    },
+    {
+      "name": "Kick",
+      "source_kind": "live_audio_recording",
+      "instrument_identity": "kick",
+      "identity_family": "drums",
+      "confidence": 0.7,
+      "perceptual_role": "structural",
+      "sacredness": "important",
+      "default_depth": "foreground"
+    },
+    {
+      "name": "Lead Vocal",
+      "source_kind": "comped_audio_track",
+      "instrument_identity": "lead_vocal",
+      "identity_family": "vocal",
+      "confidence": 0.7,
+      "perceptual_role": "heard",
+      "sacredness": "sacred",
+      "default_depth": "intimate"
+    },
+    {
+      "name": "Snare",
+      "source_kind": "live_audio_recording",
+      "instrument_identity": "snare",
+      "identity_family": "drums",
+      "confidence": 0.7,
+      "perceptual_role": "structural",
+      "sacredness": "important",
+      "default_depth": "foreground"
+    },
+    {
+      "name": "Splice Texture Loop",
+      "source_kind": "splice_sample",
+      "instrument_identity": "texture",
+      "identity_family": "texture",
+      "confidence": 0.7,
+      "perceptual_role": "felt",
+      "sacredness": "decorative",
+      "default_depth": "background"
+    },
+    {
+      "name": "Synth Pad",
+      "source_kind": "synth_bounce",
+      "instrument_identity": "pad",
+      "identity_family": "synth",
+      "confidence": 0.7,
+      "perceptual_role": "felt",
+      "sacredness": "decorative",
+      "default_depth": "background"
+    }
+  ],
+  "masking_classifications": {
+    "low_end_conflict": 2,
+    "width_crowding": 1
+  },
+  "sections": [
+    {
+      "section_id": "verse_1",
+      "lift_warning": false
+    },
+    {
+      "section_id": "chorus_1",
+      "lift_warning": true
+    }
+  ],
+  "scores": {
+    "halee_score": 67.6,
+    "ramone_score": 86.0,
+    "vocal_centrality_score": 90.0,
+    "depth_hierarchy_score": 65.3,
+    "section_contrast_score": 82,
+    "static_mix_score": 64.0,
+    "dynamic_mix_score": 23.4,
+    "overall_mix_readiness_score": 70.7
+  },
+  "next_pass_titles": [
+    "Vocal belief",
+    "Section contrast",
+    "Stereo loop / width control",
+    "Depth cleanup",
+    "Low-end definition"
+  ]
+}

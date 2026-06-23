@@ -1,0 +1,245 @@
+{
+  "nodes": [
+    {
+      "id": "source:lead_vocal",
+      "type": "source",
+      "name": "Lead Vocal"
+    },
+    {
+      "id": "stem:lead_vocal",
+      "type": "stem",
+      "name": "Lead Vocal"
+    },
+    {
+      "id": "source:acoustic_guitar",
+      "type": "source",
+      "name": "Acoustic Guitar"
+    },
+    {
+      "id": "stem:acoustic_guitar",
+      "type": "stem",
+      "name": "Acoustic Guitar"
+    },
+    {
+      "id": "source:electric_guitar_1",
+      "type": "source",
+      "name": "Electric Guitar 1"
+    },
+    {
+      "id": "stem:electric_guitar_1",
+      "type": "stem",
+      "name": "Electric Guitar 1"
+    },
+    {
+      "id": "source:electric_guitar_2",
+      "type": "source",
+      "name": "Electric Guitar 2"
+    },
+    {
+      "id": "stem:electric_guitar_2",
+      "type": "stem",
+      "name": "Electric Guitar 2"
+    },
+    {
+      "id": "source:synth_pad",
+      "type": "source",
+      "name": "Synth Pad"
+    },
+    {
+      "id": "stem:synth_pad",
+      "type": "stem",
+      "name": "Synth Pad"
+    },
+    {
+      "id": "source:splice_texture_loop",
+      "type": "source",
+      "name": "Splice Texture Loop"
+    },
+    {
+      "id": "stem:splice_texture_loop",
+      "type": "stem",
+      "name": "Splice Texture Loop"
+    },
+    {
+      "id": "source:bass",
+      "type": "source",
+      "name": "Bass"
+    },
+    {
+      "id": "stem:bass",
+      "type": "stem",
+      "name": "Bass"
+    },
+    {
+      "id": "source:kick",
+      "type": "source",
+      "name": "Kick"
+    },
+    {
+      "id": "stem:kick",
+      "type": "stem",
+      "name": "Kick"
+    },
+    {
+      "id": "source:snare",
+      "type": "source",
+      "name": "Snare"
+    },
+    {
+      "id": "stem:snare",
+      "type": "stem",
+      "name": "Snare"
+    },
+    {
+      "id": "bounce:mixdown",
+      "type": "bounce",
+      "name": "Full Mix Bounce"
+    },
+    {
+      "id": "report:track_analysis",
+      "type": "report",
+      "name": "track_analysis"
+    },
+    {
+      "id": "report:section_analysis",
+      "type": "report",
+      "name": "section_analysis"
+    },
+    {
+      "id": "report:masking_report",
+      "type": "report",
+      "name": "masking_report"
+    },
+    {
+      "id": "report:depth_map",
+      "type": "report",
+      "name": "depth_map"
+    },
+    {
+      "id": "report:doctrine_score",
+      "type": "report",
+      "name": "doctrine_score"
+    },
+    {
+      "id": "report:mix_plan",
+      "type": "report",
+      "name": "mix_plan"
+    },
+    {
+      "id": "report:reference_delta",
+      "type": "report",
+      "name": "reference_delta"
+    },
+    {
+      "id": "report:expanded_analysis",
+      "type": "report",
+      "name": "expanded_analysis"
+    }
+  ],
+  "edges": [
+    {
+      "from": "source:lead_vocal",
+      "to": "stem:lead_vocal"
+    },
+    {
+      "from": "stem:lead_vocal",
+      "to": "bounce:mixdown"
+    },
+    {
+      "from": "source:acoustic_guitar",
+      "to": "stem:acoustic_guitar"
+    },
+    {
+      "from": "stem:acoustic_guitar",
+      "to": "bounce:mixdown"
+    },
+    {
+      "from": "source:electric_guitar_1",
+      "to": "stem:electric_guitar_1"
+    },
+    {
+      "from": "stem:electric_guitar_1",
+      "to": "bounce:mixdown"
+    },
+    {
+      "from": "source:electric_guitar_2",
+      "to": "stem:electric_guitar_2"
+    },
+    {
+      "from": "stem:electric_guitar_2",
+      "to": "bounce:mixdown"
+    },
+    {
+      "from": "source:synth_pad",
+      "to": "stem:synth_pad"
+    },
+    {
+      "from": "stem:synth_pad",
+      "to": "bounce:mixdown"
+    },
+    {
+      "from": "source:splice_texture_loop",
+      "to": "stem:splice_texture_loop"
+    },
+    {
+      "from": "stem:splice_texture_loop",
+      "to": "bounce:mixdown"
+    },
+    {
+      "from": "source:bass",
+      "to": "stem:bass"
+    },
+    {
+      "from": "stem:bass",
+      "to": "bounce:mixdown"
+    },
+    {
+      "from": "source:kick",
+      "to": "stem:kick"
+    },
+    {
+      "from": "stem:kick",
+      "to": "bounce:mixdown"
+    },
+    {
+      "from": "source:snare",
+      "to": "stem:snare"
+    },
+    {
+      "from": "stem:snare",
+      "to": "bounce:mixdown"
+    },
+    {
+      "from": "bounce:mixdown",
+      "to": "report:track_analysis"
+    },
+    {
+      "from": "bounce:mixdown",
+      "to": "report:section_analysis"
+    },
+    {
+      "from": "bounce:mixdown",
+      "to": "report:masking_report"
+    },
+    {
+      "from": "bounce:mixdown",
+      "to": "report:depth_map"
+    },
+    {
+      "from": "bounce:mixdown",
+      "to": "report:doctrine_score"
+    },
+    {
+      "from": "bounce:mixdown",
+      "to": "report:mix_plan"
+    },
+    {
+      "from": "bounce:mixdown",
+      "to": "report:reference_delta"
+    },
+    {
+      "from": "bounce:mixdown",
+      "to": "report:expanded_analysis"
+    }
+  ]
+}

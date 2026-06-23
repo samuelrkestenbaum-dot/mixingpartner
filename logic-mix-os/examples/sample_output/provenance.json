@@ -1,0 +1,24 @@
+{
+  "items": [
+    {
+      "track": "Splice Texture Loop",
+      "track_id": "splice_texture_loop",
+      "sample_origin": "Splice",
+      "filename": "Splice Texture Loop.wav",
+      "license_status": "unknown",
+      "bpm": null,
+      "key": null,
+      "altered": false,
+      "recognizable": true,
+      "foregrounded": false,
+      "risk": "medium",
+      "reason": "Recognizable loop; re-contextualise so it reads as the song, not the loop.",
+      "recommendation": "Chop, filter, reverse, re-pitch, or move to background."
+    }
+  ],
+  "summary": {
+    "loops_tracked": 1,
+    "high_risk": 0,
+    "unknown_license": 1
+  }
+}

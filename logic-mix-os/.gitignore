@@ -1,0 +1,21 @@
+# Generated fixture audio (regenerated deterministically by conftest / the
+# generator script — see fixtures/generate_fixtures.py). Manifests are kept.
+fixtures/*/stems/
+
+# Runtime output directories
+/output/
+/reports/
+*/output/
+out_*/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/

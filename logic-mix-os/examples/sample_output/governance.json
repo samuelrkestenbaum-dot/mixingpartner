@@ -1,0 +1,171 @@
+{
+  "emotional_truth_lock": {
+    "statement": "A big chorus that must not bury the vocal.",
+    "lean": "neutral",
+    "locked": true,
+    "implications": []
+  },
+  "reference_sanity": {
+    "available": false,
+    "note": "No reference supplied."
+  },
+  "negative_constraints": [
+    {
+      "constraint": "Do not let the chorus become a wall of sound.",
+      "severity": "medium"
+    },
+    {
+      "constraint": "Do not let stock loops dominate the song identity.",
+      "severity": "high"
+    }
+  ],
+  "governed_branches": [
+    {
+      "problem_id": "chorus_lift",
+      "problem": "Chorus does not lift enough emotionally.",
+      "governed_winner": "chorus_lift_B",
+      "governance": {
+        "emotional_truth_alignment": 82,
+        "taste_triangle": {
+          "emotion": 83,
+          "craft": 85,
+          "identity": 86,
+          "verdict": "keep"
+        },
+        "constraint_violations": [],
+        "false_progress": null,
+        "emotional_overfit": null,
+        "vetoed": false,
+        "verdict": "keep"
+      },
+      "reason": "'Subtractive Drop' survives governance (truth alignment 82, taste keep)."
+    },
+    {
+      "problem_id": "density",
+      "problem": "Arrangement is crowded; hierarchy is unclear.",
+      "governed_winner": "density_B",
+      "governance": {
+        "emotional_truth_alignment": 82,
+        "taste_triangle": {
+          "emotion": 83,
+          "craft": 85,
+          "identity": 86,
+          "verdict": "keep"
+        },
+        "constraint_violations": [],
+        "false_progress": null,
+        "emotional_overfit": null,
+        "vetoed": false,
+        "verdict": "keep"
+      },
+      "reason": "'Subtractive Simplify' survives governance (truth alignment 82, taste keep)."
+    },
+    {
+      "problem_id": "loop",
+      "problem": "An imported loop behaves like a finished record inside the record.",
+      "governed_winner": "loop_B",
+      "governance": {
+        "emotional_truth_alignment": 82,
+        "taste_triangle": {
+          "emotion": 83,
+          "craft": 85,
+          "identity": 86,
+          "verdict": "keep"
+        },
+        "constraint_violations": [],
+        "false_progress": null,
+        "emotional_overfit": null,
+        "vetoed": false,
+        "verdict": "keep"
+      },
+      "reason": "'Loop as Accent' survives governance (truth alignment 82, taste keep)."
+    },
+    {
+      "problem_id": "depth",
+      "problem": "Too many elements occupy the foreground.",
+      "governed_winner": "depth_A",
+      "governance": {
+        "emotional_truth_alignment": 82,
+        "taste_triangle": {
+          "emotion": 79,
+          "craft": 84,
+          "identity": 85,
+          "verdict": "keep"
+        },
+        "constraint_violations": [],
+        "false_progress": null,
+        "emotional_overfit": null,
+        "vetoed": false,
+        "verdict": "keep"
+      },
+      "reason": "'Depth Cleanup' survives governance (truth alignment 82, taste keep)."
+    },
+    {
+      "problem_id": "vocal_belief",
+      "problem": "Vocal could feel more believable and present.",
+      "governed_winner": "vocal_A",
+      "governance": {
+        "emotional_truth_alignment": 84,
+        "taste_triangle": {
+          "emotion": 85,
+          "craft": 84,
+          "identity": 88,
+          "verdict": "keep"
+        },
+        "constraint_violations": [],
+        "false_progress": null,
+        "emotional_overfit": null,
+        "vetoed": false,
+        "verdict": "keep"
+      },
+      "reason": "'Phrase Rides' survives governance (truth alignment 84, taste keep)."
+    }
+  ],
+  "anti_template": {
+    "pattern": "same move kind (subtractive_drop) winning across problems",
+    "risk": "The mix may start to feel formulaic. Repeat doctrine, not presets — vary the move per problem."
+  },
+  "listener_panel": {
+    "first_time_fan": "The chorus does not yet feel earned — contrast into it is weak.",
+    "producer": "The Splice Texture Loop is exciting but too identifiable as a loop.",
+    "mixer": "2 critical masking conflict(s); low-mid/foreground sharing to resolve.",
+    "artist": "Make sure the bridge/chorus still serves: 'A big chorus that must not bury the vocal.'.",
+    "playlist_listener": "Hook/chorus should land within the first 30s and feel distinct from the verse."
+  },
+  "stop_conditions": {
+    "should_stop": false,
+    "reasons": [
+      "not yet: static mix stable",
+      "not yet: dynamic movement working",
+      "not yet: translation safe"
+    ],
+    "warning": null
+  },
+  "kill_switches": [
+    "Never overwrite original audio.",
+    "Never destructively tune or time-stretch source recordings.",
+    "Never delete tracks without backup.",
+    "Never flatten comped vocals without a duplicate.",
+    "Never apply creative source edits without a versioned duplicate.",
+    "Never chase reference loudness at the mix stage.",
+    "Never widen the full mix to solve chorus lift.",
+    "Never make the lead vocal less intelligible unless explicitly approved.",
+    "Never allow a stock loop to dominate the song identity by accident."
+  ],
+  "review_modes": [
+    "observe_only",
+    "recommend_only",
+    "checklist_only",
+    "approve_before_apply",
+    "safe_auto_apply",
+    "manual_only"
+  ],
+  "default_review_mode": "approve_before_apply",
+  "mixer_feedback": {
+    "collaborative": "I think we're getting close. The one thing I'd love to chase next is: ride the lead vocal phrase-by-phrase before adding compression.",
+    "producer": "Balance is close. The main thing I'm still missing is the chorus opening up emotionally vs the verse — maybe a little more bloom around the supporting elements without washing the vocal?",
+    "direct": "The chorus needs more section lift — it gets denser, not more open. Try widening the supporting elements and BGVs slightly while keeping the lead centered.",
+    "technical": "Verse-to-chorus RMS delta is only 0.28 dB and width barely changes. Target +3 to +5 dB perceived lift via support-stack automation, not master level.",
+    "do_not": "Please don't fix this with master level or by widening the lead vocal — use supporting-element automation and depth."
+  }
+}

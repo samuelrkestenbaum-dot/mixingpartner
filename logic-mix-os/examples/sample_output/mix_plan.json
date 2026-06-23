@@ -1,0 +1,413 @@
+{
+  "song_title": "Dense Chorus With Loops",
+  "singular_emotional_truth": "A big chorus that must not bury the vocal.",
+  "negative_constraints": [
+    "Do not let the chorus become a wall of sound.",
+    "Do not let stock loops dominate the song identity."
+  ],
+  "overall_diagnosis": "Overall mix readiness 70.7/100. Static balance 64.0/100; dynamic movement 23.4/100. The mix is more balanced than it is alive — invest in section contrast and rides, not more EQ. 1 mute/chop candidate(s) flagged; subtraction may help more than addition.",
+  "halee_score": 67.6,
+  "ramone_score": 86.0,
+  "section_contrast_score": 82,
+  "depth_hierarchy_score": 65.3,
+  "vocal_centrality_score": 90.0,
+  "static_mix_score": 64.0,
+  "dynamic_mix_score": 23.4,
+  "overall_mix_readiness_score": 70.7,
+  "biggest_risks": [
+    "Chorus 1 may not lift enough relative to the previous section (only +0.3 dB and -0.02 width). Target roughly +3 to +5 dB and +0.05 to +0.10 width via supporting elements and automation, not master level.",
+    "Dynamic movement is weak (23.4/100)."
+  ],
+  "best_opportunities": [
+    "Resolve 2 critical masking conflict(s) by depth placement and subtraction.",
+    "Create real section contrast with automation (bloom/intimacy) instead of master level."
+  ],
+  "per_track_actions": [
+    {
+      "track": "Lead Vocal",
+      "track_id": "lead_vocal",
+      "instrument_identity": "lead_vocal",
+      "perceptual_role": "heard",
+      "depth_layer": "intimate",
+      "diagnosis": "heard element in the intimate layer. Low-mid mud is elevated.",
+      "actions": [
+        {
+          "plugin": "Channel EQ",
+          "setting": "High-pass ~80 Hz. Cut ~250 Hz by 1-2 dB (mud). Avoid large 12 kHz+ air boosts (keeps the vocal human, not glossy).",
+          "reason": "Clean low-end build-up and keep believable presence without hype.",
+          "risk_class": 2
+        },
+        {
+          "plugin": "Compressor",
+          "setting": "Vintage Opto, target 2-3 dB gain reduction, slow-ish attack.",
+          "reason": "Stabilise the vocal while preserving the performance (invisible compression).",
+          "risk_class": 2
+        }
+      ],
+      "automation": [
+        {
+          "parameter": "gain (clip gain + fader)",
+          "move": "Ride phrase endings +0.5 to +1 dB where the lyric drops, before adding compression.",
+          "reason": "Ramone-style vocal belief: performance rides before brute-force compression.",
+          "risk_class": 2
+        }
+      ],
+      "send_reverb": "Short room or slapback only, very low send (~-24 dB). Keep it close.",
+      "pan_depth": "intimate layer — heard",
+      "risk_class": 2,
+      "warnings": []
+    },
+    {
+      "track": "Acoustic Guitar",
+      "track_id": "acoustic_guitar",
+      "instrument_identity": "acoustic_guitar",
+      "perceptual_role": "heard",
+      "depth_layer": "foreground",
+      "diagnosis": "heard element in the foreground layer. Low-mid mud is elevated.",
+      "actions": [
+        {
+          "plugin": "Channel EQ",
+          "setting": "Cut 250-400 Hz by 1-2 dB.",
+          "reason": "Reduce low-mid mud build-up.",
+          "risk_class": 2
+        }
+      ],
+      "automation": [],
+      "send_reverb": "Short chamber, low send (~-18 dB).",
+      "pan_depth": "foreground layer — heard",
+      "risk_class": 2,
+      "warnings": []
+    },
+    {
+      "track": "Electric Guitar 1",
+      "track_id": "electric_guitar_1",
+      "instrument_identity": "electric_guitar",
+      "perceptual_role": "heard",
+      "depth_layer": "foreground",
+      "diagnosis": "heard element in the foreground layer. Low-mid mud is elevated.",
+      "actions": [
+        {
+          "plugin": "Channel EQ",
+          "setting": "Cut 250-400 Hz by 1-2 dB.",
+          "reason": "Reduce low-mid mud build-up.",
+          "risk_class": 2
+        }
+      ],
+      "automation": [],
+      "send_reverb": "Short chamber, low send (~-18 dB).",
+      "pan_depth": "foreground layer — heard",
+      "risk_class": 2,
+      "warnings": []
+    },
+    {
+      "track": "Electric Guitar 2",
+      "track_id": "electric_guitar_2",
+      "instrument_identity": "electric_guitar",
+      "perceptual_role": "heard",
+      "depth_layer": "foreground",
+      "diagnosis": "heard element in the foreground layer. Low-mid mud is elevated.",
+      "actions": [
+        {
+          "plugin": "Channel EQ",
+          "setting": "Cut 250-400 Hz by 1-2 dB.",
+          "reason": "Reduce low-mid mud build-up.",
+          "risk_class": 2
+        }
+      ],
+      "automation": [],
+      "send_reverb": "Short chamber, low send (~-18 dB).",
+      "pan_depth": "foreground layer — heard",
+      "risk_class": 2,
+      "warnings": []
+    },
+    {
+      "track": "Synth Pad",
+      "track_id": "synth_pad",
+      "instrument_identity": "pad",
+      "perceptual_role": "felt",
+      "depth_layer": "background",
+      "diagnosis": "felt element in the background layer. Low-mid mud is elevated.",
+      "actions": [
+        {
+          "plugin": "Channel EQ",
+          "setting": "High-pass ~250 Hz; low-pass the top if it is purely atmospheric.",
+          "reason": "Filter felt elements so they support without crowding.",
+          "risk_class": 2
+        }
+      ],
+      "automation": [
+        {
+          "parameter": "filter cutoff / send",
+          "move": "Open the filter and lift the reverb send only in chorus sections; pull back in verses.",
+          "reason": "Use the element as movement (felt), not a constant heard layer.",
+          "risk_class": 2
+        }
+      ],
+      "send_reverb": "Hall or long plate, higher send (~-10 dB), filtered and diffuse.",
+      "pan_depth": "background layer — felt",
+      "risk_class": 2,
+      "warnings": []
+    },
+    {
+      "track": "Splice Texture Loop",
+      "track_id": "splice_texture_loop",
+      "instrument_identity": "texture",
+      "perceptual_role": "felt",
+      "depth_layer": "background",
+      "diagnosis": "felt element in the background layer. Wider than a felt element should be.",
+      "actions": [
+        {
+          "plugin": "Direction Mixer",
+          "setting": "Narrow stereo width to ~35-50%.",
+          "reason": "Felt/atmospheric element should not occupy the same width as heard elements.",
+          "risk_class": 3
+        },
+        {
+          "plugin": "Channel EQ",
+          "setting": "High-pass ~250 Hz; low-pass the top if it is purely atmospheric.",
+          "reason": "Filter felt elements so they support without crowding.",
+          "risk_class": 2
+        },
+        {
+          "plugin": "(arrangement)",
+          "setting": "Consider chopping into transition gestures and muting the continuous bed; reserve for pre-chorus/bridge.",
+          "reason": "Re-contextualise the imported loop instead of running it as a finished record inside the record.",
+          "risk_class": 4
+        }
+      ],
+      "automation": [
+        {
+          "parameter": "filter cutoff / send",
+          "move": "Open the filter and lift the reverb send only in chorus sections; pull back in verses.",
+          "reason": "Use the element as movement (felt), not a constant heard layer.",
+          "risk_class": 2
+        }
+      ],
+      "send_reverb": "Hall or long plate, higher send (~-10 dB), filtered and diffuse.",
+      "pan_depth": "background layer — felt",
+      "risk_class": 4,
+      "warnings": [
+        "Imported loop: do not let it dominate the song identity. Non-destructive duplicate before chopping."
+      ]
+    },
+    {
+      "track": "Bass",
+      "track_id": "bass",
+      "instrument_identity": "bass_guitar",
+      "perceptual_role": "structural",
+      "depth_layer": "foreground",
+      "diagnosis": "structural element in the foreground layer.",
+      "actions": [
+        {
+          "plugin": "Channel EQ",
+          "setting": "High-pass ~30 Hz; control 200-350 Hz if boxy.",
+          "reason": "Tighten the low end without thinning the body.",
+          "risk_class": 2
+        },
+        {
+          "plugin": "Compressor",
+          "setting": "Vintage Opto, gentle 2-4 dB GR for consistent sustain.",
+          "reason": "Even out the low-end foundation.",
+          "risk_class": 2
+        },
+        {
+          "plugin": "Channel EQ",
+          "setting": "Carve a small dip where the kick thumps (complementary to kick).",
+          "reason": "Resolve kick/bass low-end conflict by carving, not stacking.",
+          "risk_class": 2
+        }
+      ],
+      "automation": [],
+      "send_reverb": "Short chamber, low send (~-18 dB).",
+      "pan_depth": "foreground layer — structural",
+      "risk_class": 2,
+      "warnings": []
+    },
+    {
+      "track": "Kick",
+      "track_id": "kick",
+      "instrument_identity": "kick",
+      "perceptual_role": "structural",
+      "depth_layer": "foreground",
+      "diagnosis": "structural element in the foreground layer.",
+      "actions": [
+        {
+          "plugin": "Channel EQ",
+          "setting": "Shape sub (~50-70 Hz) vs beater (~3-5 kHz); leave room for bass.",
+          "reason": "Define the kick without masking the bass.",
+          "risk_class": 2
+        }
+      ],
+      "automation": [],
+      "send_reverb": "Short chamber, low send (~-18 dB).",
+      "pan_depth": "foreground layer — structural",
+      "risk_class": 2,
+      "warnings": []
+    },
+    {
+      "track": "Snare",
+      "track_id": "snare",
+      "instrument_identity": "snare",
+      "perceptual_role": "structural",
+      "depth_layer": "foreground",
+      "diagnosis": "structural element in the foreground layer.",
+      "actions": [
+        {
+          "plugin": "Channel EQ",
+          "setting": "Light tonal shaping only; preserve transient detail and room realism.",
+          "reason": "Halee naturalism: keep the kit believable.",
+          "risk_class": 2
+        }
+      ],
+      "automation": [],
+      "send_reverb": "Short chamber, low send (~-18 dB).",
+      "pan_depth": "foreground layer — structural",
+      "risk_class": 2,
+      "warnings": []
+    }
+  ],
+  "per_section_actions": [
+    {
+      "section": "verse_1",
+      "name": "Verse 1",
+      "emotional_goal": "intimacy",
+      "rms_dbfs": -16.24,
+      "width": 0.4671,
+      "contrast_warning": null
+    },
+    {
+      "section": "chorus_1",
+      "name": "Chorus 1",
+      "emotional_goal": "release",
+      "rms_dbfs": -15.96,
+      "width": 0.452,
+      "contrast_warning": "Chorus 1 may not lift enough relative to the previous section (only +0.3 dB and -0.02 width). Target roughly +3 to +5 dB and +0.05 to +0.10 width via supporting elements and automation, not master level."
+    }
+  ],
+  "automation_plan": [
+    {
+      "section": "verse_1",
+      "name": "Verse 1",
+      "emotional_goal": "intimacy",
+      "gesture": "verse_intimacy",
+      "moves": [
+        "Pull reverb sends down",
+        "Narrow stereo image",
+        "Ride vocal +0.5 to +1.5 dB",
+        "Reduce background texture level",
+        "Keep the emotional centre close"
+      ]
+    },
+    {
+      "section": "chorus_1",
+      "name": "Chorus 1",
+      "emotional_goal": "release",
+      "gesture": "final_chorus_release",
+      "moves": [
+        "Widest point of the song",
+        "Most open depth field",
+        "Longest emotional reverb tails",
+        "Largest vocal support stack",
+        "Avoid over-limiting the release"
+      ],
+      "contrast_warning": "Chorus 1 may not lift enough relative to the previous section (only +0.3 dB and -0.02 width). Target roughly +3 to +5 dB and +0.05 to +0.10 width via supporting elements and automation, not master level."
+    },
+    {
+      "section": "*",
+      "name": "Per-track rides",
+      "gesture": "track_rides",
+      "moves": [
+        {
+          "track": "Lead Vocal",
+          "parameter": "gain",
+          "move": "Phrase-level rides +0.5 to +1.5 dB before compression."
+        },
+        {
+          "track": "Synth Pad",
+          "parameter": "filter cutoff / reverb send",
+          "move": "Open and lift only in choruses; pull back in verses."
+        },
+        {
+          "track": "Splice Texture Loop",
+          "parameter": "filter cutoff / reverb send",
+          "move": "Open and lift only in choruses; pull back in verses."
+        }
+      ]
+    }
+  ],
+  "mute_candidates": [
+    {
+      "element": "Electric Guitar 2",
+      "section": "verse_1",
+      "reason": "Width crowding in 'verse_1': reserve the widest placement for one element; push or mute the rest.",
+      "risk_class": 3
+    }
+  ],
+  "reference_deltas": {},
+  "source_material_warnings": [
+    {
+      "track": "Synth Pad",
+      "warning": "Printed instrument bounce: note/patch/envelope changes require re-rendering from the original MIDI, not audio editing."
+    },
+    {
+      "track": "Splice Texture Loop",
+      "warning": "Imported loop/sample: verify it is not accepted at full width in the foreground by default. Re-contextualise into the song's depth and tone."
+    },
+    {
+      "track": "Splice Texture Loop",
+      "warning": "Stereo image is wide; consider narrowing and placing it in the midground/background rather than full-width foreground."
+    },
+    {
+      "track": "Splice Texture Loop",
+      "warning": "Low crest factor suggests the loop is pre-compressed/mastered; it may make live tracks feel small next to it."
+    }
+  ],
+  "production_vs_mix_boundaries": [
+    {
+      "issue": "'verse_1' feels crowded",
+      "boundary_classification": "arrangement_problem",
+      "reason": "3 wide, forward elements share the stereo image in section 'verse_1'. The mix may feel crowded even if levels balance.",
+      "mix_fix_possible": true,
+      "best_fix": "Mute or push decorative/wide elements to the background rather than EQ-ing all of them."
+    },
+    {
+      "issue": "Chorus 1 does not lift but is already dense",
+      "boundary_classification": "arrangement_problem",
+      "reason": "Density increases without an increase in space/width; adding more will not create lift.",
+      "mix_fix_possible": true,
+      "best_fix": "Create contrast by subtraction before the section, then bloom space at entry."
+    }
+  ],
+  "warnings": [
+    "Chorus 1 may not lift enough relative to the previous section (only +0.3 dB and -0.02 width). Target roughly +3 to +5 dB and +0.05 to +0.10 width via supporting elements and automation, not master level."
+  ],
+  "next_pass": [
+    {
+      "priority": 1,
+      "title": "Vocal belief",
+      "detail": "Ride the lead vocal phrase-by-phrase before adding compression."
+    },
+    {
+      "priority": 2,
+      "title": "Section contrast",
+      "detail": "Chorus 1 do not lift enough. Create lift through supporting elements and automation (bloom on entry, intimacy in verses), not master level."
+    },
+    {
+      "priority": 3,
+      "title": "Stereo loop / width control",
+      "detail": "Splice Texture Loop appear full-width/foregrounded. Narrow to ~35-50%, filter, or push to the background so they are felt, not heard."
+    },
+    {
+      "priority": 4,
+      "title": "Depth cleanup",
+      "detail": "Too many elements occupy the foreground. Move supporting guitars/keys/pads to the midground instead of EQ-ing everything."
+    },
+    {
+      "priority": 5,
+      "title": "Low-end definition",
+      "detail": "Kick and bass share sub energy. Carve complementary space or sidechain the bass subtly to the kick."
+    }
+  ],
+  "translation_score": 61.0,
+  "mono_compatibility_score": 84.0
+}

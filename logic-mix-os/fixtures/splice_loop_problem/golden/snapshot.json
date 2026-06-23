@@ -1,0 +1,61 @@
+{
+  "tracks": [
+    {
+      "name": "Acoustic Guitar",
+      "source_kind": "live_audio_recording",
+      "instrument_identity": "acoustic_guitar",
+      "identity_family": "guitars",
+      "confidence": 0.7,
+      "perceptual_role": "heard",
+      "sacredness": "important",
+      "default_depth": "foreground"
+    },
+    {
+      "name": "Lead Vocal",
+      "source_kind": "comped_audio_track",
+      "instrument_identity": "lead_vocal",
+      "identity_family": "vocal",
+      "confidence": 0.7,
+      "perceptual_role": "heard",
+      "sacredness": "sacred",
+      "default_depth": "intimate"
+    },
+    {
+      "name": "Splice Loop",
+      "source_kind": "splice_sample",
+      "instrument_identity": "loop",
+      "identity_family": "loop",
+      "confidence": 0.7,
+      "perceptual_role": "felt",
+      "sacredness": "decorative",
+      "default_depth": "background"
+    }
+  ],
+  "masking_classifications": {},
+  "sections": [
+    {
+      "section_id": "verse_1",
+      "lift_warning": false
+    },
+    {
+      "section_id": "chorus_1",
+      "lift_warning": true
+    }
+  ],
+  "scores": {
+    "halee_score": 81.3,
+    "ramone_score": 86.0,
+    "vocal_centrality_score": 90.0,
+    "depth_hierarchy_score": 72.0,
+    "section_contrast_score": 82,
+    "static_mix_score": 70.0,
+    "dynamic_mix_score": 23.1,
+    "overall_mix_readiness_score": 74.3
+  },
+  "next_pass_titles": [
+    "Vocal belief",
+    "Section contrast",
+    "Stereo loop / width control",
+    "Depth cleanup"
+  ]
+}

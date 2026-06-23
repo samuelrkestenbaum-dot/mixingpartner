@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Section Analysis",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["section_id", "name", "metrics", "contrast_vs_previous"],
+    "properties": {
+      "section_id": { "type": "string" },
+      "name": { "type": "string" },
+      "start_time": { "type": "number" },
+      "end_time": { "type": "number" },
+      "emotional_goal": { "type": ["string", "null"] },
+      "metrics": {
+        "type": "object",
+        "required": ["rms_dbfs", "width", "brightness", "density"],
+        "properties": {
+          "rms_dbfs": { "type": "number" },
+          "lufs": { "type": "number" },
+          "width": { "type": "number" },
+          "brightness": { "type": "number" },
+          "density": { "type": "number" }
+        }
+      },
+      "contrast_vs_previous": { "type": "object" }
+    }
+  }
+}

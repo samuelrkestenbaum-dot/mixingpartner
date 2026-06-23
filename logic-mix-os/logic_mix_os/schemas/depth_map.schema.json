@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Depth Map",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["track_id", "default_depth", "depth_by_section"],
+    "properties": {
+      "track_id": { "type": "string" },
+      "name": { "type": "string" },
+      "instrument_identity": { "type": "string" },
+      "default_depth": { "type": "string", "enum": ["intimate", "foreground", "midground", "background"] },
+      "depth_by_section": { "type": "object" },
+      "reason": { "type": "string" }
+    }
+  }
+}

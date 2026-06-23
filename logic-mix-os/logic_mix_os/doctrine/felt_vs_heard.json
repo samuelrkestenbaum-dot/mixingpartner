@@ -1,0 +1,24 @@
+{
+  "felt_vs_heard": {
+    "principle": "Not everything needs to be heard. Some things need to be felt.",
+    "felt_role_rule": "Felt elements should generally be lower in level, deeper in the depth field, more filtered, more reverberant, and less dynamically assertive than heard elements.",
+    "heard_examples": [
+      "lead vocal",
+      "lead guitar",
+      "snare",
+      "piano hook",
+      "featured harmony",
+      "signature synth riff"
+    ],
+    "felt_examples": [
+      "pads",
+      "texture loops",
+      "room tone",
+      "sub support",
+      "doubled rhythm layers",
+      "atmospheric samples",
+      "background percussion",
+      "low-level synth movement"
+    ]
+  }
+}

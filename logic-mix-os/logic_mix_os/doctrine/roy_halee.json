@@ -1,0 +1,14 @@
+{
+  "roy_halee": {
+    "physical_space": "Every element must feel physically placed.",
+    "shared_room": "Prefer shared spaces over isolated individual effects.",
+    "depth": "Depth is as important as EQ.",
+    "acoustics": "Acoustic instruments should retain transient detail and room realism.",
+    "width": "Width should come from arrangement and placement, not artificial widening.",
+    "reverb": "Reverb should feel captured, not pasted on.",
+    "masking": "Controlled blend is acceptable when it creates shared physical space.",
+    "arrangement": "The arrangement solves more mix problems than processing does.",
+    "naturalism": "The listener should be able to imagine musicians occupying believable space.",
+    "test": "Can the listener visualize musicians occupying a real physical space?"
+  }
+}

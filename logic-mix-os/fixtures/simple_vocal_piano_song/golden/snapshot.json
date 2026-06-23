@@ -1,0 +1,59 @@
+{
+  "tracks": [
+    {
+      "name": "Bass",
+      "source_kind": "live_audio_recording",
+      "instrument_identity": "bass_guitar",
+      "identity_family": "bass",
+      "confidence": 0.7,
+      "perceptual_role": "structural",
+      "sacredness": "important",
+      "default_depth": "foreground"
+    },
+    {
+      "name": "Lead Vocal",
+      "source_kind": "comped_audio_track",
+      "instrument_identity": "lead_vocal",
+      "identity_family": "vocal",
+      "confidence": 0.7,
+      "perceptual_role": "heard",
+      "sacredness": "sacred",
+      "default_depth": "intimate"
+    },
+    {
+      "name": "Piano",
+      "source_kind": "live_audio_recording",
+      "instrument_identity": "piano",
+      "identity_family": "keys",
+      "confidence": 0.7,
+      "perceptual_role": "heard",
+      "sacredness": "important",
+      "default_depth": "foreground"
+    }
+  ],
+  "masking_classifications": {},
+  "sections": [
+    {
+      "section_id": "verse_1",
+      "lift_warning": false
+    },
+    {
+      "section_id": "chorus_1",
+      "lift_warning": false
+    }
+  ],
+  "scores": {
+    "halee_score": 58.0,
+    "ramone_score": 86.0,
+    "vocal_centrality_score": 90.0,
+    "depth_hierarchy_score": 40.0,
+    "section_contrast_score": 100.0,
+    "static_mix_score": 80.0,
+    "dynamic_mix_score": 52.7,
+    "overall_mix_readiness_score": 73.8
+  },
+  "next_pass_titles": [
+    "Vocal belief",
+    "Depth cleanup"
+  ]
+}

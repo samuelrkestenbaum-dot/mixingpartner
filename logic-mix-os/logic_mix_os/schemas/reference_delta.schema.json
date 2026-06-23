@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Reference Delta",
+  "type": "object",
+  "required": ["overall_lufs_delta", "band_balance_delta", "notes"],
+  "properties": {
+    "overall_lufs_delta": { "type": "number" },
+    "my_lufs": { "type": "number" },
+    "reference_lufs": { "type": "number" },
+    "crest_factor_delta_db": { "type": "number" },
+    "stereo_width_delta": { "type": "number" },
+    "brightness_delta": { "type": "number" },
+    "spectral_centroid_delta_hz": { "type": "number" },
+    "band_balance_delta": { "type": "object" },
+    "mono_compatibility": { "type": "object" },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  }
+}

@@ -1,0 +1,216 @@
+[
+  {
+    "track_id": "lead_vocal",
+    "name": "Lead Vocal",
+    "file": "fixtures/dense_chorus_with_loops/stems/Lead Vocal.wav",
+    "source_kind": "comped_audio_track",
+    "confidence": 0.95,
+    "editable_domains": [
+      "gain",
+      "eq",
+      "dynamics",
+      "reverb_send",
+      "automation",
+      "region_editing",
+      "fade"
+    ],
+    "not_editable_directly": [],
+    "requires_render_for_analysis": false,
+    "evidence": {
+      "manifest_hint": "comped_audio_track"
+    },
+    "warnings": []
+  },
+  {
+    "track_id": "acoustic_guitar",
+    "name": "Acoustic Guitar",
+    "file": "fixtures/dense_chorus_with_loops/stems/Acoustic Guitar.wav",
+    "source_kind": "live_audio_recording",
+    "confidence": 0.55,
+    "editable_domains": [
+      "gain",
+      "eq",
+      "dynamics",
+      "reverb_send",
+      "automation",
+      "region_editing",
+      "fade"
+    ],
+    "not_editable_directly": [],
+    "requires_render_for_analysis": false,
+    "evidence": {
+      "filename_clue": "live-instrument name"
+    },
+    "warnings": []
+  },
+  {
+    "track_id": "electric_guitar_1",
+    "name": "Electric Guitar 1",
+    "file": "fixtures/dense_chorus_with_loops/stems/Electric Guitar 1.wav",
+    "source_kind": "live_audio_recording",
+    "confidence": 0.55,
+    "editable_domains": [
+      "gain",
+      "eq",
+      "dynamics",
+      "reverb_send",
+      "automation",
+      "region_editing",
+      "fade"
+    ],
+    "not_editable_directly": [],
+    "requires_render_for_analysis": false,
+    "evidence": {
+      "filename_clue": "live-instrument name"
+    },
+    "warnings": []
+  },
+  {
+    "track_id": "electric_guitar_2",
+    "name": "Electric Guitar 2",
+    "file": "fixtures/dense_chorus_with_loops/stems/Electric Guitar 2.wav",
+    "source_kind": "live_audio_recording",
+    "confidence": 0.55,
+    "editable_domains": [
+      "gain",
+      "eq",
+      "dynamics",
+      "reverb_send",
+      "automation",
+      "region_editing",
+      "fade"
+    ],
+    "not_editable_directly": [],
+    "requires_render_for_analysis": false,
+    "evidence": {
+      "filename_clue": "live-instrument name"
+    },
+    "warnings": []
+  },
+  {
+    "track_id": "synth_pad",
+    "name": "Synth Pad",
+    "file": "fixtures/dense_chorus_with_loops/stems/Synth Pad.wav",
+    "source_kind": "synth_bounce",
+    "confidence": 0.82,
+    "editable_domains": [
+      "gain",
+      "eq",
+      "dynamics",
+      "reverb_send",
+      "automation",
+      "region_editing",
+      "fade",
+      "stereo_width"
+    ],
+    "not_editable_directly": [
+      "midi_notes",
+      "velocity",
+      "synth_patch_parameters"
+    ],
+    "requires_render_for_analysis": false,
+    "evidence": {
+      "filename_clue": "synth"
+    },
+    "warnings": [
+      "Printed instrument bounce: note/patch/envelope changes require re-rendering from the original MIDI, not audio editing."
+    ]
+  },
+  {
+    "track_id": "splice_texture_loop",
+    "name": "Splice Texture Loop",
+    "file": "fixtures/dense_chorus_with_loops/stems/Splice Texture Loop.wav",
+    "source_kind": "splice_sample",
+    "confidence": 0.82,
+    "editable_domains": [
+      "gain",
+      "eq",
+      "dynamics",
+      "reverb_send",
+      "automation",
+      "region_editing",
+      "fade",
+      "stereo_width",
+      "pitch_shift",
+      "time_stretch",
+      "chop",
+      "reverse"
+    ],
+    "not_editable_directly": [],
+    "requires_render_for_analysis": false,
+    "evidence": {
+      "filename_clue": "splice"
+    },
+    "warnings": [
+      "Imported loop/sample: verify it is not accepted at full width in the foreground by default. Re-contextualise into the song's depth and tone.",
+      "Stereo image is wide; consider narrowing and placing it in the midground/background rather than full-width foreground.",
+      "Low crest factor suggests the loop is pre-compressed/mastered; it may make live tracks feel small next to it."
+    ]
+  },
+  {
+    "track_id": "bass",
+    "name": "Bass",
+    "file": "fixtures/dense_chorus_with_loops/stems/Bass.wav",
+    "source_kind": "live_audio_recording",
+    "confidence": 0.55,
+    "editable_domains": [
+      "gain",
+      "eq",
+      "dynamics",
+      "reverb_send",
+      "automation",
+      "region_editing",
+      "fade"
+    ],
+    "not_editable_directly": [],
+    "requires_render_for_analysis": false,
+    "evidence": {
+      "filename_clue": "live-instrument name"
+    },
+    "warnings": []
+  },
+  {
+    "track_id": "kick",
+    "name": "Kick",
+    "file": "fixtures/dense_chorus_with_loops/stems/Kick.wav",
+    "source_kind": "live_audio_recording",
+    "confidence": 0.55,
+    "editable_domains": [
+      "gain",
+      "eq",
+      "dynamics",
+      "reverb_send",
+      "automation",
+      "region_editing",
+      "fade"
+    ],
+    "not_editable_directly": [],
+    "requires_render_for_analysis": false,
+    "evidence": {
+      "filename_clue": "live-instrument name"
+    },
+    "warnings": []
+  },
+  {
+    "track_id": "snare",
+    "name": "Snare",
+    "file": "fixtures/dense_chorus_with_loops/stems/Snare.wav",
+    "source_kind": "live_audio_recording",
+    "confidence": 0.55,
+    "editable_domains": [
+      "gain",
+      "eq",
+      "dynamics",
+      "reverb_send",
+      "automation",
+      "region_editing",
+      "fade"
+    ],
+    "not_editable_directly": [],
+    "requires_render_for_analysis": false,
+    "evidence": {
+      "filename_clue": "live-instrument name"
+    },
+    "warnings": []
+  }
+]

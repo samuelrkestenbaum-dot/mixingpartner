@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Track Analysis",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["track_id", "name", "metrics"],
+    "properties": {
+      "track_id": { "type": "string" },
+      "name": { "type": "string" },
+      "metrics": {
+        "type": "object",
+        "required": ["peak_dbfs", "rms_dbfs", "crest_factor_db", "spectral_centroid", "band_energy"],
+        "properties": {
+          "duration": { "type": "number" },
+          "sample_rate": { "type": "integer" },
+          "channels": { "type": "integer" },
+          "peak_dbfs": { "type": "number" },
+          "rms_dbfs": { "type": "number" },
+          "estimated_lufs": { "type": "number" },
+          "crest_factor_db": { "type": "number" },
+          "spectral_centroid": { "type": "number" },
+          "spectral_rolloff": { "type": "number" },
+          "brightness": { "type": "number" },
+          "band_energy": { "type": "object" },
+          "stereo_width": { "type": "number" },
+          "phase_correlation": { "type": "number" },
+          "transient_density": { "type": "number" },
+          "mud_indicator": { "type": "number" },
+          "harshness_indicator": { "type": "number" },
+          "sibilance_indicator": { "type": "number" },
+          "masking_risk": { "type": ["number", "null"] }
+        }
+      }
+    }
+  }
+}

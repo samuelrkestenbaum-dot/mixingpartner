@@ -1,0 +1,47 @@
+{
+  "project": {
+    "song_title": "Simple Vocal Piano",
+    "tempo": 92,
+    "key": "E major",
+    "sample_rate": 32000,
+    "bit_depth": 16
+  },
+  "intent": {
+    "singular_emotional_truth": "Intimate in the verse, opening up in the chorus.",
+    "references": [],
+    "negative_constraints": [
+      "Do not make the vocal glossy."
+    ]
+  },
+  "sections": [
+    {
+      "section_id": "verse_1",
+      "name": "Verse 1",
+      "start_time": "0:00",
+      "end_time": "0:03",
+      "emotional_goal": "intimacy"
+    },
+    {
+      "section_id": "chorus_1",
+      "name": "Chorus 1",
+      "start_time": "0:03",
+      "end_time": "0:06",
+      "emotional_goal": "release"
+    }
+  ],
+  "tracks": [
+    {
+      "file": "Lead Vocal.wav",
+      "name": "Lead Vocal",
+      "source_kind": "comped_audio_track"
+    },
+    {
+      "file": "Piano.wav",
+      "name": "Piano"
+    },
+    {
+      "file": "Bass.wav",
+      "name": "Bass"
+    }
+  ]
+}

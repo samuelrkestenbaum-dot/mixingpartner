@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Mix Pass Score",
+  "type": "object",
+  "properties": {
+    "pass_name": { "type": "string" },
+    "date": { "type": "string" },
+    "scores": { "type": "object" },
+    "improved": { "type": "array" },
+    "got_worse": { "type": "array" },
+    "revert_candidates": { "type": "array" },
+    "next_recommended": { "type": "array" }
+  }
+}

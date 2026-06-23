@@ -1,0 +1,221 @@
+{
+  "translation": {
+    "profiles": [
+      {
+        "profile": "headphones",
+        "risks": [],
+        "severity": "low"
+      },
+      {
+        "profile": "airpods_earbuds",
+        "risks": [],
+        "severity": "low"
+      },
+      {
+        "profile": "car",
+        "risks": [
+          "Upper-mid/high energy may turn harsh in a car."
+        ],
+        "severity": "moderate"
+      },
+      {
+        "profile": "phone_speaker",
+        "risks": [
+          "Thin presence band: the vocal/lyric may get lost on a phone speaker."
+        ],
+        "severity": "high"
+      },
+      {
+        "profile": "laptop_speakers",
+        "risks": [],
+        "severity": "low"
+      },
+      {
+        "profile": "studio_monitors",
+        "risks": [],
+        "severity": "low"
+      },
+      {
+        "profile": "mono_bluetooth_speaker",
+        "risks": [
+          "Stereo collapse risk in mono (Splice Texture Loop); ~-1.7 dB level change."
+        ],
+        "severity": "moderate"
+      },
+      {
+        "profile": "club_pa",
+        "risks": [
+          "Sibilance can become piercing on a large PA."
+        ],
+        "severity": "moderate"
+      }
+    ],
+    "checks": {
+      "stereo_width": 0.4594,
+      "mono_collapse_loss_db": -1.687,
+      "sub_energy": 0.2085,
+      "low_mid_energy": 0.2981,
+      "harshness": 0.0,
+      "sibilance": 1.0
+    },
+    "translation_score": 61.0,
+    "warnings": [
+      "[phone_speaker] Thin presence band: the vocal/lyric may get lost on a phone speaker."
+    ]
+  },
+  "mono_compatibility": {
+    "mix_mono_collapse_loss_db": -1.687,
+    "mix_phase_correlation": 0.3572,
+    "events": [
+      {
+        "track": "Acoustic Guitar",
+        "issue": "Low L/R correlation (-0.10) risks partial cancellation in mono.",
+        "phase_correlation": -0.1012,
+        "severity": "moderate",
+        "recommendation": "Check polarity/timing between channels; consider mid-side control."
+      },
+      {
+        "track": "Electric Guitar 1",
+        "issue": "Low L/R correlation (-0.17) risks partial cancellation in mono.",
+        "phase_correlation": -0.1669,
+        "severity": "moderate",
+        "recommendation": "Check polarity/timing between channels; consider mid-side control."
+      },
+      {
+        "track": "Electric Guitar 2",
+        "issue": "Side-heavy content collapses in mono (-4.3 dB level change).",
+        "phase_correlation": -0.2564,
+        "severity": "moderate",
+        "recommendation": "Narrow to ~50%, reduce side energy below 500 Hz, and check a mono bounce."
+      },
+      {
+        "track": "Splice Texture Loop",
+        "issue": "Low L/R correlation (-0.04) risks partial cancellation in mono.",
+        "phase_correlation": -0.0357,
+        "severity": "moderate",
+        "recommendation": "Check polarity/timing between channels; consider mid-side control."
+      }
+    ],
+    "mono_score": 84.0,
+    "summary": {
+      "tracks_at_risk": 4,
+      "high_severity": 0
+    }
+  },
+  "arrangement_density": {
+    "per_section": [
+      {
+        "section_id": "verse_1",
+        "layer_counts": {
+          "intimate": 1,
+          "foreground": 6,
+          "midground": 0,
+          "background": 2
+        },
+        "forward_count": 7,
+        "density_metric": 1.0,
+        "warning": "7 elements occupy forward layers in 'verse_1'. Consider moving decorative synths/loops to midground/background for hierarchy."
+      },
+      {
+        "section_id": "chorus_1",
+        "layer_counts": {
+          "intimate": 0,
+          "foreground": 4,
+          "midground": 5,
+          "background": 0
+        },
+        "forward_count": 4,
+        "density_metric": 1.0,
+        "warning": null
+      }
+    ],
+    "crowded_sections": [
+      "verse_1"
+    ],
+    "summary": {
+      "total_sections": 2,
+      "crowded": 1
+    }
+  },
+  "listener_experience": {
+    "journey": [
+      {
+        "section_id": "verse_1",
+        "name": "Verse 1",
+        "emotional_goal": "intimacy",
+        "what_a_fan_hears": "sets the scene; dense — lots happening at once",
+        "engagement": "neutral"
+      },
+      {
+        "section_id": "chorus_1",
+        "name": "Chorus 1",
+        "emotional_goal": "release",
+        "what_a_fan_hears": "expected to lift but feels similar to the previous section; dense — lots happening at once",
+        "engagement": "may zone out"
+      }
+    ],
+    "fatigue_points": [
+      "Verse 1: density is high without a clear focal point.",
+      "Chorus 1: density is high without a clear focal point."
+    ],
+    "chorus_feels_earned": false,
+    "summary": "The chorus does not yet feel earned — contrast into it is weak."
+  },
+  "transitions": {
+    "transitions": [
+      {
+        "from": "verse_1",
+        "to": "chorus_1",
+        "boundary_sec": 3.0,
+        "rms_jump_db": 2.02,
+        "is_lift_target": true,
+        "quality": "smooth",
+        "note": "Energy changes naturally into the section."
+      }
+    ],
+    "weak_transitions": [],
+    "summary": "Transitions read intentionally."
+  },
+  "groove": {
+    "per_track": [
+      {
+        "track": "Kick",
+        "onsets": 5,
+        "regularity": 0.989,
+        "feel": "machine-tight"
+      },
+      {
+        "track": "Snare",
+        "onsets": 2,
+        "regularity": null,
+        "feel": "too few onsets to judge"
+      }
+    ],
+    "overall_regularity": 0.989,
+    "summary": "Overall groove regularity 0.989 (tight)."
+  },
+  "harmonic": {
+    "available": true,
+    "detected_key": "G major",
+    "detected_confidence": 0.827,
+    "manifest_key": "E minor",
+    "matches_manifest": true,
+    "summary": "Detected key ~G major (confidence 0.827). Manifest says E minor. Consistent (relative major/minor — same notes)."
+  },
+  "vocal_performance": {
+    "available": true,
+    "dynamic_range_db": 8.51,
+    "phrase_energy_variation_db": 2.6,
+    "push_moment_sec": 5.88,
+    "pull_back_moment_sec": 0.84,
+    "sibilance_indicator": 0.0,
+    "recommendations": [
+      "Balanced delivery: light stabilisation and phrase rides should be enough."
+    ],
+    "summary": "Vocal dynamic range ~8.51 dB; controlled."
+  },
+  "lyrics": {
+    "available": false,
+    "summary": "No lyrics provided in the manifest."
+  }
+}
