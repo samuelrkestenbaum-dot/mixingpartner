@@ -13,8 +13,10 @@ from pathlib import Path
 from typing import Optional
 
 from . import __version__
+from .album import analyze_album
 from .analyzers.audio_loader import load_audio
 from .analyzers.reference_comparator import compare_to_reference
+from .memory import ProjectMemory
 from .pipeline import analyze, write_artifacts
 from .planners.next_pass_planner import generate_creative_hypotheses
 from .project import load_manifest
@@ -207,6 +209,76 @@ def _run_regression(args) -> int:
     return 0
 
 
+def _run_memory_record(args) -> int:
+    manifest = _load_manifest(args.manifest)
+    result = analyze(args.stems, manifest, bounce_path=args.bounce)
+    mem = ProjectMemory(args.memory_dir)
+    record = mem.record_pass(args.name, result, input_bounce=args.bounce)
+    mem.record_plan_decisions(result)
+    print(f"Recorded pass '{record['pass_name']}' ({record['date']}).")
+    if record["improved"]:
+        print("  improved: " + ", ".join(record["improved"]))
+    if record["got_worse"]:
+        print("  got worse: " + ", ".join(record["got_worse"]))
+    if not record["improved"] and not record["got_worse"]:
+        print("  (first pass or no change vs previous)")
+    return 0
+
+
+def _run_memory_show(args) -> int:
+    mem = ProjectMemory(args.memory_dir)
+    history = mem.history()
+    print(f"Mix pass history ({len(history)} pass(es)):")
+    for p in history:
+        overall = p["scores"].get("overall_mix_readiness_score")
+        print(f"  - {p['pass_name']} [{p['date']}] overall {overall} "
+              f"| improved {len(p['improved'])} | worse {len(p['got_worse'])}")
+    taste = mem.taste_profile().get("profile", [])
+    if taste:
+        print("Taste profile:")
+        for t in taste:
+            print(f"  - {t}")
+    ledger = mem.ledger()
+    print(f"Decision ledger: {len(ledger)} entr(ies).")
+    return 0
+
+
+def _run_feedback(args) -> int:
+    mem = ProjectMemory(args.memory_dir)
+    taste = mem.add_feedback(args.label, context=args.context)
+    print(f"Recorded feedback '{args.label}'. Taste profile now:")
+    for t in taste["profile"]:
+        print(f"  - {t}")
+    if not taste["profile"]:
+        print("  (need more feedback to form a stable preference)")
+    return 0
+
+
+def _run_album(args) -> int:
+    base = Path(args.projects)
+    results, names = [], []
+    for sub in sorted(base.iterdir()):
+        manifest_path = sub / "project_manifest.json"
+        if manifest_path.exists():
+            manifest = _load_manifest(str(manifest_path))
+            results.append(analyze(str(sub / "stems"), manifest))
+            names.append(sub.name)
+    if not results:
+        print(f"No projects (with project_manifest.json) found under {base}")
+        return 1
+    report = analyze_album(results, names)
+    print(f"Album coherence: {report['coherence_score']}/100 — {report['verdict']}")
+    print(f"Consistency: {report['consistency']}")
+    if report["outliers"]:
+        print("Outliers:")
+        for o in report["outliers"]:
+            print(f"  - {o['name']} stands out on {', '.join(o['stands_out_on'])}")
+    if args.out:
+        Path(args.out).write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+        print(f"Wrote {args.out}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="logic-mix-os", description="Local-first Logic Pro mix decision system.")
     p.add_argument("--version", action="version", version=f"logic-mix-os {__version__}")
@@ -286,6 +358,28 @@ def build_parser() -> argparse.ArgumentParser:
     mf.add_argument("--tone", default="collaborative",
                     choices=["collaborative", "producer", "direct", "technical", "do_not"])
     mf.set_defaults(func=_run_mixer_feedback)
+
+    mr = sub.add_parser("memory-record", help="Analyse and record a mix pass to project memory")
+    add_common(mr)
+    mr.add_argument("--bounce", help="Optional stereo bounce")
+    mr.add_argument("--memory-dir", required=True, help="Project memory directory")
+    mr.add_argument("--name", required=True, help="Mix pass name (e.g. mix_pass_03)")
+    mr.set_defaults(func=_run_memory_record)
+
+    ms = sub.add_parser("memory-show", help="Show mix pass history, taste profile, and ledger size")
+    ms.add_argument("--memory-dir", required=True)
+    ms.set_defaults(func=_run_memory_show)
+
+    fb = sub.add_parser("feedback", help="Record taste feedback (e.g. 'too wide', 'too modern')")
+    fb.add_argument("--memory-dir", required=True)
+    fb.add_argument("--label", required=True)
+    fb.add_argument("--context", help="Optional note")
+    fb.set_defaults(func=_run_feedback)
+
+    al = sub.add_parser("album", help="Album-level coherence across a folder of projects")
+    al.add_argument("--projects", required=True, help="Folder containing project subfolders")
+    al.add_argument("--out", help="Optional output .json path")
+    al.set_defaults(func=_run_album)
 
     return p
 

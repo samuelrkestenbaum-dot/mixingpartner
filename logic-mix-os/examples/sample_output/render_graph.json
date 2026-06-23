@@ -1,0 +1,137 @@
+{
+  "nodes": [
+    {
+      "id": "source:lead_vocal",
+      "type": "source",
+      "name": "Lead Vocal"
+    },
+    {
+      "id": "stem:lead_vocal",
+      "type": "stem",
+      "name": "Lead Vocal"
+    },
+    {
+      "id": "source:piano",
+      "type": "source",
+      "name": "Piano"
+    },
+    {
+      "id": "stem:piano",
+      "type": "stem",
+      "name": "Piano"
+    },
+    {
+      "id": "source:bass",
+      "type": "source",
+      "name": "Bass"
+    },
+    {
+      "id": "stem:bass",
+      "type": "stem",
+      "name": "Bass"
+    },
+    {
+      "id": "bounce:mixdown",
+      "type": "bounce",
+      "name": "Full Mix Bounce"
+    },
+    {
+      "id": "report:track_analysis",
+      "type": "report",
+      "name": "track_analysis"
+    },
+    {
+      "id": "report:section_analysis",
+      "type": "report",
+      "name": "section_analysis"
+    },
+    {
+      "id": "report:masking_report",
+      "type": "report",
+      "name": "masking_report"
+    },
+    {
+      "id": "report:depth_map",
+      "type": "report",
+      "name": "depth_map"
+    },
+    {
+      "id": "report:doctrine_score",
+      "type": "report",
+      "name": "doctrine_score"
+    },
+    {
+      "id": "report:mix_plan",
+      "type": "report",
+      "name": "mix_plan"
+    },
+    {
+      "id": "report:reference_delta",
+      "type": "report",
+      "name": "reference_delta"
+    },
+    {
+      "id": "report:expanded_analysis",
+      "type": "report",
+      "name": "expanded_analysis"
+    }
+  ],
+  "edges": [
+    {
+      "from": "source:lead_vocal",
+      "to": "stem:lead_vocal"
+    },
+    {
+      "from": "stem:lead_vocal",
+      "to": "bounce:mixdown"
+    },
+    {
+      "from": "source:piano",
+      "to": "stem:piano"
+    },
+    {
+      "from": "stem:piano",
+      "to": "bounce:mixdown"
+    },
+    {
+      "from": "source:bass",
+      "to": "stem:bass"
+    },
+    {
+      "from": "stem:bass",
+      "to": "bounce:mixdown"
+    },
+    {
+      "from": "bounce:mixdown",
+      "to": "report:track_analysis"
+    },
+    {
+      "from": "bounce:mixdown",
+      "to": "report:section_analysis"
+    },
+    {
+      "from": "bounce:mixdown",
+      "to": "report:masking_report"
+    },
+    {
+      "from": "bounce:mixdown",
+      "to": "report:depth_map"
+    },
+    {
+      "from": "bounce:mixdown",
+      "to": "report:doctrine_score"
+    },
+    {
+      "from": "bounce:mixdown",
+      "to": "report:mix_plan"
+    },
+    {
+      "from": "bounce:mixdown",
+      "to": "report:reference_delta"
+    },
+    {
+      "from": "bounce:mixdown",
+      "to": "report:expanded_analysis"
+    }
+  ]
+}

@@ -296,6 +296,48 @@ def render_expanded_analysis(expanded: Dict) -> str:
     return "\n".join(out)
 
 
+def render_session_intelligence(provenance: Dict, render_graph: Dict, plugin_scan: Dict) -> str:
+    out = ["# Session Intelligence", ""]
+
+    out.append("## Sample Provenance")
+    out.append("")
+    items = provenance.get("items", [])
+    if items:
+        out.append("| Track | Origin | License | Recognizable | Foreground | Risk |")
+        out.append("|---|---|---|---|---|---|")
+        for it in items:
+            out.append(f"| {it['track']} | {it['sample_origin']} | {it['license_status']} "
+                       f"| {it['recognizable']} | {it['foregrounded']} | {it['risk']} |")
+        out.append("")
+        for it in items:
+            if it["risk"] != "low":
+                out.append(f"- ⚠️ **{it['track']}** ({it['risk']}): {it['reason']} _{it['recommendation']}_")
+    else:
+        out.append("_No imported loops/samples to track._")
+    out.append("")
+
+    out.append("## Plugin Availability")
+    out.append("")
+    out.append(f"- Inventory source: {plugin_scan.get('inventory_source')}")
+    used = plugin_scan.get("plugins_used", {})
+    if used:
+        out.append(f"- Recommended plugins: {', '.join(f'{k} ×{v}' for k, v in used.items())}")
+    if plugin_scan.get("missing"):
+        for m in plugin_scan["missing"]:
+            out.append(f"- ⚠️ Missing **{m['plugin']}** → alternatives: {', '.join(m['alternatives'])}")
+    else:
+        out.append("- ✓ All recommended plugins are available.")
+    out.append("")
+
+    out.append("## Render Dependency Graph")
+    out.append("")
+    nodes = render_graph.get("nodes", [])
+    out.append(f"{len(nodes)} nodes (source → stem → mixdown → reports). "
+               f"Changing a stem invalidates the mix bounce and every analysis report.")
+    out.append("")
+    return "\n".join(out)
+
+
 def render_section_contrast_report(sections: List[Dict]) -> str:
     out = ["# Section Contrast Report", ""]
     out.append("| Section | Goal | RMS (dB) | Width | Δ RMS | Δ Width | Note |")

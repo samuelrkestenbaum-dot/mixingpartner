@@ -1,0 +1,10 @@
+{
+  "inventory_source": "assumed Logic stock",
+  "plugins_used": {
+    "Channel EQ": 3,
+    "Compressor": 2
+  },
+  "available_count": 12,
+  "missing": [],
+  "all_available": true
+}

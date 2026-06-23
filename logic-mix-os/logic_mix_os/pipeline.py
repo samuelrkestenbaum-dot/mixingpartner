@@ -21,7 +21,10 @@ from .analyzers.listener_experience_mapper import map_experience
 from .analyzers.lyric_alignment_analyzer import analyze_lyrics
 from .analyzers.masking_analyzer import analyze_masking
 from .analyzers.mono_compatibility_analyzer import analyze_mono
+from .analyzers.plugin_scanner import scan_plugins
+from .analyzers.provenance import analyze_provenance
 from .analyzers.reference_comparator import compare_to_reference
+from .analyzers.render_graph import build_render_graph
 from .analyzers.section_analyzer import analyze_sections
 from .analyzers.source_material_detector import detect_source_material
 from .analyzers.track_identity_detector import detect_track_identity
@@ -58,6 +61,9 @@ class ProjectAnalysis:
     expanded: Dict = field(default_factory=dict)
     creative: Dict = field(default_factory=dict)
     governance: Dict = field(default_factory=dict)
+    provenance: Dict = field(default_factory=dict)
+    render_graph: Dict = field(default_factory=dict)
+    plugin_scan: Dict = field(default_factory=dict)
     records: List[Dict] = field(default_factory=list)
 
 
@@ -194,6 +200,11 @@ def analyze(
     result.creative = run_creative_engine(result, mode)
     result.governance = run_governance(result, result.creative)
 
+    # Session intelligence: provenance, render graph, plugin availability.
+    result.provenance = analyze_provenance(project, result.source_material, result.depth_map)
+    result.render_graph = build_render_graph(project)
+    result.plugin_scan = scan_plugins(result.mix_plan, manifest.get("plugins"))
+
     return result
 
 
@@ -241,6 +252,12 @@ def write_artifacts(result: ProjectAnalysis, out_dir: str | Path) -> List[str]:
         json_files["creative.json"] = result.creative
     if result.governance:
         json_files["governance.json"] = result.governance
+    if result.provenance:
+        json_files["provenance.json"] = result.provenance
+    if result.render_graph:
+        json_files["render_graph.json"] = result.render_graph
+    if result.plugin_scan:
+        json_files["plugin_scan.json"] = result.plugin_scan
 
     for name, data in json_files.items():
         _dump_json(out / name, data)
@@ -262,6 +279,10 @@ def write_artifacts(result: ProjectAnalysis, out_dir: str | Path) -> List[str]:
         md_files["creative_report.md"] = creative_renderer.render_creative(result.creative)
     if result.governance:
         md_files["governance_report.md"] = creative_renderer.render_governance(result.governance)
+    if result.provenance or result.plugin_scan:
+        md_files["session_intelligence.md"] = markdown_renderer.render_session_intelligence(
+            result.provenance, result.render_graph, result.plugin_scan
+        )
     for name, text in md_files.items():
         _write_text(out / name, text)
         written.append(str(out / name))
