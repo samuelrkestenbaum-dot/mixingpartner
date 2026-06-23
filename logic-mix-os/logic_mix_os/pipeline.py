@@ -78,6 +78,7 @@ def analyze(
     bounce_path: Optional[str | Path] = None,
     reference_path: Optional[str | Path] = None,
     creative_mode: Optional[str] = None,
+    memory_dir: Optional[str | Path] = None,
 ) -> ProjectAnalysis:
     project = Project.from_inputs(stems_dir, manifest)
     result = ProjectAnalysis(project=project)
@@ -207,7 +208,11 @@ def analyze(
 
     # Creative experimentation engine + governance / taste protection.
     mode = creative_mode or _default_creative_mode(project.intent)
-    result.creative = run_creative_engine(result, mode)
+    taste = None
+    if memory_dir:
+        from .memory import ProjectMemory
+        taste = ProjectMemory(memory_dir).taste_weights()
+    result.creative = run_creative_engine(result, mode, taste=taste)
     result.governance = run_governance(result, result.creative)
 
     # Session intelligence: provenance, render graph, plugin availability.

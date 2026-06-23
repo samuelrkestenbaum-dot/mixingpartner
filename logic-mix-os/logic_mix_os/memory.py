@@ -142,6 +142,48 @@ class ProjectMemory:
     def taste_profile(self) -> Dict:
         return self._load(self.taste_path, {"feedback": [], "profile": []})
 
+    # -- variant-choice taste learning (Hardening Packet 2) -----------------
+    # Each A/B choice nudges a per-kind preference. The derived weight is capped
+    # so learned taste can shift, but never dominate, doctrine/evidence.
+    TASTE_CAP = 8.0
+    _WEIGHT_PER_NET_CHOICE = 3.0
+
+    def add_variant_choice(self, chosen: Dict, rejected: List[Dict], reason: Optional[str] = None) -> Dict:
+        store = self._load(self.taste_path, {"feedback": [], "profile": [], "variant_choices": [], "kind_weights": {}})
+        store.setdefault("variant_choices", [])
+        store["variant_choices"].append({
+            "date": _now(),
+            "chosen_kind": chosen.get("kind"),
+            "chosen_variant": chosen.get("variant_id"),
+            "rejected_kinds": [v.get("kind") for v in rejected],
+            "evidence": chosen.get("scores", {}).get("evidence", []),
+            "reason": reason,
+        })
+        store["kind_weights"] = self._derive_kind_weights(store["variant_choices"])
+        # keep the existing feedback-derived profile intact
+        store["profile"] = self._derive_taste(store.get("feedback", []))
+        self._save(self.taste_path, store)
+        return store
+
+    def _derive_kind_weights(self, choices: List[Dict]) -> Dict[str, float]:
+        net: Dict[str, int] = {}
+        for c in choices:
+            ck = c.get("chosen_kind")
+            if ck:
+                net[ck] = net.get(ck, 0) + 1
+            for rk in c.get("rejected_kinds", []):
+                if rk:
+                    net[rk] = net.get(rk, 0) - 1
+        weights: Dict[str, float] = {}
+        for kind, score in net.items():
+            w = score * self._WEIGHT_PER_NET_CHOICE
+            weights[kind] = round(max(-self.TASTE_CAP, min(self.TASTE_CAP, w)), 2)
+        return weights
+
+    def taste_weights(self) -> Dict[str, float]:
+        """Per-kind learned adjustment (already capped to +/- TASTE_CAP)."""
+        return self._load(self.taste_path, {}).get("kind_weights", {})
+
     # -- reference profiles -------------------------------------------------
     def save_reference_profile(self, name: str, metrics: Dict) -> None:
         refs = self._load(self.refs_path, {})
