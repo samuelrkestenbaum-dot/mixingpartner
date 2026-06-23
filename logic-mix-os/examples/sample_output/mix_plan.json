@@ -1,0 +1,183 @@
+{
+  "song_title": "Simple Vocal Piano",
+  "singular_emotional_truth": "Intimate in the verse, opening up in the chorus.",
+  "negative_constraints": [
+    "Do not make the vocal glossy."
+  ],
+  "overall_diagnosis": "Overall mix readiness 73.8/100. Static balance 80.0/100; dynamic movement 52.7/100. The mix is more balanced than it is alive — invest in section contrast and rides, not more EQ.",
+  "halee_score": 58.0,
+  "ramone_score": 86.0,
+  "section_contrast_score": 100.0,
+  "depth_hierarchy_score": 40.0,
+  "vocal_centrality_score": 90.0,
+  "static_mix_score": 80.0,
+  "dynamic_mix_score": 52.7,
+  "overall_mix_readiness_score": 73.8,
+  "biggest_risks": [
+    "Halee physical-space realism is weak (58.0/100).",
+    "Depth hierarchy is weak (40.0/100).",
+    "Dynamic movement is weak (52.7/100)."
+  ],
+  "best_opportunities": [
+    "Foundation is solid; focus the next pass on emotional movement and vocal rides."
+  ],
+  "per_track_actions": [
+    {
+      "track": "Lead Vocal",
+      "track_id": "lead_vocal",
+      "instrument_identity": "lead_vocal",
+      "perceptual_role": "heard",
+      "depth_layer": "intimate",
+      "diagnosis": "heard element in the intimate layer. Low-mid mud is elevated.",
+      "actions": [
+        {
+          "plugin": "Channel EQ",
+          "setting": "High-pass ~80 Hz. Cut ~250 Hz by 1-2 dB (mud). Avoid large 12 kHz+ air boosts (keeps the vocal human, not glossy).",
+          "reason": "Clean low-end build-up and keep believable presence without hype.",
+          "risk_class": 2
+        },
+        {
+          "plugin": "Compressor",
+          "setting": "Vintage Opto, target 2-3 dB gain reduction, slow-ish attack.",
+          "reason": "Stabilise the vocal while preserving the performance (invisible compression).",
+          "risk_class": 2
+        }
+      ],
+      "automation": [
+        {
+          "parameter": "gain (clip gain + fader)",
+          "move": "Ride phrase endings +0.5 to +1 dB where the lyric drops, before adding compression.",
+          "reason": "Ramone-style vocal belief: performance rides before brute-force compression.",
+          "risk_class": 2
+        }
+      ],
+      "send_reverb": "Short room or slapback only, very low send (~-24 dB). Keep it close.",
+      "pan_depth": "intimate layer — heard",
+      "risk_class": 2,
+      "warnings": []
+    },
+    {
+      "track": "Piano",
+      "track_id": "piano",
+      "instrument_identity": "piano",
+      "perceptual_role": "heard",
+      "depth_layer": "foreground",
+      "diagnosis": "heard element in the foreground layer. Low-mid mud is elevated.",
+      "actions": [
+        {
+          "plugin": "Channel EQ",
+          "setting": "Cut 250-400 Hz by 1-2 dB.",
+          "reason": "Reduce low-mid mud build-up.",
+          "risk_class": 2
+        }
+      ],
+      "automation": [],
+      "send_reverb": "Short chamber, low send (~-18 dB).",
+      "pan_depth": "foreground layer — heard",
+      "risk_class": 2,
+      "warnings": []
+    },
+    {
+      "track": "Bass",
+      "track_id": "bass",
+      "instrument_identity": "bass_guitar",
+      "perceptual_role": "structural",
+      "depth_layer": "foreground",
+      "diagnosis": "structural element in the foreground layer.",
+      "actions": [
+        {
+          "plugin": "Channel EQ",
+          "setting": "High-pass ~30 Hz; control 200-350 Hz if boxy.",
+          "reason": "Tighten the low end without thinning the body.",
+          "risk_class": 2
+        },
+        {
+          "plugin": "Compressor",
+          "setting": "Vintage Opto, gentle 2-4 dB GR for consistent sustain.",
+          "reason": "Even out the low-end foundation.",
+          "risk_class": 2
+        }
+      ],
+      "automation": [],
+      "send_reverb": "Short chamber, low send (~-18 dB).",
+      "pan_depth": "foreground layer — structural",
+      "risk_class": 2,
+      "warnings": []
+    }
+  ],
+  "per_section_actions": [
+    {
+      "section": "verse_1",
+      "name": "Verse 1",
+      "emotional_goal": "intimacy",
+      "rms_dbfs": -15.86,
+      "width": 0.0647,
+      "contrast_warning": null
+    },
+    {
+      "section": "chorus_1",
+      "name": "Chorus 1",
+      "emotional_goal": "release",
+      "rms_dbfs": -11.1,
+      "width": 0.0384,
+      "contrast_warning": null
+    }
+  ],
+  "automation_plan": [
+    {
+      "section": "verse_1",
+      "name": "Verse 1",
+      "emotional_goal": "intimacy",
+      "gesture": "verse_intimacy",
+      "moves": [
+        "Pull reverb sends down",
+        "Narrow stereo image",
+        "Ride vocal +0.5 to +1.5 dB",
+        "Reduce background texture level",
+        "Keep the emotional centre close"
+      ]
+    },
+    {
+      "section": "chorus_1",
+      "name": "Chorus 1",
+      "emotional_goal": "release",
+      "gesture": "final_chorus_release",
+      "moves": [
+        "Widest point of the song",
+        "Most open depth field",
+        "Longest emotional reverb tails",
+        "Largest vocal support stack",
+        "Avoid over-limiting the release"
+      ]
+    },
+    {
+      "section": "*",
+      "name": "Per-track rides",
+      "gesture": "track_rides",
+      "moves": [
+        {
+          "track": "Lead Vocal",
+          "parameter": "gain",
+          "move": "Phrase-level rides +0.5 to +1.5 dB before compression."
+        }
+      ]
+    }
+  ],
+  "mute_candidates": [],
+  "reference_deltas": {},
+  "source_material_warnings": [],
+  "production_vs_mix_boundaries": [],
+  "warnings": [],
+  "next_pass": [
+    {
+      "priority": 1,
+      "title": "Vocal belief",
+      "detail": "Ride the lead vocal phrase-by-phrase before adding compression."
+    },
+    {
+      "priority": 2,
+      "title": "Depth cleanup",
+      "detail": "Too many elements occupy the foreground. Move supporting guitars/keys/pads to the midground instead of EQ-ing everything."
+    }
+  ]
+}

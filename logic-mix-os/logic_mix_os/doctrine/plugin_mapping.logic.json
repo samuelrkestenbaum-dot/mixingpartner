@@ -1,0 +1,39 @@
+{
+  "plugin_mapping": {
+    "mud": ["Channel EQ", "Linear Phase EQ"],
+    "sibilance": ["DeEsser 2"],
+    "harshness": ["Channel EQ", "Multipressor", "DeEsser 2"],
+    "unstable_vocal": ["Compressor (Vintage Opto)", "Compressor (Studio FET)", "Gain automation"],
+    "flat_vocal": ["Compressor", "ChromaVerb", "Space Designer", "Tape Delay"],
+    "lack_of_depth": ["Space Designer", "ChromaVerb", "send automation", "early reflections"],
+    "stereo_loop_too_wide": ["Direction Mixer", "Channel EQ (mid-side)", "Gain", "bus routing"],
+    "bass_unstable": ["Compressor (Vintage Opto)", "Channel EQ"],
+    "drum_bus_too_aggressive": ["Compressor (Vintage VCA)", "parallel compression reduction"],
+    "chorus_not_lifting": ["automation", "send bloom", "width increase", "arrangement muting/unmuting"],
+    "low_end_conflict": ["Channel EQ (complementary carve)", "Compressor (sidechain)"]
+  },
+  "preferred_order": [
+    "automation",
+    "level and panning",
+    "depth placement",
+    "subtractive EQ",
+    "compression",
+    "additive EQ",
+    "saturation/excitement",
+    "last-resort enhancement"
+  ],
+  "allowed_plugins_mvp": [
+    "Channel EQ",
+    "Linear Phase EQ",
+    "Compressor",
+    "DeEsser 2",
+    "Multipressor",
+    "Direction Mixer",
+    "Gain",
+    "Space Designer",
+    "ChromaVerb",
+    "Tape Delay",
+    "Sample Delay",
+    "Limiter (safety only)"
+  ]
+}

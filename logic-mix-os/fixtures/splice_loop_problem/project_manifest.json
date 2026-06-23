@@ -1,0 +1,47 @@
+{
+  "project": {
+    "song_title": "Splice Loop Problem",
+    "tempo": 100,
+    "key": "G major",
+    "sample_rate": 32000,
+    "bit_depth": 16
+  },
+  "intent": {
+    "singular_emotional_truth": "A personal song the loop is currently steamrolling.",
+    "references": [],
+    "negative_constraints": [
+      "Do not let the loop dominate the song identity."
+    ]
+  },
+  "sections": [
+    {
+      "section_id": "verse_1",
+      "name": "Verse 1",
+      "start_time": "0:00",
+      "end_time": "0:03",
+      "emotional_goal": "intimacy"
+    },
+    {
+      "section_id": "chorus_1",
+      "name": "Chorus 1",
+      "start_time": "0:03",
+      "end_time": "0:06",
+      "emotional_goal": "release"
+    }
+  ],
+  "tracks": [
+    {
+      "file": "Lead Vocal.wav",
+      "name": "Lead Vocal",
+      "source_kind": "comped_audio_track"
+    },
+    {
+      "file": "Splice Loop.wav",
+      "name": "Splice Loop"
+    },
+    {
+      "file": "Acoustic Guitar.wav",
+      "name": "Acoustic Guitar"
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+[
+  {
+    "track_id": "lead_vocal",
+    "name": "Lead Vocal",
+    "instrument_identity": "lead_vocal",
+    "identity_family": "vocal",
+    "confidence": 0.7,
+    "evidence": {
+      "filename_clues": [
+        "lead vocal"
+      ],
+      "spectral_profile": "centroid 1417 Hz; dominant band: low_mid",
+      "transient_profile": "sharp, percussive transients",
+      "stereo_profile": "centred / near-mono"
+    },
+    "alternate_candidates": [
+      {
+        "instrument_identity": "organ",
+        "confidence": 0.17
+      },
+      {
+        "instrument_identity": "pad",
+        "confidence": 0.17
+      }
+    ],
+    "manual_override": null
+  },
+  {
+    "track_id": "piano",
+    "name": "Piano",
+    "instrument_identity": "piano",
+    "identity_family": "keys",
+    "confidence": 0.7,
+    "evidence": {
+      "filename_clues": [
+        "piano"
+      ],
+      "spectral_profile": "centroid 675 Hz; dominant band: low_mid",
+      "transient_profile": "slow attack / sustained, low transient density",
+      "stereo_profile": "centred / near-mono"
+    },
+    "alternate_candidates": [
+      {
+        "instrument_identity": "pad",
+        "confidence": 0.22
+      },
+      {
+        "instrument_identity": "organ",
+        "confidence": 0.21
+      }
+    ],
+    "manual_override": null
+  },
+  {
+    "track_id": "bass",
+    "name": "Bass",
+    "instrument_identity": "bass_guitar",
+    "identity_family": "bass",
+    "confidence": 0.7,
+    "evidence": {
+      "filename_clues": [
+        "bass"
+      ],
+      "spectral_profile": "centroid 225 Hz; dominant band: low",
+      "transient_profile": "slow attack / sustained, low transient density",
+      "stereo_profile": "centred / near-mono"
+    },
+    "alternate_candidates": [
+      {
+        "instrument_identity": "kick",
+        "confidence": 0.25
+      },
+      {
+        "instrument_identity": "pad",
+        "confidence": 0.13
+      }
+    ],
+    "manual_override": null
+  }
+]

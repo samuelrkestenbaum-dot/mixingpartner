@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "logic-mix-os"
+version = "0.1.0"
+description = "A local-first mix decision system that turns Logic Pro stems into a Roy Halee / Phil Ramone-inspired, section-aware, Logic-native mix plan."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Logic Mix OS" }]
+keywords = ["audio", "mixing", "logic-pro", "analysis", "mix-plan"]
+
+# numpy is the only hard dependency. Everything else is optional and the code
+# degrades gracefully (stdlib `wave` loader, FFT-domain loudness estimate, etc.).
+dependencies = [
+    "numpy>=1.21",
+]
+
+[project.optional-dependencies]
+# Recommended for broader format support and more accurate measurements.
+full = [
+    "soundfile>=0.11",
+    "pyloudnorm>=0.1",
+    "scipy>=1.7",
+]
+dev = [
+    "pytest>=7.0",
+]
+
+[project.scripts]
+logic-mix-os = "logic_mix_os.cli:main"
+
+[tool.setuptools]
+packages = [
+    "logic_mix_os",
+    "logic_mix_os.analyzers",
+    "logic_mix_os.doctrine",
+    "logic_mix_os.planners",
+    "logic_mix_os.renderers",
+    "logic_mix_os.validation",
+]
+
+[tool.setuptools.package-data]
+"logic_mix_os" = ["schemas/*.json", "doctrine/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

@@ -1,0 +1,32 @@
+{
+  "depth_layers": {
+    "intimate": {
+      "description": "Closest emotional element; usually lead vocal or exposed solo moment.",
+      "reverb": "none, slap, or very short room",
+      "level": "loudest",
+      "eq": "full-spectrum presence",
+      "automation": "phrase-level rides required"
+    },
+    "foreground": {
+      "description": "Clearly heard musical elements that support the emotional center.",
+      "reverb": "short chamber, low send",
+      "level": "-2 to -4 dB from intimate layer",
+      "eq": "present but slightly less full than intimate",
+      "automation": "rides on fills and transitions"
+    },
+    "midground": {
+      "description": "Musical fabric; heard when focused on but not demanding attention.",
+      "reverb": "shared plate or chamber, moderate send",
+      "level": "-6 to -10 dB from intimate layer",
+      "eq": "slight high-shelf down, controlled low-mid warmth",
+      "automation": "section-level movement"
+    },
+    "background": {
+      "description": "Texture, atmosphere, room tone, glue, emotional haze.",
+      "reverb": "hall or long plate, high send",
+      "level": "-12 dB or more from intimate layer",
+      "eq": "filtered, darker, diffuse",
+      "automation": "swells, fades, emotional blooms"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "project": {
+    "song_title": "Example Song",
+    "tempo": 92,
+    "key": "E major",
+    "sample_rate": 48000,
+    "bit_depth": 24
+  },
+  "intent": {
+    "singular_emotional_truth": "The song should feel intimate in the verse and open up emotionally in the chorus.",
+    "references": [],
+    "negative_constraints": [
+      "Do not make the vocal glossy.",
+      "Do not make the chorus a wall of sound.",
+      "Do not let stock loops dominate the song identity."
+    ]
+  },
+  "sections": [
+    { "section_id": "intro",    "name": "Intro",    "start_time": "0:00", "end_time": "0:15", "emotional_goal": "anticipation" },
+    { "section_id": "verse_1",  "name": "Verse 1",  "start_time": "0:15", "end_time": "0:45", "emotional_goal": "intimacy" },
+    { "section_id": "chorus_1", "name": "Chorus 1", "start_time": "0:45", "end_time": "1:15", "emotional_goal": "release" },
+    { "section_id": "bridge",   "name": "Bridge",   "start_time": "1:45", "end_time": "2:05", "emotional_goal": "pressure" },
+    { "section_id": "final_chorus", "name": "Final Chorus", "start_time": "2:05", "end_time": "2:45", "emotional_goal": "catharsis" }
+  ],
+  "tracks": [
+    { "file": "Lead Vocal.wav",      "name": "Lead Vocal",      "source_kind": "comped_audio_track", "known_identity": "lead_vocal" },
+    { "file": "Backing Vocals.wav",  "name": "Backing Vocals",  "source_kind": "comped_audio_track", "known_identity": "backing_vocal" },
+    { "file": "Piano.wav",           "name": "Piano",           "source_kind": "live_audio_recording" },
+    { "file": "Acoustic Guitar.wav", "name": "Acoustic Guitar", "source_kind": "live_audio_recording" },
+    { "file": "Bass.wav",            "name": "Bass",            "source_kind": "di_audio_track" },
+    { "file": "Kick.wav",            "name": "Kick" },
+    { "file": "Snare.wav",           "name": "Snare" },
+    { "file": "Drum Overheads.wav",  "name": "Drum Overheads",  "known_identity": "overhead" },
+    { "file": "Synth Pad.wav",       "name": "Synth Pad",       "source_kind": "software_instrument_bounce" },
+    { "file": "Splice Texture Loop.wav", "name": "Splice Texture Loop", "source_kind": "splice_sample" }
+  ]
+}

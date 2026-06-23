@@ -1,0 +1,37 @@
+{
+  "halee_score": 58.0,
+  "ramone_score": 86.0,
+  "vocal_centrality_score": 90.0,
+  "depth_hierarchy_score": 40.0,
+  "section_contrast_score": 100.0,
+  "static_mix_score": 80.0,
+  "dynamic_mix_score": 52.7,
+  "overall_mix_readiness_score": 73.8,
+  "evidence": {
+    "halee": [
+      "100% of elements sit in forward layers; depth is collapsing."
+    ],
+    "ramone": [
+      "Vocal is not critically masked by forward elements."
+    ],
+    "vocal_centrality": [
+      "Lead vocal 'Lead Vocal' identified.",
+      "Vocal correctly marked sacred.",
+      "Vocal sits in the intimate layer."
+    ],
+    "depth_hierarchy": [
+      "2 of 4 depth layers used; 100% forward."
+    ],
+    "section_contrast": [
+      "0 section(s) fail to lift relative to the previous section."
+    ],
+    "static_mix": [
+      "Broad tonal balance is reasonable."
+    ],
+    "dynamic_mix": [
+      "Section RMS spread 2.4 dB, width spread 0.01, brightness spread 0.01.",
+      "Sections are too similar — the mix is balanced but emotionally static."
+    ]
+  },
+  "warnings": []
+}

@@ -1,0 +1,47 @@
+[
+  {
+    "section_id": "verse_1",
+    "name": "Verse 1",
+    "start_time": 0.0,
+    "end_time": 3.0,
+    "emotional_goal": "intimacy",
+    "metrics": {
+      "rms_dbfs": -15.86,
+      "lufs": -14.17,
+      "width": 0.0647,
+      "brightness": 0.5647,
+      "density": 0.1151,
+      "low_mid_energy": 0.6906,
+      "presence_energy": 0.0003,
+      "transient_density": 0.6667,
+      "vocal_presence_db": 2.76
+    },
+    "contrast_vs_previous": {
+      "note": "first analysed section; no previous section to compare."
+    }
+  },
+  {
+    "section_id": "chorus_1",
+    "name": "Chorus 1",
+    "start_time": 3.0,
+    "end_time": 6.0,
+    "emotional_goal": "release",
+    "metrics": {
+      "rms_dbfs": -11.1,
+      "lufs": -9.52,
+      "width": 0.0384,
+      "brightness": 0.5381,
+      "density": 0.1707,
+      "low_mid_energy": 0.3749,
+      "presence_energy": 0.0011,
+      "transient_density": 0.8888,
+      "vocal_presence_db": 0.24
+    },
+    "contrast_vs_previous": {
+      "rms_delta_db": 4.76,
+      "width_delta": -0.0263,
+      "brightness_delta": -0.0266,
+      "density_delta": 0.0556
+    }
+  }
+]

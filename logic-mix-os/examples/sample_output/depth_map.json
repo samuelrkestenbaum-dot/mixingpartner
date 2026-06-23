@@ -1,0 +1,35 @@
+[
+  {
+    "track_id": "lead_vocal",
+    "name": "Lead Vocal",
+    "instrument_identity": "lead_vocal",
+    "default_depth": "intimate",
+    "depth_by_section": {
+      "verse_1": "intimate",
+      "chorus_1": "foreground"
+    },
+    "reason": "Emotional centre: intimate in verses, foreground in choruses; never buried."
+  },
+  {
+    "track_id": "piano",
+    "name": "Piano",
+    "instrument_identity": "piano",
+    "default_depth": "foreground",
+    "depth_by_section": {
+      "verse_1": "foreground",
+      "chorus_1": "midground"
+    },
+    "reason": "Heard element supporting the emotional centre; clear but not competing with the vocal."
+  },
+  {
+    "track_id": "bass",
+    "name": "Bass",
+    "instrument_identity": "bass_guitar",
+    "default_depth": "foreground",
+    "depth_by_section": {
+      "verse_1": "foreground",
+      "chorus_1": "foreground"
+    },
+    "reason": "Heard element supporting the emotional centre; clear but not competing with the vocal."
+  }
+]

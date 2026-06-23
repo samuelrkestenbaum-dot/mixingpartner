@@ -1,0 +1,110 @@
+[
+  {
+    "track_id": "lead_vocal",
+    "name": "Lead Vocal",
+    "metrics": {
+      "duration": 6.0,
+      "sample_rate": 32000,
+      "channels": 1,
+      "peak_dbfs": -3.1,
+      "rms_dbfs": -11.84,
+      "estimated_lufs": -12.86,
+      "crest_factor_db": 8.745,
+      "spectral_centroid": 1417.25,
+      "spectral_rolloff": 640.62,
+      "spectral_flatness": 0.0035,
+      "brightness": 0.5757,
+      "band_energy": {
+        "low": 0.0938,
+        "low_mid": 0.6155,
+        "mid": 0.255,
+        "presence": 0.0014,
+        "high": 0.0008
+      },
+      "stereo_width": 0.0,
+      "phase_correlation": 1.0,
+      "mono_collapse_loss_db": 0.0,
+      "transient_density_per_sec": 3.833,
+      "transient_density": 0.6388,
+      "density": 0.8244,
+      "mud_indicator": 1.0,
+      "harshness_indicator": 0.0,
+      "sibilance_indicator": 0.0,
+      "vocal_presence_energy": 0.0075,
+      "masking_risk": 0.0,
+      "path": "fixtures/simple_vocal_piano_song/stems/Lead Vocal.wav"
+    }
+  },
+  {
+    "track_id": "piano",
+    "name": "Piano",
+    "metrics": {
+      "duration": 6.0,
+      "sample_rate": 32000,
+      "channels": 2,
+      "peak_dbfs": -3.1,
+      "rms_dbfs": -23.62,
+      "estimated_lufs": -19.22,
+      "crest_factor_db": 20.519,
+      "spectral_centroid": 675.3,
+      "spectral_rolloff": 656.25,
+      "spectral_flatness": 0.0,
+      "brightness": 0.3578,
+      "band_energy": {
+        "low": 0.0009,
+        "low_mid": 0.7742,
+        "mid": 0.2245,
+        "presence": 0.0001,
+        "high": 0.0
+      },
+      "stereo_width": 0.2268,
+      "phase_correlation": 0.7925,
+      "mono_collapse_loss_db": -0.476,
+      "transient_density_per_sec": 0.5,
+      "transient_density": 0.0833,
+      "density": 0.1044,
+      "mud_indicator": 1.0,
+      "harshness_indicator": 0.0,
+      "sibilance_indicator": 0.0,
+      "vocal_presence_energy": 0.0106,
+      "masking_risk": 0.0,
+      "path": "fixtures/simple_vocal_piano_song/stems/Piano.wav"
+    }
+  },
+  {
+    "track_id": "bass",
+    "name": "Bass",
+    "metrics": {
+      "duration": 6.0,
+      "sample_rate": 32000,
+      "channels": 1,
+      "peak_dbfs": -3.1,
+      "rms_dbfs": -14.65,
+      "estimated_lufs": -13.82,
+      "crest_factor_db": 11.555,
+      "spectral_centroid": 224.9,
+      "spectral_rolloff": 109.38,
+      "spectral_flatness": 0.0,
+      "brightness": 0.0345,
+      "band_energy": {
+        "low": 0.8908,
+        "low_mid": 0.1064,
+        "mid": 0.0,
+        "presence": 0.0,
+        "high": 0.0
+      },
+      "stereo_width": 0.0,
+      "phase_correlation": 1.0,
+      "mono_collapse_loss_db": 0.0,
+      "transient_density_per_sec": 0.667,
+      "transient_density": 0.1112,
+      "density": 0.0244,
+      "mud_indicator": 0.0,
+      "harshness_indicator": 0.0,
+      "sibilance_indicator": 0.0,
+      "vocal_presence_energy": 0.0,
+      "masking_risk": 0.0,
+      "path": "fixtures/simple_vocal_piano_song/stems/Bass.wav"
+    }
+  }
+]

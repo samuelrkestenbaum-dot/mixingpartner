@@ -1,0 +1,19 @@
+{
+  "masking_hierarchy": {
+    "masking_hierarchy_rule": "Only flag masking as critical when competing elements occupy the same depth layer and perceptual role. Allow controlled overlap when one element is midground/background or classified as felt.",
+    "bad_masking": "Two elements at the same or competing depth layers fight for the same perceptual role.",
+    "good_masking": "An element intentionally blends into the song fabric (a pad behind the vocal, room tone filling low-mid body).",
+    "bad_examples": [
+      "lead vocal and lead guitar both forward in 1-4 kHz",
+      "piano and vocal both dense in 300 Hz-1.5 kHz",
+      "stereo loop and guitars both full-width in the chorus",
+      "synth pad and vocal both foreground and bright"
+    ],
+    "good_examples": [
+      "pad overlapping vocal range but sitting behind the vocal",
+      "room tone filling low-mid emotional body",
+      "texture loop supporting chorus density without demanding attention",
+      "background percussion adding movement without being identifiable"
+    ]
+  }
+}

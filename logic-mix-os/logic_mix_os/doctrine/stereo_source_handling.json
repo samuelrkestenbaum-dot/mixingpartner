@@ -1,0 +1,37 @@
+{
+  "stereo_source_handling": {
+    "rule": "Stereo sources, especially loops and samples, must be deliberately placed in the depth field rather than left full-width by default.",
+    "options": [
+      "Collapse to mono and place with panning plus reverb send",
+      "Narrow stereo image to 30-50% and assign to midground or background",
+      "Use mid-side EQ to reduce side energy below 500 Hz",
+      "Filter highs and lows if the element is felt rather than heard",
+      "Assign to background depth layer with heavy filtering if it is atmospheric"
+    ],
+    "never": [
+      "Leave a stereo loop at full width in the foreground",
+      "Let a stereo sample occupy the same width and depth as the vocal",
+      "Allow side-channel low-end buildup below 150-250 Hz"
+    ]
+  },
+  "sample_loop_doctrine": {
+    "rule": "Imported loops and Splice samples should not be treated as finished mix elements by default. They must be re-contextualized into the song's depth, tone, groove, and emotional hierarchy.",
+    "preferred_moves": [
+      "narrow stereo width",
+      "filter lows or highs",
+      "chop into smaller gestures",
+      "use only at transitions",
+      "push into background depth layer",
+      "sidechain subtly to vocal or kick if needed",
+      "re-pitch or formant-shift if key/tone mismatches",
+      "replace with simpler one-shot if loop dominates"
+    ],
+    "red_flags": [
+      "full-width loop in foreground",
+      "loop is brighter than vocal",
+      "loop contains its own reverb space that conflicts with song room",
+      "loop has mastered compression that makes live tracks feel small",
+      "loop repeats unchanged across multiple sections"
+    ]
+  }
+}

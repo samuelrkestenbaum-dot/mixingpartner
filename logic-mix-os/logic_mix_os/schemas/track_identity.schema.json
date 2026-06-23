@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Track Identity Report",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["track_id", "instrument_identity", "identity_family", "confidence"],
+    "properties": {
+      "track_id": { "type": "string" },
+      "name": { "type": "string" },
+      "instrument_identity": { "type": "string" },
+      "identity_family": { "type": "string" },
+      "confidence": { "type": "number" },
+      "evidence": { "type": "object" },
+      "alternate_candidates": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "instrument_identity": { "type": "string" },
+            "confidence": { "type": "number" }
+          }
+        }
+      },
+      "manual_override": { "type": ["string", "null"] }
+    }
+  }
+}

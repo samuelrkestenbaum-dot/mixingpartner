@@ -1,0 +1,72 @@
+{
+  "project": {
+    "song_title": "Dense Chorus With Loops",
+    "tempo": 92,
+    "key": "E minor",
+    "sample_rate": 32000,
+    "bit_depth": 16
+  },
+  "intent": {
+    "singular_emotional_truth": "A big chorus that must not bury the vocal.",
+    "references": [],
+    "negative_constraints": [
+      "Do not let the chorus become a wall of sound.",
+      "Do not let stock loops dominate the song identity."
+    ]
+  },
+  "sections": [
+    {
+      "section_id": "verse_1",
+      "name": "Verse 1",
+      "start_time": "0:00",
+      "end_time": "0:03",
+      "emotional_goal": "intimacy"
+    },
+    {
+      "section_id": "chorus_1",
+      "name": "Chorus 1",
+      "start_time": "0:03",
+      "end_time": "0:06",
+      "emotional_goal": "release"
+    }
+  ],
+  "tracks": [
+    {
+      "file": "Lead Vocal.wav",
+      "name": "Lead Vocal",
+      "source_kind": "comped_audio_track"
+    },
+    {
+      "file": "Acoustic Guitar.wav",
+      "name": "Acoustic Guitar"
+    },
+    {
+      "file": "Electric Guitar 1.wav",
+      "name": "Electric Guitar 1"
+    },
+    {
+      "file": "Electric Guitar 2.wav",
+      "name": "Electric Guitar 2"
+    },
+    {
+      "file": "Synth Pad.wav",
+      "name": "Synth Pad"
+    },
+    {
+      "file": "Splice Texture Loop.wav",
+      "name": "Splice Texture Loop"
+    },
+    {
+      "file": "Bass.wav",
+      "name": "Bass"
+    },
+    {
+      "file": "Kick.wav",
+      "name": "Kick"
+    },
+    {
+      "file": "Snare.wav",
+      "name": "Snare"
+    }
+  ]
+}

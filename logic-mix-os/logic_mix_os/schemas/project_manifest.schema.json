@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Project Manifest",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "object",
+      "properties": {
+        "song_title": { "type": "string" },
+        "tempo": { "type": ["number", "null"] },
+        "key": { "type": ["string", "null"] },
+        "sample_rate": { "type": ["number", "null"] },
+        "bit_depth": { "type": ["number", "null"] }
+      }
+    },
+    "intent": {
+      "type": "object",
+      "properties": {
+        "singular_emotional_truth": { "type": "string" },
+        "references": { "type": "array" },
+        "negative_constraints": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "section_id": { "type": "string" },
+          "name": { "type": "string" },
+          "start_time": {},
+          "end_time": {},
+          "emotional_goal": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "tracks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "file": { "type": "string" },
+          "name": { "type": "string" },
+          "source_kind": { "type": ["string", "null"] },
+          "known_identity": { "type": ["string", "null"] }
+        }
+      }
+    }
+  }
+}

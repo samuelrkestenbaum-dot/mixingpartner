@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Source Material Report",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["track_id", "name", "source_kind", "confidence", "editable_domains"],
+    "properties": {
+      "track_id": { "type": "string" },
+      "name": { "type": "string" },
+      "file": { "type": ["string", "null"] },
+      "source_kind": { "type": "string" },
+      "confidence": { "type": "number" },
+      "editable_domains": { "type": "array", "items": { "type": "string" } },
+      "not_editable_directly": { "type": "array", "items": { "type": "string" } },
+      "requires_render_for_analysis": { "type": "boolean" },
+      "evidence": { "type": "object" },
+      "warnings": { "type": "array", "items": { "type": "string" } }
+    }
+  }
+}
