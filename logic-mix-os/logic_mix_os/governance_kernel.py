@@ -55,19 +55,71 @@ def _h(text: str) -> str:
     return hashlib.md5(text.encode("utf-8")).hexdigest()[:8]
 
 
-def classify_action(action: Dict) -> int:
-    """Map a proposed action to an authority class (0-5)."""
+# Fail-safe-high: an unknown / ambiguous / unrecognised action must NOT default
+# to Class 0 (observe). It is escalated to review-required at this class so a
+# human gates it. (Pre-apply hardening, Packet 4.)
+REVIEW_DEFAULT_CLASS = 3
+
+_MARKER_SETS = [
+    (_DESTRUCTIVE_MARKERS, 5, "destructive"),
+    (_EXTERNAL_MARKERS, 4, "external_prod"),
+    (_DAW_MARKERS, 3, "daw_session"),
+]
+
+
+def classify_action_detailed(action: Dict) -> Dict:
+    """Classify an action onto the authority ladder, fail-safe-high.
+
+    Known-safe kinds keep their low class; unknown kinds and benign kinds carrying
+    risky markers are escalated to the HIGHER class (never the lower). Returns the
+    class plus the reasoning so receipts can show *why* it escalated.
+    """
     kind = (action.get("kind") or action.get("type") or "").strip()
     text = " ".join(str(action.get(k, "")) for k in ("kind", "type", "setting", "reason", "op", "intent")).lower()
 
-    if any(m in text for m in _DESTRUCTIVE_MARKERS):
-        return 5
-    cls = _KIND_CLASS.get(kind, 0)
-    if any(m in text for m in _EXTERNAL_MARKERS):
-        cls = max(cls, 4)
-    if any(m in text for m in _DAW_MARKERS):
-        cls = max(cls, 3)
-    return cls
+    kind_class = _KIND_CLASS.get(kind)  # None if unrecognised
+    unknown_kind = kind_class is None
+
+    matched: Dict[str, List[str]] = {}
+    marker_class = None
+    for markers, mcls, label in _MARKER_SETS:
+        hits = [m for m in markers if m in text]
+        if hits:
+            matched[label] = hits
+            marker_class = mcls if marker_class is None else max(marker_class, mcls)
+
+    candidates = [c for c in (kind_class, marker_class) if c is not None]
+    final = max(candidates) if candidates else REVIEW_DEFAULT_CLASS
+    base = kind_class if kind_class is not None else 0
+
+    escalated_by_marker = marker_class is not None and marker_class > base
+    ambiguous = bool(unknown_kind or escalated_by_marker or len(matched) > 1)
+
+    if unknown_kind and marker_class is None:
+        reason = f"Unknown action kind '{kind or '?'}' with no recognised markers — fail-safe-high review (Class {final})."
+    elif unknown_kind:
+        reason = f"Unknown action kind '{kind or '?'}'; markers {matched} — escalated to Class {final} (fail-safe-high)."
+    elif escalated_by_marker:
+        reason = f"Known kind '{kind}' (Class {base}) escalated to Class {final} by markers {matched}."
+    elif len(matched) > 1:
+        reason = f"Known kind '{kind}'; multiple marker categories {list(matched)} — highest wins (Class {final})."
+    else:
+        reason = f"Known kind '{kind}' — Class {final}."
+
+    return {
+        "authority_class": final,
+        "ambiguous": ambiguous,
+        "unknown_kind": unknown_kind,
+        "matched_markers": matched,
+        "classification_reason": reason,
+        "escalated_from": base,
+        "escalated_to": final,
+    }
+
+
+def classify_action(action: Dict) -> int:
+    """Map a proposed action to an authority class (0-5)."""
+    return classify_action_detailed(action)["authority_class"]
 
 
 def _rollback_for(cls: int, action: Dict):
@@ -93,7 +145,8 @@ class GovernanceKernel:
 
     # -- proposal -----------------------------------------------------------
     def propose(self, action: Dict) -> Dict:
-        cls = classify_action(action)
+        detail = classify_action_detailed(action)
+        cls = detail["authority_class"]
         source_immutable = bool(action.get("source_immutable", True))
         generated_only = bool(action.get("generated_output_only", True))
 
@@ -123,6 +176,12 @@ class GovernanceKernel:
             "authority_class": cls,
             "authority_name": AUTHORITY_CLASSES[cls]["name"],
             "risk_level": _RISK_LEVEL[cls],
+            "ambiguous": detail["ambiguous"],
+            "unknown_kind": detail["unknown_kind"],
+            "matched_markers": detail["matched_markers"],
+            "classification_reason": detail["classification_reason"],
+            "escalated_from": detail["escalated_from"],
+            "escalated_to": detail["escalated_to"],
             "allowed_now": allowed_now,
             "approval_required": approval_required,
             "must_not_execute_here": cls >= 3,
