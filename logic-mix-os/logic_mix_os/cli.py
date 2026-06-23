@@ -406,8 +406,13 @@ def _run_album(args) -> int:
 
 def _run_govern(args) -> int:
     from .governance_kernel import GovernanceKernel, demo_actions, govern_actions
+    from .governance_ledger import GovernanceLedger
     from .bridge.exporter import export_actions
-    kernel = GovernanceKernel()
+    if args.verify:
+        res = GovernanceLedger(args.verify).verify()
+        print(json.dumps(res, indent=2))
+        return 0 if res["ok"] else 1
+    kernel = GovernanceKernel(ledger_path=args.ledger)
     if args.demo:
         actions = demo_actions()
     elif args.plan:
@@ -428,6 +433,10 @@ def _run_govern(args) -> int:
         print(f"{r['action_id']:<8}C{r['authority_class']:<5}{r['authority_name']:<34}"
               f"{r['decision']:<16}{r['risk_level']}")
     print(f"\nsummary: {res['summary']}")
+    if args.ledger:
+        v = kernel.verify_ledger()
+        print(f"audit ledger: {len(kernel.events())} event(s) -> {args.ledger}  "
+              f"(integrity: {'OK' if v['ok'] else 'BROKEN'})")
     if args.out:
         Path(args.out).write_text(json.dumps(res, indent=2) + "\n", encoding="utf-8")
         print(f"Wrote {args.out}")
@@ -579,6 +588,8 @@ def build_parser() -> argparse.ArgumentParser:
     gov.add_argument("--plan", help="mix_plan.json whose Logic actions to govern")
     gov.add_argument("--demo", action="store_true", help="Classify representative Class 0-5 actions")
     gov.add_argument("--out", help="Optional output .json path")
+    gov.add_argument("--ledger", help="Append governance events to this hash-chained jsonl audit ledger")
+    gov.add_argument("--verify", help="Verify a governance_ledger.jsonl's tamper-evidence chain and exit")
     gov.set_defaults(func=_run_govern)
 
     ig = sub.add_parser("ingest-render", help="Ingest an external (e.g. Logic) WAV render + calibrate vs offline")
