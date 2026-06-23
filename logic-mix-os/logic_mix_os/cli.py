@@ -404,6 +404,57 @@ def _run_album(args) -> int:
     return 0
 
 
+def _run_govern(args) -> int:
+    from .governance_kernel import GovernanceKernel, demo_actions, govern_actions
+    from .bridge.exporter import export_actions
+    kernel = GovernanceKernel()
+    if args.demo:
+        actions = demo_actions()
+    elif args.plan:
+        with open(args.plan, "r", encoding="utf-8") as fh:
+            mix_plan = json.load(fh)
+        actions = [
+            {"kind": a["type"], "setting": a.get("settings"), "reason": a.get("reason"),
+             "source_artifacts": [a["track"]]}
+            for a in export_actions(mix_plan)
+        ]
+    else:
+        print("Specify --demo or --plan <mix_plan.json>")
+        return 1
+    res = govern_actions(actions, kernel)
+    print(f"{'action':<8}{'class':<6}{'authority':<34}{'decision':<16}risk")
+    print("-" * 78)
+    for r in res["receipts"]:
+        print(f"{r['action_id']:<8}C{r['authority_class']:<5}{r['authority_name']:<34}"
+              f"{r['decision']:<16}{r['risk_level']}")
+    print(f"\nsummary: {res['summary']}")
+    if args.out:
+        Path(args.out).write_text(json.dumps(res, indent=2) + "\n", encoding="utf-8")
+        print(f"Wrote {args.out}")
+    return 0
+
+
+def _run_ingest_render(args) -> int:
+    from .render_ingest import ingest_render
+    rec = ingest_render(args.wav, base_wav=args.base, offline_wav=args.offline, link=args.link)
+    if "error" in rec:
+        print(rec["error"])
+        return 1
+    print(f"render_id: {rec['render_id']}  (governance receipt {rec['governance']['receipt_id']}, "
+          f"class {rec['governance']['authority_class']})")
+    print(f"metadata: {rec['metadata']}")
+    print(f"compatible with base: {rec['compatibility']}")
+    cal = rec.get("calibration")
+    if cal:
+        print(f"calibration: predicted_direction_correct={cal['predicted_direction_correct']} "
+              f"| aligned={cal['aligned_metrics']} | divergent={cal['divergent_metrics']}")
+        print(f"  {cal['trust_verdict']}")
+    if args.out:
+        Path(args.out).write_text(json.dumps(rec, indent=2) + "\n", encoding="utf-8")
+        print(f"Wrote {args.out}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="logic-mix-os", description="Local-first Logic Pro mix decision system.")
     p.add_argument("--version", action="version", version=f"logic-mix-os {__version__}")
@@ -523,6 +574,20 @@ def build_parser() -> argparse.ArgumentParser:
     cvch.add_argument("--chosen", required=True, help="Variant id Sam chose")
     cvch.add_argument("--reason", help="Optional note on why")
     cvch.set_defaults(func=_run_choose_variant)
+
+    gov = sub.add_parser("govern", help="Gravito governance kernel: classify/gate actions on the authority ladder")
+    gov.add_argument("--plan", help="mix_plan.json whose Logic actions to govern")
+    gov.add_argument("--demo", action="store_true", help="Classify representative Class 0-5 actions")
+    gov.add_argument("--out", help="Optional output .json path")
+    gov.set_defaults(func=_run_govern)
+
+    ig = sub.add_parser("ingest-render", help="Ingest an external (e.g. Logic) WAV render + calibrate vs offline")
+    ig.add_argument("--wav", required=True, help="External render WAV to ingest")
+    ig.add_argument("--base", help="Base render WAV (for compatibility + comparison)")
+    ig.add_argument("--offline", help="Offline-approximation render WAV (for calibration)")
+    ig.add_argument("--link", help="Variant/action/receipt id this render is linked to")
+    ig.add_argument("--out", help="Optional output .json path")
+    ig.set_defaults(func=_run_ingest_render)
 
     ea = sub.add_parser("export-actions", help="Export the mix plan as executable actions (bridge)")
     ea.add_argument("--plan", required=True, help="Path to mix_plan.json")
