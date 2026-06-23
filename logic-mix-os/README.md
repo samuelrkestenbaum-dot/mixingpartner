@@ -74,8 +74,16 @@ A ready-made example of the output lives in [`examples/sample_output/`](examples
 | `validate-output --output ./output/...` | Validate an output directory against the schemas |
 | `compare-reference --bounce a.wav --reference b.wav` | Reference-track delta report |
 | `suggest-creative-variants --plan mix_plan.json` | Non-destructive creative hypotheses (stub) |
+| `status` | Operator "control room" status surface (text) |
+| `regression [--fixtures ./fixtures] [--update-golden]` | Golden-output + doctrine regression suite |
 
 Common flags: `--stems`, `--manifest`, `--out`, plus optional `--bounce` and `--reference`.
+
+`status` is the CLI realisation of the section-50 "mix control room": one surface
+showing scores, the section map (with per-section forward-element crowding), the
+masking summary, and the next recommended action. The graphical dashboard is
+deferred to a later milestone (see Roadmap) — per the spec, the product is the
+decision system, not the UI.
 
 ## Inputs
 
@@ -171,6 +179,25 @@ non-destructive guarantee, and schema validation, across three fixtures: a
 simple vocal/piano song, a dense chorus with loops, and a Splice-loop problem.
 `conftest.py` regenerates the fixtures automatically if missing.
 
+### Regression & doctrine protection
+
+`logic-mix-os regression` guards musical judgment against silent drift, in two layers:
+
+- **Golden snapshots** — a stable categorical fingerprint of each fixture
+  (`fixtures/<name>/golden/snapshot.json`): identities, source kinds, depth
+  layers, masking classifications, and section lift warnings. Categorical
+  regressions are *critical*; score/confidence drift (within tolerance) is a
+  *warning*. Regenerate with `regression --update-golden`.
+- **Doctrine invariants** — absolute behaviours that must never regress, e.g.
+  *don't foreground full-width stock loops, don't treat all masking as bad,
+  don't widen the lead vocal to lift a chorus, prefer vocal rides before
+  heavier compression, never recommend destructive edits, never score an
+  unidentified track.*
+
+```json
+{ "tests_run": 68, "passed": 68, "failed": 0, "critical_failures": [], "warnings": [] }
+```
+
 ## Risk classes
 
 Every action is tagged with a risk class so creative/destructive moves never
@@ -187,7 +214,16 @@ bypass approval:
 
 ## Roadmap
 
-This MVP is the deterministic decision core. The broader vision (creative
-experimentation engine, taste/governance layer, session memory, and Logic
-execution bridges via AppleScript/Shortcuts/helper Audio Units) builds on top of
-it — but the product *is* the decision system; the bridge is just execution.
+This MVP is the deterministic decision core. The staged plan (per the spec):
+
+- **MVP (this)** — local analyzer + doctrine engine + Logic checklist + next-pass + regression suite.
+- **v2 — Source-aware session intelligence** — MIDI/synth/sampler auditors, render dependency graph, sample provenance, plugin scanner.
+- **v3 — Dynamic narrative + reference intelligence** — automation narrative planner, reference profile library, translation simulation, lyric/vocal/groove analysis.
+- **v4 — Memory, taste, album, Cowork ops** — mix-pass history, decision ledger, taste calibration, album coherence, approval workflow.
+- **v5 — Logic bridge + assisted execution** — AppleScript/Shortcuts/accessibility bridges, checklist executor, helper Audio Units (Mix Probe, Depth Layer Meter).
+
+**The graphical UI screen map (spec section 50) is intentionally deferred.** The
+spec's own MVP exclusions (52.1) list a "complex visual dashboard" as out of
+scope, and the build-priority rule (53) is explicit: *don't let UI distract from
+the deeper product — the product is the decision system, not the bridge.* The
+`status` command provides the equivalent operator surface in the terminal today.

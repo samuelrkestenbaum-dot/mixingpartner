@@ -18,7 +18,9 @@ from .analyzers.reference_comparator import compare_to_reference
 from .pipeline import analyze, write_artifacts
 from .planners.next_pass_planner import generate_creative_hypotheses
 from .project import load_manifest
+from .regression import run_regression_suite
 from .renderers import checklist_renderer
+from .renderers.operator_view import render_status
 from .validation.output_validator import validate_output
 
 
@@ -142,6 +144,27 @@ def _run_suggest_creative(args) -> int:
     return 0
 
 
+def _run_status(args) -> int:
+    manifest = _load_manifest(args.manifest)
+    result = analyze(args.stems, manifest, bounce_path=args.bounce)
+    print(render_status(result))
+    return 0
+
+
+def _run_regression(args) -> int:
+    report = run_regression_suite(args.fixtures, update_golden=args.update_golden)
+    if args.update_golden:
+        print("Updated golden snapshots for:", ", ".join(report.get("updated", [])))
+        return 0
+    print(json.dumps(report, indent=2))
+    if report["critical_failures"]:
+        print(f"\nREGRESSION FAILED: {len(report['critical_failures'])} critical failure(s)")
+        return 1
+    print(f"\nPASS — {report['passed']}/{report['tests_run']} checks "
+          f"({len(report['warnings'])} warning(s))")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="logic-mix-os", description="Local-first Logic Pro mix decision system.")
     p.add_argument("--version", action="version", version=f"logic-mix-os {__version__}")
@@ -192,6 +215,16 @@ def build_parser() -> argparse.ArgumentParser:
     sc = sub.add_parser("suggest-creative-variants", help="Creative hypotheses stub from a mix_plan.json")
     sc.add_argument("--plan", required=True, help="Path to mix_plan.json")
     sc.set_defaults(func=_run_suggest_creative)
+
+    st = sub.add_parser("status", help="Operator 'control room' status surface (text)")
+    add_common(st)
+    st.add_argument("--bounce", help="Optional stereo bounce")
+    st.set_defaults(func=_run_status)
+
+    rg = sub.add_parser("regression", help="Run the golden-output + doctrine regression suite")
+    rg.add_argument("--fixtures", default="./fixtures", help="Fixtures directory")
+    rg.add_argument("--update-golden", action="store_true", help="(Re)write golden snapshots instead of comparing")
+    rg.set_defaults(func=_run_regression)
 
     return p
 
