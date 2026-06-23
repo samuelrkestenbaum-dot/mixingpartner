@@ -97,3 +97,27 @@ def _pcm_bytes_to_float(raw: bytes, sampwidth: int) -> np.ndarray:
         arr = np.frombuffer(raw, dtype="<i4").astype(np.float64)
         return arr / float(1 << 31)
     raise ValueError(f"Unsupported PCM sample width: {sampwidth} bytes")
+
+
+def write_wav(path: str | Path, samples: np.ndarray, sample_rate: int) -> str:
+    """Write float samples (mono (n,) or stereo (n, ch)) to a 16-bit PCM WAV.
+
+    Uses soundfile when available, else the stdlib :mod:`wave` module. Clips to
+    [-1, 1]. Returns the written path. Non-destructive: only writes the target.
+    """
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    data = np.clip(np.asarray(samples, dtype=np.float64), -1.0, 1.0)
+
+    if _HAVE_SF:
+        _sf.write(str(path), data, int(sample_rate), subtype="PCM_16")
+        return str(path)
+
+    int16 = (data * 32767.0).astype("<i2")
+    nch = 1 if int16.ndim == 1 else int(int16.shape[1])
+    with wave.open(str(path), "wb") as wf:
+        wf.setnchannels(nch)
+        wf.setsampwidth(2)
+        wf.setframerate(int(sample_rate))
+        wf.writeframes(int16.tobytes())  # (n, ch) C-order = interleaved
+    return str(path)
