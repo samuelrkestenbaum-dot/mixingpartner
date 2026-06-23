@@ -296,6 +296,25 @@ def render_expanded_analysis(expanded: Dict) -> str:
     return "\n".join(out)
 
 
+def render_source_audits(source_audits: Dict) -> str:
+    out = ["# Source-Aware Audit", ""]
+    out.append("_Different Logic objects afford different fixes; recommendations are source-specific._")
+    out.append("")
+    for a in source_audits.get("audits", []):
+        out.append(f"## {a['track']}  ·  `{a['auditor_type']}` ({a['source_kind']})")
+        out.append("")
+        if a["red_flags"]:
+            out.append("**Red flags:** " + ", ".join(a["red_flags"]))
+            out.append("")
+        for r in a["recommendations"]:
+            out.append(f"- {r}")
+        if a["preferred_moves"]:
+            out.append("")
+            out.append("_Preferred moves:_ " + ", ".join(a["preferred_moves"]))
+        out.append("")
+    return "\n".join(out)
+
+
 def render_session_intelligence(provenance: Dict, render_graph: Dict, plugin_scan: Dict) -> str:
     out = ["# Session Intelligence", ""]
 

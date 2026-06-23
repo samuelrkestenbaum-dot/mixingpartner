@@ -209,6 +209,18 @@ def _run_regression(args) -> int:
     return 0
 
 
+def _run_audit(args) -> int:
+    manifest = _load_manifest(args.manifest)
+    result = analyze(args.stems, manifest, bounce_path=args.bounce)
+    write_artifacts(result, args.out)
+    for a in result.source_audits["audits"]:
+        flags = f"  [red flags: {', '.join(a['red_flags'])}]" if a["red_flags"] else ""
+        print(f"\n{a['track']} — {a['auditor_type']} ({a['source_kind']}){flags}")
+        for r in a["recommendations"]:
+            print(f"  • {r}")
+    return 0
+
+
 def _run_memory_record(args) -> int:
     manifest = _load_manifest(args.manifest)
     result = analyze(args.stems, manifest, bounce_path=args.bounce)
@@ -380,6 +392,11 @@ def build_parser() -> argparse.ArgumentParser:
     al.add_argument("--projects", required=True, help="Folder containing project subfolders")
     al.add_argument("--out", help="Optional output .json path")
     al.set_defaults(func=_run_album)
+
+    au = sub.add_parser("audit", help="Source-aware auditors (live / synth / sampler / loop)")
+    add_common(au)
+    au.add_argument("--bounce", help="Optional stereo bounce")
+    au.set_defaults(func=_run_audit)
 
     return p
 

@@ -26,6 +26,7 @@ from .analyzers.provenance import analyze_provenance
 from .analyzers.reference_comparator import compare_to_reference
 from .analyzers.render_graph import build_render_graph
 from .analyzers.section_analyzer import analyze_sections
+from .analyzers.source_auditors import audit_all
 from .analyzers.source_material_detector import detect_source_material
 from .analyzers.track_identity_detector import detect_track_identity
 from .analyzers.transition_quality_analyzer import analyze_transitions
@@ -64,6 +65,7 @@ class ProjectAnalysis:
     provenance: Dict = field(default_factory=dict)
     render_graph: Dict = field(default_factory=dict)
     plugin_scan: Dict = field(default_factory=dict)
+    source_audits: Dict = field(default_factory=dict)
     records: List[Dict] = field(default_factory=list)
 
 
@@ -204,6 +206,7 @@ def analyze(
     result.provenance = analyze_provenance(project, result.source_material, result.depth_map)
     result.render_graph = build_render_graph(project)
     result.plugin_scan = scan_plugins(result.mix_plan, manifest.get("plugins"))
+    result.source_audits = audit_all(records)
 
     return result
 
@@ -258,6 +261,8 @@ def write_artifacts(result: ProjectAnalysis, out_dir: str | Path) -> List[str]:
         json_files["render_graph.json"] = result.render_graph
     if result.plugin_scan:
         json_files["plugin_scan.json"] = result.plugin_scan
+    if result.source_audits:
+        json_files["source_audits.json"] = result.source_audits
 
     for name, data in json_files.items():
         _dump_json(out / name, data)
@@ -283,6 +288,8 @@ def write_artifacts(result: ProjectAnalysis, out_dir: str | Path) -> List[str]:
         md_files["session_intelligence.md"] = markdown_renderer.render_session_intelligence(
             result.provenance, result.render_graph, result.plugin_scan
         )
+    if result.source_audits:
+        md_files["source_audit_report.md"] = markdown_renderer.render_source_audits(result.source_audits)
     for name, text in md_files.items():
         _write_text(out / name, text)
         written.append(str(out / name))

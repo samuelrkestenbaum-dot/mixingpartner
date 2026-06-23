@@ -1,0 +1,92 @@
+{
+  "audits": [
+    {
+      "track": "Lead Vocal",
+      "track_id": "lead_vocal",
+      "source_kind": "comped_audio_track",
+      "instrument_identity": "lead_vocal",
+      "auditor_type": "live_track",
+      "checks": {
+        "crest_factor_db": 8.745,
+        "stereo_width": 0.0,
+        "brightness": 0.5757,
+        "transient_density": 0.6388,
+        "mud_indicator": 1.0,
+        "sibilance_indicator": 0.0,
+        "low_energy": 0.0938
+      },
+      "recommendations": [
+        "Preserve the human feel; integrate with shared room/depth rather than flattening dynamics."
+      ],
+      "preferred_moves": [
+        "clip gain before compression",
+        "phrase-level rides",
+        "light tuning only where distraction occurs",
+        "preserve transient character",
+        "use room/depth to integrate the performance"
+      ],
+      "red_flags": []
+    },
+    {
+      "track": "Piano",
+      "track_id": "piano",
+      "source_kind": "live_audio_recording",
+      "instrument_identity": "piano",
+      "auditor_type": "live_track",
+      "checks": {
+        "crest_factor_db": 20.519,
+        "stereo_width": 0.2268,
+        "brightness": 0.3578,
+        "transient_density": 0.0833,
+        "mud_indicator": 1.0,
+        "sibilance_indicator": 0.0,
+        "low_energy": 0.0009
+      },
+      "recommendations": [
+        "Inconsistent phrase energy: use clip gain + phrase rides before compression (do not compress harder).",
+        "Preserve the human feel; integrate with shared room/depth rather than flattening dynamics."
+      ],
+      "preferred_moves": [
+        "clip gain before compression",
+        "phrase-level rides",
+        "light tuning only where distraction occurs",
+        "preserve transient character",
+        "use room/depth to integrate the performance"
+      ],
+      "red_flags": []
+    },
+    {
+      "track": "Bass",
+      "track_id": "bass",
+      "source_kind": "live_audio_recording",
+      "instrument_identity": "bass_guitar",
+      "auditor_type": "live_track",
+      "checks": {
+        "crest_factor_db": 11.555,
+        "stereo_width": 0.0,
+        "brightness": 0.0345,
+        "transient_density": 0.1112,
+        "mud_indicator": 0.0,
+        "sibilance_indicator": 0.0,
+        "low_energy": 0.8908
+      },
+      "recommendations": [
+        "Preserve the human feel; integrate with shared room/depth rather than flattening dynamics."
+      ],
+      "preferred_moves": [
+        "clip gain before compression",
+        "phrase-level rides",
+        "light tuning only where distraction occurs",
+        "preserve transient character",
+        "use room/depth to integrate the performance"
+      ],
+      "red_flags": []
+    }
+  ],
+  "summary": {
+    "by_type": {
+      "live_track": 3
+    },
+    "red_flags": 0
+  }
+}
