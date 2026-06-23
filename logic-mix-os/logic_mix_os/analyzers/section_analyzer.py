@@ -15,6 +15,12 @@ from ..project import Section
 
 LIFT_GOALS = {"release", "lift", "catharsis", "climax", "bloom", "open"}
 
+# A track counts as "active" in a section if its section RMS is loud enough in
+# absolute terms AND within this many dB of its own loudest section. This is what
+# stops a kick that is silent in the verse from being treated as present there.
+ACTIVE_ABS_FLOOR_DBFS = -55.0
+ACTIVE_REL_RANGE_DB = 25.0
+
 
 def analyze_sections(
     sections: List[Section],
@@ -64,7 +70,7 @@ def analyze_sections(
     return results
 
 
-def _resolve_bounds(sections: List[Section], duration: float):
+def resolve_section_bounds(sections: List[Section], duration: float):
     bounds = []
     for i, sec in enumerate(sections):
         start = sec.start
@@ -77,6 +83,47 @@ def _resolve_bounds(sections: List[Section], duration: float):
         end = max(end, start + 0.05)
         bounds.append((start, min(end, duration if duration else end)))
     return bounds
+
+
+# Backwards-compatible alias.
+_resolve_bounds = resolve_section_bounds
+
+
+def compute_section_track_metrics(
+    loaded_by_id: Dict[str, LoadedAudio], sections: List[Section], duration: float
+) -> Dict[str, Dict[str, Dict]]:
+    """Per-track, per-section metrics computed from the actual time slices.
+
+    Returns ``{track_id: {section_id: {band_energy, vocal_presence_energy,
+    stereo_width, rms_dbfs, mud/harshness/sibilance_indicator, active}}}``.
+    The ``active`` flag is what lets masking analysis ignore a stem that is
+    silent in a given section (e.g. a kick that only enters at the chorus).
+    """
+    if not sections or not loaded_by_id:
+        return {}
+    bounds = resolve_section_bounds(sections, duration)
+    out: Dict[str, Dict[str, Dict]] = {}
+    for tid, loaded in loaded_by_id.items():
+        sec_metrics: Dict[str, Dict] = {}
+        for sec, (start, end) in zip(sections, bounds):
+            m = compute_metrics(loaded.slice_seconds(start, end), loaded.sample_rate)
+            sec_metrics[sec.section_id] = m
+        max_rms = max((m["rms_dbfs"] for m in sec_metrics.values()), default=-120.0)
+        per_sec: Dict[str, Dict] = {}
+        for sid, m in sec_metrics.items():
+            active = m["rms_dbfs"] > ACTIVE_ABS_FLOOR_DBFS and m["rms_dbfs"] > (max_rms - ACTIVE_REL_RANGE_DB)
+            per_sec[sid] = {
+                "band_energy": m["band_energy"],
+                "vocal_presence_energy": m["vocal_presence_energy"],
+                "stereo_width": m["stereo_width"],
+                "rms_dbfs": m["rms_dbfs"],
+                "mud_indicator": m["mud_indicator"],
+                "harshness_indicator": m["harshness_indicator"],
+                "sibilance_indicator": m["sibilance_indicator"],
+                "active": bool(active),
+            }
+        out[tid] = per_sec
+    return out
 
 
 def _vocal_presence(
