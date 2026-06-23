@@ -212,6 +212,23 @@ def _run_regression(args) -> int:
     return 0
 
 
+def _run_cowork(args) -> int:
+    from .cowork import build_context, list_commands, run_command
+    if args.list:
+        for c in list_commands():
+            print(f"  {c['command']:<32} {c['description']}")
+        return 0
+    if not args.name:
+        print("Specify --name <command> or --list")
+        return 1
+    params = json.loads(args.params) if args.params else {}
+    ctx = build_context(stems=args.stems, manifest=_load_manifest(args.manifest),
+                        memory_dir=args.memory_dir)
+    result = run_command(args.name, ctx, **params)
+    print(result if isinstance(result, str) else json.dumps(result, indent=2))
+    return 0
+
+
 def _run_export_actions(args) -> int:
     with open(args.plan, "r", encoding="utf-8") as fh:
         mix_plan = json.load(fh)
@@ -445,6 +462,15 @@ def build_parser() -> argparse.ArgumentParser:
                     choices=["observe_only", "recommend_only", "checklist_only",
                              "approve_before_apply", "safe_auto_apply", "manual_only"])
     bd.set_defaults(func=_run_bridge_dryrun)
+
+    cw = sub.add_parser("cowork", help="Claude Cowork command surface (registry of bounded commands)")
+    cw.add_argument("--list", action="store_true", help="List available commands")
+    cw.add_argument("--name", help="Command to run")
+    cw.add_argument("--stems", help="Folder of exported stems")
+    cw.add_argument("--manifest", help="project_manifest.json")
+    cw.add_argument("--memory-dir", help="Project memory directory (for ledger/taste commands)")
+    cw.add_argument("--params", help="JSON object of command params")
+    cw.set_defaults(func=_run_cowork)
 
     return p
 

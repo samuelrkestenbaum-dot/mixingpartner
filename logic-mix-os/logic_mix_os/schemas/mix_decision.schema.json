@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Mix Decision (ledger entry)",
+  "type": "object",
+  "required": ["decision", "reason"],
+  "properties": {
+    "date": { "type": "string" },
+    "decision": { "type": "string" },
+    "reason": { "type": "string" },
+    "doctrine": { "type": "array", "items": { "type": "string" } },
+    "risk": { "type": "string" },
+    "validation": { "type": "string" }
+  }
+}

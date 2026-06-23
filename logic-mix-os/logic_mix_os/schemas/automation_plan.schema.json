@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Automation Plan",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["section", "gesture", "moves"],
+    "properties": {
+      "section": { "type": "string" },
+      "name": { "type": "string" },
+      "emotional_goal": { "type": ["string", "null"] },
+      "gesture": { "type": "string" },
+      "moves": { "type": "array" },
+      "contrast_warning": { "type": "string" }
+    }
+  }
+}

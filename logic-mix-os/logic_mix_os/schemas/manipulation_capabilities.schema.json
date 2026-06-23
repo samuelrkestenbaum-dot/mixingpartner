@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Manipulation Capabilities",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["track", "source_kind", "editable_domains"],
+    "properties": {
+      "track": { "type": "string" },
+      "source_kind": { "type": "string" },
+      "editable_domains": { "type": "array", "items": { "type": "string" } },
+      "not_editable_directly": { "type": "array", "items": { "type": "string" } }
+    }
+  }
+}
