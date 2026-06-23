@@ -267,8 +267,18 @@ _PROBLEM_SIGNAL = {
 }
 
 
-def score_variant(variant: Dict, ctx: Dict) -> Dict:
-    """Score a variant against the song's actual evidence (not a fixed table)."""
+# Learned taste can shift scoring but must never dominate evidence/doctrine.
+TASTE_CAP = 8.0
+
+
+def score_variant(variant: Dict, ctx: Dict, taste: Optional[Dict[str, float]] = None) -> Dict:
+    """Score a variant against the song's actual evidence (not a fixed table).
+
+    ``taste`` (optional) is a per-kind learned adjustment from recorded Sam
+    choices. It is capped to +/- ``TASTE_CAP`` so it nudges, never dominates.
+    When ``taste`` is None/empty the score is identical to the unlearned case
+    (so default behaviour and golden snapshots are unchanged).
+    """
     kind = variant["kind"]
     base = dict(_KIND_SCORES.get(kind, _KIND_SCORES["depth_cleanup"]))
     evidence: List[Dict] = []
@@ -325,7 +335,10 @@ def score_variant(variant: Dict, ctx: Dict) -> Dict:
     numeric = ["technical", "halee", "ramone", "contrast", "vocal_belief", "excitement", "taste"]
     for k in numeric:
         base[k] = max(0.0, min(100.0, base[k]))
-    overall = sum(base[k] for k in numeric) / len(numeric) - _RISK_PENALTY[base["translation"]] + fit_bonus
+    taste_adj = 0.0
+    if taste:
+        taste_adj = max(-TASTE_CAP, min(TASTE_CAP, float(taste.get(kind, 0.0))))
+    overall = sum(base[k] for k in numeric) / len(numeric) - _RISK_PENALTY[base["translation"]] + fit_bonus + taste_adj
     overall = round(max(0.0, min(100.0, overall)), 1)
 
     verdict = "promising" if overall >= 80 else ("worth testing" if overall >= 70 else "marginal")
@@ -344,6 +357,7 @@ def score_variant(variant: Dict, ctx: Dict) -> Dict:
         "mono_compatibility": base["mono"],
         "reversibility": "non_destructive",
         "problem_need": round(sev, 2),
+        "taste_adjustment": round(taste_adj, 2),
         "overall_score": overall,
         "overall_verdict": verdict,
         "evidence": evidence,
@@ -371,7 +385,8 @@ def winning_variant(scored_variants: List[Dict]) -> Optional[Dict]:
     }
 
 
-def run_creative_engine(result, mode: str = "dramatic_contrast") -> Dict:
+def run_creative_engine(result, mode: str = "dramatic_contrast",
+                        taste: Optional[Dict[str, float]] = None) -> Dict:
     if mode not in SEARCH_MODES:
         mode = "dramatic_contrast"
     ctx = build_context(result)
@@ -380,7 +395,7 @@ def run_creative_engine(result, mode: str = "dramatic_contrast") -> Dict:
     for problem in problems:
         variants = generate_variants(problem, result, mode)
         for v in variants:
-            v["scores"] = score_variant(v, ctx)
+            v["scores"] = score_variant(v, ctx, taste)
         branches.append({
             "problem": problem["problem"],
             "problem_id": problem["id"],

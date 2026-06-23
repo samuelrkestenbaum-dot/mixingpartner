@@ -312,8 +312,59 @@ def _run_memory_show(args) -> int:
         print("Taste profile:")
         for t in taste:
             print(f"  - {t}")
+    weights = mem.taste_weights()
+    if weights:
+        print("Learned variant-kind weights (capped +/-8):")
+        for kind, w in sorted(weights.items(), key=lambda kv: -kv[1]):
+            print(f"  {kind:<18} {w:+.1f}")
     ledger = mem.ledger()
     print(f"Decision ledger: {len(ledger)} entr(ies).")
+    return 0
+
+
+def _run_render_variant(args) -> int:
+    from .variant_renderer import run_variant_trial
+    manifest = _load_manifest(args.manifest)
+    result = analyze(args.stems, manifest, memory_dir=args.memory_dir)
+    out = run_variant_trial(result, args.variant, out_dir=args.out)
+    if "error" in out:
+        print(out["error"])
+        return 1
+    print(f"Variant: {out['variant_name']} ({out['kind']})")
+    if out["unmapped_changes"]:
+        print("Unmapped changes (renderer cannot approximate):")
+        for c in out["unmapped_changes"]:
+            print(f"  - {c}")
+    c = out["compare"]
+    print(f"raw_delta:              {c['raw_delta']}")
+    print(f"loudness_matched_delta: {c['loudness_matched_delta']}")
+    print(f"section_contrast:       {c['section_contrast']}")
+    print(f"vocal_intelligibility:  {c['vocal_intelligibility']}")
+    print(f"perceptual_improvement: {c['perceptual_improvement']}")
+    for n in c["notes"]:
+        print(f"  • {n}")
+    if args.out:
+        print(f"renders: {out.get('base_render')} | {out.get('variant_render')}")
+    return 0
+
+
+def _run_choose_variant(args) -> int:
+    manifest = _load_manifest(args.manifest)
+    result = analyze(args.stems, manifest, memory_dir=args.memory_dir)
+    branch = chosen = None
+    for b in result.creative.get("branches", []):
+        for v in b["variants"]:
+            if v["variant_id"] == args.chosen:
+                branch, chosen = b, v
+    if chosen is None:
+        print(f"variant '{args.chosen}' not found")
+        return 1
+    rejected = [v for v in branch["variants"] if v["variant_id"] != args.chosen]
+    mem = ProjectMemory(args.memory_dir)
+    store = mem.add_variant_choice(chosen, rejected, reason=args.reason)
+    print(f"Recorded choice: {chosen['variant_id']} ({chosen['kind']}) over "
+          f"{[v['kind'] for v in rejected]}")
+    print(f"Updated learned kind weights (capped +/-8): {store['kind_weights']}")
     return 0
 
 
@@ -459,6 +510,19 @@ def build_parser() -> argparse.ArgumentParser:
     add_common(au)
     au.add_argument("--bounce", help="Optional stereo bounce")
     au.set_defaults(func=_run_audit)
+
+    rv = sub.add_parser("render-variant", help="Offline-render a creative variant + before/after compare")
+    add_common(rv)
+    rv.add_argument("--variant", help="Variant id (default: first branch's governed winner)")
+    rv.add_argument("--memory-dir", help="Apply learned taste when scoring variants")
+    rv.set_defaults(func=_run_render_variant)
+
+    cvch = sub.add_parser("choose-variant", help="Record a variant A/B choice into taste memory")
+    add_common(cvch)
+    cvch.add_argument("--memory-dir", required=True, help="Project memory directory")
+    cvch.add_argument("--chosen", required=True, help="Variant id Sam chose")
+    cvch.add_argument("--reason", help="Optional note on why")
+    cvch.set_defaults(func=_run_choose_variant)
 
     ea = sub.add_parser("export-actions", help="Export the mix plan as executable actions (bridge)")
     ea.add_argument("--plan", required=True, help="Path to mix_plan.json")
