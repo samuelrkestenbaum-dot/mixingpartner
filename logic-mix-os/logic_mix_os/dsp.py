@@ -174,11 +174,16 @@ def spectral_occupancy(freqs: np.ndarray, power: np.ndarray, floor_db: float = -
     return round(float(np.mean(active)), 4)
 
 
-def onset_density_per_sec(x: np.ndarray, sr: int) -> float:
-    """Crude onset rate via spectral-flux novelty peak picking (onsets/sec)."""
-    freqs, power = power_spectrogram(x, sr, frame=1024, hop=512)
+def _flux_novelty(x: np.ndarray, sr: int, hop: int = 512):
+    freqs, power = power_spectrogram(x, sr, frame=1024, hop=hop)
     mag = np.sqrt(np.maximum(power, 0.0))
     flux = np.sqrt(np.sum(np.maximum(np.diff(mag, axis=0), 0.0) ** 2, axis=1))
+    return flux
+
+
+def onset_density_per_sec(x: np.ndarray, sr: int) -> float:
+    """Crude onset rate via spectral-flux novelty peak picking (onsets/sec)."""
+    flux = _flux_novelty(x, sr)
     if flux.size < 3:
         return 0.0
     flux = flux / (np.max(flux) + EPS)
@@ -187,6 +192,64 @@ def onset_density_per_sec(x: np.ndarray, sr: int) -> float:
     count = int(np.sum(peaks))
     duration = max(x.size / float(sr), EPS)
     return round(count / duration, 3)
+
+
+def onset_times_sec(x: np.ndarray, sr: int, hop: int = 512) -> list:
+    """Onset times in seconds via spectral-flux peak picking."""
+    flux = _flux_novelty(x, sr, hop=hop)
+    if flux.size < 3:
+        return []
+    norm = flux / (np.max(flux) + EPS)
+    thresh = float(np.mean(norm) + 0.8 * np.std(norm))
+    idx = np.where(
+        (norm[1:-1] > norm[:-2]) & (norm[1:-1] >= norm[2:]) & (norm[1:-1] > thresh)
+    )[0] + 1
+    return [round(float((i * hop) / sr), 4) for i in idx]
+
+
+def rms_envelope(x: np.ndarray, sr: int, win: float = 0.05):
+    """Return (times_sec, rms_dbfs[]) over short windows."""
+    x = to_mono(x)
+    n = max(1, int(win * sr))
+    if x.size < n:
+        return np.array([0.0]), np.array([rms_dbfs(x)])
+    num = x.size // n
+    trimmed = x[: num * n].reshape(num, n)
+    rms_vals = np.sqrt(np.mean(trimmed ** 2, axis=1) + EPS)
+    db = 20.0 * np.log10(np.maximum(rms_vals, 10 ** (-120 / 20)))
+    times = (np.arange(num) * n + n / 2) / sr
+    return times, db
+
+
+# 12 pitch-class names starting at C.
+_PITCH_CLASSES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+# Krumhansl-Kessler major/minor key profiles.
+_KK_MAJOR = np.array([6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88])
+_KK_MINOR = np.array([6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17])
+
+
+def chroma_vector(x: np.ndarray, sr: int) -> np.ndarray:
+    """Normalised 12-bin pitch-class energy from the average spectrum."""
+    freqs, power = average_power(x, sr)
+    chroma = np.zeros(12)
+    valid = freqs > 20
+    pcs = np.round(12 * np.log2((freqs[valid] + EPS) / 440.0) + 9).astype(int) % 12
+    np.add.at(chroma, pcs, power[valid])
+    total = float(np.sum(chroma)) + EPS
+    return chroma / total
+
+
+def estimate_key(x: np.ndarray, sr: int):
+    """Return (key_name, mode, confidence) via Krumhansl key-profile correlation."""
+    chroma = chroma_vector(x, sr)
+    best = (None, None, -2.0)
+    for shift in range(12):
+        rolled = np.roll(chroma, -shift)
+        for mode, profile in (("major", _KK_MAJOR), ("minor", _KK_MINOR)):
+            corr = float(np.corrcoef(rolled, profile)[0, 1])
+            if corr > best[2]:
+                best = (_PITCH_CLASSES[shift], mode, corr)
+    return best[0], best[1], round(best[2], 3)
 
 
 # --------------------------------------------------------------------------- #

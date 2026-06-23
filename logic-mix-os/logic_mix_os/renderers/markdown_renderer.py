@@ -200,6 +200,102 @@ def render_automation_plan(automation_plan: List[Dict]) -> str:
     return "\n".join(out)
 
 
+def render_expanded_analysis(expanded: Dict) -> str:
+    out = ["# Expanded Analysis", ""]
+
+    tr = expanded.get("translation", {})
+    if tr.get("profiles"):
+        out.append(f"## Translation  ·  score {tr.get('translation_score')}/100")
+        out.append("")
+        out.append("| Profile | Severity | Risks |")
+        out.append("|---|---|---|")
+        for p in tr["profiles"]:
+            risks = "; ".join(p["risks"]) or "—"
+            out.append(f"| {p['profile']} | {p['severity']} | {risks} |")
+        out.append("")
+
+    mono = expanded.get("mono_compatibility", {})
+    out.append(f"## Mono Compatibility  ·  score {mono.get('mono_score')}/100")
+    out.append("")
+    out.append(f"Mix mono-collapse: {mono.get('mix_mono_collapse_loss_db')} dB · "
+               f"phase correlation {mono.get('mix_phase_correlation')}")
+    for e in mono.get("events", []):
+        out.append(f"- ⚠️ **{e['track']}** ({e['severity']}): {e['issue']} _{e['recommendation']}_")
+    out.append("")
+
+    dens = expanded.get("arrangement_density", {})
+    if dens.get("per_section"):
+        out.append("## Arrangement Density")
+        out.append("")
+        out.append("| Section | Intimate | Foreground | Midground | Background | Forward |")
+        out.append("|---|---|---|---|---|---|")
+        for p in dens["per_section"]:
+            c = p["layer_counts"]
+            out.append(f"| {p['section_id']} | {c['intimate']} | {c['foreground']} | {c['midground']} "
+                       f"| {c['background']} | {p['forward_count']} |")
+        out.append("")
+        for p in dens["per_section"]:
+            if p["warning"]:
+                out.append(f"- ⚠️ {p['warning']}")
+        out.append("")
+
+    le = expanded.get("listener_experience", {})
+    if le.get("journey"):
+        out.append("## Listener Experience (what a fan hears)")
+        out.append("")
+        out.append(f"_{le.get('summary')}_")
+        out.append("")
+        for j in le["journey"]:
+            out.append(f"- **{j['name']}** ({j['engagement']}): {j['what_a_fan_hears']}")
+        for fp in le.get("fatigue_points", []):
+            out.append(f"- ⚠️ {fp}")
+        out.append("")
+
+    vp = expanded.get("vocal_performance", {})
+    if vp.get("available"):
+        out.append("## Vocal Performance")
+        out.append("")
+        out.append(f"Dynamic range ~{vp['dynamic_range_db']} dB; push at {vp['push_moment_sec']}s, "
+                   f"pull-back at {vp['pull_back_moment_sec']}s.")
+        for r in vp.get("recommendations", []):
+            out.append(f"- {r}")
+        out.append("")
+
+    tq = expanded.get("transitions", {})
+    if tq.get("transitions"):
+        out.append("## Transition Quality")
+        out.append("")
+        for t in tq["transitions"]:
+            out.append(f"- **{t['from']} → {t['to']}** ({t['quality']}, {t['rms_jump_db']:+.1f} dB): {t['note']}")
+        out.append("")
+
+    groove = expanded.get("groove", {})
+    if groove.get("per_track"):
+        out.append("## Groove")
+        out.append("")
+        out.append(f"_{groove.get('summary')}_")
+        out.append("")
+        for g in groove["per_track"]:
+            out.append(f"- **{g['track']}**: {g['feel']} (regularity {g['regularity']})")
+        out.append("")
+
+    harm = expanded.get("harmonic", {})
+    if harm.get("available"):
+        out.append("## Harmonic / Melodic")
+        out.append("")
+        out.append(harm.get("summary", ""))
+        out.append("")
+
+    lyr = expanded.get("lyrics", {})
+    if lyr.get("available"):
+        out.append("## Lyric Alignment")
+        out.append("")
+        out.append(f"_{lyr.get('summary')}_")
+        out.append("")
+
+    return "\n".join(out)
+
+
 def render_section_contrast_report(sections: List[Dict]) -> str:
     out = ["# Section Contrast Report", ""]
     out.append("| Section | Goal | RMS (dB) | Width | Δ RMS | Δ Width | Note |")

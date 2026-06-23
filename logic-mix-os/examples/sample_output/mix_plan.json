@@ -179,5 +179,7 @@
       "title": "Depth cleanup",
       "detail": "Too many elements occupy the foreground. Move supporting guitars/keys/pads to the midground instead of EQ-ing everything."
     }
-  ]
+  ],
+  "translation_score": 61.0,
+  "mono_compatibility_score": 100.0
 }

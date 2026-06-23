@@ -1,0 +1,174 @@
+{
+  "translation": {
+    "profiles": [
+      {
+        "profile": "headphones",
+        "risks": [],
+        "severity": "low"
+      },
+      {
+        "profile": "airpods_earbuds",
+        "risks": [
+          "Heavy sub may be inaudible on earbuds; check kick/bass definition in the low-mids."
+        ],
+        "severity": "moderate"
+      },
+      {
+        "profile": "car",
+        "risks": [
+          "Low-mid buildup can boom in a car."
+        ],
+        "severity": "moderate"
+      },
+      {
+        "profile": "phone_speaker",
+        "risks": [
+          "Thin presence band: the vocal/lyric may get lost on a phone speaker."
+        ],
+        "severity": "high"
+      },
+      {
+        "profile": "laptop_speakers",
+        "risks": [
+          "Low-mid heavy mixes sound congested on laptop speakers."
+        ],
+        "severity": "moderate"
+      },
+      {
+        "profile": "studio_monitors",
+        "risks": [],
+        "severity": "low"
+      },
+      {
+        "profile": "mono_bluetooth_speaker",
+        "risks": [],
+        "severity": "low"
+      },
+      {
+        "profile": "club_pa",
+        "risks": [],
+        "severity": "low"
+      }
+    ],
+    "checks": {
+      "stereo_width": 0.0464,
+      "mono_collapse_loss_db": -0.021,
+      "sub_energy": 0.3526,
+      "low_mid_energy": 0.4527,
+      "harshness": 0.0,
+      "sibilance": 0.0
+    },
+    "translation_score": 61.0,
+    "warnings": [
+      "[phone_speaker] Thin presence band: the vocal/lyric may get lost on a phone speaker."
+    ]
+  },
+  "mono_compatibility": {
+    "mix_mono_collapse_loss_db": -0.021,
+    "mix_phase_correlation": 0.9904,
+    "events": [],
+    "mono_score": 100.0,
+    "summary": {
+      "tracks_at_risk": 0,
+      "high_severity": 0
+    }
+  },
+  "arrangement_density": {
+    "per_section": [
+      {
+        "section_id": "verse_1",
+        "layer_counts": {
+          "intimate": 1,
+          "foreground": 2,
+          "midground": 0,
+          "background": 0
+        },
+        "forward_count": 3,
+        "density_metric": 0.1151,
+        "warning": null
+      },
+      {
+        "section_id": "chorus_1",
+        "layer_counts": {
+          "intimate": 0,
+          "foreground": 2,
+          "midground": 1,
+          "background": 0
+        },
+        "forward_count": 2,
+        "density_metric": 0.1707,
+        "warning": null
+      }
+    ],
+    "crowded_sections": [],
+    "summary": {
+      "total_sections": 2,
+      "crowded": 0
+    }
+  },
+  "listener_experience": {
+    "journey": [
+      {
+        "section_id": "verse_1",
+        "name": "Verse 1",
+        "emotional_goal": "intimacy",
+        "what_a_fan_hears": "sets the scene",
+        "engagement": "neutral"
+      },
+      {
+        "section_id": "chorus_1",
+        "name": "Chorus 1",
+        "emotional_goal": "release",
+        "what_a_fan_hears": "opens up / pulls the listener in",
+        "engagement": "leans in"
+      }
+    ],
+    "fatigue_points": [],
+    "chorus_feels_earned": true,
+    "summary": "The chorus feels earned."
+  },
+  "transitions": {
+    "transitions": [
+      {
+        "from": "verse_1",
+        "to": "chorus_1",
+        "boundary_sec": 3.0,
+        "rms_jump_db": 4.97,
+        "is_lift_target": true,
+        "quality": "smooth",
+        "note": "Energy changes naturally into the section."
+      }
+    ],
+    "weak_transitions": [],
+    "summary": "Transitions read intentionally."
+  },
+  "groove": {
+    "per_track": [],
+    "overall_regularity": null,
+    "summary": "No rhythm stems detected."
+  },
+  "harmonic": {
+    "available": true,
+    "detected_key": "D# minor",
+    "detected_confidence": 0.661,
+    "manifest_key": "E major",
+    "matches_manifest": false,
+    "summary": "Detected key ~D# minor (confidence 0.661). Manifest says E major. Detected key differs from the manifest — verify tuning/voicing or the manifest."
+  },
+  "vocal_performance": {
+    "available": true,
+    "dynamic_range_db": 8.69,
+    "phrase_energy_variation_db": 2.7,
+    "push_moment_sec": 5.88,
+    "pull_back_moment_sec": 0.84,
+    "sibilance_indicator": 0.0,
+    "recommendations": [
+      "Balanced delivery: light stabilisation and phrase rides should be enough."
+    ],
+    "summary": "Vocal dynamic range ~8.69 dB; controlled."
+  },
+  "lyrics": {
+    "available": false,
+    "summary": "No lyrics provided in the manifest."
+  }
+}

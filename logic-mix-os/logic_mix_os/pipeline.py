@@ -12,13 +12,22 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from .analyzers.arrangement_density_mapper import map_density
 from .analyzers.audio_loader import LoadedAudio, load_audio
 from .analyzers.audio_metrics import compute_metrics
+from .analyzers.groove_analyzer import RHYTHM_IDENTITIES, analyze_groove
+from .analyzers.harmonic_melodic_analyzer import analyze_harmony
+from .analyzers.listener_experience_mapper import map_experience
+from .analyzers.lyric_alignment_analyzer import analyze_lyrics
 from .analyzers.masking_analyzer import analyze_masking
+from .analyzers.mono_compatibility_analyzer import analyze_mono
 from .analyzers.reference_comparator import compare_to_reference
 from .analyzers.section_analyzer import analyze_sections
 from .analyzers.source_material_detector import detect_source_material
 from .analyzers.track_identity_detector import detect_track_identity
+from .analyzers.transition_quality_analyzer import analyze_transitions
+from .analyzers.translation_analyzer import analyze_translation
+from .analyzers.vocal_performance_analyzer import analyze_vocal
 from .doctrine.doctrine_engine import score_doctrine
 from .planners.depth_planner import plan_depth
 from .planners.logic_action_generator import generate_logic_actions
@@ -44,6 +53,7 @@ class ProjectAnalysis:
     mix_plan: Dict = field(default_factory=dict)
     reference_delta: Optional[Dict] = None
     creative_hypotheses: List[Dict] = field(default_factory=list)
+    expanded: Dict = field(default_factory=dict)
     records: List[Dict] = field(default_factory=list)
 
 
@@ -134,6 +144,26 @@ def analyze(
         except Exception:
             result.reference_delta = None
 
+    # Expanded analysis suite (translation, mono, density, narrative, etc.).
+    lead_record = next((r for r in records if r["instrument_identity"] == "lead_vocal"), None)
+    lead_present = lead_record is not None
+    rhythm_tracks = [
+        {"name": ident["name"], "identity": ident["instrument_identity"], "loaded": loaded_by_id[ident["track_id"]]}
+        for ident in result.track_identity
+        if ident["instrument_identity"] in RHYTHM_IDENTITIES and ident["track_id"] in loaded_by_id
+    ]
+    result.expanded = {
+        "translation": analyze_translation(result.mix_metrics, records),
+        "mono_compatibility": analyze_mono(records, result.mix_metrics),
+        "arrangement_density": map_density(records, result.section_analysis),
+        "listener_experience": map_experience(result.section_analysis, lead_present),
+        "transitions": analyze_transitions(mixdown, project.sections),
+        "groove": analyze_groove(rhythm_tracks),
+        "harmonic": analyze_harmony(mixdown, project.key),
+        "vocal_performance": analyze_vocal(lead_vocal_loaded, lead_record["metrics"] if lead_record else None),
+        "lyrics": analyze_lyrics(manifest, result.section_analysis, lead_present),
+    }
+
     # Logic actions + mix plan + next pass + creative hypotheses.
     logic_actions = generate_logic_actions(records, result.masking_report)
     result.mix_plan = build_plan(
@@ -150,6 +180,8 @@ def analyze(
     result.mix_plan["next_pass"] = plan_next_pass(
         records, result.doctrine_score, result.masking_report, result.section_analysis
     )
+    result.mix_plan["translation_score"] = result.expanded["translation"]["translation_score"]
+    result.mix_plan["mono_compatibility_score"] = result.expanded["mono_compatibility"]["mono_score"]
     result.creative_hypotheses = generate_creative_hypotheses(result.mix_plan, records)
 
     return result
@@ -185,6 +217,8 @@ def write_artifacts(result: ProjectAnalysis, out_dir: str | Path) -> List[str]:
     }
     if result.reference_delta is not None:
         json_files["reference_delta.json"] = result.reference_delta
+    if result.expanded:
+        json_files["expanded_analysis.json"] = result.expanded
 
     for name, data in json_files.items():
         _dump_json(out / name, data)
@@ -200,6 +234,8 @@ def write_artifacts(result: ProjectAnalysis, out_dir: str | Path) -> List[str]:
         "automation_plan.md": markdown_renderer.render_automation_plan(result.mix_plan["automation_plan"]),
         "section_contrast_report.md": markdown_renderer.render_section_contrast_report(result.section_analysis),
     }
+    if result.expanded:
+        md_files["expanded_analysis.md"] = markdown_renderer.render_expanded_analysis(result.expanded)
     for name, text in md_files.items():
         _write_text(out / name, text)
         written.append(str(out / name))
