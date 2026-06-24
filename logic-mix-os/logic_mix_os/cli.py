@@ -561,6 +561,40 @@ def _run_build_manifest(args) -> int:
     return 0
 
 
+def _run_apply_harness(args) -> int:
+    from .apply_harness import (build_apply_readiness_report, load_change_manifest,
+                                refuse_apply, validate_manifest_for_harness)
+    from .renderers.apply_harness_packet import write_harness_packet
+    if not args.manifest:
+        print("Missing --manifest <change_manifest.json>.")
+        return 1
+    try:
+        manifest = load_change_manifest(args.manifest)
+    except (FileNotFoundError, ValueError) as exc:
+        print(f"Rejected: could not load manifest — {exc}")
+        return 1
+    v = validate_manifest_for_harness(manifest)
+    if not v["ok"]:
+        print(f"Rejected: invalid manifest contract — {v['errors']}")
+        return 1
+
+    report = build_apply_readiness_report(manifest, ledger_path=args.ledger)
+    refusal = refuse_apply(manifest, actor=args.actor, ledger_path=args.ledger)
+    print("APPLY HARNESS STUB — VALIDATED AND REFUSED, NOTHING APPLIED")
+    print(f"manifest_id: {report['manifest_id']}  readiness: {report['readiness_status']}")
+    print(f"apply: ok={refusal['ok']} applied={refusal['applied']} executed={refusal['executed']}")
+    print(f"reason: {refusal['reason']}")
+    if refusal.get("ledger_event_id"):
+        print(f"audit ledger: apply_harness_refused {refusal['ledger_event_id']} -> {args.ledger} "
+              f"(integrity: {'OK' if (refusal['ledger_verification'] or {}).get('ok') else 'BROKEN'})")
+    else:
+        print(f"ledger: {refusal['ledger_status']}")
+    out_dir = args.out or "apply_harness"
+    paths = write_harness_packet(report, refusal, out_dir)
+    print(f"Wrote {paths['json_path']}, {paths['md_path']} and {paths['refusal_path']}")
+    return 0
+
+
 def _run_ingest_render(args) -> int:
     from .render_ingest import ingest_render
     rec = ingest_render(args.wav, base_wav=args.base, offline_wav=args.offline, link=args.link)
@@ -742,6 +776,14 @@ def build_parser() -> argparse.ArgumentParser:
     bm.add_argument("--ledger", help="Append a manifest_emitted event to this hash-chained audit ledger")
     bm.add_argument("--out", help="Output directory for manifest artifacts (default: change_manifest/)")
     bm.set_defaults(func=_run_build_manifest)
+
+    ah = sub.add_parser("apply-harness",
+                        help="Validate a change manifest and refuse apply (dry-run/spec-only boundary)")
+    ah.add_argument("--manifest", help="Path to a change_manifest.json")
+    ah.add_argument("--ledger", help="Append an apply_harness_refused event to this hash-chained ledger")
+    ah.add_argument("--actor", help="Operator id recording the refusal")
+    ah.add_argument("--out", help="Output directory for harness artifacts (default: apply_harness/)")
+    ah.set_defaults(func=_run_apply_harness)
 
     ig = sub.add_parser("ingest-render", help="Ingest an external (e.g. Logic) WAV render + calibrate vs offline")
     ig.add_argument("--wav", required=True, help="External render WAV to ingest")
