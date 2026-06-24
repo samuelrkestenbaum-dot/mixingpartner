@@ -443,6 +443,35 @@ def _run_govern(args) -> int:
     return 0
 
 
+def _run_plan_logic(args) -> int:
+    from .logic_planner import plan_logic_actions
+    from .renderers.review_packet import write_review_packet
+    if bool(args.variant) == bool(args.plan):
+        print("Specify exactly one of --variant <creative_or_variant.json> or --plan <mix_plan.json>.")
+        return 1
+    if args.variant:
+        with open(args.variant, "r", encoding="utf-8") as fh:
+            source = json.load(fh)
+        plan = plan_logic_actions(source, variant_id=args.variant_id, ledger_path=args.ledger)
+    else:
+        with open(args.plan, "r", encoding="utf-8") as fh:
+            source = json.load(fh)
+        plan = plan_logic_actions(source, ledger_path=args.ledger)
+
+    s = plan["summary"]
+    print(f"NOTHING WILL BE APPLIED — dry-run/spec-only plan {plan['plan_id']} "
+          f"({plan['source_type']} {plan['source_id']})")
+    print(f"steps: {s['total']} — {s['allowed']} allowed · {s['review_required']} review-required · "
+          f"{s['blocked']} blocked · {s['unsupported']} unsupported")
+    if plan["ledger_verification"]:
+        v = plan["ledger_verification"]
+        print(f"audit ledger: {v['entries']} event(s) -> {args.ledger} (integrity: {'OK' if v['ok'] else 'BROKEN'})")
+    out_dir = args.out or "operator_review"
+    paths = write_review_packet(plan, out_dir)
+    print(f"Wrote {paths['json_path']} and {paths['md_path']}")
+    return 0
+
+
 def _run_ingest_render(args) -> int:
     from .render_ingest import ingest_render
     rec = ingest_render(args.wav, base_wav=args.base, offline_wav=args.offline, link=args.link)
@@ -591,6 +620,15 @@ def build_parser() -> argparse.ArgumentParser:
     gov.add_argument("--ledger", help="Append governance events to this hash-chained jsonl audit ledger")
     gov.add_argument("--verify", help="Verify a governance_ledger.jsonl's tamper-evidence chain and exit")
     gov.set_defaults(func=_run_govern)
+
+    pl = sub.add_parser("plan-logic",
+                        help="Plan dry-run/spec-only Logic actions (governed) + write an operator review packet")
+    pl.add_argument("--variant", help="Path to a creative.json result or a single variant recommendation JSON")
+    pl.add_argument("--variant-id", help="Select a specific variant id from a creative result (default: winning)")
+    pl.add_argument("--plan", help="Path to a mix_plan.json")
+    pl.add_argument("--ledger", help="Append governance events to this hash-chained jsonl audit ledger")
+    pl.add_argument("--out", help="Output directory for the operator review packet (default: operator_review/)")
+    pl.set_defaults(func=_run_plan_logic)
 
     ig = sub.add_parser("ingest-render", help="Ingest an external (e.g. Logic) WAV render + calibrate vs offline")
     ig.add_argument("--wav", required=True, help="External render WAV to ingest")
