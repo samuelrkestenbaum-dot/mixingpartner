@@ -524,6 +524,43 @@ def _run_review_decision(args) -> int:
     return 0
 
 
+def _run_build_manifest(args) -> int:
+    from .apply_manifest import build_change_manifest, validate_manifest, ManifestError
+    from .renderers.manifest_packet import write_manifest_packet
+    if not args.packet:
+        print("Missing --packet <operator_review_packet.json>.")
+        return 1
+    if not args.decisions:
+        print("Missing --decisions <operator_decisions.json>.")
+        return 1
+    try:
+        with open(args.packet, "r", encoding="utf-8") as fh:
+            packet = json.load(fh)
+        with open(args.decisions, "r", encoding="utf-8") as fh:
+            decisions = json.load(fh)
+        manifest = build_change_manifest(packet, decisions, ledger_path=args.ledger)
+    except (ManifestError, FileNotFoundError, ValueError) as exc:
+        print(f"Rejected: {exc}")
+        return 1
+    v = validate_manifest(manifest)
+    if not v["ok"]:
+        print(f"Rejected: invalid manifest — {v['errors']}")
+        return 1
+
+    s = manifest["summary"]
+    print(f"APPROVED CHANGE MANIFEST — SPEC ONLY, NOTHING WILL BE APPLIED — plan {manifest['plan_id']}")
+    print(f"manifest_id: {manifest['manifest_id']}  manifest_hash: {manifest['manifest_hash']}")
+    print(f"steps: {s['total_steps']} — {s['eligible']} eligible · {s['excluded']} excluded · "
+          f"{s['blocked']} blocked")
+    print(f"ledger: {manifest['ledger_status']}"
+          + (f" (integrity: {'OK' if (manifest['ledger_verification'] or {}).get('ok') else 'BROKEN'})"
+             if manifest['ledger_verification'] else ""))
+    out_dir = args.out or "change_manifest"
+    paths = write_manifest_packet(manifest, out_dir)
+    print(f"Wrote {paths['json_path']} and {paths['md_path']}")
+    return 0
+
+
 def _run_ingest_render(args) -> int:
     from .render_ingest import ingest_render
     rec = ingest_render(args.wav, base_wav=args.base, offline_wav=args.offline, link=args.link)
@@ -697,6 +734,14 @@ def build_parser() -> argparse.ArgumentParser:
     rd.add_argument("--ledger", help="Append decision events to this hash-chained jsonl audit ledger")
     rd.add_argument("--out", help="Output directory for decision artifacts (default: operator_decisions/)")
     rd.set_defaults(func=_run_review_decision)
+
+    bm = sub.add_parser("build-manifest",
+                        help="Consolidate a review packet + decision state into a spec-only change manifest")
+    bm.add_argument("--packet", help="Path to an operator_review_packet.json")
+    bm.add_argument("--decisions", help="Path to an operator_decisions.json")
+    bm.add_argument("--ledger", help="Append a manifest_emitted event to this hash-chained audit ledger")
+    bm.add_argument("--out", help="Output directory for manifest artifacts (default: change_manifest/)")
+    bm.set_defaults(func=_run_build_manifest)
 
     ig = sub.add_parser("ingest-render", help="Ingest an external (e.g. Logic) WAV render + calibrate vs offline")
     ig.add_argument("--wav", required=True, help="External render WAV to ingest")
