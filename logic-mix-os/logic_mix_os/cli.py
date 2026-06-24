@@ -472,6 +472,58 @@ def _run_plan_logic(args) -> int:
     return 0
 
 
+def _run_review_decision(args) -> int:
+    from .review_workflow import workflow_from_artifacts
+    from .renderers.decision_packet import write_decision_packet
+    plan_flags = [args.approve_all_allowed, args.reject_all, args.defer_all]
+    n_plan = sum(bool(x) for x in plan_flags)
+    step_decision = bool(args.step_id or args.decision)
+    if n_plan + (1 if step_decision else 0) != 1:
+        print("Specify exactly one action: a single-step decision (--step-id + --decision) "
+              "OR one plan-level flag (--approve-all-allowed / --reject-all / --defer-all).")
+        return 1
+    if step_decision and not (args.step_id and args.decision):
+        print("A single-step decision needs both --step-id and --decision.")
+        return 1
+    if not args.actor:
+        print("An operator id is required: pass --actor <name>.")
+        return 1
+
+    out_dir = args.out or "operator_decisions"
+    decisions_path = args.decisions
+    if not decisions_path:
+        existing = Path(out_dir) / "operator_decisions.json"
+        if existing.exists():
+            decisions_path = str(existing)   # reload + append on repeat runs
+
+    try:
+        wf = workflow_from_artifacts(args.packet, decisions_path=decisions_path, ledger_path=args.ledger)
+        if args.approve_all_allowed:
+            wf.approve_all_allowed(actor=args.actor)
+        elif args.reject_all:
+            wf.reject_all(actor=args.actor, reason=args.reason)
+        elif args.defer_all:
+            wf.defer_all(actor=args.actor, reason=args.reason)
+        else:
+            wf.decide(args.step_id, args.decision, actor=args.actor, reason=args.reason)
+    except (ValueError, FileNotFoundError) as exc:
+        print(f"Rejected: {exc}")
+        return 1
+
+    state = wf.state()
+    summ = state["summary"]
+    print(f"DECISIONS RECORDED — NOTHING APPLIED — plan {state['plan_id']}")
+    print(f"decisions: {summ['decisions_recorded']} — {summ['approved']} approved · "
+          f"{summ['rejected']} rejected · {summ['revision_requested']} revision · "
+          f"{summ['deferred']} deferred · {summ['pending']} pending · {summ['blocked']} blocked")
+    if state["ledger_verification"]:
+        v = state["ledger_verification"]
+        print(f"audit ledger: {v['entries']} event(s) -> {args.ledger} (integrity: {'OK' if v['ok'] else 'BROKEN'})")
+    paths = write_decision_packet(state, out_dir)
+    print(f"Wrote {paths['json_path']} and {paths['md_path']}")
+    return 0
+
+
 def _run_ingest_render(args) -> int:
     from .render_ingest import ingest_render
     rec = ingest_render(args.wav, base_wav=args.base, offline_wav=args.offline, link=args.link)
@@ -629,6 +681,22 @@ def build_parser() -> argparse.ArgumentParser:
     pl.add_argument("--ledger", help="Append governance events to this hash-chained jsonl audit ledger")
     pl.add_argument("--out", help="Output directory for the operator review packet (default: operator_review/)")
     pl.set_defaults(func=_run_plan_logic)
+
+    rd = sub.add_parser("review-decision",
+                        help="Record operator decisions on a review packet (approve/reject/revise/defer) — no apply")
+    rd.add_argument("--packet", required=True, help="Path to an operator_review_packet.json")
+    rd.add_argument("--step-id", help="Step id to decide on (with --decision)")
+    rd.add_argument("--decision", choices=["approve", "reject", "request_revision", "defer"],
+                    help="Per-step decision")
+    rd.add_argument("--reason", help="Reason (required for reject / request_revision)")
+    rd.add_argument("--actor", help="Operator id recording the decision (required)")
+    rd.add_argument("--approve-all-allowed", action="store_true", help="Approve every non-blocked step")
+    rd.add_argument("--reject-all", action="store_true", help="Reject every step (needs --reason)")
+    rd.add_argument("--defer-all", action="store_true", help="Defer every step")
+    rd.add_argument("--decisions", help="Path to an existing operator_decisions.json to reload + append")
+    rd.add_argument("--ledger", help="Append decision events to this hash-chained jsonl audit ledger")
+    rd.add_argument("--out", help="Output directory for decision artifacts (default: operator_decisions/)")
+    rd.set_defaults(func=_run_review_decision)
 
     ig = sub.add_parser("ingest-render", help="Ingest an external (e.g. Logic) WAV render + calibrate vs offline")
     ig.add_argument("--wav", required=True, help="External render WAV to ingest")
