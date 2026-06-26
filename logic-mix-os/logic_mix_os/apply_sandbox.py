@@ -1,29 +1,26 @@
-"""In-memory simulated Logic sandbox (Hardening Packet 9, Layer 1).
+"""Simulated apply orchestration (Hardening Packet 9; adapter-driven in Packet 10).
 
-The first packet where the system performs any kind of *apply* — but only inside
-an inert, in-memory fake session. It consumes a Packet-7 change manifest, validates
-it through the Packet-8 harness rules, builds a fake before-state, simulates ONLY
-the eligible steps, produces a before/after diff and a rollback simulation, proves
-rollback restores exactly and that excluded/blocked targets are untouched, and
-records the simulation to the audit ledger.
+The orchestration layer. It consumes a Packet-7 change manifest, validates it
+through the Packet-8 harness rules, and drives a :class:`SessionAdapter` to
+build a before-state, simulate ONLY the eligible steps, diff before/after,
+simulate rollback, prove rollback restores exactly and excluded/blocked targets
+are untouched, and record the simulation to the audit ledger.
 
-Hard boundary: the only mutable target is an in-memory Python dict created here.
-There is NO real Logic session, NO ``.logicx`` / DAW / project / session file, NO
-bridge, NO AppleScript, NO subprocess, NO macOS/Logic connection, NO source
-mutation. Nothing real is applied or executed.
-
-Local, deterministic.
+The orchestration no longer owns fake-session internals — those live behind
+``FakeSessionAdapter`` (``session_adapter.py``). A future
+``RealLogicSessionAdapter`` can satisfy the same contract without changing this
+file. Today the only adapter is fake: nothing real is applied or executed, and
+this module performs no file I/O of its own.
 """
 
 from __future__ import annotations
 
-import copy
-import hashlib
 from datetime import datetime, timezone
-from typing import Callable, Dict, List, Optional
+from typing import Callable, Dict, Optional
 
 from .apply_harness import validate_manifest_for_harness
 from .governance_ledger import GovernanceLedger
+from .session_adapter import FakeSessionAdapter, SessionAdapter
 
 EVENT_RECORDED = "simulated_apply_recorded"
 EVENT_REFUSED = "simulated_apply_refused"
@@ -32,101 +29,19 @@ EVENT_REFUSED = "simulated_apply_refused"
 _SAFE_FLAGS = {"real_applied": False, "real_executed": False, "touched_real_logic": False,
                "no_real_daw": True, "environment": "simulated_sandbox"}
 
-_KIND_BUCKET = [
-    (("aux send", "send", "plate", "reverb", "delay", "room", "chamber", "hall"),
-     "fake_send", "fake_sends"),
-    (("plugin", "channel eq", " eq", "compress", "limiter", "stereo-width", "width", "imager"),
-     "fake_plugin_slot", "fake_plugin_slots"),
-    (("automation", "ride", "fader", "throw", "automate"),
-     "fake_automation_lane", "fake_automation_lanes"),
-    (("arrangement", "region", "mute", "chop", "one-shot", "accent"),
-     "fake_region_edit", "fake_region_edits"),
-]
-_BUCKETS = ("fake_sends", "fake_plugin_slots", "fake_automation_lanes",
-            "fake_region_edits", "fake_parameters")
-
 
 def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def _h(text: str) -> str:
-    return hashlib.md5(text.encode("utf-8")).hexdigest()[:8]
+def _adapter_meta(adapter: SessionAdapter) -> Dict:
+    caps = adapter.capabilities()
+    return {"name": adapter.adapter_name(), "type": caps.get("adapter_type"), "capabilities": caps}
 
 
-def _target_id(step_id: str) -> str:
-    """Deterministic, stable fake-target id derived from the manifest step id."""
-    return "tgt_" + _h(step_id)
-
-
-def _kind_and_bucket(action: str):
-    low = (action or "").lower()
-    for needles, kind, bucket in _KIND_BUCKET:
-        if any(n in low for n in needles):
-            return kind, bucket
-    return "fake_parameter", "fake_parameters"
-
-
-def build_fake_session(manifest: Dict) -> Dict:
-    """Synthesize a deterministic, inert in-memory fake session from the manifest.
-
-    Pure Python data. Writes nothing, connects to nothing. The ``value`` of every
-    fake target starts unconfigured.
-    """
-    session: Dict = {
-        "session_id": "fakesess_" + _h(str(manifest.get("manifest_id", "")) + "|"
-                                       + str(manifest.get("manifest_hash", ""))),
-        "is_fake": True,
-        "real_logic": False,
-        "environment": "simulated_sandbox",
-        "fake_tracks": {},
-    }
-    for b in _BUCKETS:
-        session[b] = {}
-    for s in manifest.get("eligible_for_future_apply", []):
-        sid = s.get("step_id")
-        tid = _target_id(sid)
-        kind, bucket = _kind_and_bucket(s.get("planned_logic_action", ""))
-        session["fake_tracks"][tid] = {"track_id": "trk_" + _h(sid), "for_target": tid}
-        session[bucket][tid] = {
-            "target_id": tid, "step_id": sid, "kind": kind,
-            "name": s.get("planned_logic_action"), "value": {"configured": False},
-        }
-    return session
-
-
-def _all_targets(session: Dict) -> Dict[str, Dict]:
-    out: Dict[str, Dict] = {}
-    for b in _BUCKETS:
-        out.update(session.get(b, {}))
-    return out
-
-
-def _set_value(session: Dict, target_id: str, value: Dict) -> None:
-    for b in _BUCKETS:
-        if target_id in session.get(b, {}):
-            session[b][target_id]["value"] = value
-            return
-
-
-def _refusal(manifest: Dict, reason: str, *, ledger_path, actor, clock) -> Dict:
-    res = {
-        "ok": False,
-        "simulated": False,
-        **_SAFE_FLAGS,
-        "manifest_id": manifest.get("manifest_id"),
-        "manifest_hash": manifest.get("manifest_hash"),
-        "reason": reason,
-        "before": None,                 # no before/after for an invalid manifest
-        "after": None,
-        "diff": [],
-        "rollback": None,
-        "changed_targets": [],
-        "excluded_blocked_untouched": True,
-        "audit": _audit(manifest, EVENT_REFUSED, "refused", reason, actor,
-                        ledger_path=ledger_path, clock=clock),
-    }
-    return res
+def build_fake_session(manifest: Dict, adapter: Optional[SessionAdapter] = None) -> Dict:
+    """Back-compat helper: build a fake session via the (fake) session adapter."""
+    return (adapter or FakeSessionAdapter()).build_initial_session(manifest)
 
 
 def _audit(manifest, event_type, status, reason, actor, *, ledger_path, clock) -> Dict:
@@ -144,46 +59,62 @@ def _audit(manifest, event_type, status, reason, actor, *, ledger_path, clock) -
             "ledger_verification": ver}
 
 
-def simulate_apply(manifest: Dict, *, ledger_path: Optional[str] = None,
-                   actor: Optional[str] = None, clock: Optional[Callable[[], str]] = None) -> Dict:
-    """Simulate applying the eligible steps against an in-memory fake session.
+def _refusal(manifest: Dict, reason: str, adapter: SessionAdapter, *, ledger_path, actor, clock) -> Dict:
+    return {
+        "ok": False,
+        "simulated": False,
+        **_SAFE_FLAGS,
+        "manifest_id": manifest.get("manifest_id"),
+        "manifest_hash": manifest.get("manifest_hash"),
+        "reason": reason,
+        "before": None,                 # no before/after for an invalid manifest
+        "after": None,
+        "diff": [],
+        "rollback": None,
+        "changed_targets": [],
+        "excluded_blocked_untouched": True,
+        "adapter": _adapter_meta(adapter),
+        "audit": _audit(manifest, EVENT_REFUSED, "refused", reason, actor,
+                        ledger_path=ledger_path, clock=clock),
+    }
 
-    Invalid manifests are refused BEFORE any simulated-mutation path runs (no
-    before/after state is built). Nothing real is ever applied or executed.
+
+def simulate_apply(manifest: Dict, *, ledger_path: Optional[str] = None,
+                   actor: Optional[str] = None, clock: Optional[Callable[[], str]] = None,
+                   adapter: Optional[SessionAdapter] = None) -> Dict:
+    """Simulate applying the eligible steps through a :class:`SessionAdapter`.
+
+    Invalid manifests are refused BEFORE any session is built (no before/after
+    state). Nothing real is ever applied or executed. Defaults to the
+    in-memory ``FakeSessionAdapter``.
     """
     clock = clock or _utc_now
+    adapter = adapter or FakeSessionAdapter()
+
     v = validate_manifest_for_harness(manifest)
     if not v["ok"]:
         return _refusal(manifest, f"Simulation refused: invalid manifest contract — {v['errors']}",
-                        ledger_path=ledger_path, actor=actor, clock=clock)
+                        adapter, ledger_path=ledger_path, actor=actor, clock=clock)
 
-    before = build_fake_session(manifest)
-    after = copy.deepcopy(before)
-    diff: List[Dict] = []
-    for s in manifest.get("eligible_for_future_apply", []):
-        sid = s.get("step_id")
-        tid = _target_id(sid)
-        before_val = {"configured": False}
-        after_val = {"configured": True, "action": s.get("planned_logic_action")}
-        _set_value(after, tid, after_val)
-        diff.append({"step_id": sid, "target_id": tid,
-                     "planned_action": s.get("planned_logic_action"),
-                     "before": before_val, "after": after_val, "rollback": before_val})
+    eligible = manifest.get("eligible_for_future_apply", [])
+    before = adapter.build_initial_session(manifest)
+    after = adapter.build_initial_session(manifest)
+    for step in eligible:
+        adapter.apply_step(after, step)          # mutate only eligible fake targets
 
-    # Rollback simulation: revert every changed target, prove it restores `before`.
-    rolled_back = copy.deepcopy(after)
-    for d in diff:
-        _set_value(rolled_back, d["target_id"], d["rollback"])
-    rollback_restored = rolled_back == before
+    diff = adapter.diff(before, after)
+    rollback = adapter.rollback(after, diff)
+    rolled_back = rollback.get("rolled_back_session")
+    rollback_restored = adapter.verify_rollback(before, rollback)
 
     changed_targets = [d["target_id"] for d in diff]
-    eligible_ids = [_target_id(s.get("step_id")) for s in manifest.get("eligible_for_future_apply", [])]
-    excluded_ids = [_target_id(s.get("step_id")) for s in manifest.get("excluded", [])]
-    blocked_ids = [_target_id(s.get("step_id")) for s in manifest.get("blocked", [])]
-    untouched = not (set(changed_targets) & (set(excluded_ids) | set(blocked_ids)))
+    eligible_ids = [adapter.resolve_target(s, manifest) for s in eligible]
+    excluded_ids = [adapter.resolve_target(s, manifest) for s in manifest.get("excluded", [])]
+    blocked_ids = [adapter.resolve_target(s, manifest) for s in manifest.get("blocked", [])]
+    untouched = adapter.verify_untouched(changed_targets, excluded_ids, blocked_ids)
 
-    reason = (f"Simulated {len(changed_targets)} eligible step(s) in a fake in-memory session; "
-              "rollback restored the before-state; no real DAW was touched.")
+    reason = (f"Simulated {len(changed_targets)} eligible step(s) via {adapter.adapter_name()} in a "
+              "fake in-memory session; rollback restored the before-state; no real DAW was touched.")
     return {
         "ok": True,
         "simulated": True,
@@ -203,6 +134,7 @@ def simulate_apply(manifest: Dict, *, ledger_path: Optional[str] = None,
         "counts": {"eligible": len(eligible_ids), "excluded": len(excluded_ids),
                    "blocked": len(blocked_ids), "changed": len(changed_targets)},
         "rollback_restored": rollback_restored,
+        "adapter": _adapter_meta(adapter),
         "reason": reason,
         "audit": _audit(manifest, EVENT_RECORDED, "recorded", reason, actor,
                         ledger_path=ledger_path, clock=clock),
