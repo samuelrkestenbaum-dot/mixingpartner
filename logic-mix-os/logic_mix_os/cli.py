@@ -595,6 +595,43 @@ def _run_apply_harness(args) -> int:
     return 0
 
 
+def _run_simulate_apply(args) -> int:
+    from .apply_harness import load_change_manifest, validate_manifest_for_harness
+    from .apply_sandbox import simulate_apply
+    from .renderers.sandbox_packet import write_sandbox_packet
+    if not args.manifest:
+        print("Missing --manifest <change_manifest.json>.")
+        return 1
+    try:
+        manifest = load_change_manifest(args.manifest)
+    except (FileNotFoundError, ValueError) as exc:
+        print(f"Rejected: could not load manifest — {exc}")
+        return 1
+    v = validate_manifest_for_harness(manifest)
+    if not v["ok"]:
+        print(f"Rejected: invalid manifest contract — {v['errors']}")
+        return 1
+
+    result = simulate_apply(manifest, actor=args.actor, ledger_path=args.ledger)
+    c = result.get("counts", {})
+    print("SIMULATED LOGIC SANDBOX — FAKE SESSION, NO REAL DAW")
+    print(f"manifest_id: {result['manifest_id']}  simulation: "
+          f"{'recorded' if result['ok'] else 'refused'}")
+    print(f"changed targets: {c.get('changed', 0)}  rollback_restored: {result.get('rollback_restored')}")
+    print(f"no_real_daw: {result['no_real_daw']}  real_applied: {result['real_applied']}  "
+          f"real_executed: {result['real_executed']}")
+    if result["audit"].get("ledger_event_id"):
+        print(f"audit ledger: {'simulated_apply_recorded' if result['ok'] else 'simulated_apply_refused'} "
+              f"{result['audit']['ledger_event_id']} -> {args.ledger} "
+              f"(integrity: {'OK' if (result['audit']['ledger_verification'] or {}).get('ok') else 'BROKEN'})")
+    else:
+        print(f"ledger: {result['audit']['ledger_status']}")
+    out_dir = args.out or "sandbox_simulation"
+    paths = write_sandbox_packet(result, out_dir)
+    print(f"Wrote {paths['json_path']} and {paths['md_path']}")
+    return 0
+
+
 def _run_ingest_render(args) -> int:
     from .render_ingest import ingest_render
     rec = ingest_render(args.wav, base_wav=args.base, offline_wav=args.offline, link=args.link)
@@ -784,6 +821,14 @@ def build_parser() -> argparse.ArgumentParser:
     ah.add_argument("--actor", help="Operator id recording the refusal")
     ah.add_argument("--out", help="Output directory for harness artifacts (default: apply_harness/)")
     ah.set_defaults(func=_run_apply_harness)
+
+    sa = sub.add_parser("simulate-apply",
+                        help="Simulate applying a change manifest in an in-memory fake session (no real DAW)")
+    sa.add_argument("--manifest", help="Path to a change_manifest.json")
+    sa.add_argument("--ledger", help="Append a simulated_apply_recorded/refused event to this ledger")
+    sa.add_argument("--actor", help="Operator id recording the simulation")
+    sa.add_argument("--out", help="Output directory for sandbox artifacts (default: sandbox_simulation/)")
+    sa.set_defaults(func=_run_simulate_apply)
 
     ig = sub.add_parser("ingest-render", help="Ingest an external (e.g. Logic) WAV render + calibrate vs offline")
     ig.add_argument("--wav", required=True, help="External render WAV to ingest")
