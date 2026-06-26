@@ -599,6 +599,10 @@ def _run_simulate_apply(args) -> int:
     from .apply_harness import load_change_manifest, validate_manifest_for_harness
     from .apply_sandbox import simulate_apply
     from .renderers.sandbox_packet import write_sandbox_packet
+    if getattr(args, "adapter", "fake") != "fake":
+        print(f"Rejected: unknown session adapter '{args.adapter}'. Only the 'fake' "
+              "adapter is available (RealLogicSessionAdapter is a documented future seam).")
+        return 1
     if not args.manifest:
         print("Missing --manifest <change_manifest.json>.")
         return 1
@@ -615,6 +619,9 @@ def _run_simulate_apply(args) -> int:
     result = simulate_apply(manifest, actor=args.actor, ledger_path=args.ledger)
     c = result.get("counts", {})
     print("SIMULATED LOGIC SANDBOX — FAKE SESSION, NO REAL DAW")
+    ad = result.get("adapter", {})
+    print(f"adapter: {ad.get('name')} (real_daw: {ad.get('capabilities', {}).get('real_daw')}, "
+          f"real_apply: {ad.get('capabilities', {}).get('supports_real_apply')})")
     print(f"manifest_id: {result['manifest_id']}  simulation: "
           f"{'recorded' if result['ok'] else 'refused'}")
     print(f"changed targets: {c.get('changed', 0)}  rollback_restored: {result.get('rollback_restored')}")
@@ -827,6 +834,8 @@ def build_parser() -> argparse.ArgumentParser:
     sa.add_argument("--manifest", help="Path to a change_manifest.json")
     sa.add_argument("--ledger", help="Append a simulated_apply_recorded/refused event to this ledger")
     sa.add_argument("--actor", help="Operator id recording the simulation")
+    sa.add_argument("--adapter", default="fake",
+                    help="Session adapter (only 'fake' is available; real Logic is a future seam)")
     sa.add_argument("--out", help="Output directory for sandbox artifacts (default: sandbox_simulation/)")
     sa.set_defaults(func=_run_simulate_apply)
 
