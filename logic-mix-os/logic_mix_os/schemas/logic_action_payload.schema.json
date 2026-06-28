@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Logic Action Payload (Hardening Packet 11)",
+  "description": "A typed, reversible representation of one governed manifest step's intended Logic operation, carrying the requirements an adapter must satisfy for capability negotiation. Intent only — never an applied artifact.",
+  "type": "object",
+  "required": ["payload_id", "step_id", "action_type", "parameter", "value", "transition", "reversible", "required_capabilities", "required_execution_authority", "required_action_support", "intent_only", "applied"],
+  "properties": {
+    "payload_id": { "type": "string" },
+    "step_id": { "type": "string" },
+    "action_type": { "type": "string", "enum": ["set_send", "insert_plugin", "automation", "arrangement", "set_parameter"] },
+    "parameter": { "type": "string" },
+    "target": {
+      "type": "object",
+      "properties": {
+        "label": { "type": "string" },
+        "kind": { "type": "string" }
+      }
+    },
+    "value": {
+      "type": "object",
+      "properties": {
+        "amount": { "type": ["number", "null"] },
+        "unit": { "type": ["string", "null"] },
+        "direction": { "type": ["string", "null"], "enum": ["increase", "decrease", null] }
+      }
+    },
+    "transition": {
+      "type": "object",
+      "required": ["before", "after"],
+      "properties": {
+        "before": { "type": "object" },
+        "after": { "type": "object" }
+      }
+    },
+    "inverse": { "type": "object" },
+    "reversible": { "type": "boolean" },
+    "reversibility_proof": {
+      "type": "object",
+      "properties": {
+        "reversible": { "type": "boolean" },
+        "method": { "type": "string" },
+        "restores_to": { "type": "object" }
+      }
+    },
+    "required_capabilities": { "type": "array", "items": { "type": "string" } },
+    "required_execution_authority": { "type": "string" },
+    "required_action_support": { "type": "string" },
+    "authority_class": { "type": ["integer", "null"] },
+    "planned_logic_action": { "type": "string" },
+    "rollback_plan": { "type": ["string", "null"] },
+    "receipt_id": { "type": ["string", "null"] },
+    "decision_id": { "type": ["string", "null"] },
+    "intent_only": { "type": "boolean", "enum": [true] },
+    "applied": { "type": "boolean", "enum": [false] },
+    "touches_real_logic": { "type": "boolean", "enum": [false] }
+  }
+}

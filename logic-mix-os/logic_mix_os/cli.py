@@ -639,6 +639,51 @@ def _run_simulate_apply(args) -> int:
     return 0
 
 
+def _run_negotiate_payloads(args) -> int:
+    from .apply_harness import load_change_manifest, validate_manifest_for_harness
+    from .logic_action_payload import negotiate_payloads
+    from .renderers.payload_packet import write_payload_packet
+    if getattr(args, "adapter", "fake") != "fake":
+        print(f"Rejected: unknown session adapter '{args.adapter}'. Only the 'fake' "
+              "adapter is available (RealLogicSessionAdapter is a documented future seam).")
+        return 1
+    if not args.manifest:
+        print("Missing --manifest <change_manifest.json>.")
+        return 1
+    try:
+        manifest = load_change_manifest(args.manifest)
+    except (FileNotFoundError, ValueError) as exc:
+        print(f"Rejected: could not load manifest — {exc}")
+        return 1
+    v = validate_manifest_for_harness(manifest)
+    if not v["ok"]:
+        print(f"Rejected: invalid manifest contract — {v['errors']}")
+        return 1
+
+    result = negotiate_payloads(manifest, actor=args.actor, ledger_path=args.ledger)
+    c = result.get("counts", {})
+    print("TYPED LOGIC ACTION PAYLOAD NEGOTIATION — NO REAL DAW")
+    ad = result.get("adapter", {})
+    print(f"adapter: {ad.get('name')} (real_daw: {ad.get('capabilities', {}).get('real_daw')}, "
+          f"real_apply: {ad.get('capabilities', {}).get('supports_real_apply')})")
+    print(f"manifest_id: {result['manifest_id']}  negotiation: "
+          f"{'recorded' if result['ok'] else 'refused'}")
+    print(f"payloads: {c.get('payloads', 0)}  accepted: {c.get('accepted', 0)}  "
+          f"refused: {c.get('refused', 0)}  reversible: {c.get('reversible', 0)}")
+    print(f"operations_driven: {result.get('operations_driven')}  "
+          f"no_real_daw: {result['no_real_daw']}  real_applied: {result['real_applied']}")
+    if result["audit"].get("ledger_event_id"):
+        print(f"audit ledger: {'payload_negotiation_recorded' if result['ok'] else 'payload_negotiation_refused'} "
+              f"{result['audit']['ledger_event_id']} -> {args.ledger} "
+              f"(integrity: {'OK' if (result['audit']['ledger_verification'] or {}).get('ok') else 'BROKEN'})")
+    else:
+        print(f"ledger: {result['audit']['ledger_status']}")
+    out_dir = args.out or "payload_negotiation"
+    paths = write_payload_packet(result, out_dir)
+    print(f"Wrote {paths['json_path']} and {paths['md_path']}")
+    return 0
+
+
 def _run_ingest_render(args) -> int:
     from .render_ingest import ingest_render
     rec = ingest_render(args.wav, base_wav=args.base, offline_wav=args.offline, link=args.link)
@@ -838,6 +883,16 @@ def build_parser() -> argparse.ArgumentParser:
                     help="Session adapter (only 'fake' is available; real Logic is a future seam)")
     sa.add_argument("--out", help="Output directory for sandbox artifacts (default: sandbox_simulation/)")
     sa.set_defaults(func=_run_simulate_apply)
+
+    npg = sub.add_parser("negotiate-payloads",
+                         help="Negotiate typed Logic action payloads against a session adapter's capabilities (no real DAW)")
+    npg.add_argument("--manifest", help="Path to a change_manifest.json")
+    npg.add_argument("--ledger", help="Append a payload_negotiation_recorded/refused event to this ledger")
+    npg.add_argument("--actor", help="Operator id recording the negotiation")
+    npg.add_argument("--adapter", default="fake",
+                     help="Session adapter (only 'fake' is available; real Logic is a future seam)")
+    npg.add_argument("--out", help="Output directory for payload artifacts (default: payload_negotiation/)")
+    npg.set_defaults(func=_run_negotiate_payloads)
 
     ig = sub.add_parser("ingest-render", help="Ingest an external (e.g. Logic) WAV render + calibrate vs offline")
     ig.add_argument("--wav", required=True, help="External render WAV to ingest")
