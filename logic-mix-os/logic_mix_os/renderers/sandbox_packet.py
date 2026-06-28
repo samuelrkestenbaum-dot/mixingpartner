@@ -55,6 +55,7 @@ def render_sandbox_markdown(result: Dict) -> str:
         f"- environment: `{result.get('environment')}`",
         "",
     ]
+    lines += _adapter_section(result)
     if not result.get("ok"):
         lines += ["## ⛔ Refused", "", f"- reason: {result.get('reason')}", "",
                   "## 📋 Boundary note", ""]
@@ -90,6 +91,26 @@ def render_sandbox_markdown(result: Dict) -> str:
     lines += _boundary_note()
     lines += ["", "---", f"_{result.get('reason')}_", ""]
     return "\n".join(lines)
+
+
+def _adapter_section(result: Dict) -> List[str]:
+    a = result.get("adapter") or {}
+    caps = a.get("capabilities") or {}
+    return [
+        "## 🔌 Session Adapter Boundary", "",
+        f"- **active adapter:** `{a.get('name', 'FakeSessionAdapter')}`",
+        f"- adapter type: `{caps.get('adapter_type')}`",
+        f"- real DAW support: `{caps.get('real_daw')}`",
+        f"- project file writes: `{caps.get('writes_project_files')}`",
+        f"- real apply support: `{caps.get('supports_real_apply')}`",
+        f"- simulated apply support: `{caps.get('supports_simulated_apply')}`",
+        f"- rollback support: `{caps.get('supports_rollback')}`",
+        f"- requires macOS: `{caps.get('requires_macos')}`  ·  requires Logic: `{caps.get('requires_logic')}`",
+        "",
+        "_This interface is the seam a future `RealLogicSessionAdapter` must satisfy. "
+        "This packet does not implement real Logic; the orchestration is now adapter-driven._",
+        "",
+    ]
 
 
 def _boundary_note() -> List[str]:
