@@ -16,30 +16,34 @@
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression`.
-- **Green baseline (verified 2026-06-29):** suite **110 passed** (0 failed /
+- **Green baseline (verified 2026-06-29):** suite **112 passed** (0 failed /
   skipped / warnings); regression **68/68** (0 warnings).
 
 ## Where we are
 
-- **Last closed packet:** **P-005** — Extend the readiness-vs-refusal treatment
-  to `creative_renderer.py::render_governance`. The `## Stop Conditions` section
-  now renders P-003's labelled `READY TO STOP` / `NOT YET — keep iterating`
-  block in **markdown** (full `reasons` list, warning-when-ready), replacing the
-  flat boolean dump at `creative_renderer.py:104`. Single product commit
-  `107b6e5` (renderer +19/-5, `tests/test_creative.py` +58; 2 new tests).
-  Suite 108→110. Render-only; no backend reach-in; markdown-clean (no HTML).
-  **Milestone:** the readiness-vs-refusal treatment is now CONSISTENT across all
-  THREE governance surfaces — `operator_view.py` (text, P-003),
-  `html_dashboard.py` (HTML, P-003), and `creative_renderer.py` (markdown,
-  P-005). The P-003 surface-consistency thread is fully closed. Reviewer: pass
-  (single-eyes). Receipt:
-  `build-os/receipts/P-005-creative-renderer-readiness.md`.
+- **Last closed packet:** **P-006** — `creative.py` literal cleanup. Two
+  pre-existing un-resolved literals in `generate_variants` are now record-backed:
+  Site 1 (`creative.py:194`, `chorus_lift_B`) `loops or supporting[-1:]` →
+  `_resolve(loops, supporting[-1:], [r["name"] for r in records][:1])` (closes the
+  empty-`tracks_affected` path, restores P-001's non-empty + real-record-subset
+  invariant, reuses the `_resolve` seam); Site 2 (`creative.py:217`, `loop`
+  branch) replaces the `"the loop"` literal with a real-record-name fallback so
+  loop prose names an actual track whenever records exist. Single product commit
+  `6e98a3b` (`creative.py` +4/-2, `tests/test_creative_attribution.py` +62; 2 new
+  tests). Suite 110→112. Pure list logic; no renderer/backend reach-in; helper
+  reuse only (no signature change). **Milestone:** every `tracks_affected` site in
+  `generate_variants` is now record-backed and non-empty, and loop-branch prose
+  can no longer name a non-existent track (except under a degenerate record-free
+  input — tracked as a low-priority Known-risk note). Reviewer: pass
+  (single-eyes; Codex not available). Receipt:
+  `build-os/receipts/P-006-creative-literal-cleanup.md`.
 - **Now:** **none active.** No product packet in flight.
-- **Next (user has directed working through the next bunch):**
-  **P-006 — `creative.py` literal cleanup** (`chorus_lift_B` ~line 194, loop
-  branch ~line 217), then the **deferred net-new event-logging packets**
-  (`taste_feedback` / `validation_check` / `revert` / `manual_note` — each
-  net-new, no producer wired today).
+- **Next:** the **net-new event-logging packets** (`taste_feedback` /
+  `validation_check` / `revert` / `manual_note` — each net-new, no producer wired
+  today). These are **blocked on a PRODUCT DECISION from the user**: should
+  validation / taste / revert / note signals actually be written to the decision
+  ledger? They are net-new features, not mechanical follow-ups — the user is being
+  asked this next.
 
 ## Stable facts (slow-changing)
 
@@ -57,4 +61,4 @@
   explicit go.
 
 ---
-_Updated by the archivist on close. Last advanced on P-005 close (2026-06-29)._
+_Updated by the archivist on close. Last advanced on P-006 close (2026-06-29)._

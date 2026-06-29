@@ -6,20 +6,15 @@
 
 ## Deferred (follow-up packets)
 
-- **Candidate cleanup packet (next: P-006):** two pre-existing literals in
-  `creative.py` still not record-resolved — `chorus_lift_B`'s
-  `loops or supporting[-1:]` (~line 194) and the `loop` branch's
-  `loops[0] if loops else "the loop"` (~line 217). Latent on today's 3 fixtures
-  (the `"the loop"` string never leaks — that branch only fires when `loops` is
-  non-empty), but worth a follow-up packet.
-- **Candidate net-new event-logging packets (from P-004):**
-  `taste_feedback`, `validation_check`, `revert`, `manual_note` remain valid
-  `EVENT_TYPES` members with **NO producer wired into the decision ledger
-  today** (taste → `taste_calibration.json`; validation only returns; revert is
-  a pass-record field; no `manual_note` writer exists). Wiring any of them into
-  the decision ledger is **net-new feature work** — a separate packet IF the user
-  wants those events logged. (Distinct from P-004, which only tagged the one
-  EXISTING untagged write.)
+- **Net-new event-logging packets (from P-002/P-004) — BLOCKED ON A PRODUCT
+  DECISION:** `taste_feedback`, `validation_check`, `revert`, `manual_note` remain
+  valid `EVENT_TYPES` members with **NO producer wired into the decision ledger
+  today** (taste → `taste_calibration.json`; validation only returns; revert is a
+  pass-record field; no `manual_note` writer exists). Wiring any of them into the
+  decision ledger is **net-new FEATURE work, not a mechanical follow-up.** Before
+  any build, the user must decide: **should validation / taste / revert / note
+  signals actually be written to the decision ledger?** The user is being asked
+  this next. Do NOT start these as packets until that product decision lands.
 
 ## Genuinely real carried follow-ups (verified)
 
@@ -62,6 +57,18 @@
   is now CONSISTENT across all THREE governance surfaces — `operator_view.py`
   (text, P-003), `html_dashboard.py` (HTML, P-003), and `creative_renderer.py`
   (markdown, P-005). The P-003 surface-consistency thread is **fully closed**.
+- **`creative.py` literal cleanup** — **DONE via P-006**
+  (`build-os/receipts/P-006-creative-literal-cleanup.md`). The two pre-existing
+  un-resolved literals in `generate_variants` are now record-backed: Site 1
+  (`creative.py:194`, `chorus_lift_B`) `loops or supporting[-1:]` →
+  `_resolve(loops, supporting[-1:], [r["name"] for r in records][:1])` (closes the
+  empty-`tracks_affected` path, restores P-001's non-empty + real-record-subset
+  invariant, reuses the `_resolve` seam); Site 2 (`creative.py:217`, `loop`
+  branch) replaces the `"the loop"` literal with a real-record-name fallback.
+  Single product commit `6e98a3b`; suite 110→112; 2 new tests.
+  **Every `tracks_affected` site in `generate_variants` is now record-backed and
+  non-empty**, and loop-branch prose can no longer name a non-existent track
+  (except under a degenerate record-free input — see Known risks below).
 
 ## Stale / not-real (verified by orchestrator — do NOT act on as written)
 
@@ -80,8 +87,12 @@
 
 ## Known risks / debt
 
-- The two unresolved `creative.py` literals (above) remain a latent attribution
-  gap until the cleanup packet (P-006) lands.
+- **Degenerate empty-`records` input (low priority — NOT a packet yet):** under a
+  truly **empty** `records` list (an unconstructible / degenerate input on the
+  engine path), P-006's Site 1 still returns `[]` and Site 2 still yields
+  `"the loop"`. Acknowledged by the reviewer as out-of-scope — a possible future
+  guard, not a defect. Raise as a packet only if a record-free engine path
+  becomes constructible.
 - Test env: numpy + pytest are not preinstalled. The full suite requires
   `pip install -e ".[dev]"` from `logic-mix-os/` (a network install) before
   `python -m pytest`.
@@ -94,17 +105,13 @@
 
 ## Open boundaries (awaiting explicit go)
 
-- **P-004 is pushed** (PR #13 updated). The earlier P-004 push boundary is
-  retired.
-- The **NEW unpushed commits** are P-005's product commit `107b6e5`, the memory
-  commit `bebb1e3`, plus the archivist's P-005 close commit. The user has granted
-  **STANDING push-go**, so these will be pushed immediately after this close —
-  pushing updates the already-open **PR #13** (base
-  `claude/dreamy-turing-z0oxll`) to also include P-005 alongside P-001, P-002,
-  P-003, P-004, and the Build OS install.
-- NOTE: P-000's install commits are **already pushed** to
-  `origin/claude/logic-mix-os-hardening-12-7hbeh1`. The earlier "P-000 push
-  paused for go" boundary is retired.
+- **P-006's product commit `6e98a3b` is local-only as of this close** (this
+  archivist close did not push). Earlier packets' push history: P-000 install
+  commits are pushed to `origin/claude/logic-mix-os-hardening-12-7hbeh1`; P-004
+  is pushed (PR #13). Any push of `6e98a3b` (and the P-005 commits, if not yet
+  pushed) updates the already-open **PR #13** (base
+  `claude/dreamy-turing-z0oxll`) — do so only under the user's standing/explicit
+  push-go.
 
 ---
 _Append-only working notes._
