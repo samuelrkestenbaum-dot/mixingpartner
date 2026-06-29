@@ -104,11 +104,20 @@ def render_governance(governance: Dict) -> str:
     stop = governance.get("stop_conditions", {})
     out.append("## Stop Conditions")
     out.append("")
-    out.append(f"- Should stop iterating: **{stop.get('should_stop')}**")
-    for r in stop.get("reasons", []):
-        out.append(f"  - {r}")
-    if stop.get("warning"):
-        out.append(f"- ⚠️ {stop['warning']}")
+    reasons = stop.get("reasons", [])
+    if stop.get("should_stop"):
+        out.append("**READY TO STOP** — stop conditions met.")
+        out.append("")
+        for r in reasons:
+            out.append(f"- {r}")
+        warning = stop.get("warning")
+        if warning:
+            out.append(f"- ⚠️ {warning}")
+    else:
+        out.append("**NOT YET — keep iterating**")
+        out.append("")
+        for r in reasons:
+            out.append(f"- {r}")
     out.append("")
 
     fb = governance.get("mixer_feedback", {})
