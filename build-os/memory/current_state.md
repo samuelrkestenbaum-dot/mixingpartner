@@ -16,26 +16,28 @@
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression`.
-- **Green baseline (verified 2026-06-29):** suite **107 passed** (0 failed /
+- **Green baseline (verified 2026-06-29):** suite **108 passed** (0 failed /
   skipped / warnings); regression **68/68** (0 warnings).
 
 ## Where we are
 
-- **Last closed packet:** **P-003** — Readiness-vs-refusal clarity in the
-  status / dashboard surface (design-UI, render-only). Net-new labelled
-  `READY TO STOP` / `NOT YET — keep iterating` blocks in
-  `renderers/operator_view.py::render_status` and the `id="governance"` card of
-  `renderers/html_dashboard.py::render_dashboard`, sourced solely from
-  `result.governance["stop_conditions"]`; 5 new tests in
-  `tests/test_dashboard.py`. No backend reach-in. Reviewer: pass (single-eyes).
-  Receipt: `build-os/receipts/P-003-readiness-vs-refusal-clarity.md`.
+- **Last closed packet:** **P-004** — Event-tagging: tag the one existing
+  untagged ledger write (`cowork.py::_write_mix_decision` → `mix_decision`).
+  One-line tag at `cowork.py:93` passing `event_type="mix_decision"` into
+  `add_decision` + one new test in `tests/test_cowork.py` round-tripping the
+  persisted ledger entry. This closes `EVENT_TYPES` adoption across **every
+  existing** decision-ledger producer (`mute_candidate` via P-002's
+  `record_plan_decisions`, `mix_decision` via P-004's `_write_mix_decision`).
+  Suite 107→108. Reviewer: pass (single-eyes). Receipt:
+  `build-os/receipts/P-004-event-tagging-mix-decision.md`.
 - **Now:** **none active.** No product packet in flight.
 - **Next:** user's call — the **`creative.py` literal cleanup**
-  (`chorus_lift_B` ~line 194, loop branch ~line 217), the **event-tagging
-  follow-up** (tag `cowork.py::_write_mix_decision` → `mix_decision`, wire
-  `taste_feedback` / `validation_check`), or the **new `creative_renderer.py`
-  readiness follow-up** (extend the labelled READY/NOT-YET treatment to
-  `creative_renderer.py:104` for full surface consistency).
+  (`chorus_lift_B` ~line 194, loop branch ~line 217), the
+  **`creative_renderer.py:104` readiness follow-up** (extend the labelled
+  READY/NOT-YET treatment for full surface consistency, design-UI render-only),
+  one of the **deferred net-new event-logging packets** (`taste_feedback` /
+  `validation_check` / `revert` / `manual_note` — each net-new, no producer
+  wired today), or **pause**.
 
 ## Stable facts (slow-changing)
 
@@ -53,4 +55,4 @@
   explicit go.
 
 ---
-_Updated by the archivist on close. Last advanced on P-003 close (2026-06-29)._
+_Updated by the archivist on close. Last advanced on P-004 close (2026-06-29)._

@@ -11,18 +11,20 @@
   and the `loop` branch's `loops[0] if loops else "the loop"` (~line 217).
   Latent on today's 3 fixtures (the `"the loop"` string never leaks — that
   branch only fires when `loops` is non-empty), but worth a follow-up packet.
-- **Candidate event-tagging follow-up (from P-002):** only
-  `record_plan_decisions` tags its events today (`mute_candidate`). Tag the other
-  live ledger callers — `cowork.py::_write_mix_decision` → `mix_decision`, and
-  wire `taste_feedback` / `validation_check` where those signals are produced.
-  Out of scope for P-002; a natural future packet building on the new
-  `EVENT_TYPES` seam.
-- **Candidate `creative_renderer` readiness follow-up (NEW, from P-003):**
+- **Candidate `creative_renderer` readiness follow-up (from P-003):**
   `creative_renderer.py:104` also consumes `stop_conditions` but does NOT yet
   show the labelled READY/NOT-YET treatment that P-003 added to
   `operator_view.py` and `html_dashboard.py`. A future design-UI (render-only)
   packet for full surface consistency. Flagged by the reviewer; out of scope for
   P-003.
+- **Candidate net-new event-logging packets (NEW, from P-004):**
+  `taste_feedback`, `validation_check`, `revert`, `manual_note` remain valid
+  `EVENT_TYPES` members with **NO producer wired into the decision ledger
+  today** (taste → `taste_calibration.json`; validation only returns; revert is
+  a pass-record field; no `manual_note` writer exists). Wiring any of them into
+  the decision ledger is **net-new feature work** — a separate packet IF the user
+  wants those events logged. (Distinct from P-004, which only tagged the one
+  EXISTING untagged write.)
 
 ## Genuinely real carried follow-ups (verified)
 
@@ -46,6 +48,15 @@
   sourced from `result.governance["stop_conditions"]`; 5 new render-only tests.
   Render-only; no backend reach-in. (Full surface consistency for
   `creative_renderer.py` deferred — see Deferred above.)
+- **Event-tagging follow-up (from P-002) — in-scope part** — **DONE via P-004**
+  (`build-os/receipts/P-004-event-tagging-mix-decision.md`). The one existing
+  untagged ledger write (`cowork.py::_write_mix_decision`) now passes
+  `event_type="mix_decision"`. **EVENT_TYPES is now applied to every EXISTING
+  ledger write:** `mute_candidate` (via P-002's `record_plan_decisions`) and
+  `mix_decision` (via P-004's `_write_mix_decision`). The other vocabulary
+  members (`taste_feedback` / `validation_check` / `revert` / `manual_note`) have
+  no existing producer and are tracked as net-new packets under Deferred above —
+  NOT part of this DONE item.
 
 ## Stale / not-real (verified by orchestrator — do NOT act on as written)
 
@@ -78,14 +89,14 @@
 
 ## Open boundaries (awaiting explicit go)
 
-- **P-002 commits are now pushed** (PR #13 updated). The earlier "P-002 push
-  paused for go" boundary is retired.
-- The **NEW unpushed commits** are P-003's `0cd4243`, the memory commit
-  `b179ca3`, plus the archivist's P-003 close commit. The user has granted
+- **P-003 commits are now pushed** (PR #13 updated). The earlier P-003 push
+  boundary is retired.
+- The **NEW unpushed commits** are P-004's product commit `a9daa72`, the memory
+  commit `9b131b6`, plus the archivist's P-004 close commit. The user has granted
   **STANDING push-go**, so these will be pushed immediately after this close —
   pushing updates the already-open **PR #13** (base
-  `claude/dreamy-turing-z0oxll`) to also include P-003 alongside P-001, P-002,
-  and the Build OS install.
+  `claude/dreamy-turing-z0oxll`) to also include P-004 alongside P-001, P-002,
+  P-003, and the Build OS install.
 - NOTE: P-000's install commits are **already pushed** to
   `origin/claude/logic-mix-os-hardening-12-7hbeh1`. The earlier "P-000 push
   paused for go" boundary is retired.
