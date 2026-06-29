@@ -10,22 +10,25 @@
   section-aware, Logic-native **mix plan** (Roy Halee / Phil Ramone judgment
   layer). Not an auto-mixer, preset generator, or mastering tool. All product
   code lives under `logic-mix-os/`.
-- **Primary branch / base:** default branch `claude/dreamy-turing-z0oxll`; active
-  dev branch `claude/logic-mix-os-hardening-12-7hbeh1` (cut cleanly from the
-  default — 0 commits divergence at install time).
+- **Primary branch / base:** default branch `claude/dreamy-turing-z0oxll` @
+  `694d19d`; active dev branch `claude/logic-mix-os-hardening-12-7hbeh1`.
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
-  `python -m pytest` (testpaths=`tests`, 13 test files). Golden + doctrine
-  regression: `python -m logic_mix_os.cli regression`.
+  `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
+  `python -m logic_mix_os.cli regression`.
+- **Green baseline (verified 2026-06-29):** suite **101 passed** (0 failed /
+  skipped / warnings); regression **68/68** (0 warnings).
 
 ## Where we are
 
-- **Last closed packet:** none recorded in this repo's `build-os/` yet — memory
-  initialized when Build OS was vendored into the repo (P-000).
-- **Now:** Build OS orchestrator installed (project scope, vendored). No product
-  packet in flight.
-- **Next:** awaiting the user's confirmed first product packet (the branch name
-  implies a "hardening-12" line of work — confirm scope before building).
+- **Last closed packet:** **P-001** — Resolve variant `tracks_affected` against
+  real records. Record-backed attribution in `creative.py` + new
+  `tests/test_creative_attribution.py`. Reviewer: pass. Receipt:
+  `build-os/receipts/P-001-resolve-variant-track-attribution.md`.
+- **Now:** **none active.** No product packet in flight.
+- **Next:** orchestrator-ranked — **P-002** (net-new `EVENT_TYPES`
+  decision-ledger vocabulary) or **P-003** (readiness-vs-refusal UI clarity).
+  User's call on which to run.
 
 ## Stable facts (slow-changing)
 
@@ -43,5 +46,4 @@
   explicit go.
 
 ---
-_Updated by the archivist on close. Initialized with real state when Build OS was
-vendored into the repo (packet P-000)._
+_Updated by the archivist on close. Last advanced on P-001 close (2026-06-29)._
