@@ -16,19 +16,22 @@
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression`.
-- **Green baseline (verified 2026-06-29):** suite **101 passed** (0 failed /
+- **Green baseline (verified 2026-06-29):** suite **102 passed** (0 failed /
   skipped / warnings); regression **68/68** (0 warnings).
 
 ## Where we are
 
-- **Last closed packet:** **P-001** — Resolve variant `tracks_affected` against
-  real records. Record-backed attribution in `creative.py` + new
-  `tests/test_creative_attribution.py`. Reviewer: pass. Receipt:
-  `build-os/receipts/P-001-resolve-variant-track-attribution.md`.
+- **Last closed packet:** **P-002** — Net-new `EVENT_TYPES` decision-ledger
+  vocabulary + optional validated `event_type` on `add_decision`. New vocabulary
+  in `constants.py`; optional validated `event_type` on `memory.py::add_decision`;
+  `record_plan_decisions` tags `mute_candidate`; new test in
+  `tests/test_session_memory.py`. Reviewer: pass. Receipt:
+  `build-os/receipts/P-002-event-types-vocabulary.md`.
 - **Now:** **none active.** No product packet in flight.
-- **Next:** orchestrator-ranked — **P-002** (net-new `EVENT_TYPES`
-  decision-ledger vocabulary) or **P-003** (readiness-vs-refusal UI clarity).
-  User's call on which to run.
+- **Next:** user's call — **P-003** (readiness-vs-refusal UI clarity), the
+  **`creative.py` literal cleanup**, or the **new event-tagging follow-up** (tag
+  `cowork.py::_write_mix_decision` → `mix_decision`, wire `taste_feedback` /
+  `validation_check`).
 
 ## Stable facts (slow-changing)
 
@@ -46,4 +49,4 @@
   explicit go.
 
 ---
-_Updated by the archivist on close. Last advanced on P-001 close (2026-06-29)._
+_Updated by the archivist on close. Last advanced on P-002 close (2026-06-29)._
