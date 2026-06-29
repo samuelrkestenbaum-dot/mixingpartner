@@ -191,7 +191,7 @@ def generate_variants(problem: Dict, result, mode: str = "dramatic_contrast") ->
                      supporting, "May feel too modern/washed.", ["chorus feels wider", "vocal remains centered"], "emotional openness"),
             _variant("chorus_lift_B", pid, "subtractive_drop", "Subtractive Drop",
                      "Withhold a decorative layer before the chorus so it feels larger by contrast.",
-                     ["Mute decorative texture in the final pre-chorus bar"], loops or supporting[-1:],
+                     ["Mute decorative texture in the final pre-chorus bar"], _resolve(loops, supporting[-1:], [r["name"] for r in records][:1]),
                      "Chorus may still feel small.", ["chorus entrance feels more dramatic"], "impact through contrast"),
             _variant("chorus_lift_C", pid, "vocal_ride", "Vocal-Ride Lift",
                      "Ride the lead vocal into the chorus with a delay throw on the last pre-chorus phrase.",
@@ -214,7 +214,7 @@ def generate_variants(problem: Dict, result, mode: str = "dramatic_contrast") ->
                      "Lose a part you liked.", ["clarity improves without loss of energy"], "clarity"),
         ]
     elif pid == "loop":
-        target = loops[0] if loops else "the loop"
+        target = loops[0] if loops else (([r["name"] for r in records][:1] or ["the loop"])[0])
         variants += [
             _variant("loop_A", pid, "loop_deconstruct", "Loop Deconstruct",
                      f"Re-contextualise {target} as movement (felt), not a stock loop (heard).",
