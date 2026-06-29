@@ -110,6 +110,30 @@ def _supporting_elements(records) -> List[str]:
             if r["instrument_identity"] in {"acoustic_guitar", "electric_guitar", "backing_vocal", "piano", "electric_piano", "strings"}]
 
 
+# Identity families/identities that count as "the drums" for room/overhead moves.
+_DRUM_IDENTITIES = {"kick", "snare", "hat", "hi_hat", "tom", "drum_overhead", "drum_room", "cymbal", "percussion"}
+_DRUM_FAMILIES = {"drums", "percussion"}
+
+
+def _lead_vocal_tracks(records) -> List[str]:
+    """Real lead-vocal track names, in project order."""
+    return [r["name"] for r in records if r["instrument_identity"] == "lead_vocal"]
+
+
+def _drum_tracks(records) -> List[str]:
+    """Real drum/percussion track names, in project order."""
+    return [r["name"] for r in records
+            if r["instrument_identity"] in _DRUM_IDENTITIES or r["identity_family"] in _DRUM_FAMILIES]
+
+
+def _resolve(*candidate_lists: List[str]) -> List[str]:
+    """First non-empty candidate list (each already a real-record subset)."""
+    for names in candidate_lists:
+        if names:
+            return names
+    return []
+
+
 def detect_creative_problems(result) -> List[Dict]:
     problems: List[Dict] = []
     sections = result.section_analysis
@@ -148,8 +172,16 @@ def generate_variants(problem: Dict, result, mode: str = "dramatic_contrast") ->
     records = result.records
     supporting = _supporting_elements(records)
     loops = [r["name"] for r in records if r["source_kind"] in LOOP_SAMPLE_KINDS]
+    lead_vocal = _lead_vocal_tracks(records)
+    drums = _drum_tracks(records)
     pid = problem["id"]
     variants: List[Dict] = []
+
+    # Fallbacks so no variant ever emits a phantom or empty track list: the
+    # lead-vocal/drum moves resolve against real records, then degrade to the
+    # next musically-sensible real layer present in the project.
+    lead_target = _resolve(lead_vocal, supporting, loops, [r["name"] for r in records][:1])
+    drum_target = _resolve(drums, supporting, loops, lead_vocal, [r["name"] for r in records][:1])
 
     if pid == "chorus_lift":
         variants += [
@@ -164,10 +196,10 @@ def generate_variants(problem: Dict, result, mode: str = "dramatic_contrast") ->
             _variant("chorus_lift_C", pid, "vocal_ride", "Vocal-Ride Lift",
                      "Ride the lead vocal into the chorus with a delay throw on the last pre-chorus phrase.",
                      ["Ride lead vocal +1 dB into chorus", "Delay throw on last pre-chorus phrase"],
-                     ["Lead Vocal"], "May not create enough scale.", ["emotional belief increases"], "emotional belief"),
+                     lead_target, "May not create enough scale.", ["emotional belief increases"], "emotional belief"),
             _variant("chorus_lift_D", pid, "drum_room_bloom", "Drum Room Bloom",
                      "Use physical room/overheads rather than plugin hype to lift the chorus.",
-                     ["Increase drum room/overhead energy at chorus entry"], ["Drum Overheads", "Drum Room"],
+                     ["Increase drum room/overhead energy at chorus entry"], drum_target,
                      "Drums may overpower the vocal.", ["Halee-style physical lift", "vocal still on top"], "physical lift"),
         ]
     elif pid == "density":
@@ -203,11 +235,11 @@ def generate_variants(problem: Dict, result, mode: str = "dramatic_contrast") ->
         variants += [
             _variant("vocal_A", pid, "vocal_ride", "Phrase Rides",
                      "Ride phrase endings before any compression so the words land.",
-                     ["Clip gain + fader rides on phrase ends +0.5 to +1.5 dB"], ["Lead Vocal"],
+                     ["Clip gain + fader rides on phrase ends +0.5 to +1.5 dB"], lead_target,
                      "Time-consuming.", ["every word believable"], "vocal belief"),
             _variant("vocal_B", pid, "intimacy_pass", "Verse Intimacy",
                      "Pull verse reverb sends down and keep the vocal close; bloom only at the chorus.",
-                     ["Lower verse vocal sends", "Bloom sends at chorus"], ["Lead Vocal"],
+                     ["Lower verse vocal sends", "Bloom sends at chorus"], lead_target,
                      "Verses may feel dry — A/B vs baseline.", ["verse intimacy vs chorus openness"], "intimacy"),
         ]
     return variants
