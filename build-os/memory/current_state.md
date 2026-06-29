@@ -16,28 +16,30 @@
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression`.
-- **Green baseline (verified 2026-06-29):** suite **108 passed** (0 failed /
+- **Green baseline (verified 2026-06-29):** suite **110 passed** (0 failed /
   skipped / warnings); regression **68/68** (0 warnings).
 
 ## Where we are
 
-- **Last closed packet:** **P-004** — Event-tagging: tag the one existing
-  untagged ledger write (`cowork.py::_write_mix_decision` → `mix_decision`).
-  One-line tag at `cowork.py:93` passing `event_type="mix_decision"` into
-  `add_decision` + one new test in `tests/test_cowork.py` round-tripping the
-  persisted ledger entry. This closes `EVENT_TYPES` adoption across **every
-  existing** decision-ledger producer (`mute_candidate` via P-002's
-  `record_plan_decisions`, `mix_decision` via P-004's `_write_mix_decision`).
-  Suite 107→108. Reviewer: pass (single-eyes). Receipt:
-  `build-os/receipts/P-004-event-tagging-mix-decision.md`.
+- **Last closed packet:** **P-005** — Extend the readiness-vs-refusal treatment
+  to `creative_renderer.py::render_governance`. The `## Stop Conditions` section
+  now renders P-003's labelled `READY TO STOP` / `NOT YET — keep iterating`
+  block in **markdown** (full `reasons` list, warning-when-ready), replacing the
+  flat boolean dump at `creative_renderer.py:104`. Single product commit
+  `107b6e5` (renderer +19/-5, `tests/test_creative.py` +58; 2 new tests).
+  Suite 108→110. Render-only; no backend reach-in; markdown-clean (no HTML).
+  **Milestone:** the readiness-vs-refusal treatment is now CONSISTENT across all
+  THREE governance surfaces — `operator_view.py` (text, P-003),
+  `html_dashboard.py` (HTML, P-003), and `creative_renderer.py` (markdown,
+  P-005). The P-003 surface-consistency thread is fully closed. Reviewer: pass
+  (single-eyes). Receipt:
+  `build-os/receipts/P-005-creative-renderer-readiness.md`.
 - **Now:** **none active.** No product packet in flight.
-- **Next:** user's call — the **`creative.py` literal cleanup**
-  (`chorus_lift_B` ~line 194, loop branch ~line 217), the
-  **`creative_renderer.py:104` readiness follow-up** (extend the labelled
-  READY/NOT-YET treatment for full surface consistency, design-UI render-only),
-  one of the **deferred net-new event-logging packets** (`taste_feedback` /
-  `validation_check` / `revert` / `manual_note` — each net-new, no producer
-  wired today), or **pause**.
+- **Next (user has directed working through the next bunch):**
+  **P-006 — `creative.py` literal cleanup** (`chorus_lift_B` ~line 194, loop
+  branch ~line 217), then the **deferred net-new event-logging packets**
+  (`taste_feedback` / `validation_check` / `revert` / `manual_note` — each
+  net-new, no producer wired today).
 
 ## Stable facts (slow-changing)
 
@@ -55,4 +57,4 @@
   explicit go.
 
 ---
-_Updated by the archivist on close. Last advanced on P-004 close (2026-06-29)._
+_Updated by the archivist on close. Last advanced on P-005 close (2026-06-29)._
