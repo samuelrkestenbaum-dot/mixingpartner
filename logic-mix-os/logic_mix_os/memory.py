@@ -121,7 +121,7 @@ class ProjectMemory:
                 "doctrine": ["sacred_vs_expendable", "felt_vs_heard"],
                 "risk": f"Class {m.get('risk_class', 3)}",
                 "validation": "Check chorus width and emotional lift after render.",
-            }))
+            }, event_type="mute_candidate"))
         return added
 
     def ledger(self) -> List[Dict]:
