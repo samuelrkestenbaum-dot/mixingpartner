@@ -76,6 +76,23 @@ def render_status(result: ProjectAnalysis) -> str:
                    f"total: {summary.get('total_events', 0)}")
         out.append("")
 
+    # Readiness vs. refusal — sourced solely from governance stop_conditions.
+    stop = result.governance.get("stop_conditions", {})
+    if stop:
+        reasons = stop.get("reasons", [])
+        if stop.get("should_stop"):
+            out.append(" READINESS — READY TO STOP")
+            for reason in reasons:
+                out.append(f"   ✓ {reason}")
+            warning = stop.get("warning")
+            if warning:
+                out.append(f"   ⚠ {warning}")
+        else:
+            out.append(" READINESS — NOT YET — keep iterating")
+            for reason in reasons:
+                out.append(f"   • {reason}")
+        out.append("")
+
     # Next recommended action.
     nxt = result.mix_plan.get("next_pass", [])
     out.append(" NEXT RECOMMENDED ACTION")
