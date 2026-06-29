@@ -47,6 +47,20 @@ def test_override_identity_command():
     assert out["updated"]["identity_family"] == "keys"
 
 
+def test_write_mix_decision_tags_event_type(tmp_path):
+    # Drive the write_mix_decision cowork command through run_command with a
+    # memory-backed ctx, then read the ledger and assert the entry is tagged
+    # with the mix_decision event type (P-004).
+    from logic_mix_os.memory import ProjectMemory
+    mem = ProjectMemory(tmp_path / "mem")
+    ctx = {"result": None, "memory": mem}
+    out = run_command("write_mix_decision", ctx,
+                      decision={"decision": "widen chorus", "reason": "felt narrow"})
+    assert out["event_type"] == "mix_decision"
+    ledger = mem.ledger()
+    assert ledger and ledger[-1]["event_type"] == "mix_decision"
+
+
 def test_review_uncertain_uses_threshold(ctx):
     out = run_command("review_uncertain_identities", ctx, threshold=2.0)  # everything below 2.0
     assert len(out) == len(ctx["result"].track_identity)

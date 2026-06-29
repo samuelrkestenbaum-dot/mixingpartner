@@ -90,7 +90,7 @@ def _write_mix_decision(ctx, decision=None, **k):
     mem = ctx.get("memory")
     if not mem:
         return {"error": "no memory_dir configured"}
-    return mem.add_decision(decision or {})
+    return mem.add_decision(decision or {}, event_type="mix_decision")
 
 
 def _update_taste(ctx, label=None, context=None, **k):
