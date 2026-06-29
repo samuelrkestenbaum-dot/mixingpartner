@@ -154,6 +154,16 @@ EVIDENCE_TYPES = [
     "user_intent",
 ]
 
+# --- Event types for the decision ledger (build packet P-002) ---------------
+EVENT_TYPES = [
+    "mix_decision",      # a recommendation acted on / logged (default category)
+    "mute_candidate",    # muting/chopping an element (record_plan_decisions)
+    "revert",            # rolling back a prior pass/change
+    "taste_feedback",    # user taste signal logged as a decision
+    "validation_check",  # a validation/QA gate result
+    "manual_note",       # free-form analyst note
+]
+
 # Frequency band edges (Hz) used everywhere for tonal-balance reasoning.
 BANDS = {
     "low": (20.0, 120.0),

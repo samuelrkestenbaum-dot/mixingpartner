@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 from logic_mix_os.album import analyze_album
 from logic_mix_os.analyzers.render_graph import stale_after
 from logic_mix_os.memory import ProjectMemory
@@ -54,6 +56,25 @@ def test_decision_ledger_autopopulates(analyzed, tmp_path):
     ledger = mem.ledger()
     assert ledger
     assert all("validation" in d and "reason" in d for d in ledger)
+
+
+def test_add_decision_event_type_accept_reject_and_optional(tmp_path):
+    mem = ProjectMemory(tmp_path / "mem")
+
+    # accept: a valid event_type is stored on the entry
+    entry = mem.add_decision({"decision": "x", "reason": "y"}, event_type="mix_decision")
+    assert entry["event_type"] == "mix_decision"
+    ledger = mem.ledger()
+    assert ledger[-1]["event_type"] == "mix_decision"
+
+    # reject: an unknown event_type raises ValueError
+    with pytest.raises(ValueError):
+        mem.add_decision({"decision": "x", "reason": "y"}, event_type="not_a_real_type")
+
+    # backward-compat: omitting event_type succeeds and stores no event_type key
+    plain = mem.add_decision({"decision": "x", "reason": "y"})
+    assert "event_type" not in plain
+    assert "event_type" not in mem.ledger()[-1]
 
 
 def test_taste_calibration_forms_profile(tmp_path):
