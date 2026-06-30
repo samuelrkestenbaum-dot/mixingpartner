@@ -11,56 +11,56 @@
   layer). Not an auto-mixer, preset generator, or mastering tool. All product
   code lives under `logic-mix-os/`.
 - **Primary branch / base:** default branch `claude/dreamy-turing-z0oxll` @
-  `694d19d`; active dev branch `claude/logic-mix-os-hardening-12-7hbeh1`.
+  `694d19d`; active dev branch `claude/logic-mix-os-hardening-12-7hbeh1` (product
+  base `45437d2`, P-009 product commit `27bfebf` local-only).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression`.
-- **Green baseline (verified 2026-06-29):** suite **138 passed** (0 failed /
+- **Green baseline (verified 2026-06-29):** suite **143 passed** (0 failed /
   skipped / warnings); regression **68/68** (0 critical / 0 warnings).
 
 ## Where we are
 
-- **Last closed packet:** **P-008** — History-aware next pass (the OUTCOME side
-  of the learning loop). `plan_next_pass` now consumes recorded mix-pass history
-  — **opt-in, bounded, evidence-tagged**. An optional trailing `history` arg
-  (default `None` → byte-identical); a `_MOVE_TARGET` map (move title →
-  `SCORE_KEYS` member) bridges history's score-keyed `got_worse` to the planner's
-  titled candidates; a move whose target regressed AND was recommended last pass
-  is **demoted** (`HISTORY_DEMOTE = 40`, floored ≥ 0, survives — not deleted); a
-  single non-destructive `"Revert last pass"` move surfaces at priority 95 when
-  `revert_candidates` is non-empty; each history-touched candidate carries an
-  `evidence` line (absent otherwise). Uses only `history[-1]`. Deterministic.
-  Commit-1 `d98a194` (planner +88/−1 + new `tests/test_next_pass_history.py`,
-  12 tests), Commit-2 `dbf94c3` (folded `drum_room_bloom` narrower-taste test in
-  `test_governance_taste.py`). Suite 125→**138**; regression 68/68 held; **default
-  path BYTE-IDENTICAL three ways** (arg-omitted == `history=None` == `history=[]`,
-  no `evidence` key); Commit-1 green in isolation. Reviewer: **pass** (revert at
-  95>90 ruled acceptable — bounded, non-destructive, cannot manufacture a move;
-  Codex not available). Receipt:
-  `build-os/receipts/P-008-history-aware-next-pass.md`.
-  - **MILESTONE — THE LEARNING LOOP IS NOW FULLY CLOSED:** with **P-007** (taste →
-    governance, the *consumer* side) AND **P-008** (outcome → next-pass, the
-    *outcome* side), **BOTH halves of the learning loop are closed.** The system
-    both **personalizes to recorded taste** (governance biased by recorded
-    operator taste — opt-in, bounded `±15`, doctrine-inviolable) and **stops
-    re-recommending moves that regressed** (next-pass demotes recorded `got_worse`
-    moves and surfaces revert — opt-in, bounded, non-destructive). Memory is no
-    longer write-only on either axis: real consumers of recorded signals exist on
-    both the taste and outcome axes. What remains to make the loop **real in
-    production** is the live wiring (P-008b / P-007b), not new core behavior.
+- **MILESTONE — THE LEARNING LOOP IS NOW REAL IN PRODUCTION.** With **P-009**
+  (live wire), a real `cowork --memory-dir` run **both learns and personalizes**:
+  it records and history-demotes/reverts regressed moves (outcome axis) AND
+  down-weights to recorded operator taste in governance (consumer axis). The full
+  arc **P-007 (consumer) → P-008 (outcome) → P-009 (live wire)** is closed
+  end-to-end. Memory is no longer dormant in production on either axis — the
+  P-007/P-008 investment now reaches a real operator. **P-009 subsumes and
+  completes P-007b + P-008b** (both DONE via P-009).
+- **Last closed packet:** **P-009** — Live wire: thread real memory into the
+  production analysis path. `analyze()` gained an opt-in **trailing** `memory_dir`
+  param; when set it builds `ProjectMemory` **once** and threads `history()` →
+  `plan_next_pass` and `taste_profile()["profile"]` → `run_governance`.
+  `cowork.py:28` now passes `memory_dir` into its `analyze()` call, making the
+  pre-existing CLI `cowork --memory-dir` → `build_context` chain live. Single
+  product commit `27bfebf` (`pipeline.py` +18, `cowork.py` +1 at `:28`,
+  `tests/test_live_wire.py` new = 5 e2e tests). Suite 138→**143**; regression
+  68/68 held; **default path BYTE-IDENTICAL** (full `ProjectAnalysis` exact
+  string-equal across no-arg / `memory_dir=None` / empty dir — the `"evidence"`
+  keys in the dump are pre-existing baseline fields, NOT a P-009 leak); Commit-1
+  green in isolation. Positive control confirmed live (history → "Revert last
+  pass" + Section contrast demoted; taste → `taste_adjustments` + identity 80→65).
+  Reviewer: **pass** (taste axis ruled GENUINELY LIVE — flows e2e + lowers
+  identity; no winner flip on this fixture is a data property, decision-level flip
+  proven by P-007's unit test on the same `analyze()`-driven code path; Codex not
+  available). Receipt:
+  `build-os/receipts/P-009-live-wire-memory-into-analyze.md`.
 - **Now:** **none active.** No product packet in flight.
-- **Next:** the trajectory follow-ons that make the now-closed loop **real in
-  production** — **user's call** which to open:
-  - **P-008b — Live history wire:** thread `memory.history()` into
-    `pipeline.analyze()` / the planner call so a real recorded history reaches
-    `plan_next_pass` in production (kept opt-in/explicit so byte-identical-by-
-    default survives — symmetric to P-007b).
-  - **P-007b — Live taste surface:** wire a real per-operator `taste_profile`
-    from `memory_dir` into a pipeline/cowork run (explicit per-operator).
-  - Also available (still behind the product decision, now with two consumers
-    existing): the net-new **event-logging** producers (`taste_feedback` /
-    `validation_check`).
+- **Next:** orchestrator **re-survey** — the loop trajectory is fully realized, so
+  the strategic question is where to skate next. Re-ranked candidates (user is
+  driving via "skate to where the puck"):
+  - **Album cross-song coherence** — `analyze_album` is isolated from per-song
+    planning; cross-song coherence is the next strategic direction.
+  - **Deeper creative scoring** — `creative.py::_KIND_SCORES` is hardcoded;
+    richer kind-scoring is the other strategic direction.
+  - **Loop-strengthening follow-ups (from P-009 reviewer):** a borderline-song
+    taste fixture that flips the governed winner *through `analyze()`* end-to-end;
+    a wider `--memory-dir` CLI surface beyond `cowork`.
+  - Net-new **event-logging** producers (`taste_feedback` / `validation_check`)
+    remain behind the product decision — now with live consumers, more justified.
 
 ## Stable facts (slow-changing)
 
@@ -78,4 +78,4 @@
   explicit go.
 
 ---
-_Updated by the archivist on close. Last advanced on P-008 close (2026-06-29)._
+_Updated by the archivist on close. Last advanced on P-009 close (2026-06-29)._
