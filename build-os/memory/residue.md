@@ -4,24 +4,34 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
-## ★ OPEN USER DECISION (read this first)
+## ★ RESOLVED USER DECISION (was: "read this first")
 
-- **Deeper creative scoring (`creative.py::_KIND_SCORES`) — BLOCKED ON A USER
-  AESTHETIC DECISION.** This is the **leading trajectory candidate** AND the next
-  real move, but it is **not in-authority to start** — `_KIND_SCORES` is a
-  **curated Halee/Ramone aesthetic prior**, and the variant-scoring path is
-  **golden-unguarded** (a bad change is **silent** — no regression catches it).
-  The clean in-authority deck-clearing work is now drained, so the next step is
-  **the user's call**. The user has been asked to choose one of:
-  - **(a)** leave `_KIND_SCORES` as-is (no packet);
-  - **(b)** a **bounded, evidence-tagged nudge layer ON TOP of the table** —
-    generalizing the existing `width_bloom −8`, capped so it can **never overturn
-    the base score** — which the user **reviews before ship**; or
-  - **(c)** a fuller **song-derived rescoring**.
-  **Do NOT open any creative-scoring packet until the user picks a / b / c.**
+- **Deeper creative scoring (`creative.py::_KIND_SCORES`) — RESOLVED via P-012
+  (option B, penalty-only).** The user chose **option B**: a bounded, transparent,
+  capped, **penalty-only** evidence-nudge layer ON TOP of the curated table (the
+  `_KIND_SCORES` VALUES are UNCHANGED). Shipped — `score_variant` applies two
+  evidence-gated `vocal_belief` penalties (`−8` masked vocal across
+  `width_bloom`/`vocal_ride`/`intimacy_pass`; `−6` `width_crowding` for
+  `width_bloom`), the summed overall delta clamped to `±2.0`, `score_nudges`
+  emitted only on fire. It DELIBERATELY changes default scoring when a nudge fires
+  but provably cannot overturn a clear base ranking (cap 2.0 < 2.4–4.2 base gaps).
+  **NOTE: this is on the UNMERGED PR #13, awaiting the user's sign-off before merge
+  — it's the user's reviewed aesthetic change.** Receipt:
+  `build-os/receipts/P-012-creative-scoring-nudge-layer.md`. (Options (a) leave
+  as-is and (c) fuller song-derived rescoring were NOT chosen.)
 
 ## Deferred (follow-up packets)
 
+- **Reward nudges (orchestrator rows 3+4) — NEW, user-gated:**
+  `depth_cleanup +6 halee` / `subtractive_drop +4 taste` when `crowded_sections`
+  is non-empty — a possible later ADDITIVE packet IF the user wants reward
+  (promotion) nudges. **Deferred** — P-012 is penalty-only by the user's
+  recommended reading. Do NOT open without the user asking for reward nudges.
+- **Borderline near-tie fixture (from P-012 — NEW, informational, in authority):**
+  a fixture that demonstrates an INTENDED near-tie flip through `analyze()` would
+  make the option-B behavior visible on real data (today the layer fires but
+  overturns nothing on the 3 fixtures — row 2 fires on the LOSING variant; row 1
+  never fires). Small additive test, future packet.
 - **Borderline-song taste fixture (from P-009 reviewer — non-blocking, in
   authority):** add a fixture where the bounded taste nudge actually **flips the
   governed winner through `analyze()`** end-to-end. Today the decision-level taste
@@ -30,7 +40,8 @@
   through `analyze()` the dominant-variant margin exceeds the bounded ±15 nudge, so
   no winner flip is observed end-to-end. A borderline fixture would make the taste
   axis's production impact visible at the decision level through the live path. Not
-  its own large packet — a small additive test.
+  its own large packet — a small additive test. (Pairs naturally with the P-012
+  near-tie fixture above.)
 - **Wider `--memory-dir` CLI surface (from P-009 reviewer — non-blocking; partly a
   product question):** consider whether more analyze-class CLI commands (beyond
   `cowork`) should accept `--memory-dir`. P-009 wired exactly one prod surface
@@ -61,22 +72,41 @@
 - **Controlled Class-3 apply path** — guardrail-gated; do not open without an
   explicit apply-safety packet.
 
-## Re-ranked strategic candidates (in-authority deck-clearing now drained)
+## Re-ranked strategic candidates (creative-scoring decision now resolved)
 
 > The learning loop is real in production (P-007→P-008→P-009), the cross-song
-> coherence axis is open (P-010), and the album-means truth is now single-sourced
-> (P-011). The clean in-authority work is drained — the next real move is the
-> user's aesthetic call. For orchestrator re-survey:
+> coherence axis is open (P-010), the album-means truth is single-sourced (P-011),
+> and the creative-scoring aesthetic decision is RESOLVED via option B (P-012,
+> penalty-only — awaiting PR #13 sign-off). For orchestrator re-survey:
 
-- **★ Deeper creative scoring (LEADING candidate — BLOCKED on user a/b/c):** see
-  the **OPEN USER DECISION** block at the top of this file. Golden-unguarded +
-  curated aesthetic → the user must pick the path before any packet opens.
-- Loop-polish follow-ups (borderline taste fixture, wider `--memory-dir` surface —
-  see Deferred above) remain the small in-authority moves available.
+- **Reward nudges (orchestrator rows 3+4)** — the natural ADDITIVE follow-on to
+  P-012's penalty-only layer, but **user-gated** (the user chose penalty-only).
+- **Option-B-visibility fixtures** — near-tie creative fixture (P-012) +
+  borderline taste fixture (P-009) — small in-authority additive tests that make
+  the bounded nudge axes visible on real data through `analyze()`.
+- Wider `--memory-dir` surface remains a small in-authority move (partly product).
 - Net-new **event-logging** producers remain behind the product decision.
 
 ## Done (resolved)
 
+- **Deeper creative scoring (option B, penalty-only)** — **DONE via P-012**
+  (`build-os/receipts/P-012-creative-scoring-nudge-layer.md`).
+  **The standing OPEN USER DECISION is resolved.** A bounded, transparent, capped,
+  penalty-only evidence-nudge layer sits ON TOP of the curated `_KIND_SCORES`
+  (values UNCHANGED): pure `_apply_nudges`/`_NUDGE_TABLE`; `vocal_belief −8` on a
+  masked lead vocal (`bad_masking`) across `width_bloom`/`vocal_ride`/`intimacy_pass`
+  (generalizing the old `width_bloom`-only caution); `vocal_belief −6` on
+  `width_crowding` for `width_bloom`; summed overall delta clamped to
+  `±CREATIVE_NUDGE_CAP = 2.0`; `score_nudges: [reason]` emitted only on fire.
+  Deliberately NOT byte-identical when a nudge fires, but cannot overturn a clear
+  base ranking (cap 2.0 < 2.4–4.2 gaps). Single product commit `0df436c`;
+  suite 159→**202** (43 new); regression **68/68** held (variant path
+  golden-unguarded — unit tests are the binding guard); Commit-1 green in
+  isolation; CAP BINDS EXACTLY (75.7→73.7); NO RECOMMENDATION FLIP on the 3
+  fixtures. Reviewer **pass** (adversarially proven — forced −70 raw still clamps
+  to base−2.0; layer-ON vs OFF confirms non-tautological no-flip; Codex not
+  available). **Awaiting the user's sign-off at PR #13 merge.** Reward nudges
+  (rows 3+4) deferred; near-tie visibility fixture deferred.
 - **Album delta consolidation / mean-derivation consolidation (P-011 candidate)**
   — **DONE via P-011**
   (`build-os/receipts/P-011-album-delta-consolidation.md`).
@@ -238,6 +268,12 @@
 
 ## Known risks / debt
 
+- **Variant-scoring path is golden-unguarded (reinforced by P-012):**
+  `regression.py` reads `doctrine_score`, never `score_variant`, so the 68/68
+  golden cannot catch a `creative.py`/`score_variant` change. **Unit tests are the
+  binding guard** for any creative-scoring touch (P-012's
+  `tests/test_creative_nudges.py` is the current safety-invariant suite). Treat
+  any future creative-scoring change as test-binding, not golden-binding.
 - **Degenerate empty-`records` input (low priority — NOT a packet yet):** under a
   truly **empty** `records` list (an unconstructible / degenerate input on the
   engine path), P-006's Site 1 still returns `[]` and Site 2 still yields
@@ -256,15 +292,19 @@
 
 ## Open boundaries (awaiting explicit go)
 
-- **P-011's product commits `effccd0` + `ea9bebf` are local-only as of this close**
-  (this archivist close did not push). Earlier local-only product commits also
-  remain: **`27bfebf`** (P-009), **`dc61f20` + `9ebd4ee`** (P-010). Earlier
-  packets' push history: P-000 install commits are pushed to
-  `origin/claude/logic-mix-os-hardening-12-7hbeh1`; P-004 is pushed (PR #13). Any
-  push of `effccd0` / `ea9bebf` / `dc61f20` / `9ebd4ee` / `27bfebf` (and the
-  P-005/P-006/P-007/P-008 commits, if not yet pushed) updates the already-open
-  **PR #13** (base `claude/dreamy-turing-z0oxll`) — do so only under the user's
-  standing/explicit push-go. No merge / deploy / secret action taken.
+- **P-012's product commit `0df436c` is local-only as of this close** (this
+  archivist close did not push). It carries the user's **reviewed aesthetic
+  change** (option B, penalty-only) and is **awaiting the user's sign-off at the
+  PR #13 merge** — this is the deliberate review gate for the not-byte-identical
+  creative-scoring change. Earlier local-only product commits also remain:
+  **`effccd0` + `ea9bebf`** (P-011), **`27bfebf`** (P-009),
+  **`dc61f20` + `9ebd4ee`** (P-010). Earlier packets' push history: P-000 install
+  commits are pushed to `origin/claude/logic-mix-os-hardening-12-7hbeh1`; P-004 is
+  pushed (PR #13). Any push of `0df436c` / `effccd0` / `ea9bebf` / `dc61f20` /
+  `9ebd4ee` / `27bfebf` (and the P-005/P-006/P-007/P-008 commits, if not yet
+  pushed) updates the already-open **PR #13** (base `claude/dreamy-turing-z0oxll`)
+  — do so only under the user's standing/explicit push-go. No merge / deploy /
+  secret action taken.
 
 ---
 _Append-only working notes._
