@@ -25,7 +25,8 @@ def build_context(stems=None, manifest=None, memory_dir=None, bounce=None,
                   reference=None, result=None) -> Dict:
     """Build the shared context (runs one full analysis unless ``result`` given)."""
     if result is None:
-        result = analyze(stems, manifest or {}, bounce_path=bounce, reference_path=reference)
+        result = analyze(stems, manifest or {}, bounce_path=bounce, reference_path=reference,
+                         memory_dir=memory_dir)
     return {"result": result, "memory": ProjectMemory(memory_dir) if memory_dir else None}
 
 

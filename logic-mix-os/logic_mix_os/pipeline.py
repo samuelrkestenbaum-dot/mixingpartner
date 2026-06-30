@@ -37,6 +37,7 @@ from .bridge.exporter import export_actions
 from .creative import run_creative_engine
 from .doctrine.doctrine_engine import score_doctrine
 from .governance import run_governance
+from .memory import ProjectMemory
 from .planners.depth_planner import plan_depth
 from .planners.logic_action_generator import generate_logic_actions
 from .planners.mix_planner import build_plan
@@ -78,6 +79,7 @@ def analyze(
     bounce_path: Optional[str | Path] = None,
     reference_path: Optional[str | Path] = None,
     creative_mode: Optional[str] = None,
+    memory_dir: Optional[str | Path] = None,
 ) -> ProjectAnalysis:
     project = Project.from_inputs(stems_dir, manifest)
     result = ProjectAnalysis(project=project)
@@ -193,8 +195,20 @@ def analyze(
         mix_metrics=result.mix_metrics,
         reference_delta=result.reference_delta,
     )
+    # P-009 live wire: opt-in project memory. Constructed ONCE, and ONLY when an
+    # explicit ``memory_dir`` is supplied, so the no-memory default path stays
+    # byte-identical. An empty store degrades to a no-op (history()/profile are
+    # falsy), exactly as ``_history=None`` / ``_taste=None`` would.
+    _history = None
+    _taste = None
+    if memory_dir is not None:
+        _mem = ProjectMemory(memory_dir)
+        _history = _mem.history()                          # [] when empty -> falsy no-op
+        _taste = (_mem.taste_profile() or {}).get("profile")  # [] when empty -> falsy no-op
+
     result.mix_plan["next_pass"] = plan_next_pass(
-        records, result.doctrine_score, result.masking_report, result.section_analysis
+        records, result.doctrine_score, result.masking_report, result.section_analysis,
+        history=_history,
     )
     result.mix_plan["translation_score"] = result.expanded["translation"]["translation_score"]
     result.mix_plan["mono_compatibility_score"] = result.expanded["mono_compatibility"]["mono_score"]
@@ -203,7 +217,7 @@ def analyze(
     # Creative experimentation engine + governance / taste protection.
     mode = creative_mode or _default_creative_mode(project.intent)
     result.creative = run_creative_engine(result, mode)
-    result.governance = run_governance(result, result.creative)
+    result.governance = run_governance(result, result.creative, taste_profile=_taste)
 
     # Session intelligence: provenance, render graph, plugin availability.
     result.provenance = analyze_provenance(project, result.source_material, result.depth_map)
