@@ -16,34 +16,44 @@
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression`.
-- **Green baseline (verified 2026-06-29):** suite **112 passed** (0 failed /
-  skipped / warnings); regression **68/68** (0 warnings).
+- **Green baseline (verified 2026-06-29):** suite **125 passed** (0 failed /
+  skipped / warnings); regression **68/68** (0 critical / 0 warnings).
 
 ## Where we are
 
-- **Last closed packet:** **P-006** — `creative.py` literal cleanup. Two
-  pre-existing un-resolved literals in `generate_variants` are now record-backed:
-  Site 1 (`creative.py:194`, `chorus_lift_B`) `loops or supporting[-1:]` →
-  `_resolve(loops, supporting[-1:], [r["name"] for r in records][:1])` (closes the
-  empty-`tracks_affected` path, restores P-001's non-empty + real-record-subset
-  invariant, reuses the `_resolve` seam); Site 2 (`creative.py:217`, `loop`
-  branch) replaces the `"the loop"` literal with a real-record-name fallback so
-  loop prose names an actual track whenever records exist. Single product commit
-  `6e98a3b` (`creative.py` +4/-2, `tests/test_creative_attribution.py` +62; 2 new
-  tests). Suite 110→112. Pure list logic; no renderer/backend reach-in; helper
-  reuse only (no signature change). **Milestone:** every `tracks_affected` site in
-  `generate_variants` is now record-backed and non-empty, and loop-branch prose
-  can no longer name a non-existent track (except under a degenerate record-free
-  input — tracked as a low-priority Known-risk note). Reviewer: pass
-  (single-eyes; Codex not available). Receipt:
-  `build-os/receipts/P-006-creative-literal-cleanup.md`.
+- **Last closed packet:** **P-007** — Taste profile feeds governance (first
+  closure of the learning loop). The recorded operator taste profile
+  (`memory._derive_taste` statements) now **biases variant governance** —
+  opt-in, bounded, evidence-tagged. An optional `taste_profile` arg (default
+  `None`) threads through `govern_variant` / `govern_branches` / `run_governance`;
+  a pure `_apply_taste` helper + a `_TASTE_KIND_BIAS` map (verbatim `_TASTE_MAP`
+  statements) apply a bounded identity shift clamped to `TASTE_MAX_DELTA = 15`
+  (strictly `< 30`, the truth nudge); a `taste_adjustments` evidence field is
+  present **only** when an adjustment applies (absent — not `[]` — otherwise). Two
+  operators with different taste now get different governed winners from the same
+  song (proven: narrower taste flips `chorus_lift_A` → `chorus_lift_C`). Single
+  product commit `bd08f28` (`governance.py` +75/−6, `tests/test_governance_taste.py`
+  new, 13 tests). Suite 112→125; regression 68/68 held. Default path
+  **byte-identical** (the HARD backward-compat gate); bound verified (10 stacked
+  statements clamp to +15); safety surfaces untouched. Reviewer: **pass**
+  (inviolability proven — a doctrine-vetoed `width_bloom`, `align=45<50`, stays
+  rejected even with maxed wider taste raising identity to 84; Codex not
+  available). Receipt: `build-os/receipts/P-007-taste-feeds-governance.md`.
+  - **MILESTONE — first closure of the learning loop:** recorded taste now
+    influences recommendations (opt-in, bounded `±15`, evidence-tagged,
+    doctrine-inviolable). Memory is **no longer purely write-only on the
+    governance axis** — a real consumer of recorded signals exists. This is the
+    *consumer* half of the loop; the *outcome* half (history → next-pass) is the
+    natural follow-on (P-008).
 - **Now:** **none active.** No product packet in flight.
-- **Next:** the **net-new event-logging packets** (`taste_feedback` /
-  `validation_check` / `revert` / `manual_note` — each net-new, no producer wired
-  today). These are **blocked on a PRODUCT DECISION from the user**: should
-  validation / taste / revert / note signals actually be written to the decision
-  ledger? They are net-new features, not mechanical follow-ups — the user is being
-  asked this next.
+- **Next:** **P-008 — history-aware next pass** is the trajectory follow-on (the
+  OUTCOME side of the loop): `plan_next_pass` should consume `mix_pass_history`
+  (improved / got_worse / revert_candidates) so the system does not re-recommend
+  a move that regressed. Also available — **P-007b** (wire a live per-operator
+  `taste_profile` from `memory_dir` into a pipeline/cowork run) and the net-new
+  **event-logging** producers (`taste_feedback` / `validation_check`, now more
+  justified since a consumer exists, still behind the same product decision).
+  **User's call** which to open.
 
 ## Stable facts (slow-changing)
 
@@ -61,4 +71,4 @@
   explicit go.
 
 ---
-_Updated by the archivist on close. Last advanced on P-006 close (2026-06-29)._
+_Updated by the archivist on close. Last advanced on P-007 close (2026-06-29)._
