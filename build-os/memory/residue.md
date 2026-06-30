@@ -45,15 +45,24 @@
   replaced by the user-gated curation packet directly below. Receipt:
   `build-os/receipts/P-014-near-tie-creative-flip-fixture.md`. (The P-014
   harnesses live in scratchpad — not committed.)
-- **Make-the-nudge-decisive (curation change) — USER-GATED, a PRODUCT packet
-  (DECISION, not a TODO; from P-014).** Making the P-012 nudge decisive on a
-  near-tie requires a **product-code aesthetic change**, so it is user-gated and
-  separate. Two concrete routes: (a) **split row-0's `kinds` set** so `vocal_ride`
-  is penalized but `intimacy_pass` is NOT — then the `vocal_belief` 1.71-gap
-  near-tie WOULD flip within the ±2.0 cap; or (b) **re-curate `_KIND_SCORES`** so a
-  penalizable kind narrowly leads a non-equally-penalized rival in some branch.
-  Until the user asks, the nudge stays **transparency-only** and the P-014 finding
-  documents the reality. **Do NOT open without the user asking.**
+- **Make-the-nudge-decisive (curation change) — RESOLVED by P-015 (user-signed-off
+  PRODUCT change).** The user chose "Option 1 — Proceed, corrected" (2026-06-30)
+  and P-015 actioned route (a): `creative.py` `_NUDGE_TABLE` row-0 now **exempts
+  `intimacy_pass`** and **strengthens the penalty `−8` → `−14`** (= −2.0 overall =
+  the cap), so the `vocal_belief` 1.71-gap near-tie now FLIPS `vocal_ride` (vocal_A)
+  → `intimacy_pass` (vocal_B) within the ±2.0 cap. The nudge is **no longer
+  transparency-only** — it is decisive on exactly that near-tie, still bounded so it
+  cannot overturn a clear ranking. Receipt:
+  `build-os/receipts/P-015-decisive-masked-vocal-nudge.md`. **No remaining work
+  here.**
+- **Reviewer trajectory flag (from P-015 — non-blocking, watch-item):** the P-015
+  flip margin is **thin (0.2)**, but it is **fully pinned by binding tests**
+  (`tests/test_decisive_nudge.py`: flip + load-bearing negative control + collateral
+  safety; updated `tests/test_creative_nudges.py`). A future re-curation of the
+  creative scoring would surface as a **RED test, not a silent re-rank** — the
+  golden-unguarded variant-scoring path is covered by these unit/flip tests. Carry
+  this awareness into any future `creative.py` / `_NUDGE_TABLE` / `_KIND_SCORES`
+  touch.
 - **Taste-flip through `analyze()` — STRUCTURALLY UNREACHABLE test-only
   (P-013 finding); a flip is USER-GATED to a product change.** P-013 tried to build
   a taste-driven governed-winner flip fixture and could NOT: the builder brute-forced
@@ -111,15 +120,65 @@
 
 - **Reward nudges (orchestrator rows 3+4)** — the natural ADDITIVE follow-on to
   P-012's penalty-only layer, but **user-gated** (the user chose penalty-only).
-- **Option-B-visibility fixtures** — the CREATIVE half is **DONE via P-013**
-  (the nudge fires on real data through `analyze()`, option-(a) no-flip). Remaining:
-  the **near-tie-creative-FLIP** fixture (reachable, in authority). The TASTE-flip
+- **Option-B-visibility / decisiveness** — the CREATIVE half is fully closed:
+  **P-013** proved the nudge fires on real data through `analyze()` (option-(a)
+  no-flip on a clear ranking), **P-014** proved a near-tie FLIP was unreachable
+  *under the then-current curation*, and **P-015** (user-signed-off product change)
+  made it decisive on the masked-vocal near-tie (`vocal_belief`: vocal_ride →
+  intimacy_pass, within the cap). Nothing reachable remains here. The TASTE-flip
   half is **user-gated** (needs a product change; the reachable taste claim is already
   covered by `test_live_wire.py::test_taste_axis_changes_governance`).
 - Wider `--memory-dir` surface remains a small in-authority move (partly product).
 - Net-new **event-logging** producers remain behind the product decision.
 
 ## Done (resolved)
+
+- **Make-the-nudge-decisive (masked-vocal near-tie) — DONE via P-015**
+  (`build-os/receipts/P-015-decisive-masked-vocal-nudge.md`). **User-signed-off
+  PRODUCT-code aesthetic change** (the user chose "Option 1 — Proceed, corrected",
+  2026-06-30, after the orchestrator transparently corrected an arithmetic error —
+  the old `−8` penalty only moves overall `−1.14`, insufficient to flip; the
+  corrected mechanism strengthens to `−14`). The deliberate successor to P-012 and
+  the resolution of the P-014 user-gated decision. **Single product commit
+  `1756f61`** (product change + updated/new tests TOGETHER so Commit-1 is green in
+  isolation, required because the change intentionally breaks old-behavior tests):
+  `creative.py` `_NUDGE_TABLE` **row-0 only** — (1) exempt `intimacy_pass`
+  (`kinds` `{width_bloom, vocal_ride, intimacy_pass}` → `{width_bloom,
+  vocal_ride}` — an intimacy pass is the CORRECT response to a masked lead vocal,
+  focused proximity not brute level/width), (2) strengthen `delta` `−8` → `−14`
+  (`= −14/7 = −2.0` overall = EXACTLY `CREATIVE_NUDGE_CAP = 2.0`, unchanged, now
+  binds `vocal_ride` too), plus an honest `−14` reason string, a doctrine comment,
+  and a corrected stale clamp comment. `_KIND_SCORES`, the cap, row-1, the clamp,
+  and both predicates are UNTOUCHED (verified by diff). **Behavior (qa-verified):**
+  in the `vocal_belief` branch under a masked lead vocal, `vocal_ride` (vocal_A)
+  82.9 → **80.9** (cap binds, overall_delta EXACTLY −2.0, carries the `−14`
+  `score_nudges` line); `intimacy_pass` (vocal_B) 81.1 unchanged (exempt) →
+  **winner FLIPS from vocal_ride to intimacy_pass** by 0.2. **Load-bearing negative
+  control:** without `lead_masked`, vocal_ride wins (flip is caused by the masking
+  evidence, not a base re-rank). **Bounded — no clear-ranking overturn:**
+  `subtractive_drop` (85.3, penalty-immune) still wins `chorus_lift` / `density` /
+  `loop` under `lead_masked` (gaps 3.4–4.2 ≫ 2×cap); ONLY the `vocal_belief`
+  branch flips. **Tests (the binding guard — variant-scoring path golden-unguarded):**
+  updated the ~existing P-012 cases in `tests/test_creative_nudges.py` (delta
+  `−8`→`−14`, `intimacy_pass` now asserted EXEMPT, new reason, width_bloom worst
+  case `−20` raw clamped to `−2.0`; added `test_intimacy_pass_exempt_from_lead_masked_nudge`
+  + `test_vocal_ride_clamps_to_cap_under_lead_masked`) and ADDED
+  `tests/test_decisive_nudge.py` (NEW, 8 tests: flip + load-bearing negative control
+  + `test_only_vocal_belief_branch_flips_under_lead_masked` +
+  `test_subtractive_drop_branch_does_not_flip_under_lead_masked`); no coverage
+  deleted to turn red green. **Proof:** suite **207 → 217 passed** (0
+  failed/skipped/warnings; changed files alone = 53 — `test_creative_nudges.py` 45,
+  `test_decisive_nudge.py` 8); regression **68/68, 0 critical, 0 warnings** (doctrine
+  golden held); Commit-1 green in isolation; safety grep clean (only a no-DAW
+  docstring line); UI N/A. **Reviewer pass** — independently reproduced the
+  arithmetic and ran a **mutation test confirming non-vacuity** (reverted both
+  product edits → 5 binding tests went RED, the negative control correctly stayed
+  GREEN → tests are load-bearing); confirmed scope discipline, no-overturn,
+  evidence-line honesty, coverage not weakened. **Codex NOT available —
+  single-reviewer verdict.** Non-blocking reviewer note: the mandated
+  `Co-Authored-By: Claude Opus 4.8` trailer is a standing harness-required config
+  tension, not a P-015 regression. **P-015 is local-only** (product commit `1756f61`
+  on the dev branch on top of `0f4e7e9`), not pushed/merged at close.
 
 - **Near-tie-creative-FLIP fixture — RESOLVED as a VERIFIED NEGATIVE FINDING via
   P-014** (`build-os/receipts/P-014-near-tie-creative-flip-fixture.md`). **No
@@ -358,13 +417,16 @@
 
 ## Known risks / debt
 
-- **Variant-scoring path is golden-unguarded (reinforced by P-012):**
+- **Variant-scoring path is golden-unguarded (reinforced by P-012, P-015):**
   `regression.py` reads `doctrine_score`, never `score_variant`, so the 68/68
   golden cannot catch a `creative.py`/`score_variant` change. **Unit + visibility
-  tests are the binding guard** for any creative-scoring touch (P-012's
-  `tests/test_creative_nudges.py` safety-invariant suite + P-013's
-  `tests/test_creative_nudge_visibility.py` driving the live `analyze()` path).
-  Treat any future creative-scoring change as test-binding, not golden-binding.
+  + flip tests are the binding guard** for any creative-scoring touch (P-012's
+  `tests/test_creative_nudges.py` safety-invariant suite, P-013's
+  `tests/test_creative_nudge_visibility.py` driving the live `analyze()` path, and
+  P-015's `tests/test_decisive_nudge.py` pinning the masked-vocal flip). Treat any
+  future creative-scoring change as test-binding, not golden-binding. Watch-item:
+  P-015's flip margin is thin (0.2) but fully pinned — a future re-curation would
+  surface as a RED test, not a silent re-rank.
 - **Degenerate empty-`records` input (low priority — NOT a packet yet):** under a
   truly **empty** `records` list (an unconstructible / degenerate input on the
   engine path), P-006's Site 1 still returns `[]` and Site 2 still yields
@@ -398,6 +460,13 @@
   `claude/logic-mix-os-hardening-12-7hbeh1` on top of the `0f4e7e9` merge. Any push
   of it — and any subsequent PR / merge into the protected default — needs the
   user's explicit go. No push / merge / deploy / secret action taken in this close.
+- **P-015's product commit `1756f61` is local-only as of this close** (this
+  archivist close did not push). It sits on the dev branch
+  `claude/logic-mix-os-hardening-12-7hbeh1` on top of the `0f4e7e9` merge — the
+  user-signed-off masked-vocal-nudge change. The orchestrator pushes the dev branch
+  separately. Any push of it — and any subsequent PR / merge into the protected
+  default — needs the user's explicit go. No push / merge / deploy / secret action
+  taken in this close.
 
 ---
 _Append-only working notes._
