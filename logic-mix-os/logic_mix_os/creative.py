@@ -68,6 +68,68 @@ _KIND_SCORES = {
 
 _RISK_PENALTY = {"low": 0, "medium": 6, "high": 14}
 
+# --- P-012: creative-scoring evidence-nudge layer (option B, PENALTY-ONLY) ---
+# Context nudges that lower a variant's score when the diagnostic evidence makes
+# the move risky. Penalty-only (a nudge can only LOWER a score, never promote a
+# variant), bounded (the summed overall effect is clamped to ±CREATIVE_NUDGE_CAP
+# on the overall axis governance ranks on), transparent (each fired nudge emits a
+# verbatim evidence line into ``score_nudges``), and deterministic (fixed table
+# order; pure helper). The curated ``_KIND_SCORES`` base is untouched.
+CREATIVE_NUDGE_CAP = 2.0  # max summed overall-score movement, in overall points
+
+# Each row: kinds it applies to, the exact predicate over result.masking_report
+# events, the dim it moves, the (negative) delta, and the verbatim evidence line.
+_NUDGE_TABLE = [
+    {
+        "kinds": {"width_bloom", "vocal_ride", "intimacy_pass"},
+        "evidence": "lead_masked",
+        "dim": "vocal_belief",
+        "delta": -8,
+        "reason": ("vocal_belief -8: lead vocal is masked (bad_masking) — "
+                   "pushing a vocal-forward move is risky"),
+    },
+    {
+        "kinds": {"width_bloom"},
+        "evidence": "width_crowding",
+        "dim": "vocal_belief",
+        "delta": -6,
+        "reason": "vocal_belief -6: stereo image is already width-crowded",
+    },
+]
+
+
+def _lead_masked(result) -> bool:
+    """Verbatim predicate from the original context adjustment (creative.py:252-255):
+    any masking event classified ``bad_masking`` whose elements include the vocal."""
+    return any(
+        e["classification"] == "bad_masking" and any("vocal" in el.lower() for el in e["elements"])
+        for e in result.masking_report.get("events", [])
+    )
+
+
+def _width_crowded(result) -> bool:
+    return any(
+        e["classification"] == "width_crowding"
+        for e in result.masking_report.get("events", [])
+    )
+
+
+_NUDGE_EVIDENCE = {"lead_masked": _lead_masked, "width_crowding": _width_crowded}
+
+
+def _apply_nudges(kind: str, result) -> List[tuple]:
+    """Pure: the ordered ``(dim, delta, reason)`` for each FIRED nudge.
+
+    A row fires when ``kind`` is in its ``kinds`` set AND its evidence predicate
+    is true on ``result``. Rows are evaluated in table order, so the emitted
+    evidence lines are deterministic.
+    """
+    fired: List[tuple] = []
+    for row in _NUDGE_TABLE:
+        if kind in row["kinds"] and _NUDGE_EVIDENCE[row["evidence"]](result):
+            fired.append((row["dim"], row["delta"], row["reason"]))
+    return fired
+
 
 # --------------------------------------------------------------------------- #
 def static_baseline(result) -> Dict:
@@ -247,24 +309,37 @@ def generate_variants(problem: Dict, result, mode: str = "dramatic_contrast") ->
 
 def score_variant(variant: Dict, result) -> Dict:
     base = dict(_KIND_SCORES.get(variant["kind"], _KIND_SCORES["depth_cleanup"]))
-
-    # Context adjustments.
-    lead_masked = any(
-        e["classification"] == "bad_masking" and any("vocal" in el.lower() for el in e["elements"])
-        for e in result.masking_report.get("events", [])
-    )
-    if variant["kind"] == "width_bloom" and lead_masked:
-        base["vocal_belief"] -= 8  # widening while the vocal is already crowded is risky
-
     numeric = ["technical", "halee", "ramone", "contrast", "vocal_belief", "excitement", "taste"]
-    overall = sum(base[k] for k in numeric) / len(numeric) - _RISK_PENALTY[base["translation"]]
+
+    # Base overall on the curated dims, before any context nudge — this is the
+    # axis governance ranks on, and the axis the cap binds.
+    base_overall = sum(base[k] for k in numeric) / len(numeric) - _RISK_PENALTY[base["translation"]]
+
+    # --- P-012: evidence-nudge layer (penalty-only, bounded, transparent) ----
+    # Each fired nudge lowers a curated dim and emits an evidence line. The dims
+    # carry the honest move; the *overall* effect is clamped to ±CREATIVE_NUDGE_CAP.
+    fired = _apply_nudges(variant["kind"], result)
+    nudges: List[str] = []
+    for dim, delta, reason in fired:
+        base[dim] += delta
+        nudges.append(reason)
+
+    nudged_overall = sum(base[k] for k in numeric) / len(numeric) - _RISK_PENALTY[base["translation"]]
+    # Clamp the SUMMED overall delta to ±CREATIVE_NUDGE_CAP. Worst case
+    # (width_bloom rows 1+2 = -14 raw = -2.0 overall) lands at exactly the cap.
+    overall_delta = nudged_overall - base_overall
+    if overall_delta < -CREATIVE_NUDGE_CAP:
+        overall_delta = -CREATIVE_NUDGE_CAP
+    elif overall_delta > CREATIVE_NUDGE_CAP:
+        overall_delta = CREATIVE_NUDGE_CAP
+    overall = base_overall + overall_delta
     overall = round(max(0.0, min(100.0, overall)), 1)
 
     verdict = "promising" if overall >= 80 else ("worth testing" if overall >= 70 else "marginal")
     if base["vocal_belief"] < 75:
         verdict += " — check vocal wash"
 
-    return {
+    scores = {
         "technical_score": base["technical"],
         "halee_score": base["halee"],
         "ramone_score": base["ramone"],
@@ -278,6 +353,9 @@ def score_variant(variant: Dict, result) -> Dict:
         "overall_score": overall,
         "overall_verdict": verdict,
     }
+    if nudges:  # evidence-key discipline: present ONLY when ≥1 nudge fired.
+        scores["score_nudges"] = nudges
+    return scores
 
 
 def winning_variant(scored_variants: List[Dict]) -> Optional[Dict]:
