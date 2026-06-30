@@ -80,6 +80,7 @@ def analyze(
     reference_path: Optional[str | Path] = None,
     creative_mode: Optional[str] = None,
     memory_dir: Optional[str | Path] = None,
+    album_context: Optional[Dict] = None,
 ) -> ProjectAnalysis:
     project = Project.from_inputs(stems_dir, manifest)
     result = ProjectAnalysis(project=project)
@@ -209,6 +210,7 @@ def analyze(
     result.mix_plan["next_pass"] = plan_next_pass(
         records, result.doctrine_score, result.masking_report, result.section_analysis,
         history=_history,
+        album_context=album_context,
     )
     result.mix_plan["translation_score"] = result.expanded["translation"]["translation_score"]
     result.mix_plan["mono_compatibility_score"] = result.expanded["mono_compatibility"]["mono_score"]

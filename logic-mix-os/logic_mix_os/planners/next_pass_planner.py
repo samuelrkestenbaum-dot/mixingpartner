@@ -43,6 +43,73 @@ HISTORY_DEMOTE = 40
 # last change), never a manufactured destructive or doctrine-vetoed action.
 HISTORY_REVERT_PRIORITY = 95
 
+# P-010 — the CROSS-SONG coherence axis. An opt-in ``album_context`` (per-song
+# deltas vs the album means) lets an album-outlier song earn ONE bounded,
+# non-destructive, evidence-tagged next-pass item. The thresholds mirror
+# ``album.py``'s outlier test verbatim (brightness delta > 0.15 at album.py:61,
+# lufs delta > 3 at album.py:63) but are pinned as local constants so the planner
+# never depends on ``album.py`` (the delta is derived in the consumer). The fixed
+# priority 45 sits below every truth-driven move (Vocal 90, Section 80, Width 70,
+# Depth 60, Low-end 50) so the album hint can NEVER outrank a song-truth move.
+ALBUM_BRIGHTNESS_OUTLIER = 0.15
+ALBUM_LUFS_OUTLIER = 3
+ALBUM_OUTLIER_PRIORITY = 45
+
+
+def _album_outlier_item(album_context: Dict) -> Optional[Tuple[int, Dict]]:
+    """Pure, deterministic album-coherence hint from a per-song delta dict.
+
+    ``album_context`` shape: ``{"brightness_delta": float|None, "lufs_delta":
+    float|None}``. A ``None`` axis is skipped. Returns ONE bounded, advisory,
+    reversible ``(ALBUM_OUTLIER_PRIORITY, item)`` tuple when an axis exceeds its
+    threshold, else ``None``. If BOTH axes trip, the deterministic tie-break is
+    brightness before loudness. No time / I/O / randomness; a pure function of the
+    supplied deltas and the two fixed thresholds.
+    """
+    if not album_context:
+        return None
+
+    bd = album_context.get("brightness_delta")
+    ld = album_context.get("lufs_delta")
+
+    bright_trips = bd is not None and abs(bd) > ALBUM_BRIGHTNESS_OUTLIER
+    loud_trips = ld is not None and abs(ld) > ALBUM_LUFS_OUTLIER
+
+    if bright_trips:
+        field = "brightness_delta"
+        value = bd
+        threshold = ALBUM_BRIGHTNESS_OUTLIER
+        direction = "brighter" if bd > 0 else "darker"
+        detail = (
+            f"This song sits {value:+} {direction} than the album average "
+            f"({field}={value:+}). Consider matching the record's tonal centre — "
+            f"a gentle high-shelf / match-EQ toward the album, reversibly, before "
+            f"committing."
+        )
+    elif loud_trips:
+        field = "lufs_delta"
+        value = ld
+        threshold = ALBUM_LUFS_OUTLIER
+        direction = "louder" if ld > 0 else "quieter"
+        detail = (
+            f"This song sits {value:+} LU {direction} than the album average "
+            f"({field}={value:+}). Consider matching the record's loudness centre — "
+            f"adjust the bus/output level toward the album, reversibly, before "
+            f"committing."
+        )
+    else:
+        return None
+
+    item = {
+        "title": "Album coherence",
+        "detail": detail,
+        "evidence": (
+            f"album outlier: {field}={value:+} vs album mean "
+            f"(threshold {threshold})"
+        ),
+    }
+    return (ALBUM_OUTLIER_PRIORITY, item)
+
 
 def _score_key(delta: str) -> str:
     """Extract the SCORE_KEYS member from a score-delta string.
@@ -99,6 +166,7 @@ def plan_next_pass(
     masking_report: Dict,
     sections_analysis: List[Dict],
     history: Optional[List[Dict]] = None,
+    album_context: Optional[Dict] = None,
 ) -> List[Dict]:
     events = masking_report.get("events", [])
     candidates: List[Dict] = []
@@ -156,6 +224,14 @@ def plan_next_pass(
             "title": "Low-end definition",
             "detail": "Kick and bass share sub energy. Carve complementary space or sidechain the bass subtly to the kick.",
         }))
+
+    # P-010 opt-in: when (and only when) an album_context trips a threshold,
+    # append ONE bounded album-coherence hint BEFORE the history reprioritization
+    # and the sort/take-5. It only ever appends; it never modifies an existing
+    # candidate. Falsy / under-threshold context => no append => byte-identical.
+    album_item = _album_outlier_item(album_context)
+    if album_item is not None:
+        candidates.append(album_item)
 
     # P-008 opt-in: when (and only when) history is supplied, reprioritize the
     # candidates against the most recent pass BEFORE the sort/take-5. Falsy history
