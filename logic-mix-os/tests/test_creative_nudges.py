@@ -42,9 +42,12 @@ from logic_mix_os.governance import emotional_truth_lock, govern_branches
 _NUMERIC = ["technical", "halee", "ramone", "contrast", "vocal_belief", "excitement", "taste"]
 
 # Verbatim evidence strings from the nudge table (the contract surface).
+# P-015: row-0 (lead_masked) was strengthened -8 -> -14 and its reason rewritten
+# so the number matches and the doctrine is honest; intimacy_pass is now exempt.
 ROW1_REASON = (
-    "vocal_belief -8: lead vocal is masked (bad_masking) — "
-    "pushing a vocal-forward move is risky"
+    "vocal_belief -14: lead vocal is masked (bad_masking) — "
+    "pushing the vocal forward by level/width is risky here; "
+    "bring it into intimate focus instead"
 )
 ROW2_REASON = "vocal_belief -6: stereo image is already width-crowded"
 
@@ -113,8 +116,10 @@ def test_cap_binds_for_every_kind_evidence_combo(kind, events):
 
 
 def test_width_bloom_worst_case_lands_exactly_at_cap():
-    """rows 1+2 on width_bloom = -14 raw = -2.0 overall = exactly the cap.
-    Must land at exactly -2.0, not beyond."""
+    """P-015: rows 0+1 on width_bloom are now -14 + -6 = -20 raw = -2.86 overall,
+    which the cap CLAMPS to exactly -2.0. (Before P-015 the raw was -14 = -2.0 and
+    landed at the cap without clamping; now it overshoots and is clamped — either
+    way the bound holds at exactly -2.0, never beyond.)"""
     base_overall = round(_base_overall("width_bloom"), 1)
     scores = score_variant(
         _variant("width_bloom"),
@@ -141,17 +146,47 @@ def test_no_evidence_no_nudge_key_and_dims_equal_base():
 
 
 def test_row1_fires_only_for_listed_kinds_with_lead_masked():
-    fire_kinds = {"width_bloom", "vocal_ride", "intimacy_pass"}
+    # P-015: intimacy_pass is now EXEMPT from row-0 — an intimacy pass is the
+    # correct response to a masked lead vocal (focused proximity, not brute
+    # level/width), so it must NOT be penalized. Only the genuinely
+    # vocal-forward moves (width_bloom, vocal_ride) still fire.
+    fire_kinds = {"width_bloom", "vocal_ride"}
     for kind in _KIND_SCORES:
         scores = score_variant(_variant(kind), _result(_lead_masked_event()))
         base_vb = _KIND_SCORES[kind]["vocal_belief"]
         if kind in fire_kinds:
             assert scores["score_nudges"] == [ROW1_REASON]
-            # The named dim moved by the table magnitude (-8).
-            assert scores["vocal_belief_score"] == base_vb - 8
+            # P-015: the named dim now moves by the strengthened magnitude (-14).
+            assert scores["vocal_belief_score"] == base_vb - 14
         else:
+            # intimacy_pass is in this branch now: it gets NO nudge under lead_masked.
             assert "score_nudges" not in scores
             assert scores["vocal_belief_score"] == base_vb
+
+
+def test_intimacy_pass_exempt_from_lead_masked_nudge():
+    """P-015 explicit guard: intimacy_pass receives NO nudge under lead_masked,
+    and its curated vocal_belief base flows through untouched. This is the
+    binding assertion that the exemption holds (it is what causes the decisive
+    flip in the vocal_belief branch)."""
+    scores = score_variant(_variant("intimacy_pass"), _result(_lead_masked_event()))
+    assert "score_nudges" not in scores
+    assert scores["vocal_belief_score"] == _KIND_SCORES["intimacy_pass"]["vocal_belief"]
+    # And the overall is exactly the curated base (no movement at all).
+    assert scores["overall_score"] == round(_base_overall("intimacy_pass"), 1)
+
+
+def test_vocal_ride_clamps_to_cap_under_lead_masked():
+    """P-015: vocal_ride under lead_masked alone now carries the -14 nudge, which
+    maps to -14/7 = -2.0 overall = exactly CREATIVE_NUDGE_CAP. The cap binds for
+    vocal_ride now (it did not under the old -8). 82.9 -> 80.9."""
+    base_overall = round(_base_overall("vocal_ride"), 1)
+    scores = score_variant(_variant("vocal_ride"), _result(_lead_masked_event()))
+    assert scores["score_nudges"] == [ROW1_REASON]
+    delta = scores["overall_score"] - base_overall
+    assert delta == pytest.approx(-CREATIVE_NUDGE_CAP, abs=1e-9)
+    assert base_overall == pytest.approx(82.9, abs=1e-9)
+    assert scores["overall_score"] == pytest.approx(80.9, abs=1e-9)
 
 
 def test_row2_fires_only_for_width_bloom_on_width_crowding():
@@ -167,16 +202,20 @@ def test_row2_fires_only_for_width_bloom_on_width_crowding():
 
 
 def test_apply_nudges_returns_ordered_dim_delta_reason():
-    # Pure helper: row 1 then row 2, in table order, both fire on width_bloom.
+    # Pure helper: row 0 then row 1, in table order, both fire on width_bloom.
+    # P-015: row-0 delta is now -14 (strengthened from -8).
     fired = _apply_nudges("width_bloom", _result(_lead_masked_event(), _width_event()))
     assert fired == [
-        ("vocal_belief", -8, ROW1_REASON),
+        ("vocal_belief", -14, ROW1_REASON),
         ("vocal_belief", -6, ROW2_REASON),
     ]
     # No evidence -> nothing fires.
     assert _apply_nudges("width_bloom", _result()) == []
-    # Row 2 is width_bloom-only: vocal_ride with width_crowding fires nothing.
+    # Row 1 is width_bloom-only: vocal_ride with width_crowding fires nothing.
     assert _apply_nudges("vocal_ride", _result(_width_event())) == []
+    # P-015: intimacy_pass is exempt from row-0, so even under lead_masked it
+    # fires nothing (the pure-helper proof of the exemption).
+    assert _apply_nudges("intimacy_pass", _result(_lead_masked_event())) == []
 
 
 # --------------------------------------------------------------------------- #

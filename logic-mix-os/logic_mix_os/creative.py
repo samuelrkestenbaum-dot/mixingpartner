@@ -81,12 +81,21 @@ CREATIVE_NUDGE_CAP = 2.0  # max summed overall-score movement, in overall points
 # events, the dim it moves, the (negative) delta, and the verbatim evidence line.
 _NUDGE_TABLE = [
     {
-        "kinds": {"width_bloom", "vocal_ride", "intimacy_pass"},
+        # P-015: intimacy_pass is EXEMPT here. An intimacy pass is the CORRECT
+        # response to a masked lead vocal — it brings the vocal into focused
+        # proximity (lower verse sends, keep it close) rather than shoving it
+        # forward by brute level/width — so it must NOT be penalized as a risky
+        # vocal-forward move. Only the genuinely vocal-forward moves
+        # (width_bloom, vocal_ride) are penalized. The delta is -14 so the
+        # single vocal_belief dim moves -14/7 = -2.0 overall = exactly
+        # CREATIVE_NUDGE_CAP (the cap is unchanged; it now also binds vocal_ride).
+        "kinds": {"width_bloom", "vocal_ride"},
         "evidence": "lead_masked",
         "dim": "vocal_belief",
-        "delta": -8,
-        "reason": ("vocal_belief -8: lead vocal is masked (bad_masking) — "
-                   "pushing a vocal-forward move is risky"),
+        "delta": -14,
+        "reason": ("vocal_belief -14: lead vocal is masked (bad_masking) — "
+                   "pushing the vocal forward by level/width is risky here; "
+                   "bring it into intimate focus instead"),
     },
     {
         "kinds": {"width_bloom"},
@@ -325,8 +334,9 @@ def score_variant(variant: Dict, result) -> Dict:
         nudges.append(reason)
 
     nudged_overall = sum(base[k] for k in numeric) / len(numeric) - _RISK_PENALTY[base["translation"]]
-    # Clamp the SUMMED overall delta to ±CREATIVE_NUDGE_CAP. Worst case
-    # (width_bloom rows 1+2 = -14 raw = -2.0 overall) lands at exactly the cap.
+    # Clamp the SUMMED overall delta to ±CREATIVE_NUDGE_CAP. Worst case is
+    # width_bloom under BOTH rows = -20 raw = -2.86 overall, clamped to -2.0;
+    # vocal_ride under row-0 alone = -14 raw = -2.0 overall = exactly the cap.
     overall_delta = nudged_overall - base_overall
     if overall_delta < -CREATIVE_NUDGE_CAP:
         overall_delta = -CREATIVE_NUDGE_CAP
