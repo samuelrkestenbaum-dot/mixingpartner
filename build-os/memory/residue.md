@@ -6,6 +6,16 @@
 
 ## Deferred (follow-up packets)
 
+- **CLI advisory float rounding (from P-010 reviewer — cosmetic, non-blocking):**
+  the `"Album coherence"` detail/evidence print a real CLI-derived delta with a long
+  un-rounded float repr; apply `round(value, 2)` for display in a future packet.
+  Display-only — the planner-level tests use clean literals, so this does not affect
+  correctness, only the rendered text.
+- **Mean-derivation consolidation (P-011 candidate — from P-010 reviewer):**
+  `album.py:55-58` and `cli.py:367-370` now BOTH compute the album means (currently
+  byte-identical, which P-010's QA proved by matching coherence/outliers/verdict).
+  A future packet could have `album.py` optionally EMIT per-song deltas, retiring the
+  consumer-side recompute in `cli.py` and removing the duplication.
 - **Borderline-song taste fixture (from P-009 reviewer — non-blocking):** add a
   fixture where the bounded taste nudge actually **flips the governed winner
   through `analyze()`** end-to-end. Today the decision-level taste flip is proven
@@ -44,19 +54,39 @@
 - **Controlled Class-3 apply path** — guardrail-gated; do not open without an
   explicit apply-safety packet.
 
-## Re-ranked strategic candidates (loop trajectory now fully realized)
+## Re-ranked strategic candidates (cross-song coherence axis now OPEN)
 
-> The learning loop is real in production (P-007→P-008→P-009 closed end-to-end).
-> The next strategic directions, for orchestrator re-survey:
+> The learning loop is real in production (P-007→P-008→P-009) AND the cross-song
+> coherence axis is open (P-010). The leading trajectory candidate is now deeper
+> creative scoring. For orchestrator re-survey:
 
-- **Album cross-song coherence** — `analyze_album` is isolated from per-song
-  planning. Cross-song coherence (e.g. consistency of decisions across a record)
-  is a net-new strategic direction.
-- **Deeper creative scoring** — `creative.py::_KIND_SCORES` is hardcoded. Richer,
-  evidence-driven kind-scoring is the other strategic direction.
+- **Deeper creative scoring (LEADING candidate)** — `creative.py::_KIND_SCORES` is
+  hardcoded (verified NOT golden-blocked). Richer, evidence-driven kind-scoring is
+  the leading net-new strategic direction now that coherence is open.
+- **`album.py` delta consolidation (P-011 candidate)** — retire the duplicate mean
+  computation between `album.py:55-58` and `cli.py:367-370` by having `album.py`
+  emit per-song deltas (see Deferred above).
+- Loop-polish follow-ups (borderline taste fixture, wider `--memory-dir` surface)
+  and the CLI float-rounding cosmetic (see Deferred above).
+- Net-new **event-logging** producers remain behind the product decision.
 
 ## Done (resolved)
 
+- **Album cross-song coherence** — **DONE via P-010**
+  (`build-os/receipts/P-010-album-context-into-planning.md`).
+  **MILESTONE — the cross-song coherence axis is now OPEN.** `analyze()` gained an
+  opt-in `album_context: {brightness_delta, lufs_delta}`; an album-outlier song
+  (thresholds 0.15 brightness / 3 LUFS, verbatim from `album.py:61,63`, not
+  imported) receives ONE bounded, advisory, evidence-tagged `"Album coherence"`
+  next-pass item at priority 45 (below every truth move — can never outrank Vocal),
+  via a pure `_album_outlier_item`. The `album` CLI is now two-pass (pass 1 = album
+  means via `analyze_album`; pass 2 = re-run each song with its derived delta) so
+  the album report shows album-aware per-song guidance. **`album.py` is NOT
+  modified** (delta derived in the consumer, `cli.py`). Default
+  (`album_context=None`) is BYTE-IDENTICAL. **A song's plan now reflects its album
+  siblings — the product is no longer strictly song-isolated.** Commits `dc61f20`
+  (planner+pipeline+test, 10 tests) and `9ebd4ee` (CLI two-pass+test, 2 tests);
+  suite 143→**155**; regression 68/68 held; Commit-1 green in isolation.
 - **Richer variant→track attribution** — **DONE via P-001**
   (`build-os/receipts/P-001-resolve-variant-track-attribution.md`).
 - **Net-new `EVENT_TYPES` decision-ledger vocabulary** — **DONE via P-002**
@@ -205,11 +235,12 @@
 
 ## Open boundaries (awaiting explicit go)
 
-- **P-009's product commit `27bfebf` is local-only as of this close** (this
-  archivist close did not push). Earlier packets' push history: P-000 install
-  commits are pushed to `origin/claude/logic-mix-os-hardening-12-7hbeh1`; P-004 is
-  pushed (PR #13). Any push of `27bfebf` (and the P-005/P-006/P-007/P-008 commits,
-  if not yet pushed) updates the already-open **PR #13** (base
+- **P-010's product commits `dc61f20` + `9ebd4ee` are local-only as of this close**
+  (this archivist close did not push). **P-009's product commit `27bfebf` is also
+  local-only.** Earlier packets' push history: P-000 install commits are pushed to
+  `origin/claude/logic-mix-os-hardening-12-7hbeh1`; P-004 is pushed (PR #13). Any
+  push of `dc61f20` / `9ebd4ee` / `27bfebf` (and the P-005/P-006/P-007/P-008
+  commits, if not yet pushed) updates the already-open **PR #13** (base
   `claude/dreamy-turing-z0oxll`) — do so only under the user's standing/explicit
   push-go. No merge / deploy / secret action taken.
 
