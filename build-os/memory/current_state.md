@@ -16,44 +16,51 @@
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression`.
-- **Green baseline (verified 2026-06-29):** suite **125 passed** (0 failed /
+- **Green baseline (verified 2026-06-29):** suite **138 passed** (0 failed /
   skipped / warnings); regression **68/68** (0 critical / 0 warnings).
 
 ## Where we are
 
-- **Last closed packet:** **P-007** — Taste profile feeds governance (first
-  closure of the learning loop). The recorded operator taste profile
-  (`memory._derive_taste` statements) now **biases variant governance** —
-  opt-in, bounded, evidence-tagged. An optional `taste_profile` arg (default
-  `None`) threads through `govern_variant` / `govern_branches` / `run_governance`;
-  a pure `_apply_taste` helper + a `_TASTE_KIND_BIAS` map (verbatim `_TASTE_MAP`
-  statements) apply a bounded identity shift clamped to `TASTE_MAX_DELTA = 15`
-  (strictly `< 30`, the truth nudge); a `taste_adjustments` evidence field is
-  present **only** when an adjustment applies (absent — not `[]` — otherwise). Two
-  operators with different taste now get different governed winners from the same
-  song (proven: narrower taste flips `chorus_lift_A` → `chorus_lift_C`). Single
-  product commit `bd08f28` (`governance.py` +75/−6, `tests/test_governance_taste.py`
-  new, 13 tests). Suite 112→125; regression 68/68 held. Default path
-  **byte-identical** (the HARD backward-compat gate); bound verified (10 stacked
-  statements clamp to +15); safety surfaces untouched. Reviewer: **pass**
-  (inviolability proven — a doctrine-vetoed `width_bloom`, `align=45<50`, stays
-  rejected even with maxed wider taste raising identity to 84; Codex not
-  available). Receipt: `build-os/receipts/P-007-taste-feeds-governance.md`.
-  - **MILESTONE — first closure of the learning loop:** recorded taste now
-    influences recommendations (opt-in, bounded `±15`, evidence-tagged,
-    doctrine-inviolable). Memory is **no longer purely write-only on the
-    governance axis** — a real consumer of recorded signals exists. This is the
-    *consumer* half of the loop; the *outcome* half (history → next-pass) is the
-    natural follow-on (P-008).
+- **Last closed packet:** **P-008** — History-aware next pass (the OUTCOME side
+  of the learning loop). `plan_next_pass` now consumes recorded mix-pass history
+  — **opt-in, bounded, evidence-tagged**. An optional trailing `history` arg
+  (default `None` → byte-identical); a `_MOVE_TARGET` map (move title →
+  `SCORE_KEYS` member) bridges history's score-keyed `got_worse` to the planner's
+  titled candidates; a move whose target regressed AND was recommended last pass
+  is **demoted** (`HISTORY_DEMOTE = 40`, floored ≥ 0, survives — not deleted); a
+  single non-destructive `"Revert last pass"` move surfaces at priority 95 when
+  `revert_candidates` is non-empty; each history-touched candidate carries an
+  `evidence` line (absent otherwise). Uses only `history[-1]`. Deterministic.
+  Commit-1 `d98a194` (planner +88/−1 + new `tests/test_next_pass_history.py`,
+  12 tests), Commit-2 `dbf94c3` (folded `drum_room_bloom` narrower-taste test in
+  `test_governance_taste.py`). Suite 125→**138**; regression 68/68 held; **default
+  path BYTE-IDENTICAL three ways** (arg-omitted == `history=None` == `history=[]`,
+  no `evidence` key); Commit-1 green in isolation. Reviewer: **pass** (revert at
+  95>90 ruled acceptable — bounded, non-destructive, cannot manufacture a move;
+  Codex not available). Receipt:
+  `build-os/receipts/P-008-history-aware-next-pass.md`.
+  - **MILESTONE — THE LEARNING LOOP IS NOW FULLY CLOSED:** with **P-007** (taste →
+    governance, the *consumer* side) AND **P-008** (outcome → next-pass, the
+    *outcome* side), **BOTH halves of the learning loop are closed.** The system
+    both **personalizes to recorded taste** (governance biased by recorded
+    operator taste — opt-in, bounded `±15`, doctrine-inviolable) and **stops
+    re-recommending moves that regressed** (next-pass demotes recorded `got_worse`
+    moves and surfaces revert — opt-in, bounded, non-destructive). Memory is no
+    longer write-only on either axis: real consumers of recorded signals exist on
+    both the taste and outcome axes. What remains to make the loop **real in
+    production** is the live wiring (P-008b / P-007b), not new core behavior.
 - **Now:** **none active.** No product packet in flight.
-- **Next:** **P-008 — history-aware next pass** is the trajectory follow-on (the
-  OUTCOME side of the loop): `plan_next_pass` should consume `mix_pass_history`
-  (improved / got_worse / revert_candidates) so the system does not re-recommend
-  a move that regressed. Also available — **P-007b** (wire a live per-operator
-  `taste_profile` from `memory_dir` into a pipeline/cowork run) and the net-new
-  **event-logging** producers (`taste_feedback` / `validation_check`, now more
-  justified since a consumer exists, still behind the same product decision).
-  **User's call** which to open.
+- **Next:** the trajectory follow-ons that make the now-closed loop **real in
+  production** — **user's call** which to open:
+  - **P-008b — Live history wire:** thread `memory.history()` into
+    `pipeline.analyze()` / the planner call so a real recorded history reaches
+    `plan_next_pass` in production (kept opt-in/explicit so byte-identical-by-
+    default survives — symmetric to P-007b).
+  - **P-007b — Live taste surface:** wire a real per-operator `taste_profile`
+    from `memory_dir` into a pipeline/cowork run (explicit per-operator).
+  - Also available (still behind the product decision, now with two consumers
+    existing): the net-new **event-logging** producers (`taste_feedback` /
+    `validation_check`).
 
 ## Stable facts (slow-changing)
 
@@ -71,4 +78,4 @@
   explicit go.
 
 ---
-_Updated by the archivist on close. Last advanced on P-007 close (2026-06-29)._
+_Updated by the archivist on close. Last advanced on P-008 close (2026-06-29)._
