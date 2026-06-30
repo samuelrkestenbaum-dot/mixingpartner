@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import statistics
 import sys
 from pathlib import Path
 from typing import Optional
@@ -330,17 +331,42 @@ def _run_feedback(args) -> int:
 
 def _run_album(args) -> int:
     base = Path(args.projects)
-    results, names = [], []
+    # Pass 1: analyze each song on its own (album-context-free), exactly as before,
+    # then derive the album means via analyze_album.
+    results, names, dirs, manifests = [], [], [], []
     for sub in sorted(base.iterdir()):
         manifest_path = sub / "project_manifest.json"
         if manifest_path.exists():
             manifest = _load_manifest(str(manifest_path))
             results.append(analyze(str(sub / "stems"), manifest))
             names.append(sub.name)
+            dirs.append(sub)
+            manifests.append(manifest)
     if not results:
         print(f"No projects (with project_manifest.json) found under {base}")
         return 1
     report = analyze_album(results, names)
+
+    # Pass 2: re-run each song WITH its per-song delta vs the album means so the
+    # album report's per-song next-pass guidance is album-aware. Means are the
+    # mean of the non-None per-song values (mirrors album.py:57-58); a missing
+    # axis yields a None delta (skipped by the planner). This re-analysis is opt-in
+    # and additive — the pass-1 results above already drove the coherence report.
+    b_vals = [s["brightness"] for s in report["songs"] if s["brightness"] is not None]
+    l_vals = [s["lufs"] for s in report["songs"] if s["lufs"] is not None]
+    b_mean = statistics.mean(b_vals) if b_vals else None
+    l_mean = statistics.mean(l_vals) if l_vals else None
+    album_aware = []
+    for sub, manifest, song in zip(dirs, manifests, report["songs"]):
+        bd = (song["brightness"] - b_mean) if (b_mean is not None and song["brightness"] is not None) else None
+        ld = (song["lufs"] - l_mean) if (l_mean is not None and song["lufs"] is not None) else None
+        ctx = {"brightness_delta": bd, "lufs_delta": ld}
+        album_aware.append(analyze(str(sub / "stems"), manifest, album_context=ctx))
+    report["per_song_next_pass"] = [
+        {"name": n, "next_pass": r.mix_plan["next_pass"]}
+        for n, r in zip(names, album_aware)
+    ]
+
     print(f"Album coherence: {report['coherence_score']}/100 — {report['verdict']}")
     print(f"Consistency: {report['consistency']}")
     if report["outliers"]:
