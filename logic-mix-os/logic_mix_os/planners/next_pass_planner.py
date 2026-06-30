@@ -7,11 +7,165 @@ then targeted fixes. Also provides the creative-hypothesis stub (build packet 8)
 
 from __future__ import annotations
 
-from typing import Dict, List
+from typing import Dict, List, Optional, Tuple
 
 from ..constants import LOOP_SAMPLE_KINDS
 
 FORWARD = {"intimate", "foreground"}
+
+# P-008 — the OUTCOME side of the learning loop. The planner can be made
+# history-aware, opt-in and bounded: a move recorded as having made things worse
+# (and that we recommended last pass) is *demoted* (never deleted), and revert
+# candidates surface as a single conservative move. The recorded history speaks
+# two vocabularies — ``got_worse`` / ``revert_candidates`` are score-delta strings
+# keyed by ``memory.SCORE_KEYS`` (e.g. ``"section_contrast_score 70->62"``) while
+# ``next_recommended`` is a list of prior move *titles*. ``_MOVE_TARGET`` is the
+# one piece of glue that bridges the two: it maps a move title to the score key it
+# is meant to improve. Titles with no unambiguous target map to nothing and are
+# left untouched (conservative). Pairings are pinned against ``memory.SCORE_KEYS``.
+_MOVE_TARGET: Dict[str, str] = {
+    "Vocal belief": "vocal_centrality_score",
+    "Section contrast": "section_contrast_score",
+    "Stereo loop / width control": "depth_hierarchy_score",
+    "Depth cleanup": "depth_hierarchy_score",
+    # "Low-end definition" and the "Establish the emotional centre" fallback have
+    # no unambiguous SCORE_KEYS target → deliberately absent (never demoted).
+}
+
+# Fixed, bounded priority penalty for a recommended-and-regressed move. Floored so
+# a demoted priority never goes negative; strictly a reorder, never a deletion.
+HISTORY_DEMOTE = 40
+
+# Fixed priority for the single surfaced "Revert last pass" move. Set above the
+# normal candidate band (90 = top vocal move) so a recorded regression worth
+# reverting is shown prominently rather than buried below the take-5 cut. It is
+# still only a reorder/annotation — a revert is non-destructive (undo your own
+# last change), never a manufactured destructive or doctrine-vetoed action.
+HISTORY_REVERT_PRIORITY = 95
+
+# P-010 — the CROSS-SONG coherence axis. An opt-in ``album_context`` (per-song
+# deltas vs the album means) lets an album-outlier song earn ONE bounded,
+# non-destructive, evidence-tagged next-pass item. The thresholds mirror
+# ``album.py``'s outlier test verbatim (brightness delta > 0.15 at album.py:61,
+# lufs delta > 3 at album.py:63) but are pinned as local constants so the planner
+# never depends on ``album.py`` (the delta is derived in the consumer). The fixed
+# priority 45 sits below every truth-driven move (Vocal 90, Section 80, Width 70,
+# Depth 60, Low-end 50) so the album hint can NEVER outrank a song-truth move.
+ALBUM_BRIGHTNESS_OUTLIER = 0.15
+ALBUM_LUFS_OUTLIER = 3
+ALBUM_OUTLIER_PRIORITY = 45
+
+
+def _album_outlier_item(album_context: Dict) -> Optional[Tuple[int, Dict]]:
+    """Pure, deterministic album-coherence hint from a per-song delta dict.
+
+    ``album_context`` shape: ``{"brightness_delta": float|None, "lufs_delta":
+    float|None}``. A ``None`` axis is skipped. Returns ONE bounded, advisory,
+    reversible ``(ALBUM_OUTLIER_PRIORITY, item)`` tuple when an axis exceeds its
+    threshold, else ``None``. If BOTH axes trip, the deterministic tie-break is
+    brightness before loudness. No time / I/O / randomness; a pure function of the
+    supplied deltas and the two fixed thresholds.
+    """
+    if not album_context:
+        return None
+
+    bd = album_context.get("brightness_delta")
+    ld = album_context.get("lufs_delta")
+
+    bright_trips = bd is not None and abs(bd) > ALBUM_BRIGHTNESS_OUTLIER
+    loud_trips = ld is not None and abs(ld) > ALBUM_LUFS_OUTLIER
+
+    if bright_trips:
+        field = "brightness_delta"
+        value = bd
+        threshold = ALBUM_BRIGHTNESS_OUTLIER
+        direction = "brighter" if bd > 0 else "darker"
+        # DISPLAY ONLY: round the signed delta to 2 dp so a real CLI-derived float
+        # (e.g. 0.2866…) renders as +0.29, not a long repr. The outlier LOGIC above
+        # (``bright_trips``) compares the FULL-precision ``bd``; only this text is
+        # rounded.
+        shown = round(value, 2)
+        detail = (
+            f"This song sits {shown:+} {direction} than the album average "
+            f"({field}={shown:+}). Consider matching the record's tonal centre — "
+            f"a gentle high-shelf / match-EQ toward the album, reversibly, before "
+            f"committing."
+        )
+    elif loud_trips:
+        field = "lufs_delta"
+        value = ld
+        threshold = ALBUM_LUFS_OUTLIER
+        direction = "louder" if ld > 0 else "quieter"
+        # DISPLAY ONLY: see the brightness branch — ``loud_trips`` compares the
+        # full-precision ``ld``; the rendered text rounds to 2 dp.
+        shown = round(value, 2)
+        detail = (
+            f"This song sits {shown:+} LU {direction} than the album average "
+            f"({field}={shown:+}). Consider matching the record's loudness centre — "
+            f"adjust the bus/output level toward the album, reversibly, before "
+            f"committing."
+        )
+    else:
+        return None
+
+    item = {
+        "title": "Album coherence",
+        "detail": detail,
+        "evidence": (
+            f"album outlier: {field}={shown:+} vs album mean "
+            f"(threshold {threshold})"
+        ),
+    }
+    return (ALBUM_OUTLIER_PRIORITY, item)
+
+
+def _score_key(delta: str) -> str:
+    """Extract the SCORE_KEYS member from a score-delta string.
+
+    ``"section_contrast_score 70->62"`` → ``"section_contrast_score"`` (split on
+    the first space). Strings without a space pass through unchanged.
+    """
+    return delta.split(" ", 1)[0]
+
+
+def _apply_history(
+    candidates: List[Tuple[int, Dict]], last: Dict
+) -> List[Tuple[int, Dict]]:
+    """Pure, deterministic reprioritizer driven by the most recent pass.
+
+    Demotes (does not delete) any candidate whose ``_MOVE_TARGET`` target is in
+    ``last.got_worse`` AND whose title is in ``last.next_recommended``; attaches an
+    ``evidence`` line ONLY to candidates it actually moves. Surfaces exactly one
+    ``"Revert last pass"`` move when ``last.revert_candidates`` is non-empty. No
+    time / I/O / randomness; output order is a deterministic function of the input.
+    """
+    regressed = {_score_key(d) for d in last.get("got_worse", [])}
+    recommended = set(last.get("next_recommended", []))
+
+    out: List[Tuple[int, Dict]] = []
+    for priority, item in candidates:
+        title = item["title"]
+        target = _MOVE_TARGET.get(title)
+        if target is not None and target in regressed and title in recommended:
+            new_priority = max(0, priority - HISTORY_DEMOTE)
+            new_item = dict(item)
+            new_item["evidence"] = (
+                f"demoted: prior pass recorded {target} getting worse after this move"
+            )
+            out.append((new_priority, new_item))
+        else:
+            out.append((priority, item))
+
+    revert = sorted(_score_key(d) for d in last.get("revert_candidates", []))
+    if revert:
+        out.append((HISTORY_REVERT_PRIORITY, {
+            "title": "Revert last pass",
+            "detail": ("The previous pass regressed " + ", ".join(revert)
+                       + ". Revert it and re-approach the targeted change more conservatively."),
+            "evidence": "surfaced because the last pass recorded revert candidate(s): "
+                        + ", ".join(revert),
+        }))
+    return out
 
 
 def plan_next_pass(
@@ -19,6 +173,8 @@ def plan_next_pass(
     doctrine_score: Dict,
     masking_report: Dict,
     sections_analysis: List[Dict],
+    history: Optional[List[Dict]] = None,
+    album_context: Optional[Dict] = None,
 ) -> List[Dict]:
     events = masking_report.get("events", [])
     candidates: List[Dict] = []
@@ -76,6 +232,20 @@ def plan_next_pass(
             "title": "Low-end definition",
             "detail": "Kick and bass share sub energy. Carve complementary space or sidechain the bass subtly to the kick.",
         }))
+
+    # P-010 opt-in: when (and only when) an album_context trips a threshold,
+    # append ONE bounded album-coherence hint BEFORE the history reprioritization
+    # and the sort/take-5. It only ever appends; it never modifies an existing
+    # candidate. Falsy / under-threshold context => no append => byte-identical.
+    album_item = _album_outlier_item(album_context)
+    if album_item is not None:
+        candidates.append(album_item)
+
+    # P-008 opt-in: when (and only when) history is supplied, reprioritize the
+    # candidates against the most recent pass BEFORE the sort/take-5. Falsy history
+    # (``None`` / ``[]``) leaves the default path byte-identical.
+    if history:
+        candidates = _apply_history(candidates, history[-1])
 
     candidates.sort(key=lambda c: c[0], reverse=True)
     out = []

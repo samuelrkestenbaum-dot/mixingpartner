@@ -13,6 +13,8 @@ import json
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from .constants import EVENT_TYPES
+
 SCORE_KEYS = [
     "overall_mix_readiness_score", "halee_score", "ramone_score", "static_mix_score",
     "dynamic_mix_score", "section_contrast_score", "depth_hierarchy_score",
@@ -98,9 +100,13 @@ class ProjectMemory:
         return self._load(self.passes_path, [])
 
     # -- decision ledger ----------------------------------------------------
-    def add_decision(self, decision: Dict) -> Dict:
+    def add_decision(self, decision: Dict, event_type: Optional[str] = None) -> Dict:
+        if event_type is not None and event_type not in EVENT_TYPES:
+            raise ValueError(f"Unknown event type: {event_type}. Allowed: {EVENT_TYPES}")
         ledger = self._load(self.ledger_path, [])
         decision = {"date": _now(), **decision}
+        if event_type is not None:
+            decision["event_type"] = event_type
         ledger.append(decision)
         self._save(self.ledger_path, ledger)
         return decision
@@ -115,7 +121,7 @@ class ProjectMemory:
                 "doctrine": ["sacred_vs_expendable", "felt_vs_heard"],
                 "risk": f"Class {m.get('risk_class', 3)}",
                 "validation": "Check chorus width and emotional lift after render.",
-            }))
+            }, event_type="mute_candidate"))
         return added
 
     def ledger(self) -> List[Dict]:

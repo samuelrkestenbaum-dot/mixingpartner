@@ -5,6 +5,11 @@ from __future__ import annotations
 import pytest
 
 from logic_mix_os.creative import SEARCH_MODES, run_creative_engine
+from logic_mix_os.renderers.creative_renderer import render_governance
+
+# Stable readiness labels (P-003), reused verbatim by the markdown report.
+READY_LABEL = "READY TO STOP"
+NOT_YET_LABEL = "NOT YET — keep iterating"
 
 
 def test_creative_present_with_branches(analyzed):
@@ -56,3 +61,56 @@ def test_explicit_mode_override():
     m = load_manifest(base / "project_manifest.json")
     res = analyze(str(base / "stems"), m, creative_mode="deconstructive")
     assert res.creative["search_mode"] == "deconstructive"
+
+
+# --- P-005: readiness-vs-refusal treatment in the markdown governance report ---
+
+_READINESS_HTML_TOKENS = ("<li", "<div", "<span", "<p>", "<script", "http://", "https://")
+
+
+def _readiness_slice(markdown: str) -> str:
+    """The ## Stop Conditions block, isolated from the rest of the report."""
+    after = markdown.split("## Stop Conditions", 1)[1]
+    # stop at the next section header (or end of document)
+    return after.split("\n## ", 1)[0]
+
+
+def test_render_governance_not_yet_lists_reasons(analyzed):
+    # Real fixture: should_stop is False with non-empty "not yet:" reasons.
+    governance = analyzed["dense_chorus_with_loops"].governance
+    sc = governance["stop_conditions"]
+    assert sc["should_stop"] is False and sc["reasons"]
+
+    out = render_governance(governance)
+    assert NOT_YET_LABEL in out
+    assert READY_LABEL not in out
+    for reason in sc["reasons"]:
+        assert reason in out
+
+    block = _readiness_slice(out)
+    assert NOT_YET_LABEL in block
+    for token in _READINESS_HTML_TOKENS:
+        assert token not in block
+
+
+def test_render_governance_ready_shows_warning(analyzed):
+    ready = {
+        "should_stop": True,
+        "reasons": ["all stop conditions met — validate and move to mastering-readiness checks"],
+        "warning": "Overworking risk: stop creative experimentation once gains are marginal.",
+    }
+    gov = dict(analyzed["dense_chorus_with_loops"].governance)
+    gov["stop_conditions"] = ready
+
+    out = render_governance(gov)
+    assert READY_LABEL in out
+    assert NOT_YET_LABEL not in out
+    assert ready["warning"] in out
+    for reason in ready["reasons"]:
+        assert reason in out
+
+    block = _readiness_slice(out)
+    assert READY_LABEL in block
+    assert ready["warning"] in block
+    for token in _READINESS_HTML_TOKENS:
+        assert token not in block

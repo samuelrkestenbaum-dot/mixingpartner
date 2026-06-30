@@ -330,17 +330,42 @@ def _run_feedback(args) -> int:
 
 def _run_album(args) -> int:
     base = Path(args.projects)
-    results, names = [], []
+    # Pass 1: analyze each song on its own (album-context-free), exactly as before,
+    # then derive the album means via analyze_album.
+    results, names, dirs, manifests = [], [], [], []
     for sub in sorted(base.iterdir()):
         manifest_path = sub / "project_manifest.json"
         if manifest_path.exists():
             manifest = _load_manifest(str(manifest_path))
             results.append(analyze(str(sub / "stems"), manifest))
             names.append(sub.name)
+            dirs.append(sub)
+            manifests.append(manifest)
     if not results:
         print(f"No projects (with project_manifest.json) found under {base}")
         return 1
     report = analyze_album(results, names)
+
+    # Pass 2: re-run each song WITH its per-song delta vs the album means so the
+    # album report's per-song next-pass guidance is album-aware. The deltas are
+    # single-sourced by ``analyze_album`` (it emits ``brightness_delta`` /
+    # ``lufs_delta`` per song from the same means its own outlier test uses); the
+    # consumer no longer recomputes them, so the two truths can never drift. A
+    # missing axis is a ``None`` delta (skipped by the planner). This re-analysis is
+    # opt-in and additive — the pass-1 results above already drove the coherence
+    # report.
+    album_aware = []
+    for sub, manifest, song in zip(dirs, manifests, report["songs"]):
+        ctx = {
+            "brightness_delta": song["brightness_delta"],
+            "lufs_delta": song["lufs_delta"],
+        }
+        album_aware.append(analyze(str(sub / "stems"), manifest, album_context=ctx))
+    report["per_song_next_pass"] = [
+        {"name": n, "next_pass": r.mix_plan["next_pass"]}
+        for n, r in zip(names, album_aware)
+    ]
+
     print(f"Album coherence: {report['coherence_score']}/100 — {report['verdict']}")
     print(f"Consistency: {report['consistency']}")
     if report["outliers"]:

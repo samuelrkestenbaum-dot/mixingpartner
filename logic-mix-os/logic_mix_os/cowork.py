@@ -25,7 +25,8 @@ def build_context(stems=None, manifest=None, memory_dir=None, bounce=None,
                   reference=None, result=None) -> Dict:
     """Build the shared context (runs one full analysis unless ``result`` given)."""
     if result is None:
-        result = analyze(stems, manifest or {}, bounce_path=bounce, reference_path=reference)
+        result = analyze(stems, manifest or {}, bounce_path=bounce, reference_path=reference,
+                         memory_dir=memory_dir)
     return {"result": result, "memory": ProjectMemory(memory_dir) if memory_dir else None}
 
 
@@ -90,7 +91,7 @@ def _write_mix_decision(ctx, decision=None, **k):
     mem = ctx.get("memory")
     if not mem:
         return {"error": "no memory_dir configured"}
-    return mem.add_decision(decision or {})
+    return mem.add_decision(decision or {}, event_type="mix_decision")
 
 
 def _update_taste(ctx, label=None, context=None, **k):

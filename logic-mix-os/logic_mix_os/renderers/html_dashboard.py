@@ -182,7 +182,16 @@ def render_dashboard(result) -> str:
     gov += "".join(f'<li><b>{_esc(k.replace("_", " "))}</b>: {_esc(v)}</li>' for k, v in g.get("listener_panel", {}).items())
     gov += "</ul>"
     stop = g.get("stop_conditions", {})
-    gov += f'<p>Stop iterating: <b>{_esc(stop.get("should_stop"))}</b></p>'
+    reasons = stop.get("reasons", [])
+    if stop.get("should_stop"):
+        gov += '<p><b class="good">READY TO STOP</b> — stop conditions met.</p>'
+        gov += "<ul>" + "".join(f'<li class="good">{_esc(r)}</li>' for r in reasons) + "</ul>"
+        warning = stop.get("warning")
+        if warning:
+            gov += f'<p class="flag">⚠ {_esc(warning)}</p>'
+    else:
+        gov += '<p><b class="bad">NOT YET — keep iterating</b></p>'
+        gov += "<ul>" + "".join(f'<li>{_esc(r)}</li>' for r in reasons) + "</ul>"
     cards.append(_card("governance", "Governance & Taste", gov))
 
     # --- logic checklist ---

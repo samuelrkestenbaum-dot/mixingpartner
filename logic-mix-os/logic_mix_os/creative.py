@@ -68,6 +68,68 @@ _KIND_SCORES = {
 
 _RISK_PENALTY = {"low": 0, "medium": 6, "high": 14}
 
+# --- P-012: creative-scoring evidence-nudge layer (option B, PENALTY-ONLY) ---
+# Context nudges that lower a variant's score when the diagnostic evidence makes
+# the move risky. Penalty-only (a nudge can only LOWER a score, never promote a
+# variant), bounded (the summed overall effect is clamped to ±CREATIVE_NUDGE_CAP
+# on the overall axis governance ranks on), transparent (each fired nudge emits a
+# verbatim evidence line into ``score_nudges``), and deterministic (fixed table
+# order; pure helper). The curated ``_KIND_SCORES`` base is untouched.
+CREATIVE_NUDGE_CAP = 2.0  # max summed overall-score movement, in overall points
+
+# Each row: kinds it applies to, the exact predicate over result.masking_report
+# events, the dim it moves, the (negative) delta, and the verbatim evidence line.
+_NUDGE_TABLE = [
+    {
+        "kinds": {"width_bloom", "vocal_ride", "intimacy_pass"},
+        "evidence": "lead_masked",
+        "dim": "vocal_belief",
+        "delta": -8,
+        "reason": ("vocal_belief -8: lead vocal is masked (bad_masking) — "
+                   "pushing a vocal-forward move is risky"),
+    },
+    {
+        "kinds": {"width_bloom"},
+        "evidence": "width_crowding",
+        "dim": "vocal_belief",
+        "delta": -6,
+        "reason": "vocal_belief -6: stereo image is already width-crowded",
+    },
+]
+
+
+def _lead_masked(result) -> bool:
+    """Verbatim predicate from the original context adjustment (creative.py:252-255):
+    any masking event classified ``bad_masking`` whose elements include the vocal."""
+    return any(
+        e["classification"] == "bad_masking" and any("vocal" in el.lower() for el in e["elements"])
+        for e in result.masking_report.get("events", [])
+    )
+
+
+def _width_crowded(result) -> bool:
+    return any(
+        e["classification"] == "width_crowding"
+        for e in result.masking_report.get("events", [])
+    )
+
+
+_NUDGE_EVIDENCE = {"lead_masked": _lead_masked, "width_crowding": _width_crowded}
+
+
+def _apply_nudges(kind: str, result) -> List[tuple]:
+    """Pure: the ordered ``(dim, delta, reason)`` for each FIRED nudge.
+
+    A row fires when ``kind`` is in its ``kinds`` set AND its evidence predicate
+    is true on ``result``. Rows are evaluated in table order, so the emitted
+    evidence lines are deterministic.
+    """
+    fired: List[tuple] = []
+    for row in _NUDGE_TABLE:
+        if kind in row["kinds"] and _NUDGE_EVIDENCE[row["evidence"]](result):
+            fired.append((row["dim"], row["delta"], row["reason"]))
+    return fired
+
 
 # --------------------------------------------------------------------------- #
 def static_baseline(result) -> Dict:
@@ -110,6 +172,30 @@ def _supporting_elements(records) -> List[str]:
             if r["instrument_identity"] in {"acoustic_guitar", "electric_guitar", "backing_vocal", "piano", "electric_piano", "strings"}]
 
 
+# Identity families/identities that count as "the drums" for room/overhead moves.
+_DRUM_IDENTITIES = {"kick", "snare", "hat", "hi_hat", "tom", "drum_overhead", "drum_room", "cymbal", "percussion"}
+_DRUM_FAMILIES = {"drums", "percussion"}
+
+
+def _lead_vocal_tracks(records) -> List[str]:
+    """Real lead-vocal track names, in project order."""
+    return [r["name"] for r in records if r["instrument_identity"] == "lead_vocal"]
+
+
+def _drum_tracks(records) -> List[str]:
+    """Real drum/percussion track names, in project order."""
+    return [r["name"] for r in records
+            if r["instrument_identity"] in _DRUM_IDENTITIES or r["identity_family"] in _DRUM_FAMILIES]
+
+
+def _resolve(*candidate_lists: List[str]) -> List[str]:
+    """First non-empty candidate list (each already a real-record subset)."""
+    for names in candidate_lists:
+        if names:
+            return names
+    return []
+
+
 def detect_creative_problems(result) -> List[Dict]:
     problems: List[Dict] = []
     sections = result.section_analysis
@@ -148,8 +234,16 @@ def generate_variants(problem: Dict, result, mode: str = "dramatic_contrast") ->
     records = result.records
     supporting = _supporting_elements(records)
     loops = [r["name"] for r in records if r["source_kind"] in LOOP_SAMPLE_KINDS]
+    lead_vocal = _lead_vocal_tracks(records)
+    drums = _drum_tracks(records)
     pid = problem["id"]
     variants: List[Dict] = []
+
+    # Fallbacks so no variant ever emits a phantom or empty track list: the
+    # lead-vocal/drum moves resolve against real records, then degrade to the
+    # next musically-sensible real layer present in the project.
+    lead_target = _resolve(lead_vocal, supporting, loops, [r["name"] for r in records][:1])
+    drum_target = _resolve(drums, supporting, loops, lead_vocal, [r["name"] for r in records][:1])
 
     if pid == "chorus_lift":
         variants += [
@@ -159,15 +253,15 @@ def generate_variants(problem: Dict, result, mode: str = "dramatic_contrast") ->
                      supporting, "May feel too modern/washed.", ["chorus feels wider", "vocal remains centered"], "emotional openness"),
             _variant("chorus_lift_B", pid, "subtractive_drop", "Subtractive Drop",
                      "Withhold a decorative layer before the chorus so it feels larger by contrast.",
-                     ["Mute decorative texture in the final pre-chorus bar"], loops or supporting[-1:],
+                     ["Mute decorative texture in the final pre-chorus bar"], _resolve(loops, supporting[-1:], [r["name"] for r in records][:1]),
                      "Chorus may still feel small.", ["chorus entrance feels more dramatic"], "impact through contrast"),
             _variant("chorus_lift_C", pid, "vocal_ride", "Vocal-Ride Lift",
                      "Ride the lead vocal into the chorus with a delay throw on the last pre-chorus phrase.",
                      ["Ride lead vocal +1 dB into chorus", "Delay throw on last pre-chorus phrase"],
-                     ["Lead Vocal"], "May not create enough scale.", ["emotional belief increases"], "emotional belief"),
+                     lead_target, "May not create enough scale.", ["emotional belief increases"], "emotional belief"),
             _variant("chorus_lift_D", pid, "drum_room_bloom", "Drum Room Bloom",
                      "Use physical room/overheads rather than plugin hype to lift the chorus.",
-                     ["Increase drum room/overhead energy at chorus entry"], ["Drum Overheads", "Drum Room"],
+                     ["Increase drum room/overhead energy at chorus entry"], drum_target,
                      "Drums may overpower the vocal.", ["Halee-style physical lift", "vocal still on top"], "physical lift"),
         ]
     elif pid == "density":
@@ -182,7 +276,7 @@ def generate_variants(problem: Dict, result, mode: str = "dramatic_contrast") ->
                      "Lose a part you liked.", ["clarity improves without loss of energy"], "clarity"),
         ]
     elif pid == "loop":
-        target = loops[0] if loops else "the loop"
+        target = loops[0] if loops else (([r["name"] for r in records][:1] or ["the loop"])[0])
         variants += [
             _variant("loop_A", pid, "loop_deconstruct", "Loop Deconstruct",
                      f"Re-contextualise {target} as movement (felt), not a stock loop (heard).",
@@ -203,11 +297,11 @@ def generate_variants(problem: Dict, result, mode: str = "dramatic_contrast") ->
         variants += [
             _variant("vocal_A", pid, "vocal_ride", "Phrase Rides",
                      "Ride phrase endings before any compression so the words land.",
-                     ["Clip gain + fader rides on phrase ends +0.5 to +1.5 dB"], ["Lead Vocal"],
+                     ["Clip gain + fader rides on phrase ends +0.5 to +1.5 dB"], lead_target,
                      "Time-consuming.", ["every word believable"], "vocal belief"),
             _variant("vocal_B", pid, "intimacy_pass", "Verse Intimacy",
                      "Pull verse reverb sends down and keep the vocal close; bloom only at the chorus.",
-                     ["Lower verse vocal sends", "Bloom sends at chorus"], ["Lead Vocal"],
+                     ["Lower verse vocal sends", "Bloom sends at chorus"], lead_target,
                      "Verses may feel dry — A/B vs baseline.", ["verse intimacy vs chorus openness"], "intimacy"),
         ]
     return variants
@@ -215,24 +309,37 @@ def generate_variants(problem: Dict, result, mode: str = "dramatic_contrast") ->
 
 def score_variant(variant: Dict, result) -> Dict:
     base = dict(_KIND_SCORES.get(variant["kind"], _KIND_SCORES["depth_cleanup"]))
-
-    # Context adjustments.
-    lead_masked = any(
-        e["classification"] == "bad_masking" and any("vocal" in el.lower() for el in e["elements"])
-        for e in result.masking_report.get("events", [])
-    )
-    if variant["kind"] == "width_bloom" and lead_masked:
-        base["vocal_belief"] -= 8  # widening while the vocal is already crowded is risky
-
     numeric = ["technical", "halee", "ramone", "contrast", "vocal_belief", "excitement", "taste"]
-    overall = sum(base[k] for k in numeric) / len(numeric) - _RISK_PENALTY[base["translation"]]
+
+    # Base overall on the curated dims, before any context nudge — this is the
+    # axis governance ranks on, and the axis the cap binds.
+    base_overall = sum(base[k] for k in numeric) / len(numeric) - _RISK_PENALTY[base["translation"]]
+
+    # --- P-012: evidence-nudge layer (penalty-only, bounded, transparent) ----
+    # Each fired nudge lowers a curated dim and emits an evidence line. The dims
+    # carry the honest move; the *overall* effect is clamped to ±CREATIVE_NUDGE_CAP.
+    fired = _apply_nudges(variant["kind"], result)
+    nudges: List[str] = []
+    for dim, delta, reason in fired:
+        base[dim] += delta
+        nudges.append(reason)
+
+    nudged_overall = sum(base[k] for k in numeric) / len(numeric) - _RISK_PENALTY[base["translation"]]
+    # Clamp the SUMMED overall delta to ±CREATIVE_NUDGE_CAP. Worst case
+    # (width_bloom rows 1+2 = -14 raw = -2.0 overall) lands at exactly the cap.
+    overall_delta = nudged_overall - base_overall
+    if overall_delta < -CREATIVE_NUDGE_CAP:
+        overall_delta = -CREATIVE_NUDGE_CAP
+    elif overall_delta > CREATIVE_NUDGE_CAP:
+        overall_delta = CREATIVE_NUDGE_CAP
+    overall = base_overall + overall_delta
     overall = round(max(0.0, min(100.0, overall)), 1)
 
     verdict = "promising" if overall >= 80 else ("worth testing" if overall >= 70 else "marginal")
     if base["vocal_belief"] < 75:
         verdict += " — check vocal wash"
 
-    return {
+    scores = {
         "technical_score": base["technical"],
         "halee_score": base["halee"],
         "ramone_score": base["ramone"],
@@ -246,6 +353,9 @@ def score_variant(variant: Dict, result) -> Dict:
         "overall_score": overall,
         "overall_verdict": verdict,
     }
+    if nudges:  # evidence-key discipline: present ONLY when ≥1 nudge fired.
+        scores["score_nudges"] = nudges
+    return scores
 
 
 def winning_variant(scored_variants: List[Dict]) -> Optional[Dict]:

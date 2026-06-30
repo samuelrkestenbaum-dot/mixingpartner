@@ -39,6 +39,59 @@ _INTIMATE_WORDS = {"intimate", "intimacy", "vulnerable", "vulnerability", "confl
                    "tender", "grief", "broken", "composed"}
 _BIG_WORDS = {"triumphant", "anthemic", "huge", "massive", "stadium", "euphoric", "explosive"}
 
+# Section 38 (taste calibration) feeding governance: the recorded operator taste
+# profile (the statements ``memory._TASTE_MAP`` emits) may *bias* a matching-kind
+# variant's identity, opt-in and bounded. This is the first read of the learning
+# loop. A taste profile can nudge identity but NEVER override doctrine: the
+# truth-lock veto, the align<50 veto, and the kill-switch path all fire
+# independently of taste (see govern_variant / validate_action_safety).
+#
+# Hard bound: total identity adjustment is clamped to ±TASTE_MAX_DELTA, strictly
+# below the existing intimate-truth -30 nudge, so taste can never out-pull
+# doctrine. Re-clamped to [0, 100] afterward.
+TASTE_MAX_DELTA = 15
+
+# profile statement (verbatim from memory._TASTE_MAP) -> {variant kind: signed
+# identity delta}. Statements not listed here map to no governance kind in this
+# pass (creative/EQ surfaces, out of scope). Applied in a fixed order; pure.
+_TASTE_KIND_BIAS = {
+    "tends to prefer narrower stereo images": {"width_bloom": -TASTE_MAX_DELTA,
+                                               "drum_room_bloom": -TASTE_MAX_DELTA},
+    "prefers wider images": {"width_bloom": TASTE_MAX_DELTA},
+}
+
+
+def _apply_taste(kind: str, identity: int, statements: Optional[List[str]]):
+    """Pure, deterministic taste bias on a variant's identity.
+
+    Returns ``(new_identity, evidence_lines)``. Sums the signed deltas for every
+    statement that maps to ``kind`` (fixed iteration order over ``statements``),
+    clamps the *total* adjustment to ±TASTE_MAX_DELTA, then re-clamps the result
+    to [0, 100]. No time / I/O / randomness. ``evidence_lines`` is empty when no
+    statement applies — callers omit the ``taste_adjustments`` key entirely then.
+    """
+    if not statements:
+        return identity, []
+    delta = 0
+    matched: List[str] = []
+    for statement in statements:
+        bias = _TASTE_KIND_BIAS.get(statement)
+        if not bias or kind not in bias:
+            continue
+        delta += bias[kind]
+        matched.append(statement)
+    if not matched:
+        return identity, []
+    delta = max(-TASTE_MAX_DELTA, min(TASTE_MAX_DELTA, delta))
+    new_identity = max(0, min(100, identity + delta))
+    if new_identity == identity:
+        return identity, []
+    direction = "down-weighted" if new_identity < identity else "up-weighted"
+    reason = "; ".join(matched)
+    line = (f"adjusted for operator taste: {direction} {kind} "
+            f"({reason}), identity {identity}->{new_identity}")
+    return new_identity, [line]
+
 # emotional-truth alignment (0-100) by variant kind, per truth lean.
 _TRUTH_ALIGNMENT = {
     "intimate": {"vocal_ride": 88, "intimacy_pass": 90, "subtractive_drop": 84, "depth_cleanup": 82,
@@ -149,15 +202,26 @@ def emotional_overfit(variant: Dict, truth_lean: str) -> Optional[Dict]:
     return None
 
 
-def govern_variant(variant: Dict, constraints: List[Dict], truth_lean: str) -> Dict:
+def govern_variant(variant: Dict, constraints: List[Dict], truth_lean: str,
+                   taste_profile: Optional[List[str]] = None) -> Dict:
     align = _TRUTH_ALIGNMENT.get(truth_lean, _TRUTH_ALIGNMENT["neutral"]).get(variant["kind"], 75)
     triangle = taste_triangle(variant, truth_lean)
+    taste_adjustments: List[str] = []
+    if taste_profile:
+        new_identity, taste_adjustments = _apply_taste(
+            variant["kind"], triangle["identity"], taste_profile)
+        if taste_adjustments:
+            triangle["identity"] = new_identity
+            # Recompute the keep/reject verdict the same way taste_triangle does.
+            triangle["verdict"] = (
+                "reject" if (triangle["identity"] < 45 or triangle["emotion"] < 45)
+                else "keep")
     violations = _violates_constraints(variant, constraints)
     fp = false_progress(variant)
     overfit = emotional_overfit(variant, truth_lean)
     high_violation = any(v["severity"] == "high" for v in violations)
     vetoed = high_violation or align < 50 or triangle["verdict"] == "reject"
-    return {
+    out = {
         "emotional_truth_alignment": align,
         "taste_triangle": triangle,
         "constraint_violations": [v["constraint"] for v in violations],
@@ -166,16 +230,20 @@ def govern_variant(variant: Dict, constraints: List[Dict], truth_lean: str) -> D
         "vetoed": vetoed,
         "verdict": "reject" if vetoed else "keep",
     }
+    if taste_adjustments:
+        out["taste_adjustments"] = taste_adjustments
+    return out
 
 
-def govern_branches(branches: List[Dict], intent: Dict, truth_lean: str) -> List[Dict]:
+def govern_branches(branches: List[Dict], intent: Dict, truth_lean: str,
+                    taste_profile: Optional[List[str]] = None) -> List[Dict]:
     constraints = negative_constraints(intent)
     out = []
     for branch in branches:
         ranked = sorted(branch["variants"], key=lambda v: v["scores"]["overall_score"], reverse=True)
         chosen, gov = None, None
         for v in ranked:
-            g = govern_variant(v, constraints, truth_lean)
+            g = govern_variant(v, constraints, truth_lean, taste_profile=taste_profile)
             v["governance"] = g
             if chosen is None and not g["vetoed"]:
                 chosen, gov = v, g
@@ -285,10 +353,11 @@ def mixer_communication(result, tone: str = "collaborative") -> str:
     return (f"I think we're getting close. The one thing I'd love to chase next is: {top['detail'].lower()}")
 
 
-def run_governance(result, creative: Dict) -> Dict:
+def run_governance(result, creative: Dict, taste_profile: Optional[List[str]] = None) -> Dict:
     intent = result.project.intent
     truth = emotional_truth_lock(intent)
-    governed = govern_branches(creative.get("branches", []), intent, truth["lean"])
+    governed = govern_branches(creative.get("branches", []), intent, truth["lean"],
+                               taste_profile=taste_profile)
     return {
         "emotional_truth_lock": truth,
         "reference_sanity": reference_sanity(result.reference_delta, intent),
