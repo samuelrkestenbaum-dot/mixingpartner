@@ -4,31 +4,38 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
+## ★ OPEN USER DECISION (read this first)
+
+- **Deeper creative scoring (`creative.py::_KIND_SCORES`) — BLOCKED ON A USER
+  AESTHETIC DECISION.** This is the **leading trajectory candidate** AND the next
+  real move, but it is **not in-authority to start** — `_KIND_SCORES` is a
+  **curated Halee/Ramone aesthetic prior**, and the variant-scoring path is
+  **golden-unguarded** (a bad change is **silent** — no regression catches it).
+  The clean in-authority deck-clearing work is now drained, so the next step is
+  **the user's call**. The user has been asked to choose one of:
+  - **(a)** leave `_KIND_SCORES` as-is (no packet);
+  - **(b)** a **bounded, evidence-tagged nudge layer ON TOP of the table** —
+    generalizing the existing `width_bloom −8`, capped so it can **never overturn
+    the base score** — which the user **reviews before ship**; or
+  - **(c)** a fuller **song-derived rescoring**.
+  **Do NOT open any creative-scoring packet until the user picks a / b / c.**
+
 ## Deferred (follow-up packets)
 
-- **CLI advisory float rounding (from P-010 reviewer — cosmetic, non-blocking):**
-  the `"Album coherence"` detail/evidence print a real CLI-derived delta with a long
-  un-rounded float repr; apply `round(value, 2)` for display in a future packet.
-  Display-only — the planner-level tests use clean literals, so this does not affect
-  correctness, only the rendered text.
-- **Mean-derivation consolidation (P-011 candidate — from P-010 reviewer):**
-  `album.py:55-58` and `cli.py:367-370` now BOTH compute the album means (currently
-  byte-identical, which P-010's QA proved by matching coherence/outliers/verdict).
-  A future packet could have `album.py` optionally EMIT per-song deltas, retiring the
-  consumer-side recompute in `cli.py` and removing the duplication.
-- **Borderline-song taste fixture (from P-009 reviewer — non-blocking):** add a
-  fixture where the bounded taste nudge actually **flips the governed winner
-  through `analyze()`** end-to-end. Today the decision-level taste flip is proven
-  only at the P-007 unit level (`test_narrower_taste_changes_governed_winner`); on
-  the real fixtures driven through `analyze()` the dominant-variant margin exceeds
-  the bounded ±15 nudge, so no winner flip is observed end-to-end. A borderline
-  fixture would make the taste axis's production impact visible at the decision
-  level through the live path. Not its own large packet — a small additive test.
-- **Wider `--memory-dir` CLI surface (from P-009 reviewer — non-blocking):**
-  consider whether more analyze-class CLI commands (beyond `cowork`) should accept
-  `--memory-dir`. P-009 wired exactly one prod surface (`cowork.py:28`); the other
-  13 `analyze()` CLI call sites stay memoryless by design. Evaluate which, if any,
-  warrant the live wire.
+- **Borderline-song taste fixture (from P-009 reviewer — non-blocking, in
+  authority):** add a fixture where the bounded taste nudge actually **flips the
+  governed winner through `analyze()`** end-to-end. Today the decision-level taste
+  flip is proven only at the P-007 unit level
+  (`test_narrower_taste_changes_governed_winner`); on the real fixtures driven
+  through `analyze()` the dominant-variant margin exceeds the bounded ±15 nudge, so
+  no winner flip is observed end-to-end. A borderline fixture would make the taste
+  axis's production impact visible at the decision level through the live path. Not
+  its own large packet — a small additive test.
+- **Wider `--memory-dir` CLI surface (from P-009 reviewer — non-blocking; partly a
+  product question):** consider whether more analyze-class CLI commands (beyond
+  `cowork`) should accept `--memory-dir`. P-009 wired exactly one prod surface
+  (`cowork.py:28`); the other 13 `analyze()` CLI call sites stay memoryless by
+  design. Evaluate which, if any, warrant the live wire.
 - **Low-priority test cleanup (from P-008):** `test_evidence_only_on_moved_candidates`
   in `tests/test_next_pass_history.py` has a redundant always-true inner guard;
   tidy when convenient. **Not its own packet** — fold into any future touch of
@@ -54,24 +61,39 @@
 - **Controlled Class-3 apply path** — guardrail-gated; do not open without an
   explicit apply-safety packet.
 
-## Re-ranked strategic candidates (cross-song coherence axis now OPEN)
+## Re-ranked strategic candidates (in-authority deck-clearing now drained)
 
-> The learning loop is real in production (P-007→P-008→P-009) AND the cross-song
-> coherence axis is open (P-010). The leading trajectory candidate is now deeper
-> creative scoring. For orchestrator re-survey:
+> The learning loop is real in production (P-007→P-008→P-009), the cross-song
+> coherence axis is open (P-010), and the album-means truth is now single-sourced
+> (P-011). The clean in-authority work is drained — the next real move is the
+> user's aesthetic call. For orchestrator re-survey:
 
-- **Deeper creative scoring (LEADING candidate)** — `creative.py::_KIND_SCORES` is
-  hardcoded (verified NOT golden-blocked). Richer, evidence-driven kind-scoring is
-  the leading net-new strategic direction now that coherence is open.
-- **`album.py` delta consolidation (P-011 candidate)** — retire the duplicate mean
-  computation between `album.py:55-58` and `cli.py:367-370` by having `album.py`
-  emit per-song deltas (see Deferred above).
-- Loop-polish follow-ups (borderline taste fixture, wider `--memory-dir` surface)
-  and the CLI float-rounding cosmetic (see Deferred above).
+- **★ Deeper creative scoring (LEADING candidate — BLOCKED on user a/b/c):** see
+  the **OPEN USER DECISION** block at the top of this file. Golden-unguarded +
+  curated aesthetic → the user must pick the path before any packet opens.
+- Loop-polish follow-ups (borderline taste fixture, wider `--memory-dir` surface —
+  see Deferred above) remain the small in-authority moves available.
 - Net-new **event-logging** producers remain behind the product decision.
 
 ## Done (resolved)
 
+- **Album delta consolidation / mean-derivation consolidation (P-011 candidate)**
+  — **DONE via P-011**
+  (`build-os/receipts/P-011-album-delta-consolidation.md`).
+  **The two-place album-means truth is killed — single-sourced in `album.py`.**
+  `album.py::analyze_album` additively emits per-song `brightness_delta` /
+  `lufs_delta` (from the means it already computes); `cli.py::_run_album` consumes
+  them and the duplicate `statistics.mean` recompute block (and the now-unused
+  `import statistics`) is removed. VALUE-IDENTITY proven exact (emitted deltas ==
+  `song − statistics.mean(non-None)` for all 3 fixtures, 0 mismatches; the `album`
+  report's `coherence_score` / `outliers` / `verdict` unchanged). Commit-1
+  `effccd0`; suite 155→**159**; regression 68/68 held; Commit-1 green in isolation.
+- **CLI advisory float rounding (cosmetic, from P-010 reviewer)** — **DONE via
+  P-011 Commit-2** (`build-os/receipts/P-011-album-delta-consolidation.md`).
+  `next_pass_planner.py::_album_outlier_item` now applies `round(value, 2)` to the
+  `"Album coherence"` **DISPLAY** delta text. **Display-only** — the outlier
+  threshold logic still uses full precision (`0.151` trips `0.15`). Commit-2
+  `ea9bebf`; 4 float-round tests in `tests/test_album_context.py`.
 - **Album cross-song coherence** — **DONE via P-010**
   (`build-os/receipts/P-010-album-context-into-planning.md`).
   **MILESTONE — the cross-song coherence axis is now OPEN.** `analyze()` gained an
@@ -81,12 +103,11 @@
   next-pass item at priority 45 (below every truth move — can never outrank Vocal),
   via a pure `_album_outlier_item`. The `album` CLI is now two-pass (pass 1 = album
   means via `analyze_album`; pass 2 = re-run each song with its derived delta) so
-  the album report shows album-aware per-song guidance. **`album.py` is NOT
-  modified** (delta derived in the consumer, `cli.py`). Default
-  (`album_context=None`) is BYTE-IDENTICAL. **A song's plan now reflects its album
-  siblings — the product is no longer strictly song-isolated.** Commits `dc61f20`
-  (planner+pipeline+test, 10 tests) and `9ebd4ee` (CLI two-pass+test, 2 tests);
-  suite 143→**155**; regression 68/68 held; Commit-1 green in isolation.
+  the album report shows album-aware per-song guidance. **A song's plan now
+  reflects its album siblings — the product is no longer strictly song-isolated.**
+  Commits `dc61f20` (planner+pipeline+test, 10 tests) and `9ebd4ee` (CLI two-pass+
+  test, 2 tests); suite 143→**155**; regression 68/68 held; Commit-1 green in
+  isolation. NOTE: P-010 left the album means in two places — **resolved by P-011**.
 - **Richer variant→track attribution** — **DONE via P-001**
   (`build-os/receipts/P-001-resolve-variant-track-attribution.md`).
 - **Net-new `EVENT_TYPES` decision-ledger vocabulary** — **DONE via P-002**
@@ -235,14 +256,15 @@
 
 ## Open boundaries (awaiting explicit go)
 
-- **P-010's product commits `dc61f20` + `9ebd4ee` are local-only as of this close**
-  (this archivist close did not push). **P-009's product commit `27bfebf` is also
-  local-only.** Earlier packets' push history: P-000 install commits are pushed to
+- **P-011's product commits `effccd0` + `ea9bebf` are local-only as of this close**
+  (this archivist close did not push). Earlier local-only product commits also
+  remain: **`27bfebf`** (P-009), **`dc61f20` + `9ebd4ee`** (P-010). Earlier
+  packets' push history: P-000 install commits are pushed to
   `origin/claude/logic-mix-os-hardening-12-7hbeh1`; P-004 is pushed (PR #13). Any
-  push of `dc61f20` / `9ebd4ee` / `27bfebf` (and the P-005/P-006/P-007/P-008
-  commits, if not yet pushed) updates the already-open **PR #13** (base
-  `claude/dreamy-turing-z0oxll`) — do so only under the user's standing/explicit
-  push-go. No merge / deploy / secret action taken.
+  push of `effccd0` / `ea9bebf` / `dc61f20` / `9ebd4ee` / `27bfebf` (and the
+  P-005/P-006/P-007/P-008 commits, if not yet pushed) updates the already-open
+  **PR #13** (base `claude/dreamy-turing-z0oxll`) — do so only under the user's
+  standing/explicit push-go. No merge / deploy / secret action taken.
 
 ---
 _Append-only working notes._

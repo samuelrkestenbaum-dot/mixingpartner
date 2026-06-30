@@ -11,62 +11,68 @@
   layer). Not an auto-mixer, preset generator, or mastering tool. All product
   code lives under `logic-mix-os/`.
 - **Primary branch / base:** default branch `claude/dreamy-turing-z0oxll` @
-  `694d19d`; active dev branch `claude/logic-mix-os-hardening-12-7hbeh1` (P-010
-  product base `ed9e875`; P-010 product commits `dc61f20` + `9ebd4ee` local-only).
+  `694d19d`; active dev branch `claude/logic-mix-os-hardening-12-7hbeh1`
+  (P-011 product base `111f115`; P-011 product commits `effccd0` + `ea9bebf`
+  local-only).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression`.
-- **Green baseline (verified 2026-06-29):** suite **155 passed** (0 failed /
+- **Green baseline (verified 2026-06-29):** suite **159 passed** (0 failed /
   skipped / warnings); regression **68/68** (0 critical / 0 warnings).
 
 ## Where we are
 
-- **MILESTONE — THE CROSS-SONG COHERENCE AXIS IS NOW OPEN.** With **P-010**, a
-  song's plan (via the `album` command) now reflects its album siblings:
-  album-aware per-song guidance, opt-in / bounded / evidence-tagged. The `album`
-  CLI runs two passes (pass 1 = album means; pass 2 = re-run each song with its
-  delta) so an album-outlier song receives ONE advisory `"Album coherence"`
-  next-pass item at priority 45 (below every truth move — can never outrank
-  Vocal). **The product is no longer strictly song-isolated.** `album.py` itself
-  is unchanged (the per-song delta is derived in the consumer, `cli.py`).
+- **THE ALBUM-MEANS TRUTH IS NOW SINGLE-SOURCED.** With **P-011**, the album
+  means live in exactly ONE place: `album.py::analyze_album` additively emits
+  per-song `brightness_delta` / `lufs_delta` (from the means it already computes)
+  and `cli.py::_run_album` consumes them. The duplicate `statistics.mean`
+  recompute (and the now-unused `import statistics`) that P-010 left in `cli.py`
+  is gone — the two-place drift risk is killed. The `album` report stays
+  value-identical (`coherence_score` / `outliers` / `verdict` unchanged); the only
+  changed output is a deliberate display-only float-round of the
+  `"Album coherence"` delta text (threshold logic still full-precision).
+- **MILESTONE (still standing) — THE CROSS-SONG COHERENCE AXIS IS OPEN.** Via
+  **P-010**, a song's plan (through the `album` command) reflects its album
+  siblings: album-aware per-song guidance, opt-in / bounded / evidence-tagged. An
+  album-outlier song receives ONE advisory `"Album coherence"` next-pass item at
+  priority 45 (below every truth move — can never outrank Vocal). **The product is
+  no longer strictly song-isolated.**
 - **MILESTONE (still standing) — THE LEARNING LOOP IS REAL IN PRODUCTION.** The
   full arc **P-007 (consumer) → P-008 (outcome) → P-009 (live wire)** is closed
   end-to-end: a real `cowork --memory-dir` run both **learns** (records →
   history-aware next pass) and **personalizes** (taste → governance).
-- **Last closed packet:** **P-010** — Album context into per-song planning
-  (opt-in, bounded, evidence-tagged). `analyze()` gained an opt-in
-  `album_context: {brightness_delta, lufs_delta}`; an album-outlier song
-  (thresholds 0.15 brightness / 3 LUFS, verbatim from `album.py:61,63`, not
-  imported) gets ONE `"Album coherence"` item at priority 45 via a pure
-  `_album_outlier_item`. The `album` CLI is now two-pass. Commit-1 `dc61f20`
-  (`next_pass_planner.py` + `pipeline.py` passthrough + `tests/test_album_context.py`
-  new = 10 tests); Commit-2 `9ebd4ee` (`cli.py` two-pass + `import statistics` +
-  `tests/test_cli.py` new = 2 tests). Suite 143→**155**; regression 68/68 held;
-  **default path BYTE-IDENTICAL** (full `ProjectAnalysis` 91,406==91,406 chars, no
-  `"Album coherence"` on the default path); Commit-1 green in isolation (153
-  passed at `dc61f20`); CLI two-pass flags BOTH real outliers
-  (`simple_vocal_piano_song` −0.289, `splice_loop_problem` +0.167) with
-  coherence/outliers/verdict matching single-pass `analyze_album`. Reviewer:
-  **pass** (priority 45 proven safe — 6th-ranked behind 5 native moves → dropped;
-  CLI means byte-identical to `album.py:55-58`; thresholds verbatim + strict `>`;
-  invariant-safe; deterministic; Codex not available). Receipt:
-  `build-os/receipts/P-010-album-context-into-planning.md`.
+- **Last closed packet:** **P-011** — Album delta consolidation (mechanical
+  refactor; golden-safe). `album.py::analyze_album` additively emits per-song
+  `brightness_delta` / `lufs_delta`; `cli.py::_run_album` consumes them and drops
+  the duplicate mean recompute + `import statistics`; `next_pass_planner.py`
+  rounds the `"Album coherence"` DISPLAY delta (display-only). Commit-1 `effccd0`
+  (album.py emit + cli.py consume + provenance test in `tests/test_cli.py`),
+  Commit-2 `ea9bebf` (float-round + 4 tests in `tests/test_album_context.py`).
+  Suite 155→**159**; regression 68/68 held; Commit-1 green in isolation
+  (`effccd0`: 156 passed, 13 targeted, 68/68); **VALUE-IDENTITY proven exact**
+  (emitted deltas == `song − statistics.mean(non-None)` for all 3 fixtures, 0
+  mismatches; outlier threshold still full-precision — `0.151` trips `0.15`);
+  scope = exactly 5 files; `creative`/`governance`/`memory`/`pipeline` untouched;
+  safety grep none; UI N/A. Reviewer: **pass** (consolidation exact + additive;
+  value-identity pinned; float-round display-only; kills the two-place
+  album-means drift risk; Codex not available). Receipt:
+  `build-os/receipts/P-011-album-delta-consolidation.md`.
 - **Now:** **none active.** No product packet in flight.
-- **Next:** orchestrator **re-survey** — user is driving via "skate to where the
-  puck." Re-ranked candidates:
-  - **Deeper creative scoring** — `creative.py::_KIND_SCORES` is hardcoded
-    (verified NOT golden-blocked); now the **leading** trajectory candidate.
-  - **`album.py` delta consolidation (P-011 candidate)** — `album.py:55-58` and
-    `cli.py:367-370` both compute album means (byte-identical today); have
-    `album.py` optionally EMIT per-song deltas and retire the consumer recompute.
-  - **CLI advisory float rounding (cosmetic, from P-010 reviewer)** — `round(value,
-    2)` for the `"Album coherence"` detail/evidence display.
-  - **Loop-strengthening follow-ups (from P-009 reviewer):** a borderline-song
-    taste fixture that flips the governed winner *through `analyze()`*; a wider
-    `--memory-dir` CLI surface beyond `cowork`.
-  - Net-new **event-logging** producers (`taste_feedback` / `validation_check`)
-    remain behind the product decision.
+- **Next — THE CLEAN IN-AUTHORITY DECK-CLEARING WORK IS NOW DRAINED. The next
+  decision is the USER'S.** The leading trajectory candidate, **deeper creative
+  scoring** (`creative.py::_KIND_SCORES`), is **BLOCKED ON A USER AESTHETIC
+  DECISION** — the table is a curated Halee/Ramone prior and the variant-scoring
+  path is golden-unguarded (a bad change is silent). The user must pick:
+  - **(a)** leave the table as-is;
+  - **(b)** a bounded, evidence-tagged nudge layer ON TOP of the table
+    (generalizing the `width_bloom −8`, capped so it never overturns the base),
+    which the user reviews before ship; or
+  - **(c)** a fuller song-derived rescoring.
+  Do NOT open a creative-scoring packet until the user chooses a/b/c. Remaining
+  in-authority follow-ups (borderline-song taste fixture flipping the governed
+  winner through `analyze()`; wider `--memory-dir` CLI surface — partly a product
+  question) and net-new event-logging producers (product decision) stay deferred.
 
 ## Stable facts (slow-changing)
 
@@ -84,4 +90,4 @@
   explicit go.
 
 ---
-_Updated by the archivist on close. Last advanced on P-010 close (2026-06-29)._
+_Updated by the archivist on close. Last advanced on P-011 close (2026-06-29)._
