@@ -143,6 +143,31 @@ def test_narrower_taste_lowers_width_bloom_identity_bounded():
     assert "width_bloom" in line
 
 
+def test_narrower_taste_lowers_drum_room_bloom_identity_bounded():
+    """Symmetric to the width_bloom case: the narrower-taste statement also maps
+    ``drum_room_bloom -> -TASTE_MAX_DELTA`` (governance._TASTE_KIND_BIAS), so it
+    must down-weight a drum_room_bloom variant's identity, bounded, with an
+    evidence line naming the kind. Closes the P-007 residue test gap."""
+    v = _variant("chorus_lift_D", "drum_room_bloom", "Drum Room Bloom",
+                 taste=70, overall=90.0)
+    no_profile = govern_variant(copy.deepcopy(v), [], "neutral")
+    with_profile = govern_variant(
+        copy.deepcopy(v), [], "neutral",
+        taste_profile=["tends to prefer narrower stereo images"],
+    )
+
+    base_id = no_profile["taste_triangle"]["identity"]
+    new_id = with_profile["taste_triangle"]["identity"]
+    assert new_id < base_id
+    assert base_id - new_id <= TASTE_MAX_DELTA
+    # Evidence line present, names the reason and the kind.
+    adj = with_profile["taste_adjustments"]
+    assert adj, "expected a taste_adjustments evidence line"
+    line = " ".join(adj).lower()
+    assert "adjusted for operator taste" in line
+    assert "drum_room_bloom" in line
+
+
 def test_narrower_taste_changes_governed_winner():
     intent = _intent()
 
