@@ -4,34 +4,38 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** none active
+- **Status:** NONE ACTIVE
 - **Packet id:** —
 - **Title:** —
 
+No product packet in flight. The orchestrator stages the next one here.
+
 ## Last closed
 
-- **P-012 — Creative-scoring evidence-nudge layer (option B, penalty-only)** —
-  CLOSED 2026-06-29. Receipt:
-  `build-os/receipts/P-012-creative-scoring-nudge-layer.md`. Single product
-  commit `0df436c` (local-only). A bounded, transparent, capped, penalty-only
-  evidence-nudge layer ON TOP of the curated `_KIND_SCORES` (values unchanged):
-  `vocal_belief −8` on masked vocal / `vocal_belief −6` on `width_crowding`,
-  summed overall delta clamped to `±2.0`, `score_nudges` emitted only on fire.
-  Suite 159→**202**; regression **68/68** held; reviewer **pass** (adversarially
-  proven). **Deliberately NOT byte-identical when a nudge fires — awaiting the
-  user's sign-off at the PR #13 merge.**
-
-## Next (staged — not yet active)
-
-- No product packet in flight. The creative-scoring aesthetic decision is
-  resolved (option B shipped). Candidate next moves (see `residue.md`):
-  - **Reward nudges (orchestrator rows 3+4)** — additive promotion nudges on
-    `crowded_sections`; **user-gated** (P-012 is penalty-only by choice).
-  - **Option-B-visibility fixtures** — a near-tie creative fixture (P-012) and the
-    borderline taste fixture (P-009) through `analyze()`; small in-authority tests.
-  - **Wider `--memory-dir` CLI surface** (partly product); net-new
-    **event-logging** producers (behind a product decision) — both deferred.
-- Route any next packet via the build-orchestrator before starting.
+- **P-015 — Make the masked-vocal nudge DECISIVE (user-signed-off aesthetic
+  change).** Closed 2026-06-30. The deliberate, user-gated successor to P-012 and
+  the resolution of the P-014 user-gated decision: it changes the default creative
+  winner on a masked-lead-vocal near-tie. The user chose "Option 1 — Proceed,
+  corrected" after the orchestrator transparently corrected an arithmetic error
+  (the old `−8` penalty only moves overall `−1.14`, insufficient to flip; the
+  corrected mechanism strengthens to `−14`). **Single product commit `1756f61`**
+  (product change + updated/new tests together so Commit-1 is green in isolation):
+  `creative.py` `_NUDGE_TABLE` row-0 ONLY — exempt `intimacy_pass`, strengthen
+  `−8`→`−14` (`= −2.0` overall = the cap, unchanged), honest reason + doctrine
+  comment + corrected stale clamp comment. Net effect in the `vocal_belief` branch
+  under a masked lead vocal: `vocal_ride` (vocal_A) 82.9 → 80.9 (cap binds);
+  `intimacy_pass` (vocal_B) 81.1 unchanged (exempt) → **winner FLIPS vocal_ride →
+  intimacy_pass** by 0.2. Bounded — `subtractive_drop` (85.3) still wins every
+  clear-ranking branch; only `vocal_belief` flips. Suite **207 → 217 passed**;
+  regression **68/68, 0 critical, 0 warnings** held; Commit-1 green in isolation;
+  safety grep clean; UI N/A. qa **GREEN**; reviewer **pass** (independently
+  reproduced the arithmetic + a mutation test confirming non-vacuity — reverting
+  both edits turned 5 binding tests RED, the negative control stayed GREEN);
+  **Codex NOT available — single-reviewer verdict.** **Local-only** (product commit
+  `1756f61` on the dev branch on top of `0f4e7e9`), not pushed/merged at close (the
+  orchestrator pushes the dev branch after). Receipt:
+  `build-os/receipts/P-015-decisive-masked-vocal-nudge.md`.
 
 ---
-_Cleared by the archivist on P-012 close (2026-06-29). One packet at a time._
+_Cleared by the archivist on P-015 close (2026-06-30). One packet at a time._
+</content>
