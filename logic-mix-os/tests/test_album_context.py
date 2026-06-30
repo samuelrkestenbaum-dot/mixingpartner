@@ -176,3 +176,49 @@ def test_negative_brightness_outlier_signs_correctly(analyzed):
     item = items[0]
     assert "-0.4" in item["evidence"]
     assert "-0.4" in item["detail"]
+
+
+# --------------------------------------------------------------------------- #
+# (f) Cosmetic float-round (P-011 Commit-2): a long real-float delta renders
+#     rounded to 2 dp in detail/evidence, while the outlier LOGIC still uses the
+#     full-precision delta (threshold comparison unrounded).
+# --------------------------------------------------------------------------- #
+def test_long_float_brightness_delta_renders_rounded(analyzed):
+    res = analyzed["splice_loop_problem"]
+    # A realistic CLI-derived float (e.g. song - statistics.mean(...)) that the
+    # old code would have rendered as a long repr like ``0.2866666...``.
+    ctx = {"brightness_delta": 0.28666666666666663, "lufs_delta": None}
+    plan = _plan(res, album_context=ctx)
+    items = _coherence_items(plan)
+    assert len(items) == 1
+    item = items[0]
+
+    # The DISPLAY is rounded to 2 dp (+0.29), never the long repr.
+    assert "+0.29" in item["detail"]
+    assert "+0.29" in item["evidence"]
+    assert "0.2866" not in item["detail"]
+    assert "0.2866" not in item["evidence"]
+
+
+def test_long_float_lufs_delta_renders_rounded(analyzed):
+    res = analyzed["splice_loop_problem"]
+    ctx = {"brightness_delta": None, "lufs_delta": 3.144444444444445}
+    plan = _plan(res, album_context=ctx)
+    items = _coherence_items(plan)
+    assert len(items) == 1
+    item = items[0]
+    assert "+3.14" in item["detail"]
+    assert "+3.14" in item["evidence"]
+    assert "3.1444" not in item["detail"]
+    assert "3.1444" not in item["evidence"]
+
+
+def test_outlier_logic_uses_full_precision_not_rounded(analyzed):
+    res = analyzed["splice_loop_problem"]
+    # 0.151 > 0.15 threshold on the FULL-precision value, but rounds to 0.15.
+    # If the threshold compared the rounded display (0.15) it would NOT trip;
+    # it must trip because the logic uses the full-precision delta.
+    ctx = {"brightness_delta": 0.151, "lufs_delta": None}
+    plan = _plan(res, album_context=ctx)
+    items = _coherence_items(plan)
+    assert len(items) == 1, "full-precision 0.151 must exceed the 0.15 threshold"

@@ -80,9 +80,14 @@ def _album_outlier_item(album_context: Dict) -> Optional[Tuple[int, Dict]]:
         value = bd
         threshold = ALBUM_BRIGHTNESS_OUTLIER
         direction = "brighter" if bd > 0 else "darker"
+        # DISPLAY ONLY: round the signed delta to 2 dp so a real CLI-derived float
+        # (e.g. 0.2866…) renders as +0.29, not a long repr. The outlier LOGIC above
+        # (``bright_trips``) compares the FULL-precision ``bd``; only this text is
+        # rounded.
+        shown = round(value, 2)
         detail = (
-            f"This song sits {value:+} {direction} than the album average "
-            f"({field}={value:+}). Consider matching the record's tonal centre — "
+            f"This song sits {shown:+} {direction} than the album average "
+            f"({field}={shown:+}). Consider matching the record's tonal centre — "
             f"a gentle high-shelf / match-EQ toward the album, reversibly, before "
             f"committing."
         )
@@ -91,9 +96,12 @@ def _album_outlier_item(album_context: Dict) -> Optional[Tuple[int, Dict]]:
         value = ld
         threshold = ALBUM_LUFS_OUTLIER
         direction = "louder" if ld > 0 else "quieter"
+        # DISPLAY ONLY: see the brightness branch — ``loud_trips`` compares the
+        # full-precision ``ld``; the rendered text rounds to 2 dp.
+        shown = round(value, 2)
         detail = (
-            f"This song sits {value:+} LU {direction} than the album average "
-            f"({field}={value:+}). Consider matching the record's loudness centre — "
+            f"This song sits {shown:+} LU {direction} than the album average "
+            f"({field}={shown:+}). Consider matching the record's loudness centre — "
             f"adjust the bus/output level toward the album, reversibly, before "
             f"committing."
         )
@@ -104,7 +112,7 @@ def _album_outlier_item(album_context: Dict) -> Optional[Tuple[int, Dict]]:
         "title": "Album coherence",
         "detail": detail,
         "evidence": (
-            f"album outlier: {field}={value:+} vs album mean "
+            f"album outlier: {field}={shown:+} vs album mean "
             f"(threshold {threshold})"
         ),
     }
