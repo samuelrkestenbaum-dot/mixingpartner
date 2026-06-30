@@ -25,6 +25,28 @@
 
 ## Where we are
 
+- **THE P-012 NUDGE IS A TRANSPARENCY-ONLY LAYER — IT CANNOT REORDER ANY
+  BRANCH (P-014, VERIFIED NEGATIVE FINDING).** P-014 set out to prove the
+  complement to P-013 — a genuine near-tie where the bounded nudge is
+  *decisive* and FLIPS the creative winner through `analyze()` within the ±2.0
+  cap. **It is structurally UNREACHABLE test-only under the current
+  `_KIND_SCORES` / `_NUDGE_TABLE` curation.** The builder wrote ZERO code
+  (honesty clause honored — no product change, no contrived fixture, no commit);
+  qa then adversarially tried to REFUTE it with THREE independent harnesses
+  (inline-math, real-`score_variant`, a saturated worst-case `masking_report`) —
+  **all 0 flips** — and re-derived the arithmetic from source. Two structural
+  reasons: (1) the **universal branch leader `subtractive_drop` (85.29) is in NO
+  nudge row → penalty-immune**, so the three branches it leads cannot reorder;
+  (2) the **one sub-cap near-tie branch `vocal_belief`** (`vocal_ride` 82.86 vs
+  `intimacy_pass` 81.14, gap 1.71) has its leader AND runner-up hit by the
+  **identical** row-0 `lead_masked −8`, preserving the gap. **Reframing
+  (headline):** the P-012 nudge moves the displayed governed `overall_score` and
+  emits `score_nudges` but **can never reorder a winner** — P-013's option-(a)
+  "cannot overturn a ranking" holds **UNIVERSALLY**, sharper than the P-012
+  sign-off ("cannot overturn a *clear* ranking"). **Not a defect** — the nudge
+  stays honest/bounded/penalty-only/evidence-tagged; its decisive-when-close
+  capability is *latent and unrealizable* without a user-gated curation change.
+
 - **THE P-012 CREATIVE NUDGE IS NOW PROVEN ON REAL DATA THROUGH `analyze()`.**
   With **P-013** (tests-only), the bounded penalty-only evidence-nudge layer
   shipped in P-012 is lifted from the unit level (hand-built `SimpleNamespace`) to
@@ -71,31 +93,30 @@
   "taste can never outrank a truth move," working as intended. The reachable taste
   claim is already proven on real data by
   `tests/test_live_wire.py::test_taste_axis_changes_governance`.
-- **Last closed packet:** **P-013** — Nudge-visibility fixture (tests-only). One
-  new file `tests/test_creative_nudge_visibility.py` (+154 lines, **5 tests**)
-  drives the P-012 creative nudge through the live `analyze()` path on
-  `dense_chorus_with_loops` (real `width_crowding` event → row-2 nudge fires).
-  Builder chose **option (a)**: the cap binds, the winner does NOT flip
-  (overall_score 75.7 → 74.9, movement −0.857 within ±2.0; winner stays
-  `chorus_lift_B`; base gap 9.6 > 2×2.0). Single tests-only commit `172cfd0` (no
-  product tree change). Suite 202→**207**; regression **68/68** held;
-  Commit-1 green in isolation (single tip commit; new file alone = 5 passed;
-  product tree unmodified); safety grep clean (only hit a no-DAW docstring); UI
-  N/A. Reviewer: **pass** — independent negative control (disarmed `_apply_nudges`
-  → 3 of 5 fail, so assertions are load-bearing), independently recomputed the
-  option-(a) numbers, confirmed the Fixture #2 re-scope sound. **Codex NOT
-  available — single-reviewer verdict.** Fixture #2 (taste-flip through `analyze()`)
-  re-scoped to a positive alignment finding (structurally unreachable test-only —
-  user-gated to a product change). Receipt:
-  `build-os/receipts/P-013-nudge-visibility-fixture.md`.
+- **Last closed packet:** **P-014** — Near-tie-creative-FLIP fixture, closed as a
+  **VERIFIED NEGATIVE FINDING** (no product code, no product/test commit). The
+  builder wrote ZERO code (honesty clause); qa adversarially CONFIRMED
+  unreachability via three independent harnesses (all 0 flips) + a source
+  re-derivation. **Suite 207 passed UNCHANGED; regression 68/68 held.**
+  Commit-1-in-isolation N/A (no commit); `creative.py` unchanged since P-012
+  (`0df436c`); working tree clean; safety grep N/A. qa verdict **GREEN — FINDING
+  CONFIRMED**; **Codex not available — single-reviewer verdict.** Establishes the
+  transparency-only reframing above and surfaces the user-gated
+  "make-the-nudge-decisive (curation change)" packet. HEAD `596174d` (only the
+  P-014 active-packet confirmation commit; no product change). Receipt:
+  `build-os/receipts/P-014-near-tie-creative-flip-fixture.md`.
 - **Now:** **none active.** No product packet in flight.
 - **Next — the creative-scoring decision is resolved AND merged; P-013 proved it
   on real data. Remaining moves are small in-authority additives + user-gated
   follow-ups.** Candidates:
-  - **"Near-tie-creative-flip" fixture (NEW from P-013)** — a fixture where the
-    creative nudge actually FLIPS the winner through `analyze()` (a true near-tie,
-    distinct from P-013's no-flip option-(a) case). Reachable test-only, the
-    natural next increment. Small additive test, in authority.
+  - **"Make-the-nudge-decisive" (curation change) — USER-GATED, product packet
+    (replaces the old reachable "near-tie-creative-flip" candidate, now
+    P-014-RESOLVED-as-unreachable).** A near-tie flip cannot be reached test-only;
+    making the nudge decisive needs a product-code aesthetic change — e.g. split
+    row-0's `kinds` so `vocal_ride` is penalized but `intimacy_pass` is NOT (then
+    the `vocal_belief` 1.71-gap near-tie WOULD flip within the cap), or re-curate
+    `_KIND_SCORES` so a penalizable kind narrowly leads a non-equally-penalized
+    rival. **Do NOT open without the user asking.**
   - **Reward nudges (orchestrator rows 3+4)** — `depth_cleanup +6 halee` /
     `subtractive_drop +4 taste` on non-empty `crowded_sections`. Possible later
     ADDITIVE packet IF the user wants reward (promotion) nudges; P-012 is
@@ -127,10 +148,20 @@
   the identity axis (clamped ±15), maps only to `width_bloom`/`drum_room_bloom`, and
   is align-vetoed — so taste cannot reorder a truth-ranked governed winner on
   curated data. Working as intended.
+- **P-012 nudge is bounded BELOW any reordering (P-014-verified):** under the
+  current `_KIND_SCORES` / `_NUDGE_TABLE`, the nudge cannot reorder any branch.
+  The universal branch leader `subtractive_drop` (85.29) is in NO nudge row →
+  penalty-immune; the one sub-cap near-tie branch (`vocal_belief`) penalizes its
+  leader (`vocal_ride`) and runner-up (`intimacy_pass`) equally (identical row-0
+  `lead_masked −8`), preserving the gap. Verified by an exhaustive 3-harness,
+  0-flip refutation attempt + a source re-derivation. The nudge is therefore a
+  TRANSPARENCY/EVIDENCE layer (moves displayed `overall_score`, emits
+  `score_nudges`) — decisive-when-close is latent until a user-gated curation
+  change.
 - **Orchestration:** this repo runs Build OS at project scope (`.claude/` +
   `build-os/`). Route every task via the build-orchestrator; ≤2 commits/packet;
   Commit-1 green in isolation; STOP at any push/merge/deploy/secret boundary for
   explicit go.
 
 ---
-_Updated by the archivist on close. Last advanced on P-013 close (2026-06-30)._
+_Updated by the archivist on close. Last advanced on P-014 close (2026-06-30)._

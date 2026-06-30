@@ -31,12 +31,29 @@
   is non-empty — a possible later ADDITIVE packet IF the user wants reward
   (promotion) nudges. **Deferred** — P-012 is penalty-only by the user's
   recommended reading. Do NOT open without the user asking for reward nudges.
-- **Near-tie-creative-FLIP fixture (from P-013 — NEW, reachable, in authority):**
-  the option-(a) NO-FLIP visibility case is now DONE (P-013: the nudge fires on real
-  data through `analyze()` but the cap binds and the winner holds). The natural next
-  increment is a fixture where the creative nudge actually FLIPS the winner through
-  `analyze()` — a true near-tie, distinct from P-013's no-flip case. Reachable
-  test-only. Small additive test, future packet.
+- **Near-tie-creative-FLIP fixture — RESOLVED-as-UNREACHABLE (P-014 verified
+  negative finding).** This was the reachable-deferred complement to P-013's
+  no-flip case; **P-014 proved a flip is structurally UNREACHABLE test-only**
+  under the current `_KIND_SCORES` / `_NUDGE_TABLE`. The builder wrote ZERO code
+  (honesty clause); qa adversarially CONFIRMED with THREE independent harnesses
+  (inline-math, real-`score_variant`, saturated worst-case `masking_report`) —
+  **all 0 flips** — plus a source re-derivation. Two structural reasons: the
+  universal branch leader `subtractive_drop` (85.29) is in NO nudge row →
+  penalty-immune; the one sub-cap near-tie branch (`vocal_belief`, gap 1.71)
+  penalizes leader (`vocal_ride`) and runner-up (`intimacy_pass`) equally
+  (identical row-0 `lead_masked −8`). **No longer a reachable candidate** — it is
+  replaced by the user-gated curation packet directly below. Receipt:
+  `build-os/receipts/P-014-near-tie-creative-flip-fixture.md`. (The P-014
+  harnesses live in scratchpad — not committed.)
+- **Make-the-nudge-decisive (curation change) — USER-GATED, a PRODUCT packet
+  (DECISION, not a TODO; from P-014).** Making the P-012 nudge decisive on a
+  near-tie requires a **product-code aesthetic change**, so it is user-gated and
+  separate. Two concrete routes: (a) **split row-0's `kinds` set** so `vocal_ride`
+  is penalized but `intimacy_pass` is NOT — then the `vocal_belief` 1.71-gap
+  near-tie WOULD flip within the ±2.0 cap; or (b) **re-curate `_KIND_SCORES`** so a
+  penalizable kind narrowly leads a non-equally-penalized rival in some branch.
+  Until the user asks, the nudge stays **transparency-only** and the P-014 finding
+  documents the reality. **Do NOT open without the user asking.**
 - **Taste-flip through `analyze()` — STRUCTURALLY UNREACHABLE test-only
   (P-013 finding); a flip is USER-GATED to a product change.** P-013 tried to build
   a taste-driven governed-winner flip fixture and could NOT: the builder brute-forced
@@ -103,6 +120,36 @@
 - Net-new **event-logging** producers remain behind the product decision.
 
 ## Done (resolved)
+
+- **Near-tie-creative-FLIP fixture — RESOLVED as a VERIFIED NEGATIVE FINDING via
+  P-014** (`build-os/receipts/P-014-near-tie-creative-flip-fixture.md`). **No
+  product code, no product/test commit.** The goal — prove the P-012 nudge is
+  *decisive* and FLIPS the creative winner through `analyze()` on a genuine
+  near-tie within the ±2.0 cap — is **structurally UNREACHABLE test-only** under
+  the current `_KIND_SCORES` / `_NUDGE_TABLE`. The builder wrote ZERO code
+  (honesty clause honored); qa adversarially tried to REFUTE it with THREE
+  independent harnesses (builder inline-math + qa real-`score_variant` driver +
+  a saturated worst-case `masking_report` with every classification the analyzer
+  emits) — **all 0 flips** — and re-derived the arithmetic from source.
+  Structural proof: `overall = mean(7 dims) − risk_penalty{low0/med6/high14}`,
+  recomputed exactly as `score_variant`; base leaders are `generate_variants`
+  literals keyed on `problem['id']` (fixture-invariant across 4 record sets);
+  the **universal leader `subtractive_drop` (85.29) is penalty-immune** (in no
+  `_NUDGE_TABLE` row), so `chorus_lift` / `density` / `loop` cannot reorder, and
+  the **one sub-cap near-tie branch `vocal_belief`** (`vocal_ride` 82.86 vs
+  `intimacy_pass` 81.14, gap 1.71) has BOTH hit by the identical row-0
+  `lead_masked −8`, preserving the gap. **Headline reframing:** the P-012 nudge
+  is a TRANSPARENCY/EVIDENCE layer — it moves the displayed governed
+  `overall_score` and emits `score_nudges` but **can never reorder any branch**;
+  P-013's option-(a) "cannot overturn a ranking" holds UNIVERSALLY (sharper than
+  the P-012 "cannot overturn a *clear* ranking" framing). **Not a defect** — the
+  nudge stays honest/bounded/penalty-only/evidence-tagged; decisive-when-close is
+  latent until a user-gated curation change (see Deferred). **Suite 207 passed
+  UNCHANGED; regression 68/68 held.** Commit-1-in-isolation N/A; `creative.py`
+  unchanged since P-012 (`0df436c`); working tree clean; safety grep N/A.
+  qa verdict **GREEN — FINDING CONFIRMED**; **Codex not available — single-reviewer
+  verdict.** HEAD `596174d` (P-014 active-packet confirmation only; no product
+  change). The P-014 harnesses live in scratchpad (not committed).
 
 - **P-012 nudge proven on real data through `analyze()` (creative visibility
   fixture)** — **DONE via P-013**
@@ -336,6 +383,12 @@
 
 ## Open boundaries (awaiting explicit go)
 
+- **P-014 closed with NO product/test commit (verified negative finding).** Only
+  the build-os memory advance (this close) and the prior `596174d` active-packet
+  confirmation sit on the dev branch `claude/logic-mix-os-hardening-12-7hbeh1` on
+  top of the `0f4e7e9` merge. Nothing product-side to push. Any push, and any
+  subsequent PR / merge into the protected default, needs the user's explicit go.
+  No push / merge / deploy / secret action taken in this close.
 - **PR #13 is MERGED** (merge commit `0f4e7e9`) — the earlier local-only product
   commits (P-005…P-012: `0df436c`, `effccd0`, `ea9bebf`, `dc61f20`, `9ebd4ee`,
   `27bfebf`, etc.) are now landed on the default branch via that merge. That
