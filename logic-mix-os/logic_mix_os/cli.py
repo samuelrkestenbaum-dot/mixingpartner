@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import statistics
 import sys
 from pathlib import Path
 from typing import Optional
@@ -348,19 +347,19 @@ def _run_album(args) -> int:
     report = analyze_album(results, names)
 
     # Pass 2: re-run each song WITH its per-song delta vs the album means so the
-    # album report's per-song next-pass guidance is album-aware. Means are the
-    # mean of the non-None per-song values (mirrors album.py:57-58); a missing
-    # axis yields a None delta (skipped by the planner). This re-analysis is opt-in
-    # and additive — the pass-1 results above already drove the coherence report.
-    b_vals = [s["brightness"] for s in report["songs"] if s["brightness"] is not None]
-    l_vals = [s["lufs"] for s in report["songs"] if s["lufs"] is not None]
-    b_mean = statistics.mean(b_vals) if b_vals else None
-    l_mean = statistics.mean(l_vals) if l_vals else None
+    # album report's per-song next-pass guidance is album-aware. The deltas are
+    # single-sourced by ``analyze_album`` (it emits ``brightness_delta`` /
+    # ``lufs_delta`` per song from the same means its own outlier test uses); the
+    # consumer no longer recomputes them, so the two truths can never drift. A
+    # missing axis is a ``None`` delta (skipped by the planner). This re-analysis is
+    # opt-in and additive — the pass-1 results above already drove the coherence
+    # report.
     album_aware = []
     for sub, manifest, song in zip(dirs, manifests, report["songs"]):
-        bd = (song["brightness"] - b_mean) if (b_mean is not None and song["brightness"] is not None) else None
-        ld = (song["lufs"] - l_mean) if (l_mean is not None and song["lufs"] is not None) else None
-        ctx = {"brightness_delta": bd, "lufs_delta": ld}
+        ctx = {
+            "brightness_delta": song["brightness_delta"],
+            "lufs_delta": song["lufs_delta"],
+        }
         album_aware.append(analyze(str(sub / "stems"), manifest, album_context=ctx))
     report["per_song_next_pass"] = [
         {"name": n, "next_pass": r.mix_plan["next_pass"]}

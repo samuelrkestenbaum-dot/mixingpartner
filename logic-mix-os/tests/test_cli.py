@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import json
 import pathlib
+import statistics
 
 import pytest
 
@@ -31,6 +32,55 @@ FIXTURE_NAMES = [
     "dense_chorus_with_loops",
     "splice_loop_problem",
 ]
+
+
+def test_album_emitted_deltas_match_prior_cli_recompute(_ensure_fixtures):
+    """Provenance: ``album.py``'s emitted per-song deltas equal the value the old
+    ``cli.py`` block computed (``song - statistics.mean(non-None values)``).
+
+    P-011 single-sources the album means: ``analyze_album`` now emits each song's
+    ``brightness_delta`` / ``lufs_delta`` and ``cli.py`` consumes them instead of
+    recomputing ``statistics.mean``. This pins that the consolidation is EXACT —
+    the emitted delta is byte-identical to what the consumer derived before.
+    """
+    from logic_mix_os.album import analyze_album
+    from logic_mix_os.pipeline import analyze
+    from logic_mix_os.project import load_manifest
+
+    results, names = [], []
+    for sub in sorted(FIXTURES.iterdir()):
+        mp = sub / "project_manifest.json"
+        if mp.exists():
+            m = load_manifest(mp)
+            results.append(analyze(str(sub / "stems"), m))
+            names.append(sub.name)
+
+    report = analyze_album(results, names)
+    songs = report["songs"]
+
+    # The independent ("old cli.py") recompute over the same source dicts.
+    b_vals = [s["brightness"] for s in songs if s["brightness"] is not None]
+    l_vals = [s["lufs"] for s in songs if s["lufs"] is not None]
+    b_mean = statistics.mean(b_vals) if b_vals else None
+    l_mean = statistics.mean(l_vals) if l_vals else None
+
+    for s in songs:
+        # album.py now emits these keys additively.
+        assert "brightness_delta" in s
+        assert "lufs_delta" in s
+
+        expected_bd = (
+            (s["brightness"] - b_mean)
+            if (b_mean is not None and s["brightness"] is not None)
+            else None
+        )
+        expected_ld = (
+            (s["lufs"] - l_mean)
+            if (l_mean is not None and s["lufs"] is not None)
+            else None
+        )
+        assert s["brightness_delta"] == expected_bd, s["name"]
+        assert s["lufs_delta"] == expected_ld, s["name"]
 
 
 def test_album_command_emits_album_aware_per_song_guidance(tmp_path, capsys, _ensure_fixtures):

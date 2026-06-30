@@ -57,6 +57,22 @@ def analyze_album(results: List, names: Optional[List[str]] = None) -> Dict:
     b_mean = statistics.mean(bvals) if bvals else None
     l_mean = statistics.mean(lvals) if lvals else None
     for s in songs:
+        # Single-source the cross-song deltas: emit each song's signed delta vs the
+        # album means alongside the outlier check that already uses them. ``None``
+        # when the metric or its mean is unavailable (mirrors the outlier guards
+        # below). Additive keys — existing output stays a strict superset, so the
+        # consumer (cli.py) no longer has to recompute ``statistics.mean``.
+        s["brightness_delta"] = (
+            (s["brightness"] - b_mean)
+            if (b_mean is not None and s["brightness"] is not None)
+            else None
+        )
+        s["lufs_delta"] = (
+            (s["lufs"] - l_mean)
+            if (l_mean is not None and s["lufs"] is not None)
+            else None
+        )
+
         reasons = []
         if b_mean is not None and s["brightness"] is not None and abs(s["brightness"] - b_mean) > 0.15:
             reasons.append("brightness" if s["brightness"] > b_mean else "darkness")
