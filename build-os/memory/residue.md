@@ -15,9 +15,13 @@
   `width_bloom`), the summed overall delta clamped to `±2.0`, `score_nudges`
   emitted only on fire. It DELIBERATELY changes default scoring when a nudge fires
   but provably cannot overturn a clear base ranking (cap 2.0 < 2.4–4.2 base gaps).
-  **NOTE: this is on the UNMERGED PR #13, awaiting the user's sign-off before merge
-  — it's the user's reviewed aesthetic change.** Receipt:
-  `build-os/receipts/P-012-creative-scoring-nudge-layer.md`. (Options (a) leave
+  **NOW MERGED to default via PR #13 (merge commit `0f4e7e9`)** — the user's
+  reviewed aesthetic change is live. **P-013 (tests-only) then proved the nudge
+  fires on REAL DATA through the live `analyze()` path** (`dense_chorus_with_loops`
+  emits a real `width_crowding` event → row-2 nudge fires; overall_score
+  75.7→74.9; winner unchanged — option (a)), closing the golden-unguarded gap.
+  Receipts: `build-os/receipts/P-012-creative-scoring-nudge-layer.md`,
+  `build-os/receipts/P-013-nudge-visibility-fixture.md`. (Options (a) leave
   as-is and (c) fuller song-derived rescoring were NOT chosen.)
 
 ## Deferred (follow-up packets)
@@ -27,21 +31,30 @@
   is non-empty — a possible later ADDITIVE packet IF the user wants reward
   (promotion) nudges. **Deferred** — P-012 is penalty-only by the user's
   recommended reading. Do NOT open without the user asking for reward nudges.
-- **Borderline near-tie fixture (from P-012 — NEW, informational, in authority):**
-  a fixture that demonstrates an INTENDED near-tie flip through `analyze()` would
-  make the option-B behavior visible on real data (today the layer fires but
-  overturns nothing on the 3 fixtures — row 2 fires on the LOSING variant; row 1
-  never fires). Small additive test, future packet.
-- **Borderline-song taste fixture (from P-009 reviewer — non-blocking, in
-  authority):** add a fixture where the bounded taste nudge actually **flips the
-  governed winner through `analyze()`** end-to-end. Today the decision-level taste
-  flip is proven only at the P-007 unit level
-  (`test_narrower_taste_changes_governed_winner`); on the real fixtures driven
-  through `analyze()` the dominant-variant margin exceeds the bounded ±15 nudge, so
-  no winner flip is observed end-to-end. A borderline fixture would make the taste
-  axis's production impact visible at the decision level through the live path. Not
-  its own large packet — a small additive test. (Pairs naturally with the P-012
-  near-tie fixture above.)
+- **Near-tie-creative-FLIP fixture (from P-013 — NEW, reachable, in authority):**
+  the option-(a) NO-FLIP visibility case is now DONE (P-013: the nudge fires on real
+  data through `analyze()` but the cap binds and the winner holds). The natural next
+  increment is a fixture where the creative nudge actually FLIPS the winner through
+  `analyze()` — a true near-tie, distinct from P-013's no-flip case. Reachable
+  test-only. Small additive test, future packet.
+- **Taste-flip through `analyze()` — STRUCTURALLY UNREACHABLE test-only
+  (P-013 finding); a flip is USER-GATED to a product change.** P-013 tried to build
+  a taste-driven governed-winner flip fixture and could NOT: the builder brute-forced
+  all 3 fixtures × 4 intents with a narrower-taste `ProjectMemory` and found NO
+  governed-winner flip anywhere. **This is a POSITIVE alignment confirmation, not a
+  gap** — reviewer-verified in source: `_apply_taste` (governance.py) moves only the
+  `taste_triangle` **identity** axis (clamped ±`TASTE_MAX_DELTA 15`), maps only to
+  `width_bloom`/`drum_room_bloom` (`_TASTE_KIND_BIAS`), and the governed winner is
+  ranked on `overall_score` behind an **align-veto**, so **taste structurally cannot
+  reorder a truth-ranked winner** (doctrine: "taste can never outrank a truth move,"
+  working as intended). The unit "flip" in `test_governance_taste.py` only works
+  because it hand-injects branch values curated scoring never produces. **The
+  reachable end-to-end taste claim (taste reaches governance + down-weights identity
+  with bounded evidence) is ALREADY proven on real data** by
+  `tests/test_live_wire.py::test_taste_axis_changes_governance`. Making a real
+  governed-winner flip reachable would need a product-code aesthetic change →
+  **user-gated, a separate packet** (distinct from the reachable near-tie-creative
+  FLIP fixture above).
 - **Wider `--memory-dir` CLI surface (from P-009 reviewer — non-blocking; partly a
   product question):** consider whether more analyze-class CLI commands (beyond
   `cowork`) should accept `--memory-dir`. P-009 wired exactly one prod surface
@@ -81,13 +94,43 @@
 
 - **Reward nudges (orchestrator rows 3+4)** — the natural ADDITIVE follow-on to
   P-012's penalty-only layer, but **user-gated** (the user chose penalty-only).
-- **Option-B-visibility fixtures** — near-tie creative fixture (P-012) +
-  borderline taste fixture (P-009) — small in-authority additive tests that make
-  the bounded nudge axes visible on real data through `analyze()`.
+- **Option-B-visibility fixtures** — the CREATIVE half is **DONE via P-013**
+  (the nudge fires on real data through `analyze()`, option-(a) no-flip). Remaining:
+  the **near-tie-creative-FLIP** fixture (reachable, in authority). The TASTE-flip
+  half is **user-gated** (needs a product change; the reachable taste claim is already
+  covered by `test_live_wire.py::test_taste_axis_changes_governance`).
 - Wider `--memory-dir` surface remains a small in-authority move (partly product).
 - Net-new **event-logging** producers remain behind the product decision.
 
 ## Done (resolved)
+
+- **P-012 nudge proven on real data through `analyze()` (creative visibility
+  fixture)** — **DONE via P-013**
+  (`build-os/receipts/P-013-nudge-visibility-fixture.md`). **Tests-only** — one new
+  file `tests/test_creative_nudge_visibility.py` (+154 lines, 5 tests); NO product
+  code touched. Lifts the P-012 creative evidence-nudge from the unit level to the
+  **live `pipeline.analyze()` production path**: on `dense_chorus_with_loops` the
+  live masking analyzer emits a real `width_crowding` event, so the row-2 nudge
+  (`vocal_belief −6`) fires on the `chorus_lift` `width_bloom` variant with no
+  contrivance — overall_score (the governed-rank value) 75.7→**74.9** (movement
+  −0.857, inside the ±2.0 cap), yet the winner stays `chorus_lift_B` (base gap ~9.6
+  > 2× the cap). Builder chose **option (a)** — the cap binds, the winner does NOT
+  flip — the documented latent-but-armed posture, now proven end-to-end. **Closes
+  the golden-unguarded gap** on the variant-scoring path. Single tests-only commit
+  `172cfd0`; suite 202→**207**; regression **68/68** held; Commit-1 green in
+  isolation; safety grep clean (only hit a no-DAW docstring). Reviewer **pass** —
+  independent negative control (disarmed `_apply_nudges` → 3 of 5 tests fail, so the
+  assertions are load-bearing), independently recomputed the numbers, confirmed the
+  Fixture #2 re-scope sound; **Codex not available — single-reviewer verdict.**
+  Fixture #2 (taste-flip through `analyze()`) re-scoped to a POSITIVE alignment
+  finding (taste structurally cannot flip a governed winner on curated data — see
+  Deferred). P-013 is the **first post-merge packet** (PR #13 merged at `0f4e7e9`).
+- **PR #13 (P-001…P-012 + canonical-alignment audit) MERGED to default** — merge
+  commit `0f4e7e9` on `claude/dreamy-turing-z0oxll`. The whole P-001…P-012 line
+  (including the option-B creative-scoring change) plus the AUDIT-2026-06-29
+  canonical-alignment audit (verdict ALIGNED) is now on the default branch. The dev
+  branch `claude/logic-mix-os-hardening-12-7hbeh1` was freshly restarted on top of
+  the merge for post-merge work (P-013 onward).
 
 - **Deeper creative scoring (option B, penalty-only)** — **DONE via P-012**
   (`build-os/receipts/P-012-creative-scoring-nudge-layer.md`).
@@ -270,10 +313,11 @@
 
 - **Variant-scoring path is golden-unguarded (reinforced by P-012):**
   `regression.py` reads `doctrine_score`, never `score_variant`, so the 68/68
-  golden cannot catch a `creative.py`/`score_variant` change. **Unit tests are the
-  binding guard** for any creative-scoring touch (P-012's
-  `tests/test_creative_nudges.py` is the current safety-invariant suite). Treat
-  any future creative-scoring change as test-binding, not golden-binding.
+  golden cannot catch a `creative.py`/`score_variant` change. **Unit + visibility
+  tests are the binding guard** for any creative-scoring touch (P-012's
+  `tests/test_creative_nudges.py` safety-invariant suite + P-013's
+  `tests/test_creative_nudge_visibility.py` driving the live `analyze()` path).
+  Treat any future creative-scoring change as test-binding, not golden-binding.
 - **Degenerate empty-`records` input (low priority — NOT a packet yet):** under a
   truly **empty** `records` list (an unconstructible / degenerate input on the
   engine path), P-006's Site 1 still returns `[]` and Site 2 still yields
@@ -292,19 +336,15 @@
 
 ## Open boundaries (awaiting explicit go)
 
-- **P-012's product commit `0df436c` is local-only as of this close** (this
-  archivist close did not push). It carries the user's **reviewed aesthetic
-  change** (option B, penalty-only) and is **awaiting the user's sign-off at the
-  PR #13 merge** — this is the deliberate review gate for the not-byte-identical
-  creative-scoring change. Earlier local-only product commits also remain:
-  **`effccd0` + `ea9bebf`** (P-011), **`27bfebf`** (P-009),
-  **`dc61f20` + `9ebd4ee`** (P-010). Earlier packets' push history: P-000 install
-  commits are pushed to `origin/claude/logic-mix-os-hardening-12-7hbeh1`; P-004 is
-  pushed (PR #13). Any push of `0df436c` / `effccd0` / `ea9bebf` / `dc61f20` /
-  `9ebd4ee` / `27bfebf` (and the P-005/P-006/P-007/P-008 commits, if not yet
-  pushed) updates the already-open **PR #13** (base `claude/dreamy-turing-z0oxll`)
-  — do so only under the user's standing/explicit push-go. No merge / deploy /
-  secret action taken.
+- **PR #13 is MERGED** (merge commit `0f4e7e9`) — the earlier local-only product
+  commits (P-005…P-012: `0df436c`, `effccd0`, `ea9bebf`, `dc61f20`, `9ebd4ee`,
+  `27bfebf`, etc.) are now landed on the default branch via that merge. That
+  boundary is resolved.
+- **P-013's tests-only product commit `172cfd0` is local-only as of this close**
+  (this archivist close did not push). It sits on the dev branch
+  `claude/logic-mix-os-hardening-12-7hbeh1` on top of the `0f4e7e9` merge. Any push
+  of it — and any subsequent PR / merge into the protected default — needs the
+  user's explicit go. No push / merge / deploy / secret action taken in this close.
 
 ---
 _Append-only working notes._

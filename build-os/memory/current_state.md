@@ -10,40 +10,48 @@
   section-aware, Logic-native **mix plan** (Roy Halee / Phil Ramone judgment
   layer). Not an auto-mixer, preset generator, or mastering tool. All product
   code lives under `logic-mix-os/`.
-- **Primary branch / base:** default branch `claude/dreamy-turing-z0oxll` @
-  `694d19d`; active dev branch `claude/logic-mix-os-hardening-12-7hbeh1`
-  (P-012 product base `4dfe142`; P-012 product commit `0df436c` local-only).
+- **Primary branch / base:** default branch `claude/dreamy-turing-z0oxll`;
+  active dev branch `claude/logic-mix-os-hardening-12-7hbeh1` (`git merge-base`
+  with default = `694d19d`). **PR #13 (P-001…P-012 + the canonical-alignment
+  audit) is MERGED to default** — merge commit `0f4e7e9`. **P-013 is the first
+  post-merge packet** on the freshly-restarted dev branch; its tests-only product
+  commit `172cfd0` sits on top of `0f4e7e9` and is local-only.
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression`.
-- **Green baseline (verified 2026-06-29):** suite **202 passed** (0 failed /
+- **Green baseline (verified 2026-06-30):** suite **207 passed** (0 failed /
   skipped / warnings); regression **68/68** (0 critical / 0 warnings).
 
 ## Where we are
 
-- **THE CREATIVE-SCORING AESTHETIC DECISION IS RESOLVED — via option B.** With
-  **P-012**, the standing OPEN USER DECISION ("deeper creative scoring") is
-  closed by the user's chosen path: a bounded, transparent, **capped,
-  penalty-only** evidence-nudge layer ON TOP of the curated `_KIND_SCORES` (the
-  curated values are UNCHANGED). `score_variant` applies, via a pure
-  `_apply_nudges`/`_NUDGE_TABLE`, two evidence-gated penalties — `vocal_belief −8`
-  when the lead vocal is masked (`bad_masking`, generalizing the old `width_bloom`
-  caution to `vocal_ride`/`intimacy_pass` too) and `vocal_belief −6` when the
-  image is `width_crowding` — with the summed overall delta clamped to
-  `±CREATIVE_NUDGE_CAP = 2.0` and `score_nudges: [reason]` emitted only when a
-  nudge fires. **This DELIBERATELY changes default scoring when a nudge fires (NOT
-  byte-identical by default) but provably cannot overturn a clear base ranking**
-  (cap 2.0 < typical 2.4–4.2 base gaps). It is **latent-but-armed** — fires on no
-  current fixture's winner, ready for a real masked-vocal / crowded-width song —
-  and **awaiting the user's sign-off at the PR #13 merge** (the user's reviewed
-  aesthetic change). The deferred **REWARD nudges** (orchestrator rows 3+4) are a
-  possible later additive packet.
-- **THE ALBUM-MEANS TRUTH IS SINGLE-SOURCED.** With **P-011**, the album means
+- **THE P-012 CREATIVE NUDGE IS NOW PROVEN ON REAL DATA THROUGH `analyze()`.**
+  With **P-013** (tests-only), the bounded penalty-only evidence-nudge layer
+  shipped in P-012 is lifted from the unit level (hand-built `SimpleNamespace`) to
+  the **live `pipeline.analyze()` production path**. On `dense_chorus_with_loops`
+  the live masking analyzer emits a real `width_crowding` event, so the row-2
+  nudge (`vocal_belief −6`) fires on the `chorus_lift` `width_bloom` variant with
+  no contrivance — lowering its `overall_score` from the curated base **75.7 →
+  74.9** (movement −0.857, well inside the ±2.0 cap), yet the winner stays
+  `chorus_lift_B` (base gap ~9.6 > 2× the cap). This is the documented
+  **latent-but-armed option-(a)** posture, now proven end-to-end, **closing the
+  golden-unguarded gap** on the variant-scoring path (the 68/68 golden reads
+  `doctrine_score`, never `score_variant`). **No product code touched.**
+- **THE CREATIVE-SCORING AESTHETIC DECISION IS RESOLVED — via option B (P-012),
+  AND NOW MERGED.** The bounded, transparent, capped, **penalty-only**
+  evidence-nudge layer ON TOP of the curated `_KIND_SCORES` (values UNCHANGED) is
+  live on the default branch via PR #13. `score_variant` applies two evidence-gated
+  `vocal_belief` penalties (`−8` masked vocal across
+  `width_bloom`/`vocal_ride`/`intimacy_pass`; `−6` `width_crowding` for
+  `width_bloom`), summed overall delta clamped to `±2.0`, `score_nudges` emitted
+  only on fire. It cannot overturn a clear base ranking (cap 2.0 < 2.4–4.2 base
+  gaps). The deferred **REWARD nudges** (orchestrator rows 3+4) remain a possible
+  later additive packet, **user-gated**.
+- **THE ALBUM-MEANS TRUTH IS SINGLE-SOURCED.** Via **P-011**, the album means
   live in exactly ONE place: `album.py::analyze_album` additively emits per-song
   `brightness_delta` / `lufs_delta` and `cli.py::_run_album` consumes them; the
-  duplicate `statistics.mean` recompute is gone — the two-place drift risk is
-  killed. The `album` report stays value-identical.
+  duplicate `statistics.mean` recompute is gone. The `album` report stays
+  value-identical.
 - **MILESTONE (still standing) — THE CROSS-SONG COHERENCE AXIS IS OPEN.** Via
   **P-010**, a song's plan (through the `album` command) reflects its album
   siblings: album-aware per-song guidance, opt-in / bounded / evidence-tagged. An
@@ -54,40 +62,48 @@
   full arc **P-007 (consumer) → P-008 (outcome) → P-009 (live wire)** is closed
   end-to-end: a real `cowork --memory-dir` run both **learns** (records →
   history-aware next pass) and **personalizes** (taste → governance).
-- **Last closed packet:** **P-012** — Creative-scoring evidence-nudge layer
-  (option B, penalty-only). Pure `_apply_nudges`/`_NUDGE_TABLE` on top of the
-  untouched `_KIND_SCORES`; two evidence-gated penalties (`vocal_belief −8` on
-  masked vocal across `width_bloom`/`vocal_ride`/`intimacy_pass`; `vocal_belief −6`
-  on `width_crowding` for `width_bloom`); summed overall delta clamped to
-  `±2.0`; `score_nudges` emitted only on fire. Single product commit `0df436c`
-  (`creative.py` +89/−11; `tests/test_creative_nudges.py` new, 43 cases). Suite
-  159→**202**; regression **68/68** held (variant-scoring path is golden-unguarded
-  — unit tests are the binding guard); Commit-1 green in isolation (`0df436c`:
-  202 passed, 70 targeted, 68/68); **CAP BINDS EXACTLY** (`width_bloom` both rows:
-  75.7 → 73.7 = base−2.0, raw −14 clamped); **NO RECOMMENDATION FLIP** on the 3
-  fixtures (dense fires row 2 on the LOSING `chorus_lift_A`; winner stays
-  `chorus_lift_B`; row 1 never fires); scope = exactly 2 files; `_KIND_SCORES`
-  values unchanged; governance/memory/pipeline/album/next_pass untouched; safety
-  grep none; UI N/A. Reviewer: **pass** — adversarially proven (forced −70 raw /
-  −10.0 overall STILL clamped to base−2.0; layer-ON vs layer-OFF confirms the
-  dense fixture genuinely fires yet no winner flips → non-tautological;
-  penalty-only across all kinds; predicates verbatim-reused; test-first
-  `ImportError` reproduced; Codex not available). **NOT byte-identical by
-  default — deliberate — but cannot overturn a clear base ranking.** Awaiting the
-  user's sign-off at PR #13 merge. Receipt:
-  `build-os/receipts/P-012-creative-scoring-nudge-layer.md`.
+- **POSITIVE ALIGNMENT FINDING (from P-013) — taste cannot flip a governed winner
+  on curated data, BY DESIGN.** The builder brute-forced all 3 fixtures × 4 intents
+  with a narrower-taste `ProjectMemory`: no governed-winner flip anywhere.
+  Reviewer-verified in source — `_apply_taste` moves only the `taste_triangle`
+  identity axis (clamped ±15), maps only to `width_bloom`/`drum_room_bloom`, and is
+  align-vetoed before it can reorder a truth-ranked winner. This is the doctrine
+  "taste can never outrank a truth move," working as intended. The reachable taste
+  claim is already proven on real data by
+  `tests/test_live_wire.py::test_taste_axis_changes_governance`.
+- **Last closed packet:** **P-013** — Nudge-visibility fixture (tests-only). One
+  new file `tests/test_creative_nudge_visibility.py` (+154 lines, **5 tests**)
+  drives the P-012 creative nudge through the live `analyze()` path on
+  `dense_chorus_with_loops` (real `width_crowding` event → row-2 nudge fires).
+  Builder chose **option (a)**: the cap binds, the winner does NOT flip
+  (overall_score 75.7 → 74.9, movement −0.857 within ±2.0; winner stays
+  `chorus_lift_B`; base gap 9.6 > 2×2.0). Single tests-only commit `172cfd0` (no
+  product tree change). Suite 202→**207**; regression **68/68** held;
+  Commit-1 green in isolation (single tip commit; new file alone = 5 passed;
+  product tree unmodified); safety grep clean (only hit a no-DAW docstring); UI
+  N/A. Reviewer: **pass** — independent negative control (disarmed `_apply_nudges`
+  → 3 of 5 fail, so assertions are load-bearing), independently recomputed the
+  option-(a) numbers, confirmed the Fixture #2 re-scope sound. **Codex NOT
+  available — single-reviewer verdict.** Fixture #2 (taste-flip through `analyze()`)
+  re-scoped to a positive alignment finding (structurally unreachable test-only —
+  user-gated to a product change). Receipt:
+  `build-os/receipts/P-013-nudge-visibility-fixture.md`.
 - **Now:** **none active.** No product packet in flight.
-- **Next — THE USER'S AESTHETIC DECISION IS RESOLVED (option B shipped, awaiting
-  PR #13 sign-off). The remaining moves are small in-authority follow-ups + one
-  user-gated additive.** Candidates:
+- **Next — the creative-scoring decision is resolved AND merged; P-013 proved it
+  on real data. Remaining moves are small in-authority additives + user-gated
+  follow-ups.** Candidates:
+  - **"Near-tie-creative-flip" fixture (NEW from P-013)** — a fixture where the
+    creative nudge actually FLIPS the winner through `analyze()` (a true near-tie,
+    distinct from P-013's no-flip option-(a) case). Reachable test-only, the
+    natural next increment. Small additive test, in authority.
   - **Reward nudges (orchestrator rows 3+4)** — `depth_cleanup +6 halee` /
     `subtractive_drop +4 taste` on non-empty `crowded_sections`. Possible later
     ADDITIVE packet IF the user wants reward (promotion) nudges; P-012 is
-    penalty-only by design. User-gated.
-  - **Borderline near-tie / taste fixtures (informational)** — a fixture that
-    demonstrates an INTENDED near-tie flip through `analyze()` (option-B behavior
-    visible on real data), and the carried borderline-TASTE fixture from P-009.
-    Small additive tests, in authority.
+    penalty-only by design. **User-gated.**
+  - **Taste-flip-via-product-change** — making a taste-driven governed-winner flip
+    reachable through `analyze()` needs a product-code aesthetic change. **User-gated,
+    separate packet.** (The reachable taste claim is already covered by
+    `test_live_wire.py::test_taste_axis_changes_governance`.)
   - **Wider `--memory-dir` CLI surface** (from P-009 — partly a product question);
     net-new **event-logging** producers (behind a product decision). Deferred.
 
@@ -103,12 +119,18 @@
   only; keep any `RealLogicSessionAdapter` non-instantiable.
 - **Variant-scoring path is golden-unguarded:** `regression.py` reads
   `doctrine_score`, never `score_variant`, so the 68/68 golden cannot catch a
-  creative-scoring change. **Unit tests are the binding guard for any
-  `creative.py`/`score_variant` change** (P-012's `tests/test_creative_nudges.py`).
+  creative-scoring change. **Unit + visibility tests are the binding guard for any
+  `creative.py`/`score_variant` change** (P-012's `tests/test_creative_nudges.py`
+  + P-013's `tests/test_creative_nudge_visibility.py` driving the live `analyze()`
+  path).
+- **Taste is structurally below truth (P-013-verified):** `_apply_taste` moves only
+  the identity axis (clamped ±15), maps only to `width_bloom`/`drum_room_bloom`, and
+  is align-vetoed — so taste cannot reorder a truth-ranked governed winner on
+  curated data. Working as intended.
 - **Orchestration:** this repo runs Build OS at project scope (`.claude/` +
   `build-os/`). Route every task via the build-orchestrator; ≤2 commits/packet;
   Commit-1 green in isolation; STOP at any push/merge/deploy/secret boundary for
   explicit go.
 
 ---
-_Updated by the archivist on close. Last advanced on P-012 close (2026-06-29)._
+_Updated by the archivist on close. Last advanced on P-013 close (2026-06-30)._

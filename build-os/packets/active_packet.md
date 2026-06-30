@@ -4,68 +4,48 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** ACTIVE — routed to builder
-- **Packet id:** P-013
-- **Title:** Option-B-visibility fixtures — near-tie creative + borderline taste,
-  driven through `analyze()`
+- **Status:** NONE ACTIVE — no product packet in flight.
+- **Packet id:** —
+- **Title:** —
 
-## Scope (the builder implements EXACTLY this)
+## Next candidates (orchestrator to route — none committed)
 
-**Test-only.** Add fixtures that exercise the already-shipped P-012 nudge layer
-and the P-007/P-009 taste axis through the live `analyze()` production path,
-making the bounded-but-armed behavior visible on realistic data. **No product /
-runtime code touched — `tests/` only.** This converts two claims that are today
-proven only at the unit level into claims proven on real data through
-`analyze()`:
-
-1. **Near-tie creative fixture (P-012):** an `analyze()`-driven case where the
-   creative nudge **fires through the production path** and the outcome is
-   asserted explicitly — either (a) the cap binds and the winner does **not**
-   flip, or (b) a constructed near-tie where it flips **within the ±2.0 bound**.
-   The builder must state which, and the assertion must be on the value the
-   governance ranks on (not just the raw nudge).
-2. **Borderline-taste fixture (P-007/P-009):** an `analyze()`-driven case where a
-   bounded taste profile **flips the governed winner end-to-end** through the
-   live memory wire (today proven only at the P-007 unit level in
-   `test_governance_taste.py`).
-
-Fixtures must use **fake adapters only** — no real DAW / Logic / AppleScript /
-subprocess / `.logicx` write / network.
-
-## Authority + budget
-
-- **Authority:** build (router row 1: `builder → qa → reviewer → archivist`).
-  No design-UI, marketing, swarm, or infra authority touched. No gate tripped.
-- **Tool Budget:** `[Read, Grep, Glob, Edit, Write, Bash] + builder → qa →
-  reviewer → archivist` — add `analyze()`-driven visibility fixtures for the
-  P-012 nudge layer and the taste axis; tests-only, prove on real data.
-- **Commits:** ≤2 (likely 1 tests-only commit; Commit-2 reserved only if the two
-  fixtures split cleanly). **Commit-1 green in isolation.**
-- **Hard stop:** no push/merge/deploy in scope. Standing push-go covers commits
-  to this dev branch; a merge into the protected default still needs explicit go.
-
-## Expected proof (qa reports exact counts at close)
-
-- Suite **202 → ~206–210 passed** (0 failed / skipped / warnings).
-- Regression **68/68 held** (0 critical / 0 warnings). Standing fact: the
-  variant-scoring path is **golden-unguarded**, so these fixtures are the binding
-  visibility guard, not the golden.
-- **Commit-1 green in isolation.**
-- **Safety grep clean** (fake adapters only; no DAW/Logic/AppleScript/subprocess/
-  `.logicx`/network).
+- **Near-tie-creative-FLIP fixture (NEW from P-013, reachable, in authority)** — a
+  fixture where the creative nudge actually FLIPS the winner through `analyze()` (a
+  true near-tie, distinct from P-013's option-(a) no-flip case). Small additive
+  tests-only test. The natural next increment.
+- **Reward nudges (orchestrator rows 3+4) — user-gated.** `depth_cleanup +6 halee` /
+  `subtractive_drop +4 taste` on non-empty `crowded_sections`. A later ADDITIVE
+  packet only IF the user asks for reward (promotion) nudges; P-012 is penalty-only
+  by design.
+- **Taste-flip-via-product-change — user-gated.** Making a taste-driven
+  governed-winner flip reachable through `analyze()` needs a product-code aesthetic
+  change (P-013 proved it is structurally unreachable test-only). Separate packet.
+  The reachable taste claim is already covered by
+  `test_live_wire.py::test_taste_axis_changes_governance`.
+- **Wider `--memory-dir` CLI surface** (from P-009 — partly a product question);
+  net-new **event-logging** producers (behind a product decision). Deferred.
 
 ## Last closed
 
-- **P-012 — Creative-scoring evidence-nudge layer (option B, penalty-only)** —
-  CLOSED 2026-06-29; **MERGED to default via PR #13 (merge commit `0f4e7e9`)**.
-  Receipt: `build-os/receipts/P-012-creative-scoring-nudge-layer.md`. A bounded,
-  transparent, capped, penalty-only evidence-nudge layer ON TOP of the curated
-  `_KIND_SCORES` (values unchanged): `vocal_belief −8` on masked vocal /
-  `vocal_belief −6` on `width_crowding`, summed overall delta clamped to `±2.0`,
-  `score_nudges` emitted only on fire. Suite 159→202; regression 68/68 held;
-  reviewer pass (adversarially proven). The whole P-001…P-012 line plus the
-  canonical-alignment audit (verdict ALIGNED) is now on the default branch.
+- **P-013 — Nudge-visibility fixture — P-012 nudge fires through `analyze()`
+  (option a)** — CLOSED 2026-06-30. Receipt:
+  `build-os/receipts/P-013-nudge-visibility-fixture.md`. **Tests-only** — one new
+  file `tests/test_creative_nudge_visibility.py` (+154 lines, 5 tests); NO product
+  code touched. Drives the P-012 creative nudge through the live `analyze()` path on
+  `dense_chorus_with_loops` (real `width_crowding` event → row-2 nudge fires);
+  builder chose **option (a)** — the cap binds, the winner does NOT flip
+  (overall_score 75.7→74.9, movement −0.857 within ±2.0; winner stays
+  `chorus_lift_B`; base gap 9.6 > 2×2.0). Single tests-only commit `172cfd0`. Suite
+  202→**207**; regression **68/68** held; Commit-1 green in isolation; safety grep
+  clean (only hit a no-DAW docstring); UI N/A. Reviewer **pass** — independent
+  negative control (disarmed `_apply_nudges` → 3 of 5 fail), recomputed the numbers,
+  confirmed the Fixture #2 re-scope; **Codex not available — single-reviewer
+  verdict.** Fixture #2 (taste-flip) re-scoped to a positive alignment finding
+  (structurally unreachable test-only — user-gated to a product change). **P-013 is
+  the first post-merge packet** — PR #13 (P-001…P-012 + canonical-alignment audit)
+  is MERGED to default (merge commit `0f4e7e9`).
 
 ---
-_Confirmed active on P-013 open (2026-06-30) by the orchestrator-in-chief.
-One packet at a time._
+_Cleared by the archivist on P-013 close (2026-06-30). None active — one packet at
+a time._
