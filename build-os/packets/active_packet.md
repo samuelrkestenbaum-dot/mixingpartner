@@ -4,48 +4,75 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** NONE ACTIVE — no product packet in flight.
-- **Packet id:** —
-- **Title:** —
+- **Status:** ACTIVE
+- **Packet id:** P-014
+- **Title:** Near-tie-creative-FLIP fixture — the P-012 nudge DOES flip the winner through `analyze()` (within the ±2.0 cap)
 
-## Next candidates (orchestrator to route — none committed)
+## Scope (the builder implements EXACTLY this)
 
-- **Near-tie-creative-FLIP fixture (NEW from P-013, reachable, in authority)** — a
-  fixture where the creative nudge actually FLIPS the winner through `analyze()` (a
-  true near-tie, distinct from P-013's option-(a) no-flip case). Small additive
-  tests-only test. The natural next increment.
-- **Reward nudges (orchestrator rows 3+4) — user-gated.** `depth_cleanup +6 halee` /
-  `subtractive_drop +4 taste` on non-empty `crowded_sections`. A later ADDITIVE
-  packet only IF the user asks for reward (promotion) nudges; P-012 is penalty-only
-  by design.
-- **Taste-flip-via-product-change — user-gated.** Making a taste-driven
-  governed-winner flip reachable through `analyze()` needs a product-code aesthetic
-  change (P-013 proved it is structurally unreachable test-only). Separate packet.
-  The reachable taste claim is already covered by
-  `test_live_wire.py::test_taste_axis_changes_governance`.
-- **Wider `--memory-dir` CLI surface** (from P-009 — partly a product question);
-  net-new **event-logging** producers (behind a product decision). Deferred.
+**Test-only.** Add a fixture that demonstrates the OTHER half of the P-012 nudge
+posture: a genuine **near-tie** creative case where the bounded nudge, firing
+through the live `analyze()` production path, **flips the creative winner**
+within the `CREATIVE_NUDGE_CAP = ±2.0` bound. This is the natural complement to
+P-013's option-(a) "fires-but-cannot-overturn-a-clear-ranking" — it proves the
+nudge is not only *armed and transparent* but *decisive when the ranking is
+genuinely close*, exactly as designed. **No product / runtime code touched —
+`tests/` (and, if needed, a new tests-local fixture-data dir) only.**
 
-## Last closed
+What the fixture must establish, asserted on the value governance ranks on
+(`overall_score`) through the real `analyze()` path — NOT on hand-built objects:
 
-- **P-013 — Nudge-visibility fixture — P-012 nudge fires through `analyze()`
-  (option a)** — CLOSED 2026-06-30. Receipt:
-  `build-os/receipts/P-013-nudge-visibility-fixture.md`. **Tests-only** — one new
-  file `tests/test_creative_nudge_visibility.py` (+154 lines, 5 tests); NO product
-  code touched. Drives the P-012 creative nudge through the live `analyze()` path on
-  `dense_chorus_with_loops` (real `width_crowding` event → row-2 nudge fires);
-  builder chose **option (a)** — the cap binds, the winner does NOT flip
-  (overall_score 75.7→74.9, movement −0.857 within ±2.0; winner stays
-  `chorus_lift_B`; base gap 9.6 > 2×2.0). Single tests-only commit `172cfd0`. Suite
-  202→**207**; regression **68/68** held; Commit-1 green in isolation; safety grep
-  clean (only hit a no-DAW docstring); UI N/A. Reviewer **pass** — independent
-  negative control (disarmed `_apply_nudges` → 3 of 5 fail), recomputed the numbers,
-  confirmed the Fixture #2 re-scope; **Codex not available — single-reviewer
-  verdict.** Fixture #2 (taste-flip) re-scoped to a positive alignment finding
-  (structurally unreachable test-only — user-gated to a product change). **P-013 is
-  the first post-merge packet** — PR #13 (P-001…P-012 + canonical-alignment audit)
-  is MERGED to default (merge commit `0f4e7e9`).
+1. Two creative variants whose curated base `overall_score` gap is **< 2×cap
+   (< 4.0)** so a bounded penalty *can* reorder them, with the nudge-penalized
+   kind (`width_bloom` under `width_crowding`, or a masked-vocal kind under
+   `bad_masking`) as the **narrow base leader**.
+2. The masking/width condition **actually fires** through `analyze()` (a real
+   event in the masking report — no monkeypatching the nudge in).
+3. With the nudge ARMED, the penalized leader drops **below** the runner-up →
+   `winning_variant` / `governed_winner` **flips** to the runner-up.
+4. The movement stays **within the ±2.0 cap** (the flip is caused by a *bounded*
+   nudge breaking a *near-tie*, never by an unbounded swing).
+5. A **negative control is load-bearing**: with the nudge disarmed (or absent),
+   the winner stays the base leader — i.e. the flip is genuinely caused by the
+   nudge, not a tautology. Make this explicit in the assertions (a layer-ON vs
+   layer-OFF contrast, mirroring P-013's non-tautology discipline).
+
+### Builder latitude / honesty clause
+A genuine near-tie flip may require a **new minimal synthetic fixture** (seeded
+stems + manifest under `tests/`) engineered so the penalized kind narrowly leads
+*and* its masking condition fires. That is in scope (tests-only). **If — after a
+real attempt — a flip is structurally unreachable test-only without changing
+product code** (e.g. curated `_KIND_SCORES` never lets `width_bloom` lead by a
+sub-cap margin while `width_crowding` fires), **do NOT touch product code**:
+report it with the same evidence rigor P-013 applied to Fixture #2, and it
+becomes a recorded finding (and, if it implies a product-code aesthetic change,
+a user-gated packet) rather than a forced result.
+
+Fixtures must use **fake adapters only** — no real DAW / Logic / AppleScript /
+subprocess / `.logicx` write / network.
+
+## Constraints
+
+- **≤2 commits** (likely 1: a single tests-only commit; a 2nd reserved if a
+  new fixture-data dir + the test split cleanly). **Commit-1 green in isolation.**
+- The variant-scoring path is **golden-unguarded** (regression reads
+  `doctrine_score`, never `score_variant`) — so this fixture is a *binding*
+  guard, not the golden. Assert on real produced values.
+- **No external mutation** — no push / merge / deploy / secret. Stop at any such
+  boundary for explicit go. (Standing push-go covers commits to the dev branch
+  only.)
+
+## Expected proof (qa to report exact)
+
+- Suite **207 → ~209–212 passed** (0 failed / skipped / warnings); exact count
+  at close.
+- Regression **68/68, 0 critical** held.
+- Commit-1 green in isolation; new test(s) alone green.
+- Safety grep clean (no real DAW / Logic / AppleScript / subprocess / network /
+  `.logicx` write).
+- Non-tautology: the layer-OFF negative control must change the asserted winner
+  (flip present with nudge ON, absent with nudge OFF).
 
 ---
-_Cleared by the archivist on P-013 close (2026-06-30). None active — one packet at
-a time._
+_Confirmed as active by the orchestrator-in-chief (P-014), 2026-06-30. One packet
+at a time._
