@@ -36,9 +36,11 @@ network.
 from __future__ import annotations
 
 import copy
+import pathlib
 
 import pytest
 
+import logic_mix_os.pipeline as pipeline
 from logic_mix_os.analyzers.provenance import analyze_provenance
 from logic_mix_os.analyzers.source_auditors import audit_all
 from logic_mix_os.constants import LOOP_SAMPLE_KINDS
@@ -50,6 +52,9 @@ from logic_mix_os.creative import (
     _foregrounded_loop,
     run_creative_engine,
 )
+from logic_mix_os.project import load_manifest
+
+_ROOT = pathlib.Path(__file__).resolve().parent.parent
 
 # Verbatim promotion evidence string (the P-016 contract surface).
 PROMOTION_REASON = (
@@ -231,3 +236,68 @@ def test_other_subtractive_drop_branches_do_not_flip(analyzed, problem_id):
     assert branch is not None, problem_id
     winner = _variant_by_id(branch, branch["winning"]["winning_variant"])
     assert winner["kind"] == "subtractive_drop"
+
+
+# --------------------------------------------------------------------------- #
+# PRODUCTION LIVENESS (P-009-style guard) — the promotion must fire through the
+# REAL production ``analyze()`` path, reading ``result.creative`` DIRECTLY with
+# NO re-run of ``run_creative_engine``. This is the guard that catches the inert-
+# in-production failure: ``score_variant``'s ``_foregrounded_loop`` predicate
+# reads ``result.provenance`` / ``result.source_audits``, so those must be
+# computed BEFORE the creative engine in ``pipeline.analyze()``.
+#
+# To exercise the production path on a GENUINELY foregrounded loop we patch the
+# ONE planner decision that sets a loop's depth (``pipeline.plan_depth``), so the
+# loop is really foregrounded — then the ENTIRE real pipeline flows from that
+# state: the REAL ``audit_all`` emits the real "foregrounded loop" red_flag, the
+# REAL ``analyze_provenance`` reports real ``high_risk``, and the REAL
+# ``run_creative_engine`` inside ``analyze()`` fires the promotion. We do NOT
+# monkeypatch the nudge, the flag, provenance, or ``run_creative_engine``.
+# --------------------------------------------------------------------------- #
+def _analyze_with_foregrounded_loops(monkeypatch):
+    """Run the REAL production ``analyze()`` with loops genuinely foregrounded at
+    the depth-planner seam. Returns the production ``ProjectAnalysis``."""
+    real_plan_depth = pipeline.plan_depth
+
+    def _foreground_loop_depth(identity, roles, source_material, sections):
+        d = real_plan_depth(identity, roles, source_material, sections)
+        if source_material.get("source_kind") in LOOP_SAMPLE_KINDS:
+            d["default_depth"] = "foreground"
+        return d
+
+    monkeypatch.setattr(pipeline, "plan_depth", _foreground_loop_depth)
+    fixture = _ROOT / "fixtures" / "dense_chorus_with_loops"
+    manifest = load_manifest(fixture / "project_manifest.json")
+    return pipeline.analyze(str(fixture / "stems"), manifest)
+
+
+def test_promotion_is_live_in_production_analyze(monkeypatch):
+    """The production ``result.creative`` (NO re-run) has the loop branch won by
+    ``loop_deconstruct`` carrying the promotion line — proving the promotion fires
+    in the real pipeline, i.e. provenance/source_audits are computed before
+    creative and the evidence is available to ``score_variant``."""
+    res = _analyze_with_foregrounded_loops(monkeypatch)
+
+    # The evidence is genuinely produced by the REAL analyzers in the pipeline.
+    red_flags = {f for a in res.source_audits["audits"] for f in a["red_flags"]}
+    assert "foregrounded loop" in red_flags
+    assert res.provenance["summary"]["high_risk"] >= 1
+
+    # Read the PRODUCTION creative value directly — no re-run of the engine.
+    branch = next(b for b in res.creative["branches"] if b["problem_id"] == "loop")
+    loop_a = _variant_by_id(branch, "loop_A")
+    assert loop_a["kind"] == "loop_deconstruct"
+    assert branch["winning"]["winning_variant"] == "loop_A"
+    assert loop_a["scores"].get("score_nudges") == [PROMOTION_REASON]
+    assert loop_a["scores"]["overall_score"] == pytest.approx(85.9, abs=1e-9)
+
+
+def test_production_governed_winner_is_loop_deconstruct(monkeypatch):
+    """The governed winner (the layer that actually ranks) likewise flips to
+    ``loop_A`` in production — the promotion reaches the governed surface, no
+    veto. Asserted on ``result.governance`` from the real ``analyze()``."""
+    res = _analyze_with_foregrounded_loops(monkeypatch)
+    gb = next(
+        b for b in res.governance["governed_branches"] if b["problem_id"] == "loop"
+    )
+    assert gb["governed_winner"] == "loop_A"

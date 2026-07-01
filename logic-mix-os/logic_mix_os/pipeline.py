@@ -216,16 +216,27 @@ def analyze(
     result.mix_plan["mono_compatibility_score"] = result.expanded["mono_compatibility"]["mono_score"]
     result.creative_hypotheses = generate_creative_hypotheses(result.mix_plan, records)
 
+    # Source provenance + source audits must be computed BEFORE the creative
+    # engine: the P-016 evidence-gated promotion predicate (``_foregrounded_loop``)
+    # reads ``result.provenance`` / ``result.source_audits`` inside
+    # ``score_variant``. Their inputs are all ready here — ``source_material`` and
+    # ``depth_map`` are filled in the per-track loop above and ``records`` is
+    # assigned before section/masking analysis — so computing them earlier is a
+    # pure relocation: for any project WITHOUT a foregrounded loop the values are
+    # byte-identical (same inputs) and the promotion never fires, so nothing else
+    # changes. (P-015's evidence, ``masking_report``, is likewise computed before
+    # creative; this brings the loop-promotion evidence to parity.)
+    result.provenance = analyze_provenance(project, result.source_material, result.depth_map)
+    result.source_audits = audit_all(records)
+
     # Creative experimentation engine + governance / taste protection.
     mode = creative_mode or _default_creative_mode(project.intent)
     result.creative = run_creative_engine(result, mode)
     result.governance = run_governance(result, result.creative, taste_profile=_taste)
 
-    # Session intelligence: provenance, render graph, plugin availability.
-    result.provenance = analyze_provenance(project, result.source_material, result.depth_map)
+    # Session intelligence: render graph, plugin availability.
     result.render_graph = build_render_graph(project)
     result.plugin_scan = scan_plugins(result.mix_plan, manifest.get("plugins"))
-    result.source_audits = audit_all(records)
 
     return result
 
