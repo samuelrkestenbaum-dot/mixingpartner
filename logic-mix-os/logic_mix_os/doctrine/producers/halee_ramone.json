@@ -119,6 +119,42 @@
         "decorative_threshold": 0.4,
         "decorative_penalty": 10
       }
+    },
+    "scorers": {
+      "vocal_centrality": {
+        "no_lead_score": 35.0,
+        "baseline": 70.0,
+        "sacred_bonus": 10,
+        "forward_bonus": 10,
+        "masked_coeff": 6
+      },
+      "depth_hierarchy": {
+        "baseline": 40,
+        "per_distinct": 12,
+        "forward_threshold": 0.6,
+        "forward_occupancy": 60
+      },
+      "section_contrast": {
+        "baseline": 100,
+        "lift_fail_penalty": 18
+      },
+      "static_mix": {
+        "baseline": 80.0,
+        "peak_ceiling": -0.1,
+        "peak_penalty": 10,
+        "dominant_band_threshold": 0.55,
+        "dominant_band_penalty": 10,
+        "crit_low_coeff": 8,
+        "no_lead_penalty": 8
+      },
+      "dynamic_mix": {
+        "insufficient_sections_score": 40.0,
+        "baseline": 30,
+        "rms_coeff": 8,
+        "width_coeff": 140,
+        "bright_coeff": 140,
+        "lift_fail_penalty": 10
+      }
     }
   },
 

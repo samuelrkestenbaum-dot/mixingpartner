@@ -91,7 +91,11 @@ class ProducerProfile:
     taste_triangle: Dict[str, Any]
     veto_thresholds: Dict[str, int]
 
-    # doctrine_engine.py (weights / baselines / inline penalty coefficients)
+    # doctrine_engine.py — weights / baselines / _halee+_ramone penalty coeffs
+    # (P-025), plus (P-028 Finding A) the widened ``scorers`` group holding the
+    # per-function aesthetic constants for the five remaining scorers
+    # (vocal_centrality / depth_hierarchy / section_contrast / static_mix /
+    # dynamic_mix): baselines, bonuses, penalties, coefficients and thresholds.
     doctrine: Dict[str, Any]
 
     # pipeline.py (_default_creative_mode truth -> mode map)
@@ -127,9 +131,13 @@ def _validate(raw: Dict[str, Any], name: str) -> None:
         if f not in raw:
             raise ValueError(f"profile {name!r}: missing data field {f!r}")
     doctrine = raw["doctrine"]
-    for key in ("weights", "baselines", "penalty_coeffs"):
+    for key in ("weights", "baselines", "penalty_coeffs", "scorers"):
         if key not in doctrine:
             raise ValueError(f"profile {name!r}: doctrine missing {key!r}")
+    for fn in ("vocal_centrality", "depth_hierarchy", "section_contrast",
+               "static_mix", "dynamic_mix"):
+        if fn not in doctrine["scorers"]:
+            raise ValueError(f"profile {name!r}: doctrine.scorers missing {fn!r}")
 
 
 def load_profile(name: str = "halee_ramone") -> ProducerProfile:

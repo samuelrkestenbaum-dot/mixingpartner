@@ -31,6 +31,10 @@ _DOCTRINE = _DEFAULT_PROFILE.doctrine
 _WEIGHTS = _DOCTRINE["weights"]
 _BASELINES = _DOCTRINE["baselines"]
 _PENALTY_COEFFS = _DOCTRINE["penalty_coeffs"]
+# Per-function aesthetic constants for the five remaining scorers (P-028
+# Finding A widened the profile to cover them): baseline, bonuses, penalties,
+# coefficients and thresholds, each captured verbatim.
+_SCORERS = _DOCTRINE["scorers"]
 
 
 def _clamp(x: float) -> float:
@@ -159,31 +163,33 @@ def _ramone(records: List[Dict], lead: Optional[Dict], events: List[Dict], warni
 
 
 def _vocal_centrality(lead: Optional[Dict], events: List[Dict]):
+    c = _SCORERS["vocal_centrality"]
     if lead is None:
-        return 35.0, ["No lead vocal present."]
-    score = 70.0
+        return c["no_lead_score"], ["No lead vocal present."]
+    score = c["baseline"]
     ev = [f"Lead vocal '{lead['name']}' identified."]
     if lead["sacredness"] == "sacred":
-        score += 10
+        score += c["sacred_bonus"]
         ev.append("Vocal correctly marked sacred.")
     if lead["depth_default"] in FORWARD:
-        score += 10
+        score += c["forward_bonus"]
         ev.append(f"Vocal sits in the {lead['depth_default']} layer.")
     bad = [e for e in events if lead["name"] in e["elements"] and e["classification"] == "bad_masking"]
     if bad:
-        score -= 6 * len(bad)
+        score -= c["masked_coeff"] * len(bad)
         ev.append(f"Vocal challenged by {len(bad)} masking conflict(s).")
     return _clamp(score), ev
 
 
 def _depth_hierarchy(records: List[Dict]):
+    c = _SCORERS["depth_hierarchy"]
     depths = [r["depth_default"] for r in records]
     distinct = len(set(depths))
     n = len(records) or 1
-    score = 40 + distinct * 12
+    score = c["baseline"] + distinct * c["per_distinct"]
     fg_frac = sum(1 for d in depths if d in FORWARD) / n
-    if fg_frac > 0.6:
-        score -= (fg_frac - 0.6) * 60
+    if fg_frac > c["forward_threshold"]:
+        score -= (fg_frac - c["forward_threshold"]) * c["forward_occupancy"]
     ev = [f"{distinct} of 4 depth layers used; {fg_frac:.0%} forward."]
     if distinct <= 1:
         ev.append("Everything occupies one layer — no hierarchy.")
@@ -191,6 +197,7 @@ def _depth_hierarchy(records: List[Dict]):
 
 
 def _section_contrast(sections: List[Dict], warnings: List[Dict]):
+    coeffs = _SCORERS["section_contrast"]
     if len(sections) < 2:
         return None, ["Fewer than two sections analysed; contrast cannot be scored."]
     lift_fail = 0
@@ -199,48 +206,50 @@ def _section_contrast(sections: List[Dict], warnings: List[Dict]):
         if "warning" in c:
             lift_fail += 1
             warnings.append({"warning": c["warning"], "doctrine": ["section_contrast"]})
-    score = 100 - 18 * lift_fail
+    score = coeffs["baseline"] - coeffs["lift_fail_penalty"] * lift_fail
     ev = [f"{lift_fail} section(s) fail to lift relative to the previous section."]
     return _clamp(score), ev
 
 
 def _static_mix(records: List[Dict], lead: Optional[Dict], events: List[Dict], mix_metrics: Optional[Dict]):
-    score = 80.0
+    c = _SCORERS["static_mix"]
+    score = c["baseline"]
     ev: List[str] = []
     if mix_metrics:
-        if mix_metrics.get("peak_dbfs", -1) > -0.1:
-            score -= 10
+        if mix_metrics.get("peak_dbfs", -1) > c["peak_ceiling"]:
+            score -= c["peak_penalty"]
             ev.append("Mixdown is at/over full scale — clipping risk.")
         bands = mix_metrics.get("band_energy", {})
         if bands:
             dominant = max(bands, key=bands.get)
-            if bands[dominant] > 0.55:
-                score -= 10
+            if bands[dominant] > c["dominant_band_threshold"]:
+                score -= c["dominant_band_penalty"]
                 ev.append(f"Tonal balance skewed: '{dominant}' band holds {bands[dominant]:.0%} of energy.")
             else:
                 ev.append("Broad tonal balance is reasonable.")
     crit_low = [e for e in events if e["classification"] == "low_end_conflict" and e["severity"] == "critical"]
     if crit_low:
-        score -= 8 * len(crit_low)
+        score -= c["crit_low_coeff"] * len(crit_low)
         ev.append(f"{len(crit_low)} critical low-end (kick/bass) conflict(s).")
     if lead is None:
-        score -= 8
+        score -= c["no_lead_penalty"]
         ev.append("No lead vocal to anchor intelligibility.")
     return _clamp(score), ev
 
 
 def _dynamic_mix(sections: List[Dict]):
+    c = _SCORERS["dynamic_mix"]
     if len(sections) < 2:
-        return 40.0, ["Fewer than two sections; dynamic movement cannot be assessed."]
+        return c["insufficient_sections_score"], ["Fewer than two sections; dynamic movement cannot be assessed."]
     rms = [s["metrics"]["rms_dbfs"] for s in sections]
     width = [s["metrics"]["width"] for s in sections]
     bright = [s["metrics"]["brightness"] for s in sections]
     rms_std = statistics.pstdev(rms) if len(rms) > 1 else 0.0
     width_std = statistics.pstdev(width) if len(width) > 1 else 0.0
     bright_std = statistics.pstdev(bright) if len(bright) > 1 else 0.0
-    score = 30 + rms_std * 8 + width_std * 140 + bright_std * 140
+    score = c["baseline"] + rms_std * c["rms_coeff"] + width_std * c["width_coeff"] + bright_std * c["bright_coeff"]
     lift_fail = sum(1 for s in sections if "warning" in s.get("contrast_vs_previous", {}))
-    score -= 10 * lift_fail
+    score -= c["lift_fail_penalty"] * lift_fail
     ev = [
         f"Section RMS spread {rms_std:.1f} dB, width spread {width_std:.2f}, "
         f"brightness spread {bright_std:.2f}."

@@ -345,6 +345,198 @@ def test_doctrine_ramone_penalty_coeffs_round_trip_indirect():
 
 
 # --------------------------------------------------------------------------- #
+# P-028 Finding A — the WIDENED doctrine.scorers group: the per-function
+# aesthetic constants for the five remaining scorers. EXACT value pins + the
+# drive-the-function indirect round-trip (same honest pattern as the
+# _halee/_ramone coeffs above): fire each scorer one condition at a time and
+# assert the captured constant reproduces the function's own arithmetic.
+# --------------------------------------------------------------------------- #
+def test_doctrine_scorers_value_pins_exact():
+    """Every widened constant, captured VERBATIM from the pre-P-028 inline
+    literals — the exact-equal round-trip on the JSON structure."""
+    s = load_profile().doctrine["scorers"]
+    assert s["vocal_centrality"] == {
+        "no_lead_score": 35.0, "baseline": 70.0,
+        "sacred_bonus": 10, "forward_bonus": 10, "masked_coeff": 6,
+    }
+    assert s["depth_hierarchy"] == {
+        "baseline": 40, "per_distinct": 12,
+        "forward_threshold": 0.6, "forward_occupancy": 60,
+    }
+    assert s["section_contrast"] == {"baseline": 100, "lift_fail_penalty": 18}
+    assert s["static_mix"] == {
+        "baseline": 80.0, "peak_ceiling": -0.1, "peak_penalty": 10,
+        "dominant_band_threshold": 0.55, "dominant_band_penalty": 10,
+        "crit_low_coeff": 8, "no_lead_penalty": 8,
+    }
+    assert s["dynamic_mix"] == {
+        "insufficient_sections_score": 40.0, "baseline": 30,
+        "rms_coeff": 8, "width_coeff": 140, "bright_coeff": 140,
+        "lift_fail_penalty": 10,
+    }
+
+
+def test_doctrine_vocal_centrality_round_trip_indirect():
+    """Drive ``_vocal_centrality`` one condition at a time; the captured constants
+    must reproduce its exact score."""
+    c = load_profile().doctrine["scorers"]["vocal_centrality"]
+
+    # No lead => the captured no_lead_score, verbatim.
+    assert doctrine_engine._vocal_centrality(None, [])[0] == c["no_lead_score"]
+
+    # A non-sacred, non-forward lead with no masking => bare baseline.
+    plain_lead = _record(name="V", instrument_identity="lead_vocal",
+                         identity_family="vocal", depth_default="background",
+                         sacredness="core")
+    assert doctrine_engine._vocal_centrality(plain_lead, [])[0] == \
+        doctrine_engine._clamp(c["baseline"])
+
+    # Sacred bonus only.
+    sacred = _record(name="V", instrument_identity="lead_vocal",
+                     identity_family="vocal", depth_default="background",
+                     sacredness="sacred")
+    assert doctrine_engine._vocal_centrality(sacred, [])[0] == \
+        doctrine_engine._clamp(c["baseline"] + c["sacred_bonus"])
+
+    # Forward bonus only.
+    fwd = _record(name="V", instrument_identity="lead_vocal",
+                  identity_family="vocal", depth_default="foreground",
+                  sacredness="core")
+    assert doctrine_engine._vocal_centrality(fwd, [])[0] == \
+        doctrine_engine._clamp(c["baseline"] + c["forward_bonus"])
+
+    # Masked penalty: baseline - masked_coeff * N (N=2).
+    plain = _record(name="V", instrument_identity="lead_vocal",
+                    identity_family="vocal", depth_default="background",
+                    sacredness="core")
+    events = [
+        {"elements": ["V"], "classification": "bad_masking"},
+        {"elements": ["V"], "classification": "bad_masking"},
+    ]
+    assert doctrine_engine._vocal_centrality(plain, events)[0] == \
+        doctrine_engine._clamp(c["baseline"] - c["masked_coeff"] * 2)
+
+
+def test_doctrine_depth_hierarchy_round_trip_indirect():
+    """Drive ``_depth_hierarchy``; the captured baseline/per-distinct/forward
+    constants must reproduce its score. Physics (distinct counting, fg_frac) stays
+    in the function."""
+    c = load_profile().doctrine["scorers"]["depth_hierarchy"]
+
+    # Two distinct non-forward layers (fg_frac=0, no occupancy penalty).
+    recs = [_record(name="a", depth_default="background"),
+            _record(name="b", depth_default="midground")]
+    distinct = 2
+    assert doctrine_engine._depth_hierarchy(recs)[0] == \
+        doctrine_engine._clamp(c["baseline"] + distinct * c["per_distinct"])
+
+    # fg_frac > threshold => occupancy penalty applies on top of the layer score.
+    fwd = [_record(name=f"f{i}", depth_default="foreground") for i in range(4)]
+    fwd += [_record(name="b", depth_default="background")]
+    distinct = 2  # {foreground, background}
+    fg_frac = 4 / 5
+    expected = (c["baseline"] + distinct * c["per_distinct"]
+                - (fg_frac - c["forward_threshold"]) * c["forward_occupancy"])
+    assert doctrine_engine._depth_hierarchy(fwd)[0] == doctrine_engine._clamp(expected)
+
+
+def test_doctrine_section_contrast_round_trip_indirect():
+    """Drive ``_section_contrast``; ``baseline - lift_fail_penalty * fails``."""
+    c = load_profile().doctrine["scorers"]["section_contrast"]
+
+    # No lift failures => bare baseline.
+    ok = [{"contrast_vs_previous": {}}, {"contrast_vs_previous": {}}]
+    assert doctrine_engine._section_contrast(ok, [])[0] == \
+        doctrine_engine._clamp(c["baseline"])
+
+    # Two lift failures => baseline - penalty * 2.
+    fails = [
+        {"contrast_vs_previous": {"warning": "no lift"}},
+        {"contrast_vs_previous": {"warning": "no lift"}},
+    ]
+    assert doctrine_engine._section_contrast(fails, [])[0] == \
+        doctrine_engine._clamp(c["baseline"] - c["lift_fail_penalty"] * 2)
+
+
+def test_doctrine_static_mix_round_trip_indirect():
+    """Drive ``_static_mix`` one penalty at a time; band analysis / severity
+    checks stay physics, the captured constants supply the numbers."""
+    c = load_profile().doctrine["scorers"]["static_mix"]
+    lead = _record(name="V", instrument_identity="lead_vocal",
+                   identity_family="vocal", depth_default="foreground",
+                   sacredness="sacred")
+
+    # Clean (lead present, no metrics penalties) => bare baseline.
+    balanced = {"band_energy": {"low": 0.4, "mid": 0.4, "high": 0.2}, "peak_dbfs": -3.0}
+    assert doctrine_engine._static_mix([lead], lead, [], balanced)[0] == \
+        doctrine_engine._clamp(c["baseline"])
+
+    # Peak over ceiling => peak_penalty.
+    hot = {"band_energy": {"low": 0.4, "mid": 0.4, "high": 0.2}, "peak_dbfs": 0.0}
+    assert doctrine_engine._static_mix([lead], lead, [], hot)[0] == \
+        doctrine_engine._clamp(c["baseline"] - c["peak_penalty"])
+
+    # Dominant band over threshold => dominant_band_penalty.
+    skewed = {"band_energy": {"low": 0.7, "mid": 0.2, "high": 0.1}, "peak_dbfs": -3.0}
+    assert doctrine_engine._static_mix([lead], lead, [], skewed)[0] == \
+        doctrine_engine._clamp(c["baseline"] - c["dominant_band_penalty"])
+
+    # Critical low-end conflicts => crit_low_coeff * N (N=2), no mix_metrics.
+    events = [
+        {"classification": "low_end_conflict", "severity": "critical"},
+        {"classification": "low_end_conflict", "severity": "critical"},
+    ]
+    assert doctrine_engine._static_mix([lead], lead, events, None)[0] == \
+        doctrine_engine._clamp(c["baseline"] - c["crit_low_coeff"] * 2)
+
+    # No lead => no_lead_penalty.
+    assert doctrine_engine._static_mix([], None, [], None)[0] == \
+        doctrine_engine._clamp(c["baseline"] - c["no_lead_penalty"])
+
+
+def test_doctrine_dynamic_mix_round_trip_indirect():
+    """Drive ``_dynamic_mix``; pstdev spread computation stays physics, the
+    captured coefficients supply the multipliers/baseline. Byte-for-byte the
+    function's own arithmetic (float order preserved)."""
+    import statistics
+    c = load_profile().doctrine["scorers"]["dynamic_mix"]
+
+    # Fewer than two sections => the captured insufficient-sections score.
+    assert doctrine_engine._dynamic_mix([])[0] == c["insufficient_sections_score"]
+    one = [{"metrics": {"rms_dbfs": -10.0, "width": 0.3, "brightness": 0.4},
+            "contrast_vs_previous": {}}]
+    assert doctrine_engine._dynamic_mix(one)[0] == c["insufficient_sections_score"]
+
+    # Two sections, no lift failure => baseline + weighted spreads, same order.
+    secs = [
+        {"metrics": {"rms_dbfs": -12.0, "width": 0.3, "brightness": 0.4},
+         "contrast_vs_previous": {}},
+        {"metrics": {"rms_dbfs": -6.0, "width": 0.7, "brightness": 0.9},
+         "contrast_vs_previous": {}},
+    ]
+    rms = [s["metrics"]["rms_dbfs"] for s in secs]
+    width = [s["metrics"]["width"] for s in secs]
+    bright = [s["metrics"]["brightness"] for s in secs]
+    rms_std = statistics.pstdev(rms)
+    width_std = statistics.pstdev(width)
+    bright_std = statistics.pstdev(bright)
+    expected = (c["baseline"] + rms_std * c["rms_coeff"]
+                + width_std * c["width_coeff"] + bright_std * c["bright_coeff"])
+    assert doctrine_engine._dynamic_mix(secs)[0] == doctrine_engine._clamp(expected)
+
+    # A lift failure subtracts lift_fail_penalty.
+    secs_fail = [
+        {"metrics": {"rms_dbfs": -12.0, "width": 0.3, "brightness": 0.4},
+         "contrast_vs_previous": {}},
+        {"metrics": {"rms_dbfs": -6.0, "width": 0.7, "brightness": 0.9},
+         "contrast_vs_previous": {"warning": "no lift"}},
+    ]
+    expected_fail = expected - c["lift_fail_penalty"] * 1
+    assert doctrine_engine._dynamic_mix(secs_fail)[0] == \
+        doctrine_engine._clamp(expected_fail)
+
+
+# --------------------------------------------------------------------------- #
 # Extraction-completeness — every named producer-specific structure has a home
 # --------------------------------------------------------------------------- #
 def test_extraction_completeness_all_fields_present():
@@ -367,9 +559,14 @@ def test_extraction_completeness_all_fields_present():
 
 def test_doctrine_subfields_present():
     d = load_profile().doctrine
-    for key in ("weights", "baselines", "penalty_coeffs"):
+    for key in ("weights", "baselines", "penalty_coeffs", "scorers"):
         assert key in d and d[key], f"doctrine missing {key!r}"
     assert set(d["penalty_coeffs"]) == {"halee", "ramone"}
+    # P-028 Finding A: the five widened scorers each have a captured group.
+    assert set(d["scorers"]) == {
+        "vocal_centrality", "depth_hierarchy", "section_contrast",
+        "static_mix", "dynamic_mix",
+    }
 
 
 # --------------------------------------------------------------------------- #
