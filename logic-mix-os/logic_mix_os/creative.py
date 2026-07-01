@@ -13,7 +13,7 @@ from __future__ import annotations
 from typing import Dict, List, Optional
 
 from .constants import LOOP_SAMPLE_KINDS
-from .doctrine.producer_profile import load_profile
+from .doctrine.producer_profile import ProducerProfile, load_profile
 
 # --- Producer-specific judgment: sourced from the reference ProducerProfile --
 # (P-026, first wiring step of the producer-agnostic epic). The producer-specific
@@ -109,15 +109,18 @@ def _width_crowded(result) -> bool:
 _NUDGE_EVIDENCE = {"lead_masked": _lead_masked, "width_crowding": _width_crowded}
 
 
-def _apply_nudges(kind: str, result) -> List[tuple]:
+def _apply_nudges(kind: str, result, profile: Optional[ProducerProfile] = None) -> List[tuple]:
     """Pure: the ordered ``(dim, delta, reason)`` for each FIRED nudge.
 
     A row fires when ``kind`` is in its ``kinds`` set AND its evidence predicate
     is true on ``result``. Rows are evaluated in table order, so the emitted
-    evidence lines are deterministic.
+    evidence lines are deterministic. The nudge table is read from the PASSED
+    ``profile`` (default = the reference), so per-call producer selection reaches
+    the penalty layer.
     """
+    nudge_table = (profile or _DEFAULT_PROFILE).nudge_table
     fired: List[tuple] = []
-    for row in _NUDGE_TABLE:
+    for row in nudge_table:
         if kind in row["kinds"] and _NUDGE_EVIDENCE[row["evidence"]](result):
             fired.append((row["dim"], row["delta"], row["reason"]))
     return fired
@@ -172,15 +175,17 @@ def _foregrounded_loop(result) -> bool:
 _PROMOTION_EVIDENCE = {"foregrounded_loop": _foregrounded_loop}
 
 
-def _apply_promotions(kind: str, result) -> List[tuple]:
+def _apply_promotions(kind: str, result, profile: Optional[ProducerProfile] = None) -> List[tuple]:
     """Pure: the ordered ``(dim, delta, reason)`` for each FIRED promotion.
 
     A row fires when ``kind`` is in its ``kinds`` set AND its evidence predicate
     is true on ``result``. Rows are evaluated in table order, so the emitted
-    evidence lines are deterministic. Mirrors ``_apply_nudges`` exactly.
+    evidence lines are deterministic. Mirrors ``_apply_nudges`` exactly, reading
+    the promotion table from the PASSED ``profile`` (default = the reference).
     """
+    promotion_table = (profile or _DEFAULT_PROFILE).promotion_table
     fired: List[tuple] = []
-    for row in _PROMOTION_TABLE:
+    for row in promotion_table:
         if kind in row["kinds"] and _PROMOTION_EVIDENCE[row["evidence"]](result):
             fired.append((row["dim"], row["delta"], row["reason"]))
     return fired
@@ -362,32 +367,42 @@ def generate_variants(problem: Dict, result, mode: str = "dramatic_contrast") ->
     return variants
 
 
-def score_variant(variant: Dict, result) -> Dict:
-    base = dict(_KIND_SCORES.get(variant["kind"], _KIND_SCORES["depth_cleanup"]))
+def score_variant(variant: Dict, result, profile: Optional[ProducerProfile] = None) -> Dict:
+    # P-029: per-call producer selection. The curated kind-score table, the risk
+    # penalty, and the two caps are read from the PASSED ``profile`` (default = the
+    # reference), and the same profile is threaded to the nudge/promotion layers —
+    # so ``analyze(producer=…)`` steers variant scoring end to end.
+    prof = profile or _DEFAULT_PROFILE
+    kind_scores = prof.kind_scores
+    risk_penalty = prof.risk_penalty
+    nudge_cap = prof.creative_nudge_cap
+    promotion_cap = prof.creative_promotion_cap
+
+    base = dict(kind_scores.get(variant["kind"], kind_scores["depth_cleanup"]))
     numeric = ["technical", "halee", "ramone", "contrast", "vocal_belief", "excitement", "taste"]
 
     # Base overall on the curated dims, before any context nudge — this is the
     # axis governance ranks on, and the axis the cap binds.
-    base_overall = sum(base[k] for k in numeric) / len(numeric) - _RISK_PENALTY[base["translation"]]
+    base_overall = sum(base[k] for k in numeric) / len(numeric) - risk_penalty[base["translation"]]
 
     # --- P-012: evidence-nudge layer (penalty-only, bounded, transparent) ----
     # Each fired nudge lowers a curated dim and emits an evidence line. The dims
     # carry the honest move; the *overall* effect is clamped to ±CREATIVE_NUDGE_CAP.
-    fired = _apply_nudges(variant["kind"], result)
+    fired = _apply_nudges(variant["kind"], result, prof)
     nudges: List[str] = []
     for dim, delta, reason in fired:
         base[dim] += delta
         nudges.append(reason)
 
-    nudged_overall = sum(base[k] for k in numeric) / len(numeric) - _RISK_PENALTY[base["translation"]]
+    nudged_overall = sum(base[k] for k in numeric) / len(numeric) - risk_penalty[base["translation"]]
     # Clamp the SUMMED overall delta to ±CREATIVE_NUDGE_CAP. Worst case is
     # width_bloom under BOTH rows = -20 raw = -2.86 overall, clamped to -2.0;
     # vocal_ride under row-0 alone = -14 raw = -2.0 overall = exactly the cap.
     overall_delta = nudged_overall - base_overall
-    if overall_delta < -CREATIVE_NUDGE_CAP:
-        overall_delta = -CREATIVE_NUDGE_CAP
-    elif overall_delta > CREATIVE_NUDGE_CAP:
-        overall_delta = CREATIVE_NUDGE_CAP
+    if overall_delta < -nudge_cap:
+        overall_delta = -nudge_cap
+    elif overall_delta > nudge_cap:
+        overall_delta = nudge_cap
 
     # --- P-016: evidence-PROMOTION layer (reward-only, bounded, transparent) --
     # Independent of the penalty path: each fired promotion raises a curated dim
@@ -395,15 +410,15 @@ def score_variant(variant: Dict, result) -> Dict:
     # +CREATIVE_PROMOTION_CAP, exactly as the penalty path clamps to
     # -CREATIVE_NUDGE_CAP. Measured from the SAME curated base_overall so the two
     # bounded effects are additive and each independently bounded.
-    promoted = _apply_promotions(variant["kind"], result)
+    promoted = _apply_promotions(variant["kind"], result, prof)
     for dim, delta, reason in promoted:
         base[dim] += delta
         nudges.append(reason)
     if promoted:
-        promoted_overall = sum(base[k] for k in numeric) / len(numeric) - _RISK_PENALTY[base["translation"]]
+        promoted_overall = sum(base[k] for k in numeric) / len(numeric) - risk_penalty[base["translation"]]
         promotion_delta = (promoted_overall - base_overall) - overall_delta
-        if promotion_delta > CREATIVE_PROMOTION_CAP:
-            promotion_delta = CREATIVE_PROMOTION_CAP
+        if promotion_delta > promotion_cap:
+            promotion_delta = promotion_cap
         overall_delta += promotion_delta
 
     overall = base_overall + overall_delta
@@ -446,15 +461,22 @@ def winning_variant(scored_variants: List[Dict]) -> Optional[Dict]:
     }
 
 
-def run_creative_engine(result, mode: str = "dramatic_contrast") -> Dict:
-    if mode not in SEARCH_MODES:
+def run_creative_engine(result, mode: str = "dramatic_contrast",
+                        profile: Optional[ProducerProfile] = None) -> Dict:
+    # P-029: per-call producer selection. Search modes, the per-variant scoring
+    # profile, and the philosophy line are read from the PASSED ``profile``
+    # (default = the reference), so ``analyze(producer=…)`` drives the creative
+    # engine. Passing ``profile is None`` reproduces the reference byte-for-byte.
+    prof = profile or _DEFAULT_PROFILE
+    search_modes = prof.search_modes
+    if mode not in search_modes:
         mode = "dramatic_contrast"
     problems = detect_creative_problems(result)
     branches: List[Dict] = []
     for problem in problems:
         variants = generate_variants(problem, result, mode)
         for v in variants:
-            v["scores"] = score_variant(v, result)
+            v["scores"] = score_variant(v, result, prof)
         branches.append({
             "problem": problem["problem"],
             "problem_id": problem["id"],
@@ -463,7 +485,7 @@ def run_creative_engine(result, mode: str = "dramatic_contrast") -> Dict:
         })
     return {
         "search_mode": mode,
-        "search_mode_bias": SEARCH_MODES[mode]["bias"],
+        "search_mode_bias": search_modes[mode]["bias"],
         "static_baseline": static_baseline(result),
         "static_vs_dynamic": static_vs_dynamic(result),
         "adjustment_library": ADJUSTMENT_LIBRARY,
@@ -475,5 +497,5 @@ def run_creative_engine(result, mode: str = "dramatic_contrast") -> Dict:
             "Never let novelty override vocal belief.",
             "Always compare creative variants to the song's emotional truth.",
         ],
-        "philosophy": PHILOSOPHY,
+        "philosophy": prof.philosophy,
     }

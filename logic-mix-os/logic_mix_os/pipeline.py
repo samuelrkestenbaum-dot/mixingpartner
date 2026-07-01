@@ -36,6 +36,7 @@ from .bridge.applescript_bridge import generate_applescript
 from .bridge.exporter import export_actions
 from .creative import run_creative_engine
 from .doctrine.doctrine_engine import score_doctrine
+from .doctrine.producer_profile import ProducerProfile, load_profile
 from .governance import run_governance
 from .memory import ProjectMemory
 from .planners.depth_planner import plan_depth
@@ -81,7 +82,18 @@ def analyze(
     creative_mode: Optional[str] = None,
     memory_dir: Optional[str | Path] = None,
     album_context: Optional[Dict] = None,
+    producer: str | ProducerProfile = "halee_ramone",
 ) -> ProjectAnalysis:
+    # P-029 — THE PIVOT: ``producer`` SELECTS which ProducerProfile drives the
+    # judgment. It accepts a profile NAME (loaded once here) or a ready
+    # ``ProducerProfile`` object (convenient for tests / callers holding one). The
+    # loaded profile is threaded to the three judgment entry points below
+    # (``score_doctrine`` / ``run_creative_engine`` / ``run_governance``); each
+    # defaults to its module ``_DEFAULT_PROFILE`` when passed ``None``, so the
+    # default ``producer="halee_ramone"`` is byte-identical to the reference. The
+    # physics/analyzers and the safety kill-switches are producer-AGNOSTIC and
+    # untouched by this selection.
+    profile = producer if isinstance(producer, ProducerProfile) else load_profile(producer)
     project = Project.from_inputs(stems_dir, manifest)
     result = ProjectAnalysis(project=project)
 
@@ -152,7 +164,8 @@ def analyze(
 
     # Doctrine scoring.
     result.doctrine_score = score_doctrine(
-        records, result.section_analysis, result.masking_report, result.mix_metrics, project.intent
+        records, result.section_analysis, result.masking_report, result.mix_metrics,
+        project.intent, profile=profile,
     )
 
     # Reference delta.
@@ -231,7 +244,7 @@ def analyze(
 
     # Creative experimentation engine + governance / taste protection.
     mode = creative_mode or _default_creative_mode(project.intent)
-    result.creative = run_creative_engine(result, mode)
+    result.creative = run_creative_engine(result, mode, profile=profile)
     result.governance = run_governance(result, result.creative, taste_profile=_taste)
 
     # Session intelligence: render graph, plugin availability.

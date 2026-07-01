@@ -11,7 +11,7 @@ import statistics
 from typing import Dict, List, Optional
 
 from ..constants import LOOP_SAMPLE_KINDS
-from .producer_profile import load_profile
+from .producer_profile import ProducerProfile, load_profile
 
 FORWARD = {"intimate", "foreground"}
 
@@ -47,18 +47,24 @@ def score_doctrine(
     masking_report: Dict,
     mix_metrics: Optional[Dict],
     intent: Optional[Dict] = None,
+    profile: Optional[ProducerProfile] = None,
 ) -> Dict:
+    # P-029: per-call producer selection. When ``profile is None`` the reference
+    # ``_DEFAULT_PROFILE`` is used, so every existing caller (and the no-arg
+    # pipeline path) stays byte-identical; when a profile IS passed, EVERY scorer
+    # reads ITS doctrine constants, so ``analyze(producer=…)`` is a live lever.
+    doctrine = (profile or _DEFAULT_PROFILE).doctrine
     events = masking_report.get("events", [])
     lead = next((r for r in records if r["instrument_identity"] == "lead_vocal"), None)
     warnings: List[Dict] = []
 
-    halee, halee_ev = _halee(records, events)
-    ramone, ramone_ev = _ramone(records, lead, events, warnings)
-    vocal, vocal_ev = _vocal_centrality(lead, events)
-    depth, depth_ev = _depth_hierarchy(records)
-    contrast, contrast_ev = _section_contrast(sections_analysis, warnings)
-    static, static_ev = _static_mix(records, lead, events, mix_metrics)
-    dynamic, dynamic_ev = _dynamic_mix(sections_analysis)
+    halee, halee_ev = _halee(records, events, doctrine)
+    ramone, ramone_ev = _ramone(records, lead, events, warnings, doctrine)
+    vocal, vocal_ev = _vocal_centrality(lead, events, doctrine)
+    depth, depth_ev = _depth_hierarchy(records, doctrine)
+    contrast, contrast_ev = _section_contrast(sections_analysis, warnings, doctrine)
+    static, static_ev = _static_mix(records, lead, events, mix_metrics, doctrine)
+    dynamic, dynamic_ev = _dynamic_mix(sections_analysis, doctrine)
 
     component_scores = {
         "halee_score": halee,
@@ -69,7 +75,7 @@ def score_doctrine(
         "static_mix_score": static,
         "dynamic_mix_score": dynamic,
     }
-    weights = _WEIGHTS
+    weights = doctrine["weights"]
     present = {k: v for k, v in component_scores.items() if v is not None}
     overall = (
         _clamp(sum(present[k] * weights[k] for k in present) / sum(weights[k] for k in present))
@@ -94,9 +100,9 @@ def score_doctrine(
 
 
 # --------------------------------------------------------------------------- #
-def _halee(records: List[Dict], events: List[Dict]):
-    c = _PENALTY_COEFFS["halee"]
-    score = _BASELINES["halee"]
+def _halee(records: List[Dict], events: List[Dict], doctrine: Dict = _DOCTRINE):
+    c = doctrine["penalty_coeffs"]["halee"]
+    score = doctrine["baselines"]["halee"]
     ev: List[str] = []
     n = len(records) or 1
 
@@ -131,9 +137,10 @@ def _halee(records: List[Dict], events: List[Dict]):
     return _clamp(score), ev
 
 
-def _ramone(records: List[Dict], lead: Optional[Dict], events: List[Dict], warnings: List[Dict]):
-    c = _PENALTY_COEFFS["ramone"]
-    score = _BASELINES["ramone"]
+def _ramone(records: List[Dict], lead: Optional[Dict], events: List[Dict],
+            warnings: List[Dict], doctrine: Dict = _DOCTRINE):
+    c = doctrine["penalty_coeffs"]["ramone"]
+    score = doctrine["baselines"]["ramone"]
     ev: List[str] = []
     if lead is None:
         score -= c["no_lead"]
@@ -162,8 +169,8 @@ def _ramone(records: List[Dict], lead: Optional[Dict], events: List[Dict], warni
     return _clamp(score), ev
 
 
-def _vocal_centrality(lead: Optional[Dict], events: List[Dict]):
-    c = _SCORERS["vocal_centrality"]
+def _vocal_centrality(lead: Optional[Dict], events: List[Dict], doctrine: Dict = _DOCTRINE):
+    c = doctrine["scorers"]["vocal_centrality"]
     if lead is None:
         return c["no_lead_score"], ["No lead vocal present."]
     score = c["baseline"]
@@ -181,8 +188,8 @@ def _vocal_centrality(lead: Optional[Dict], events: List[Dict]):
     return _clamp(score), ev
 
 
-def _depth_hierarchy(records: List[Dict]):
-    c = _SCORERS["depth_hierarchy"]
+def _depth_hierarchy(records: List[Dict], doctrine: Dict = _DOCTRINE):
+    c = doctrine["scorers"]["depth_hierarchy"]
     depths = [r["depth_default"] for r in records]
     distinct = len(set(depths))
     n = len(records) or 1
@@ -196,8 +203,8 @@ def _depth_hierarchy(records: List[Dict]):
     return _clamp(score), ev
 
 
-def _section_contrast(sections: List[Dict], warnings: List[Dict]):
-    coeffs = _SCORERS["section_contrast"]
+def _section_contrast(sections: List[Dict], warnings: List[Dict], doctrine: Dict = _DOCTRINE):
+    coeffs = doctrine["scorers"]["section_contrast"]
     if len(sections) < 2:
         return None, ["Fewer than two sections analysed; contrast cannot be scored."]
     lift_fail = 0
@@ -211,8 +218,9 @@ def _section_contrast(sections: List[Dict], warnings: List[Dict]):
     return _clamp(score), ev
 
 
-def _static_mix(records: List[Dict], lead: Optional[Dict], events: List[Dict], mix_metrics: Optional[Dict]):
-    c = _SCORERS["static_mix"]
+def _static_mix(records: List[Dict], lead: Optional[Dict], events: List[Dict],
+                mix_metrics: Optional[Dict], doctrine: Dict = _DOCTRINE):
+    c = doctrine["scorers"]["static_mix"]
     score = c["baseline"]
     ev: List[str] = []
     if mix_metrics:
@@ -237,8 +245,8 @@ def _static_mix(records: List[Dict], lead: Optional[Dict], events: List[Dict], m
     return _clamp(score), ev
 
 
-def _dynamic_mix(sections: List[Dict]):
-    c = _SCORERS["dynamic_mix"]
+def _dynamic_mix(sections: List[Dict], doctrine: Dict = _DOCTRINE):
+    c = doctrine["scorers"]["dynamic_mix"]
     if len(sections) < 2:
         return c["insufficient_sections_score"], ["Fewer than two sections; dynamic movement cannot be assessed."]
     rms = [s["metrics"]["rms_dbfs"] for s in sections]
