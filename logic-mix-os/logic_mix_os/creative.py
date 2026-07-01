@@ -13,6 +13,7 @@ from __future__ import annotations
 from typing import Dict, List, Optional
 
 from .constants import LOOP_SAMPLE_KINDS
+from .doctrine.doctrine_engine import read_loop_context
 from .doctrine.producer_profile import ProducerProfile, load_profile
 
 # --- Producer-specific judgment: sourced from the reference ProducerProfile --
@@ -175,6 +176,40 @@ def _foregrounded_loop(result) -> bool:
 _PROMOTION_EVIDENCE = {"foregrounded_loop": _foregrounded_loop}
 
 
+def _protected_iconic_loop(result, prof: ProducerProfile) -> bool:
+    """P-032g — the first profile-DECIDED creative gate (pure, read-only).
+
+    THE DOCTRINE PIN made operational: the engine DETECTS agnostically (the
+    ``loop_context`` doctrine axis reads static-vs-iconic, observationally);
+    the PROFILE decides. This predicate is True — and the ``loop_deconstruct``
+    promotion is withheld — ONLY when ALL of:
+
+      * the profile OPTS IN: ``protect_iconic_loops`` is True. The reference
+        ``halee_ramone`` sets it False, so the default path short-circuits
+        here and current behavior is byte-identical (Halee/Ramone still
+        deconstructs a dominating loop).
+      * the lead vocal is NOT bad-masked (the RAMONE GATE): iconic must not
+        override a masked lead. Even a protecting profile lets the
+        deconstruct pressure through when the loop context includes a buried
+        vocal — checked FIRST, so protection can never shadow the vocal.
+      * the loop READS iconic on the SAME shared detection basis as the
+        doctrine axis (``read_loop_context`` with the profile's own
+        ``loop_context`` constants — one basis, never forked): dominant +
+        groove-carrying function while the mix evolves around it. A STATIC
+        or ambiguous reading earns no protection.
+    """
+    if not prof.protect_iconic_loops:
+        return False
+    if _lead_masked(result):
+        return False
+    c = prof.doctrine["scorers"]["loop_context"]
+    status, _ = read_loop_context(
+        result.records, result.section_analysis,
+        result.masking_report.get("events", []), c,
+    )
+    return status == "iconic"
+
+
 def _apply_promotions(kind: str, result, profile: Optional[ProducerProfile] = None) -> List[tuple]:
     """Pure: the ordered ``(dim, delta, reason)`` for each FIRED promotion.
 
@@ -182,11 +217,20 @@ def _apply_promotions(kind: str, result, profile: Optional[ProducerProfile] = No
     is true on ``result``. Rows are evaluated in table order, so the emitted
     evidence lines are deterministic. Mirrors ``_apply_nudges`` exactly, reading
     the promotion table from the PASSED ``profile`` (default = the reference).
+
+    P-032g: the ``loop_deconstruct`` promotion additionally passes the
+    profile-decided ``protect_iconic_loops`` gate — a profile that protects
+    iconic-functioning loops withholds the promotion (unless the lead vocal is
+    masked). With the reference default (False) the gate is inert and the
+    firing behavior is byte-identical to the pre-gate engine.
     """
-    promotion_table = (profile or _DEFAULT_PROFILE).promotion_table
+    prof = profile or _DEFAULT_PROFILE
+    promotion_table = prof.promotion_table
     fired: List[tuple] = []
     for row in promotion_table:
         if kind in row["kinds"] and _PROMOTION_EVIDENCE[row["evidence"]](result):
+            if kind == "loop_deconstruct" and _protected_iconic_loop(result, prof):
+                continue  # the profile protects the iconic-functioning loop
             fired.append((row["dim"], row["delta"], row["reason"]))
     return fired
 

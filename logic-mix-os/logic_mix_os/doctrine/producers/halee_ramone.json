@@ -231,5 +231,7 @@
     "intimate_truth_words": ["intimate", "vulnerable", "conflicted", "ache", "quiet", "restrained", "composed"],
     "intimate_mode": "ramone_vocal_truth",
     "default_mode": "dramatic_contrast"
-  }
+  },
+
+  "protect_iconic_loops": false
 }

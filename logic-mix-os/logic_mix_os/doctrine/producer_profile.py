@@ -47,6 +47,7 @@ _REQUIRED_DATA_FIELDS = (
     "veto_thresholds",
     "doctrine",
     "default_creative_mode",
+    "protect_iconic_loops",
 )
 
 _REQUIRED_METADATA_FIELDS = (
@@ -100,6 +101,16 @@ class ProducerProfile:
 
     # pipeline.py (_default_creative_mode truth -> mode map)
     default_creative_mode: Dict[str, Any]
+
+    # creative.py — P-032g: the first profile-DECIDED creative gate. The
+    # engine's ``loop_context`` axis DETECTS static-vs-iconic observationally;
+    # this flag is the profile DECIDING what to do with an iconic reading:
+    # True => the ``loop_deconstruct`` promotion does not fire on an
+    # iconic-functioning loop (the profile protects the loop as the record's
+    # identity); False (halee_ramone) => current behavior, byte-identical —
+    # the reference profile deconstructs. A masked lead vocal always overrides
+    # protection (the Ramone gate lives in creative.py).
+    protect_iconic_loops: bool
 
 
 def _normalize_kinds_sets(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
@@ -173,6 +184,7 @@ def load_profile(name: str = "halee_ramone") -> ProducerProfile:
         veto_thresholds=raw["veto_thresholds"],
         doctrine=raw["doctrine"],
         default_creative_mode=raw["default_creative_mode"],
+        protect_iconic_loops=raw["protect_iconic_loops"],
     )
 
 
