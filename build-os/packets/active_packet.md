@@ -4,51 +4,97 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** NONE ACTIVE
-- **Packet id:** —
-- **Title:** —
+- **Status:** ACTIVE
+- **Packet id:** P-021
+- **Title:** Verified end-to-end agent walkthrough — a full session through the cowork surface (TESTS-ONLY)
 
-No product packet is in flight. The orchestrator picks the next one from the arc
-below (or re-surveys `build-os/memory/residue.md`).
+## Why (the arc to the canonical target — the MILESTONE step)
 
-## Last closed
+Arc P-019→P-023 to "Claude Cowork drives a full mixing session end-to-end."
+P-019 made the loop closeable inside cowork; P-020 made the flow discoverable
+(`describe_session`). P-021 is the milestone: **prove, executably, that an agent
+using ONLY the cowork command surface can drive a complete session start-to-finish
+and the learning loop closes.** After this, "Cowork-usable end-to-end" is a pinned
+fact, not a claim. TESTS-ONLY — no product behavior change (the surface is already
+built; this proves it works as a whole).
 
-- **P-020 — `describe_session` session-flow discoverability** (CLOSED 2026-07-01,
-  qa GREEN, reviewer pass; **Codex NOT available — single-reviewer verdict**).
-  SECOND step of the arc P-019→P-023 to the Cowork-usable end-to-end state. Adds a
-  pure `_SESSION_FLOW` structure + a read-only `describe_session` command to the
-  cowork registry (count **33 → 34**) that returns the SAME registry as an ORDERED,
-  phase-grouped session flow `{"phases": [...], "auxiliary": [...]}` in the canonical
-  order **intake → classify → diagnose → plan → checklist → validate → record-outcome
-  → next-pass** (31 commands across 8 phases + 3 honest `auxiliary` off-axis:
-  `run_creative_engine`, `build_missing_tool`, `describe_session`). Completeness
-  INVARIANT load-bearing (every `COMMANDS` key covered EXACTLY ONCE; qa verified
-  31+3=34). Additive / read-only (every existing handler byte-unchanged; output
-  deterministic + deep-copied). Single commit **`942a68a`** (green in isolation =
-  tip). Suite **259 → 269 passed** (+10, green under `-W error`); regression
-  **68/68, 0 critical, 0 warnings**; safety grep clean; UI N/A. **Local-only** on
-  the dev branch (base `6c40e2b`, PR #15) — not pushed/merged. Receipt:
-  `build-os/receipts/P-020-describe-session-flow-discoverability.md`.
-  **Carry-forward → P-021:** surface the live-vs-dead-ledger distinction
-  (`record_mix_pass` live history vs `write_mix_decision` dead ledger, both under
-  `record-outcome`) in the walkthrough/session view.
+## Authority
 
-## Next (staged — the arc to the Cowork-usable end-to-end state, P-021 → P-023)
+**Build / test-additive — in authority.** No product/runtime change (tests-only).
+**Merge to default stays gated on the user's explicit go; dev-branch commits
+covered by standing push-go.**
 
-Steps 1 (P-019) and 2 (P-020) are DONE. Remaining, in sequence:
+## Scope (the builder implements EXACTLY this)
 
-- **P-021 — verified end-to-end agent walkthrough (TESTS-ONLY).** Drive a full
-  Logic-Pro mixing session through the cowork surface start-to-finish; prove the
-  whole chain works as one session. **Also the home for the carried
-  live-vs-dead-ledger clarity nudge** (make it clear an agent should not treat the
-  `write_mix_decision` dead-ledger write as loop-closing — only `record_mix_pass`
-  on the LIVE history channel closes the loop).
-- **P-022 — OPTIONAL session-efficiency / override-propagation.** Sequence only if
-  P-021 surfaces a real need.
-- **P-023 — USER-GATED transport decision: MCP server vs a documented raw-CLI
-  contract as the agent transport.** **Do NOT open blind; sequenced LAST** — a
-  product/architecture fork that needs an explicit user ask.
+### Tests-only — a new `tests/test_cowork_session_walkthrough.py`
+Drive a full mixing session **through the cowork surface** (`build_context` +
+`run_command` only — the agent's own command set) on a seeded fixture, following
+the canonical phase order that `describe_session` returns, and prove the chain
+works as ONE session:
+
+1. **Discover-then-drive:** call `run_command("describe_session", ctx)` to get the
+   ordered phases, then drive the ESSENTIAL happy-path command of each phase in
+   order via `run_command` — intake → classify → diagnose → plan → checklist →
+   validate → record-outcome → next-pass. (You need not run all 34 commands — pick
+   the core end-to-end path; param-heavy/auxiliary commands like
+   `compare_to_reference` [needs a reference], `override_track_identity`,
+   `build_missing_tool` may be exercised separately or noted, not forced into the
+   line.) Assert each driven command returns sane, structured (JSON-serializable)
+   output — the chain runs without dropping out of the cowork surface.
+2. **The loop CLOSES (the milestone assertion):** at record-outcome, call
+   `run_command("record_mix_pass", ctx, ..., reverted=True)` (the LIVE channel);
+   then build a FRESH `build_context(memory_dir=...)` and call
+   `run_command("suggest_next_pass", ...)` — assert the confirmed "Revert last
+   pass" surfaces. NO hand re-run of `record_pass`/planner. This proves an agent
+   closes the loop entirely within the cowork surface (reuses the P-019 liveness
+   pattern, now as part of a FULL session).
+3. **Pin the live-vs-dead-ledger distinction (the carried P-020 clarity nudge —
+   executable):** assert that `run_command("write_mix_decision", ...)` (the
+   display-only DEAD ledger) does NOT change `suggest_next_pass` output, whereas
+   `record_mix_pass` (LIVE history) DOES. This pins, executably, that only
+   `record_mix_pass` closes the loop — so a future agent/reader can't mistake the
+   ledger write for loop-closing.
+4. **Determinism / honesty:** the walkthrough must use real seeded fixtures and the
+   real `analyze()` path (fake adapters only — no DAW/Logic/AppleScript/subprocess/
+   network/`.logicx`). Assert the driven session is deterministic where it should
+   be (same inputs → same plan/next-pass).
+
+### Honesty clause
+If driving through the cowork surface reveals a REAL gap — a phase whose essential
+command can't be reached, a command that needs state the cowork context doesn't
+carry, or the loop NOT closing through the full session — STOP and report it as a
+finding (like P-014 / the P-016 inert catch). The walkthrough's job is to tell the
+truth about whether the surface is actually agent-drivable end-to-end; a green
+test that skips the hard part is worse than an honest gap. If you find a gap that
+needs a small product fix, report it — do NOT silently expand scope into product
+code; that becomes a separate packet (possibly P-022).
+
+## Constraints
+
+- **≤2 commits** (likely 1: the walkthrough test file). **Commit-1 green in
+  isolation.**
+- **No product/runtime change** — tests-only. If a product fix proves necessary,
+  STOP and report (honesty clause), don't fold it in silently.
+- **No external mutation** — no push / merge / deploy / secret.
+- Author/committer `Claude <noreply@anthropic.com>`; trailers required; NO model
+  identifier in any commit message/artifact.
+
+## Expected proof (qa to report exact)
+
+- Full suite **269 → 269+N passed** (0 failed/skipped/warnings, green under
+  `-W error`).
+- Regression **68/68, 0 critical, 0 warnings** held.
+- Commit-1 green in isolation.
+- **The milestone is proven:** a full session driven through the cowork surface
+  (via `describe_session`'s order) completes, and the loop CLOSES (record via
+  `record_mix_pass` → fresh context → `suggest_next_pass` shows the confirmed
+  revert), with NO hand re-run — load-bearing (fails if the record isn't threaded).
+- **Live-vs-dead pinned:** `write_mix_decision` does NOT change next-pass;
+  `record_mix_pass` does.
+- Safety grep clean; UI N/A; all prior tests (P-008/9/18/19/20 + existing) green,
+  UNEDITED (this packet adds a test file; it must not need to change existing
+  assertions — if it does, that's a signal to flag, not silently edit).
 
 ---
-_Cleared by the archivist on P-020 close (2026-07-01). One packet at a time; the
-orchestrator-in-chief confirms the next active packet._
+_Confirmed as active by the orchestrator-in-chief (P-021), the milestone step of
+the arc to the Claude-Cowork-usable final state. One packet at a time._
