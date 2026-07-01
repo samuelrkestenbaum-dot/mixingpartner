@@ -43,21 +43,33 @@
 ## Deferred (follow-up packets)
 
 - **★ THE ACTIVE ROADMAP — THE ARC TO A COWORK-USABLE END-TO-END STATE
-  (P-020 → P-023).** Canonical target: Logic Mix OS as a tool Claude Cowork can
-  drive END-TO-END in a Logic Pro mixing session (plan-only v1). **P-019 closed the
-  FIRST step** — the learning loop is now closeable INSIDE the cowork surface
-  (`record_mix_pass`, read/write symmetric). The rest of the arc, in sequence:
-  - **P-020 — session-flow discoverability:** phase-grouped commands so an agent
-    can navigate the 33-command surface (intake → classify → diagnose → plan →
-    checklist → validate → record → next-pass). In-authority, additive.
+  (P-021 → P-023).** Canonical target: Logic Mix OS as a tool Claude Cowork can
+  drive END-TO-END in a Logic Pro mixing session (plan-only v1). **P-019 ✓** closed
+  the learning loop INSIDE the cowork surface (`record_mix_pass`, read/write
+  symmetric); **P-020 ✓** made the surface self-describing as an ordered,
+  phase-grouped session flow (`describe_session`, 34 commands, completeness invariant
+  load-bearing). The rest of the arc, in sequence:
   - **P-021 — verified end-to-end agent walkthrough (TESTS-ONLY):** drive a full
     Logic-Pro mixing session through the cowork surface start-to-finish; prove the
-    whole chain works as one session.
+    whole chain works as one session. **★ Also the home for the carried
+    live-vs-dead-ledger clarity nudge** (see the next bullet).
   - **P-022 — OPTIONAL session-efficiency / override-propagation.** Sequence only
-    if P-020/P-021 surface a real need.
+    if P-021 surfaces a real need.
   - **P-023 — USER-GATED transport decision: MCP server vs a documented raw-CLI
     contract.** **Do NOT open blind; sequenced LAST** — it is a product/architecture
     fork that needs an explicit user ask.
+
+- **★ P-020 CARRY-FORWARD — surface the LIVE-vs-DEAD-ledger distinction in the P-021
+  walkthrough (reviewer flag, non-blocking).** In `describe_session`, both
+  `record_mix_pass` (writes the LIVE history channel → `_apply_history`, the loop
+  closer) and `write_mix_decision` (writes the display-only DEAD
+  `decision_ledger.json`) sit under the `record-outcome` phase. This is HONEST (both
+  ARE outcome-recording, and the per-command `desc` strings telegraph the
+  difference), but the dead/live distinction is NOT surfaced in `describe_session`'s
+  output. **P-021 (the end-to-end walkthrough) is the natural place to add a one-line
+  clarity nudge** so an agent doesn't treat the dead-ledger write as loop-closing.
+  Carry as a P-021 consideration; ties into the standing LEDGER-IS-DEAD routing guard
+  below.
 
 - **Reward-nudges family — NOW CLOSED as SATURATED / EQUILIBRIUM (P-017).**
   P-016 shipped the FIRST reward/promotion nudge (the `loop` branch:
@@ -205,8 +217,10 @@
 > at a DOCTRINE-HONEST EQUILIBRIUM (P-017 — no honest further flip in the current
 > dimension set), the OUTCOME→learning axis is OPEN (P-018 — the first
 > confirmed-outcome signal is live), and the learning loop is now CLOSEABLE INSIDE
-> the cowork surface (P-019 — read/write symmetric; FIRST step of the arc
-> P-019→P-023 to a Cowork-usable end-to-end state). For orchestrator re-survey:
+> the cowork surface (P-019 — read/write symmetric) and self-describing as an
+> ordered, phase-grouped session flow (P-020 — `describe_session`, 34 commands;
+> steps 1 & 2 of the arc P-019→P-023 to a Cowork-usable end-to-end state). For
+> orchestrator re-survey:
 
 - **THE FLIP PROGRAM IS ESSENTIALLY COMPLETE — DOCTRINE-HONEST EQUILIBRIUM
   (P-017).** The three levers have converged: penalty (P-012/P-015), reward
@@ -229,9 +243,12 @@
   (read/write symmetric). The reachable outcome-side next move is the **outcome-enum
   generalization** (`reverted`/`kept`/`refined`, widening the `reverted: bool`
   without breaking the default) — **user-gated for the semantics; NOT staged.** The
-  in-flight roadmap now is the cowork ARC (P-020→P-023, see the Deferred section).
-  **Standing routing guard:** route any outcome/event producer onto a LIVE channel
-  (history or taste), never the display-only ledger.
+  in-flight roadmap now is the cowork ARC — **P-020 (`describe_session`,
+  self-describing session flow) is DONE (step 2); the remainder is P-021→P-023**
+  (see the Deferred section). **Standing routing guard:** route any outcome/event
+  producer onto a LIVE channel (history or taste), never the display-only ledger —
+  and P-020 carries a P-021 nudge to SURFACE that live-vs-dead distinction in the
+  walkthrough.
 - **Option-B-visibility / decisiveness** — the CREATIVE half is fully closed:
   **P-013** proved the nudge fires on real data through `analyze()` (option-(a)
   no-flip on a clear ranking), **P-014** proved a near-tie FLIP was unreachable
@@ -244,6 +261,46 @@
 - Net-new **event-logging** producers remain behind the product decision.
 
 ## Done (resolved)
+
+- **`describe_session` makes the cowork surface self-describing as an ordered,
+  phase-grouped session flow (SECOND step of the arc P-019→P-023) — DONE via P-020**
+  (`build-os/receipts/P-020-describe-session-flow-discoverability.md`). **PRODUCT-code
+  feature; in-authority, additive, read-only (a grouping OVER the existing registry —
+  no new product decision).** Adds a pure `_SESSION_FLOW` structure + a read-only
+  `describe_session` command to the cowork `COMMANDS` registry (count **33 → 34**)
+  that returns the SAME registry as `{"phases": [...ordered...], "auxiliary": [...]}`
+  in the canonical order **intake → classify → diagnose → plan → checklist → validate
+  → record-outcome → next-pass** (grounded in the README pipeline + the P-018/P-019
+  record/validate steps). **31 commands** map onto the 8 linear phases; **3 are
+  honestly `auxiliary`** — OFF the linear axis: `run_creative_engine` (parallel
+  creative exploration), `build_missing_tool` (meta tooling-gap helper),
+  `describe_session` (self-describing). **Honesty clause honored:** no fabricated
+  flow; `suggest_next_pass` placed ONCE (in `next-pass`), not double-listed.
+  **Completeness INVARIANT (the load-bearing guard):** every `COMMANDS` key appears
+  EXACTLY ONCE across phases + auxiliary (exact cover — no orphan, no duplicate),
+  keeping the flow honest as commands are added; proven load-bearing (orphan or
+  duplicate → the invariant test FAILS), independently verified by qa
+  (**31 + 3 = 34 = len(COMMANDS)**). **Additive / read-only:** `list_commands` /
+  `run_command` / every existing handler are BYTE-UNCHANGED; `describe_session` is
+  deterministic (byte-identical across calls) and DEEP-COPIES its output so callers
+  can't mutate the module-level `_SESSION_FLOW`. **Single commit `942a68a`** (purely
+  additive `cowork.py` +100, new `tests/test_cowork_session_flow.py` 10 tests, the
+  one intended `test_cowork.py` count assertion 33→34; single commit = tip, green in
+  isolation = 269). **Proof:** suite **259 → 269 passed** (+10; 0
+  failed/skipped/warnings, green under `-W error`); regression **68/68, 0 critical,
+  0 warnings** held (additive read-only → goldens untouched); registry 34, no stale
+  33 anywhere; safety grep clean; UI N/A; existing cowork + P-008/P-009/P-018/P-019
+  tests green. qa **GREEN** (independent exact-partition verification 31+3=34).
+  Reviewer **pass** — verified EVERY command placement against its real handler; the
+  flow is truthful (two defensible judgment calls: `score_mix` and
+  `compare_to_reference` placed in `plan`); the 3 auxiliaries are genuinely off-axis;
+  the invariant is load-bearing. **Codex NOT available — single-reviewer verdict.**
+  **Reviewer non-blocking flag → carried to P-021:** `write_mix_decision` (dead
+  ledger) and `record_mix_pass` (live history) both sit under `record-outcome`, but
+  the dead/live distinction is NOT surfaced in `describe_session`'s output — add a
+  one-line clarity nudge in the P-021 walkthrough (see the Deferred section above).
+  **P-020 is local-only** (commit `942a68a` on the dev branch on top of the `6c40e2b`
+  PR #15 merge base), not pushed/merged at close.
 
 - **`record_mix_pass` closes the learning loop INSIDE the cowork surface (FIRST
   step of the arc P-019→P-023 to a Cowork-usable end-to-end state) — DONE via
@@ -793,5 +850,14 @@
   any subsequent PR / merge into the protected default — needs the user's explicit
   go. No push / merge / deploy / secret action taken in this close.
 
+- **P-020's product commit `942a68a` is local-only as of this close** (this
+  archivist close did not push). It sits on the dev branch
+  `claude/logic-mix-os-hardening-12-7hbeh1` on top of the `6c40e2b` (PR #15) merge
+  base — the additive, read-only `describe_session` cowork command + `_SESSION_FLOW`
+  (byte-identical to every existing command). The build-os-only close commit is
+  separate. Any push of the product commit — and any subsequent PR / merge into the
+  protected default — needs the user's explicit go. No push / merge / deploy / secret
+  action taken in this close.
+
 ---
-_Append-only working notes. Last advanced on P-019 close (2026-07-01)._
+_Append-only working notes. Last advanced on P-020 close (2026-07-01)._
