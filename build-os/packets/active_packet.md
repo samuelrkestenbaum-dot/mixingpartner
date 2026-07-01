@@ -4,99 +4,50 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** ACTIVE
-- **Packet id:** P-027
-- **Title:** Source `governance.py`'s producer-specific values from the profile (byte-identical, WIDENED per Finding A)
+- **Status:** NONE ACTIVE — awaiting the orchestrator to confirm the next packet.
+- **Packet id:** —
+- **Last-closed:** **P-027** — Source `governance.py`'s producer-specific values
+  from the reference profile (byte-identical, WIDENED per Finding A). qa GREEN,
+  reviewer pass (Codex unavailable — single-reviewer). Two commits `e4786ca`
+  (Part A + no-aliasing test, green in isolation = 343) + `7b1c26d` (Part B widen +
+  source + round-trip). Suite 331 → 351 (+20); regression 68/68 UNCHANGED. Safety
+  kill-switches (1–5) STAY hardcoded; the 4 aesthetic switches + `taste_triangle` +
+  `veto_thresholds` now profile-sourced. No-aliasing DISCHARGED; emotion-blend
+  round() proven byte-identical (all 1,030,301 integer triples). **Local-only**
+  (`e4786ca`, `7b1c26d` on the dev branch on top of P-026 `c4a092d`, on top of the
+  P-025 commits, on top of the `e79426a` PR #16 base) — NOT pushed/merged. Receipt:
+  `build-os/receipts/P-027-governance-sources-values-from-reference-profile.md`.
 
-## Why (producer-agnostic epic — governance extraction)
+## Next (staged — the orchestrator confirms before the builder starts)
 
-Third extraction step. Source `governance.py`'s producer-specific judgment from
-`load_profile("halee_ramone")` (same byte-identical pattern as P-026 for
-creative), AND — per P-025's Finding A — WIDEN the profile to also hold the
-secondary governance aesthetic constants that were inline. Byte-identical,
-guarded by the round-trip + regression 68/68.
+- **P-028 — doctrine extraction (WIDENED per Finding A + ALIASING-PROOF required) —
+  the LAST and LARGEST extraction of the producer-agnostic epic.** Source
+  `doctrine_engine.py`'s producer-specific judgment from
+  `load_profile("halee_ramone")` (same byte-identical pattern as P-026/P-027), AND
+  — per P-025's Finding A — WIDEN the profile to capture **ALL doctrine scoring
+  functions' constants**, not just `_halee` / `_ramone`:
+  - `_vocal_centrality`, `_depth_hierarchy`, `_section_contrast`, `_static_mix`,
+    `_dynamic_mix` — baselines (80.0 / 70.0 / 40), penalties, and coefficients
+    (e.g. `30 + rms_std*8 + width_std*140`).
+  - **ALIASING-PROOF (BINDING, still open — see residue):** doctrine's consumers
+    must never mutate a sourced global in place. Grep for in-place mutation of the
+    sourced structures + add a no-aliasing test (fire the relevant path, assert the
+    shared `_DEFAULT_PROFILE` structures are byte-unchanged) + a determinism check.
+    Do NOT close P-028 without this proof.
+  - **Byte-identical:** existing doctrine tests pass UNEDITED; regression 68/68 held.
+  - **≤2 commits; Commit-1 green in isolation.** `creative.py` / `governance.py`
+    (done) / `pipeline.py` (P-029) untouched.
+  - **Spec note (from P-027):** OMIT the "NO model identifier" constraint line — the
+    mandated `Co-Authored-By: Claude Opus 4.8` trailer is the sanctioned form and is
+    required (it conflicts with that line and keeps tripping the reviewer).
 
-## Authority
-
-**Build / feature — in authority, byte-identical.** Extends the profile
-(additively) + sources governance from it. **Merge to default gated on explicit
-go; dev-branch commits under standing push-go.**
-
-## Scope (the builder implements EXACTLY this)
-
-### Part A — source governance's ALREADY-captured values from the profile
-`governance.py` gets `_DEFAULT_PROFILE = load_profile("halee_ramone")` and sources
-these from it (same names/shapes; literals deleted; JSON = single source of truth):
-- `_TRUTH_ALIGNMENT = _DEFAULT_PROFILE.truth_alignment`
-- `_TASTE_KIND_BIAS = _DEFAULT_PROFILE.taste_kind_bias`
-- `TASTE_MAX_DELTA = _DEFAULT_PROFILE.taste_max_delta`
-- the AESTHETIC subset of `KILL_SWITCHES` (items 6–9) sourced from
-  `_DEFAULT_PROFILE.aesthetic_kill_switches`. **The SAFETY kill-switches (items
-  1–5, non-destructive/Class-5) STAY hardcoded in governance.py — they are
-  producer-AGNOSTIC and must NOT come from a swappable profile.** So `KILL_SWITCHES`
-  becomes `[<5 hardcoded safety switches>] + _DEFAULT_PROFILE.aesthetic_kill_switches`
-  (verify the order/content reproduces today's list EXACTLY).
-
-### Part B — WIDEN the profile with the secondary governance constants (Finding A)
-Extend `ProducerProfile` + `halee_ramone.json` + the P-025 round-trip test to
-capture, and then SOURCE from the profile, these currently-inline values (verified
-against `governance.py`):
-- **`taste_triangle` rules:** the `width_bloom + intimate → identity -= 30` penalty
-  (line 180) and the `emotion` blend = mean of `ramone_score`,
-  `listener_excitement_score`, `vocal_belief_score` (line 176). Represent honestly
-  in the schema (e.g. `taste_triangle: {intimate_width_penalty: 30, emotion_dims:
-  ["ramone_score","listener_excitement_score","vocal_belief_score"]}`).
-- **veto thresholds:** `reject_below: 45` (identity/emotion reject, line 182),
-  `align_veto_below: 50` (govern_variant `align < 50`), `align_fallback: 75`
-  (govern_variant `_TRUTH_ALIGNMENT.get(...).get(kind, 75)`). Represent as e.g.
-  `veto_thresholds: {reject_below: 45, align_veto_below: 50, align_fallback: 75}`.
-Then rewrite `taste_triangle`/`govern_variant` to READ these from
-`_DEFAULT_PROFILE` instead of the inline literals — byte-identical.
-
-### Invariants
-- **Byte-identical:** no governance output changes. The existing governance/taste
-  tests (`test_governance*.py`, `test_live_wire.py`, P-007/8/9 taste tests) MUST
-  pass UNEDITED — that is the byte-identical proof.
-- **NO-ALIASING PROOF (BINDING, from P-026):** governance's consumers must never
-  mutate a sourced global in place. Grep `governance.py` for in-place mutation of
-  `_TRUTH_ALIGNMENT`/`_TASTE_KIND_BIAS`/`KILL_SWITCHES`/the sourced values; add a
-  no-aliasing test (run governance on a fixture, assert the shared
-  `_DEFAULT_PROFILE` structures are byte-unchanged after). Note `_apply_taste`
-  mutates a LOCAL `triangle` dict, not the profile — confirm.
-- Do NOT touch `creative.py` (done), `doctrine_engine.py` (P-028), `pipeline.py`
-  (P-029). No per-call profile threading yet.
-
-### Tests — the binding guard. Test-first.
-- Round-trip for the NEW profile fields (taste_triangle rules + veto thresholds ==
-  the current inline values), extending `tests/test_producer_profile.py`.
-- Value-pins for the sourced governance globals (like P-026's) + the no-aliasing
-  test.
-- Byte-identical: existing governance/taste tests pass UNEDITED.
-
-Fake adapters only — no DAW / Logic / AppleScript / subprocess / `.logicx` /
-network.
-
-## Constraints
-
-- **≤2 commits.** Commit-1: Part A (source already-captured values) + no-aliasing
-  test, green in isolation. Commit-2: Part B (widen profile + source the secondary
-  constants) + round-trip for the new fields.
-- **Byte-identical** — if any governance output changes, STOP and report.
-- **No external mutation.** Author/committer `Claude <noreply@anthropic.com>`;
-  trailers required; NO model identifier in any commit message/artifact.
-
-## Expected proof (qa to report exact)
-
-- Full suite **331 → 331+N passed** (0 failed/skipped/warnings, green under
-  `-W error`) — existing governance/taste tests pass UNEDITED.
-- Regression **68/68, 0 critical, 0 warnings** held (byte-identical judgment).
-- Commit-1 green in isolation.
-- **Byte-identical governance proven** + **no-aliasing proven** (shared profile
-  structures unmutated after governance runs). The widened secondary constants are
-  now profile-sourced + round-trip-guarded. Safety kill-switches (1–5) confirmed
-  STILL hardcoded (not in the profile). `creative.py`/`doctrine_engine.py`/
-  `pipeline.py` untouched. Safety grep clean; UI N/A.
+- **Then:** P-029 (parameterize the pipeline / per-call profile — the structural fix
+  for the aliasing risk) → P-030 (rename the `halee` / `ramone` dims off the producer
+  names) → P-031 (confidence framework — consume the metadata stamp) → P-032 (second
+  producer) → P-033 (expose producer selection).
 
 ---
-_Confirmed as active by the orchestrator-in-chief (P-027), governance extraction
-(widened) of the producer-agnostic epic. One packet at a time._
+_Cleared by the archivist on the P-027 close, 2026-07-01. P-027 (governance sourced
+from the profile + WIDENED; the safety chassis kept hardcoded and separate) is the
+last-closed; P-028 (doctrine extraction, the last and largest) is staged as Next.
+One packet at a time._

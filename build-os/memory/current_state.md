@@ -22,27 +22,102 @@
   producer-agnostic epic: **P-025 (`195127c` + `e6cb038`, product — the
   `ProducerProfile` schema + pure `load_profile()` + the VERBATIM-extracted
   `halee_ramone.json` reference, byte-identical round-trip guard, honesty metadata
-  stamp; COMPLETELY UNWIRED)** then **P-026 (`c4a092d`, product — the FIRST WIRING:
-  `creative.py` sources its 8 producer-specific globals FROM
-  `load_profile("halee_ramone")`, the hardcoded literals DELETED, so
-  `halee_ramone.json` is now their single source of truth; byte-identical,
-  no-aliasing-proven; the other three judgment sources byte-unchanged, regression
-  UNCHANGED)**. The P-025 + P-026 product commits are local-only (not pushed /
-  merged). P-026's parent is `84d208d` (the active-packet confirmation).
+  stamp; COMPLETELY UNWIRED)** then **P-026 (`c4a092d`, product — creative.py
+  sources its 8 producer-specific globals FROM `load_profile("halee_ramone")`, the
+  hardcoded literals DELETED)** then **P-027 (`e4786ca` + `7b1c26d`, product —
+  `governance.py` sources its producer-specific judgment from the profile AND the
+  profile is WIDENED, per Finding A, with `taste_triangle` + `veto_thresholds`,
+  now sourced too; the 5 SAFETY kill-switches STAY hardcoded — producer-agnostic;
+  byte-identical, no-aliasing-proven; `doctrine_engine.py` / `pipeline.py`
+  byte-unchanged, regression UNCHANGED)**. The P-025 + P-026 + P-027 product
+  commits are local-only (not pushed / merged). P-027's parent chain: `7b1c26d` →
+  `e4786ca` → `b8526a8` (active-packet confirmation) → `c4a092d` (P-026).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-01, P-026):** suite **331 passed** (0 failed /
+- **Green baseline (verified 2026-07-01, P-027):** suite **351 passed** (0 failed /
   skipped / warnings; green even under `-W error`); regression **68/68** (0
-  critical / 0 warnings) — UNCHANGED (P-026 is byte-identical). Commit-1 green in
-  isolation = 331. (Prior baseline was 319 at P-025; P-026 added +12 —
-  `test_creative_profile_sourced.py` value-pins / shape / no-aliasing; goldens &
-  judgment untouched. Earlier: 293 → 319 at P-025.)
+  critical / 0 warnings) — UNCHANGED (P-027 is byte-identical). Commit-1 green in
+  isolation = 343. (Prior baseline was 331 at P-026; P-027 added +20 —
+  `test_governance_profile_sourced.py` value-pins / kill-switch boundary /
+  no-aliasing / exhaustive emotion-blend round() proof + the widened-fields
+  round-trip in `test_producer_profile.py`; goldens & judgment untouched. Earlier:
+  319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★ P-027 SOURCES `governance.py` FROM THE REFERENCE PROFILE AND WIDENS THE
+  PROFILE (FINDING A) — THE JSON IS THE SINGLE SOURCE OF TRUTH, BYTE-IDENTICAL, WITH
+  THE SAFETY CHASSIS KEPT SEPARATE.** Third extraction step of the producer-agnostic
+  epic. P-026 sourced `creative.py`; **P-027 sources `governance.py`** AND widens the
+  profile with governance's secondary aesthetic constants. **Last-closed = P-027.**
+  - **What P-027 shipped — Part A (source already-captured values):** `governance.py`
+    gains `_DEFAULT_PROFILE = load_profile("halee_ramone")` and SOURCES
+    `_TRUTH_ALIGNMENT` / `_TASTE_KIND_BIAS` / `TASTE_MAX_DELTA` FROM it; the inline
+    literals are DELETED. **The kill-switch SPLIT (the load-bearing safety boundary):**
+    `KILL_SWITCHES = _SAFETY_KILL_SWITCHES + _DEFAULT_PROFILE.aesthetic_kill_switches`
+    — the **5 SAFETY switches (items 1–5, Class-5 / non-destructive) STAY HARDCODED**
+    (producer-AGNOSTIC; must NEVER enter a swappable profile); the **4 AESTHETIC
+    switches (items 6–9)** come from the profile; the composed 9-item list is
+    byte-identical to the pre-P-027 literal (no safety string appears in the JSON).
+  - **Part B — WIDEN the profile (Finding A):** `ProducerProfile` + `halee_ramone.json`
+    + the P-025 round-trip gain `taste_triangle` (`intimate_width_penalty: 30`,
+    `emotion_dims: [ramone_score, listener_excitement_score, vocal_belief_score]`) and
+    `veto_thresholds` (`reject_below: 45`, `align_veto_below: 50`, `align_fallback:
+    75`). `taste_triangle` / `govern_variant` now READ these from `_DEFAULT_PROFILE`;
+    the emotion blend reproduces `round((ramone + listener_excitement + vocal_belief)
+    / 3)` EXACTLY (same fixed dim order, same `round()`).
+  - **Byte-identical by construction:** the existing governance/taste tests
+    (`test_governance.py`, `test_governance_taste.py`, `test_live_wire.py`; the
+    P-007/8/9 taste tests) pass **UNEDITED** — same governance output on the seeded
+    fixtures, now sourced from the JSON. **Emotion-blend round() proven byte-identical:**
+    reviewer checked ALL **1,030,301** integer triples (0 mismatches); qa checked
+    51,520 triples + named `.5`-boundary cases where banker's rounding matters.
+  - **No-aliasing PROVEN (the per-module safety invariant — DISCHARGED, binding from
+    P-026):** grep confirmed no in-place mutation of the sourced globals;
+    `_apply_taste` / `govern_variant` mutate only a LOCAL `triangle`; the no-aliasing
+    test confirms the shared `_DEFAULT_PROFILE` structures are byte-unchanged after
+    governance runs on a real fixture. Determinism holds. Widened fields round-trip
+    non-vacuously (a 30→25 mutation is caught).
+  - **No signature/mechanism change; no per-call producer selection yet** (P-029).
+    `creative.py` (done) / `doctrine_engine.py` (P-028) / `pipeline.py` (P-029)
+    **byte-unchanged.**
+  - **Two commits `e4786ca` (Part A + no-aliasing test — green in isolation = 343) +
+    `7b1c26d` (Part B widen + source + round-trip).** Suite **331 → 351 passed** (+20;
+    0 failed/skipped/warnings, green under `-W error`); regression **68/68, 0 critical,
+    0 warnings — UNCHANGED.** Safety grep clean; UI N/A. qa **GREEN**; reviewer
+    **pass.** **Codex NOT available — single-reviewer verdict.** **P-027 local-only**
+    (commits `e4786ca`, `7b1c26d` on the dev branch on top of the P-026 commit on top
+    of the P-025 commits on top of the `e79426a` base), not pushed/merged.
+  - **★ STABLE FACT (recorded this close):** **safety kill-switches (Class-5 /
+    non-destructive) are producer-AGNOSTIC and stay HARDCODED in `governance.py`
+    (`_SAFETY_KILL_SWITCHES`); only AESTHETIC switches are profile-swappable — a
+    safety switch must NEVER enter a `ProducerProfile`.** This boundary lets the
+    profile become swappable without ever letting a producer disable a safety guard.
+  - **★ TRAILER RECONCILED (stop the recurring flag):** the reviewer re-flagged the
+    mandated `Co-Authored-By: Claude Opus 4.8` trailer as a "model identifier" vs the
+    packet-spec "NO model identifier" line — NO violation: the harness / `CLAUDE.md`
+    MANDATE that exact trailer; "Claude Opus 4.8" is the sanctioned trailer form,
+    DISTINCT from the exact model ID the identity rule bars. **Action: DROP the "NO
+    model identifier" line from FUTURE packet specs (P-028+)** — recorded in residue.
+  - **★ WATCH-ITEM (reviewer, mild):** `taste_triangle.emotion_dims` couples the
+    profile to the runtime `scores` dict keys — watch this coupling when P-028
+    generalizes scoring / P-029 threads the profile per-call.
+  - **★ WATCH-ITEM (aliasing, from P-026):** DISCHARGED for governance (P-027);
+    remains BINDING for **P-028 (doctrine)** — each extraction packet must
+    independently prove its consumers never mutate a sourced global in place. P-029
+    (per-call profile) is the structural fix.
+  - **★ EPIC ARC (updated):** **P-025 ✓ (foundation) → P-026 ✓ (creative sourced) →
+    P-027 ✓ (governance sourced + WIDENED; safety chassis kept separate)** → **P-028
+    (doctrine extraction, WIDENED — the LAST and LARGEST; capture ALL doctrine scoring
+    functions' constants; +aliasing-proof)** → P-029 (parameterize the pipeline /
+    per-call profile) → P-030 (rename the `halee` / `ramone` dims off the producer
+    names) → P-031 (confidence framework — consume the metadata stamp) → P-032 (second
+    producer) → P-033 (expose producer selection). Receipt:
+    `build-os/receipts/P-027-governance-sources-values-from-reference-profile.md`.
 
 - **★★ P-026 LANDS THE FIRST WIRING OF THE PRODUCER-AGNOSTIC EPIC: `creative.py`
   NOW SOURCES ITS PRODUCER-SPECIFIC VALUES FROM THE REFERENCE PROFILE — THE JSON IS
@@ -87,13 +162,11 @@
     extraction packet MUST independently PROVE its consumers never mutate a sourced
     global in place — grep for in-place mutation + a no-aliasing test like P-026's.
     P-029 (per-call profile) reduces this risk. Recorded in residue as binding.
-  - **★ EPIC ARC (updated):** **P-025 ✓ (foundation) → P-026 ✓ (creative sourced
-    from the profile)** → P-027 (governance extraction, **WIDENED** + **aliasing-
-    proof required**) → P-028 (doctrine extraction, **WIDENED** + **aliasing-proof
-    required**) → P-029 (parameterize the pipeline / per-call profile) → P-030
-    (rename the `halee` / `ramone` dims off the producer names) → P-031 (confidence
-    framework — consume the metadata stamp) → P-032 (second producer) → P-033
-    (expose producer selection). Receipt:
+  - **★ EPIC ARC (as of P-026 close):** P-025 ✓ → P-026 ✓ → P-027 (governance,
+    WIDENED + aliasing-proof) → P-028 (doctrine, WIDENED + aliasing-proof) → P-029
+    (per-call profile) → P-030 (rename dims) → P-031 (confidence) → P-032 (second
+    producer) → P-033 (expose selection). **[SUPERSEDED — see the P-027 block above:
+    P-027 is now ✓; NEXT = P-028.]** Receipt:
     `build-os/receipts/P-026-creative-sources-values-from-reference-profile.md`.
 
 - **★★ A NEW EPIC OPENS — THE PRODUCER-AGNOSTIC EPIC — AND P-025 LANDS ITS
@@ -143,15 +216,14 @@
     (commits `195127c`, `e6cb038` on the dev branch on top of the `e79426a` PR #16
     base), not pushed/merged.
   - **★ COMPLETENESS carry-forward (reviewer Finding A — IMPORTANT for the arc):**
-    P-025 captured what its scope declared, but ADDITIONAL producer-aesthetic
-    constants are NOT yet in the profile (deferred by design, not drift). **WIDEN
-    P-027** to also capture governance's inline `taste_triangle` rule
-    (`width_bloom + intimate → identity -= 30`) + the `<45` reject / `<50`
-    align-veto / `75` align-fallback thresholds + the `emotion` blend; **WIDEN
-    P-028** to capture ALL doctrine scoring functions' constants
-    (`_vocal_centrality` / `_depth_hierarchy` / `_section_contrast` / `_static_mix`
-    / `_dynamic_mix` — baselines 80.0/70.0/40, penalties, coefficients), not just
-    `_halee` / `_ramone`.
+    P-025 captured what its scope declared; additional producer-aesthetic constants
+    were deferred by design (not drift). **P-027 ✓ RESOLVED the governance portion**
+    — the profile now holds `taste_triangle` (`intimate_width_penalty: 30` +
+    `emotion_dims`) + `veto_thresholds` (`reject_below: 45` / `align_veto_below: 50`
+    / `align_fallback: 75`), all sourced + round-trip-guarded. **REMAINING for
+    P-028:** capture ALL doctrine scoring functions' constants (`_vocal_centrality`
+    / `_depth_hierarchy` / `_section_contrast` / `_static_mix` / `_dynamic_mix` —
+    baselines 80.0/70.0/40, penalties, coefficients), not just `_halee` / `_ramone`.
   - **★ EPIC ARC (the active roadmap):** **P-025 ✓ (foundation) → P-026 ✓
     (creative sources its values from the profile, byte-identical)** → P-027
     (governance extraction, **WIDENED** + **aliasing-proof**) → P-028 (doctrine

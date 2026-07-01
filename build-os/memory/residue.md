@@ -43,7 +43,8 @@
 ## Deferred (follow-up packets)
 
 - **★★ THE ACTIVE ROADMAP IS THE PRODUCER-AGNOSTIC EPIC — P-025 ✓ (foundation) +
-  P-026 ✓ (FIRST WIRING).** Make the engine select any producer's judgment as a
+  P-026 ✓ (creative sourced) + P-027 ✓ (governance sourced + WIDENED).** Make the
+  engine select any producer's judgment as a
   swappable `ProducerProfile` (the physics stays fixed). **P-025 ✓** extracted
   today's 100%-hardcoded Halee/Ramone judgment into a frozen `ProducerProfile` + a
   pure `load_profile()` + the VERBATIM `halee_ramone.json` reference, byte-identical
@@ -55,20 +56,29 @@
   `halee_ramone.json` is now their single source of truth. Byte-identical (the
   P-012/13/15/16 creative tests pass UNEDITED, 69 combined; regression 68/68
   UNCHANGED), no-aliasing-proven (copy-before-mutate; profile byte-unchanged after a
-  nudge + promotion fire). Single commit `c4a092d`; suite 319 → 331 (+12). Receipts:
+  nudge + promotion fire). Single commit `c4a092d`; suite 319 → 331 (+12). **P-027 ✓**
+  sourced `governance.py` from the profile (`_TRUTH_ALIGNMENT` / `_TASTE_KIND_BIAS` /
+  `TASTE_MAX_DELTA` + the 4 AESTHETIC kill-switches) AND WIDENED the profile
+  (Finding A) with `taste_triangle` (`intimate_width_penalty: 30` + `emotion_dims`) +
+  `veto_thresholds` (`reject_below: 45` / `align_veto_below: 50` / `align_fallback:
+  75`), now sourced too. The 5 SAFETY kill-switches STAY hardcoded
+  (`_SAFETY_KILL_SWITCHES`) — producer-AGNOSTIC. Byte-identical (existing
+  governance/taste tests pass UNEDITED; emotion-blend round() proven byte-identical
+  across all 1,030,301 integer triples; regression 68/68 UNCHANGED), no-aliasing
+  DISCHARGED (mutation local-only; shared profile byte-unchanged). Two commits
+  `e4786ca` (green in isolation = 343) + `7b1c26d`; suite 331 → 351 (+20). Receipts:
   `build-os/receipts/P-025-producer-profile-schema-loader-halee-ramone-extraction.md`,
-  `build-os/receipts/P-026-creative-sources-values-from-reference-profile.md`.
+  `build-os/receipts/P-026-creative-sources-values-from-reference-profile.md`,
+  `build-os/receipts/P-027-governance-sources-values-from-reference-profile.md`.
   **The epic arc (next steps):**
-  - **P-027 — governance extraction (WIDENED per Finding A + ALIASING-PROOF
-    required)** (NEXT). In addition to `_TRUTH_ALIGNMENT` / `_TASTE_KIND_BIAS` /
-    `TASTE_MAX_DELTA` / the aesthetic kill-switches, ALSO capture the inline
-    `taste_triangle` rule (`width_bloom + intimate → identity -= 30`, ~L179–182),
-    the `<45` reject / `<50` align-veto / `75` align-fallback thresholds, and the
-    `emotion` blend definition (~L176). MUST independently PROVE governance's
-    consumers never mutate the sourced globals in place (see the aliasing-proof
-    requirement below).
+  - **P-027 — governance extraction (WIDENED per Finding A + ALIASING-PROOF) — ✓
+    DONE.** `governance.py` sources `_TRUTH_ALIGNMENT` / `_TASTE_KIND_BIAS` /
+    `TASTE_MAX_DELTA` + the 4 AESTHETIC kill-switches from the profile; the profile
+    widened with `taste_triangle` + `veto_thresholds`, now sourced; the 5 SAFETY
+    kill-switches STAY hardcoded (producer-agnostic). Aliasing-proof DISCHARGED.
   - **P-028 — doctrine extraction (WIDENED per Finding A + ALIASING-PROOF
-    required).** Capture ALL doctrine scoring functions' constants —
+    required) — NEXT, the LAST and LARGEST extraction.** Capture ALL doctrine
+    scoring functions' constants —
     `_vocal_centrality` / `_depth_hierarchy` / `_section_contrast` / `_static_mix` /
     `_dynamic_mix` (baselines 80.0/70.0/40, penalties, coefficients e.g.
     `30 + rms_std*8 + width_std*140`) — not just `_halee` / `_ramone`. MUST
@@ -85,33 +95,56 @@
     of true producer-agnosticism; governed by the honesty policy).
   - **P-033 — expose producer selection** (the user-facing selection surface).
 
-- **★ FINDING A — SECONDARY PRODUCER-AESTHETIC CONSTANTS carried forward to
-  P-027 / P-028 (reviewer, from P-025; deferred by design, NOT drift).** P-025
-  captured what its scope declared, but there are additional producer-specific
-  constants the epic MUST capture before it can claim FULL producer-agnosticism:
-  - **→ P-027 (governance):** the inline `taste_triangle` rule
-    `width_bloom + intimate → identity -= 30` (~L179–182, a sibling of
-    `_TASTE_KIND_BIAS`); the `<45` reject / `<50` align-veto / `75` align-fallback
-    thresholds; the `emotion` blend definition (~L176).
-  - **→ P-028 (doctrine):** ALL scoring functions' constants — `_vocal_centrality`,
-    `_depth_hierarchy`, `_section_contrast`, `_static_mix`, `_dynamic_mix`
-    (baselines 80.0/70.0/40, penalties, coefficients).
-  These two packets OWN capturing these; the P-025 round-trip guard is the safety
-  net they rely on as they widen the profile.
+- **★ FINDING A — SECONDARY PRODUCER-AESTHETIC CONSTANTS (reviewer, from P-025;
+  deferred by design, NOT drift). NOW PARTIALLY RESOLVED (governance ✓; doctrine
+  OPEN for P-028).** P-025 captured what its scope declared, but additional
+  producer-specific constants must be captured before FULL producer-agnosticism:
+  - **→ P-027 (governance): ✓ RESOLVED.** The profile now holds `taste_triangle`
+    (`intimate_width_penalty: 30` — the `width_bloom + intimate → identity -= 30`
+    penalty — + `emotion_dims: [ramone_score, listener_excitement_score,
+    vocal_belief_score]` — the emotion blend) + `veto_thresholds` (`reject_below: 45`
+    / `align_veto_below: 50` / `align_fallback: 75`), all sourced + round-trip-
+    guarded, byte-identical.
+  - **→ P-028 (doctrine): OPEN — the remaining Finding-A work.** ALL scoring
+    functions' constants — `_vocal_centrality`, `_depth_hierarchy`,
+    `_section_contrast`, `_static_mix`, `_dynamic_mix` (baselines 80.0/70.0/40,
+    penalties, coefficients).
+  P-028 OWNS the remaining capture; the P-025 round-trip guard is the safety net it
+  relies on as it widens the profile.
 
-- **★ ALIASING-PROOF REQUIREMENT — BINDING for P-027 / P-028 (reviewer, from P-026;
-  a PER-MODULE invariant, NOT a structural guarantee).** P-026 proved `creative.py`
-  never mutates its sourced globals in place — `score_variant` copies each
-  `_KIND_SCORES` row via `dict(_KIND_SCORES.get(...))` BEFORE mutating, and qa
-  confirmed `_DEFAULT_PROFILE.kind_scores` is byte-unchanged after forcing a nudge
-  AND a promotion to fire. **That safety is per-module.** As the sourcing pattern
-  repeats, **EACH of P-027 (governance) and P-028 (doctrine) MUST independently
-  PROVE its consumers never mutate a sourced global in place** — (a) grep for
-  in-place mutation of the sourced structures, and (b) add a no-aliasing test like
-  P-026's (fire the relevant path, then assert the shared profile object is
-  byte-unchanged) + a determinism check. **P-029 (per-call profile) is the
-  structural fix** that removes the shared-mutable-global risk. Do NOT close P-027
-  or P-028 without this proof.
+- **★ ALIASING-PROOF REQUIREMENT — DISCHARGED for creative (P-026) + governance
+  (P-027); STILL BINDING for P-028 (reviewer, from P-026; a PER-MODULE invariant,
+  NOT a structural guarantee).** P-026 proved `creative.py` never mutates its sourced
+  globals in place (copy-before-mutate; `kind_scores` byte-unchanged after a nudge +
+  promotion fire). **P-027 DISCHARGED it for governance:** grep confirmed no in-place
+  mutation; `_apply_taste` / `govern_variant` mutate only a LOCAL `triangle`; the
+  no-aliasing test confirmed the shared `_DEFAULT_PROFILE` structures are
+  byte-unchanged after governance runs on a real fixture. **That safety is
+  per-module.** **P-028 (doctrine) MUST STILL independently PROVE its consumers never
+  mutate a sourced global in place** — (a) grep for in-place mutation of the sourced
+  structures, and (b) add a no-aliasing test (fire the relevant path, then assert the
+  shared profile object is byte-unchanged) + a determinism check. **P-029 (per-call
+  profile) is the structural fix** that removes the shared-mutable-global risk. Do
+  NOT close P-028 without this proof.
+
+- **★ TRAILER-SPEC STANDING NOTE — DROP the "NO model identifier" line from FUTURE
+  packet specs (from P-027; reconciled).** The reviewer repeatedly re-flags the
+  mandated `Co-Authored-By: Claude Opus 4.8` trailer as a "model identifier,"
+  conflicting with packet-spec lines that say "NO model identifier in any commit
+  message/artifact." **RECONCILED — there is NO violation:** the harness / `CLAUDE.md`
+  MANDATE that exact trailer session-wide; "Claude Opus 4.8" is the SANCTIONED trailer
+  form, DISTINCT from the exact model ID the identity rule bars. **Action for P-028+
+  spec authors:** OMIT the "NO model identifier" constraint line — it conflicts with
+  the mandated trailer and keeps tripping the reviewer. The required trailers
+  (`Co-Authored-By: Claude Opus 4.8` + `Claude-Session: …`) are correct and expected.
+
+- **★ WATCH-ITEM — `emotion_dims` couples the profile to `scores` dict keys (reviewer,
+  from P-027; mild).** P-027's widened `taste_triangle.emotion_dims`
+  (`["ramone_score", "listener_excitement_score", "vocal_belief_score"]`) couples the
+  profile to the exact key names in the runtime `scores` dict. Byte-identical and
+  correct today, but **watch this coupling when P-028 generalizes scoring and when
+  P-029 threads the profile per-call** — any rename/restructure of the score keys must
+  stay in lockstep with `emotion_dims`.
 
 - **★ CONFIRMED HONESTY / SOURCING POLICY — a STANDING product decision governing
   P-031 / P-032 (confirmed by the user).** hand-curated → high-confidence;
