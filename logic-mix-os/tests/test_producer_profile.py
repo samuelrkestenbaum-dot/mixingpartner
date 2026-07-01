@@ -1,4 +1,4 @@
-"""P-025 — the binding guard for the producer-agnostic extraction (round-trip).
+"""P-025 — the binding guard for the producer-agnostic extraction.
 
 This test suite is the load-bearing proof that ``halee_ramone.json`` (loaded via
 ``load_profile``) reconstructs TODAY's producer-specific judgment BYTE-IDENTICALLY
@@ -22,9 +22,11 @@ Round-trip assertions are of two kinds:
 
 from __future__ import annotations
 
+import copy
+
 from logic_mix_os import creative, governance
 from logic_mix_os.doctrine import doctrine_engine
-from logic_mix_os.doctrine.producer_profile import load_profile
+from logic_mix_os.doctrine.producer_profile import ProducerProfile, load_profile
 
 
 # --------------------------------------------------------------------------- #
@@ -255,7 +257,88 @@ def test_doctrine_ramone_penalty_coeffs_round_trip_indirect():
 
 
 # --------------------------------------------------------------------------- #
-# Determinism (the round-trip guard must be stable across loads)
+# Extraction-completeness — every named producer-specific structure has a home
+# --------------------------------------------------------------------------- #
+def test_extraction_completeness_all_fields_present():
+    """Every producer-specific structure named in P-025 must have a profile field
+    (no silent omission). If a future new producer-specific constant is added it
+    must be given a home here or this list is knowingly incomplete."""
+    p = load_profile()
+    required = [
+        "kind_scores", "nudge_table", "promotion_table",
+        "creative_nudge_cap", "creative_promotion_cap", "risk_penalty",
+        "search_modes", "philosophy",
+        "truth_alignment", "taste_kind_bias", "taste_max_delta",
+        "aesthetic_kill_switches",
+        "doctrine", "default_creative_mode",
+    ]
+    for field in required:
+        assert hasattr(p, field), f"profile missing field {field!r}"
+        assert getattr(p, field) is not None, f"profile field {field!r} is None"
+
+
+def test_doctrine_subfields_present():
+    d = load_profile().doctrine
+    for key in ("weights", "baselines", "penalty_coeffs"):
+        assert key in d and d[key], f"doctrine missing {key!r}"
+    assert set(d["penalty_coeffs"]) == {"halee", "ramone"}
+
+
+# --------------------------------------------------------------------------- #
+# Schema validity + metadata
+# --------------------------------------------------------------------------- #
+def test_metadata_present_and_typed():
+    m = load_profile().metadata
+    assert isinstance(m["name"], str)
+    assert isinstance(m["display_name"], str)
+    assert isinstance(m["provenance"], str)
+    assert isinstance(m["confidence"], str)
+    assert isinstance(m["risk_class"], int)
+
+
+def test_metadata_reference_values():
+    m = load_profile().metadata
+    assert m["name"] == "halee_ramone"
+    assert m["display_name"] == "Roy Halee / Phil Ramone"
+    assert m["confidence"] == "high"
+    assert m["provenance"] == "hand-curated-documented"
+    # Judgment profile => low/observe risk class, not a destructive action.
+    assert m["risk_class"] == 0
+
+
+def test_load_profile_validates_and_rejects_unknown():
+    import pytest
+
+    with pytest.raises((FileNotFoundError, ValueError)):
+        load_profile("no_such_producer")
+
+
+def test_profile_is_frozen():
+    """The returned profile is an immutable view — mutation is rejected."""
+    import dataclasses
+    import pytest
+
+    p = load_profile()
+    with pytest.raises(dataclasses.FrozenInstanceError):
+        p.philosophy = "changed"  # type: ignore[misc]
+
+
+def test_load_profile_default_name():
+    assert load_profile().metadata["name"] == "halee_ramone"
+    assert isinstance(load_profile(), ProducerProfile)
+
+
+# --------------------------------------------------------------------------- #
+# Determinism
 # --------------------------------------------------------------------------- #
 def test_two_loads_equal():
     assert load_profile() == load_profile()
+
+
+def test_load_does_not_mutate_source_dicts():
+    """Loading the profile must not alias/mutate the live module dicts."""
+    before = copy.deepcopy(creative._KIND_SCORES)
+    p = load_profile()
+    # Mutating the loaded copy must not touch the source.
+    p.kind_scores["width_bloom"]["technical"] = -999
+    assert creative._KIND_SCORES == before
