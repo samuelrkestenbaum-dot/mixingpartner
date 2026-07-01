@@ -11,8 +11,26 @@ import statistics
 from typing import Dict, List, Optional
 
 from ..constants import LOOP_SAMPLE_KINDS
+from .producer_profile import load_profile
 
 FORWARD = {"intimate", "foreground"}
+
+# The producer-specific judgment constants (component weights, per-scorer
+# baselines, penalty coefficients, thresholds and bonuses) are SOURCED from the
+# reference producer profile — the JSON is now their single source of truth
+# (P-025 captured them; P-028 sources them). The PHYSICS/measurement code
+# (forward-layer occupancy, band analysis, section spread via pstdev, distinct
+# depth counting) stays IN the functions below; only the aesthetic numbers move
+# to the profile, so the formula shape and evaluation order are byte-identical.
+#
+# Read-only in the consumers: every scorer does dict ``[...]`` reads off these
+# shared structures, never an in-place mutation (the no-aliasing proof in
+# ``tests/test_doctrine_profile_sourced.py`` is binding).
+_DEFAULT_PROFILE = load_profile("halee_ramone")
+_DOCTRINE = _DEFAULT_PROFILE.doctrine
+_WEIGHTS = _DOCTRINE["weights"]
+_BASELINES = _DOCTRINE["baselines"]
+_PENALTY_COEFFS = _DOCTRINE["penalty_coeffs"]
 
 
 def _clamp(x: float) -> float:
@@ -47,15 +65,7 @@ def score_doctrine(
         "static_mix_score": static,
         "dynamic_mix_score": dynamic,
     }
-    weights = {
-        "halee_score": 1.0,
-        "ramone_score": 1.2,
-        "vocal_centrality_score": 1.2,
-        "depth_hierarchy_score": 1.0,
-        "section_contrast_score": 1.0,
-        "static_mix_score": 1.0,
-        "dynamic_mix_score": 0.8,
-    }
+    weights = _WEIGHTS
     present = {k: v for k, v in component_scores.items() if v is not None}
     overall = (
         _clamp(sum(present[k] * weights[k] for k in present) / sum(weights[k] for k in present))
@@ -81,13 +91,14 @@ def score_doctrine(
 
 # --------------------------------------------------------------------------- #
 def _halee(records: List[Dict], events: List[Dict]):
-    score = 86.0
+    c = _PENALTY_COEFFS["halee"]
+    score = _BASELINES["halee"]
     ev: List[str] = []
     n = len(records) or 1
 
     fg_frac = sum(1 for r in records if r["depth_default"] in FORWARD) / n
-    if fg_frac > 0.6:
-        penalty = (fg_frac - 0.6) * 70
+    if fg_frac > c["forward_threshold"]:
+        penalty = (fg_frac - c["forward_threshold"]) * c["forward_occupancy"]
         score -= penalty
         ev.append(f"{fg_frac:.0%} of elements sit in forward layers; depth is collapsing.")
     else:
@@ -95,12 +106,12 @@ def _halee(records: List[Dict], events: List[Dict]):
 
     felt_fg = [r for r in records if r["perceptual_role"] == "felt" and r["depth_default"] in FORWARD]
     if felt_fg:
-        score -= 4 * len(felt_fg)
+        score -= c["felt_forward"] * len(felt_fg)
         ev.append(f"{len(felt_fg)} felt element(s) sit too far forward: " + ", ".join(r["name"] for r in felt_fg) + ".")
 
     width_events = [e for e in events if e["classification"] == "width_crowding"]
     if width_events:
-        score -= 6 * len(width_events)
+        score -= c["width_crowding"] * len(width_events)
         ev.append(f"{len(width_events)} section(s) show stereo-width crowding (artificial width).")
 
     loop_fg = [
@@ -110,17 +121,18 @@ def _halee(records: List[Dict], events: List[Dict]):
         and r.get("stereo_width", 0) > 0.6
     ]
     if loop_fg:
-        score -= 6 * len(loop_fg)
+        score -= c["loop_foregrounded"] * len(loop_fg)
         ev.append("Full-width loop(s) foregrounded: " + ", ".join(r["name"] for r in loop_fg) + ".")
 
     return _clamp(score), ev
 
 
 def _ramone(records: List[Dict], lead: Optional[Dict], events: List[Dict], warnings: List[Dict]):
-    score = 86.0
+    c = _PENALTY_COEFFS["ramone"]
+    score = _BASELINES["ramone"]
     ev: List[str] = []
     if lead is None:
-        score -= 35
+        score -= c["no_lead"]
         ev.append("No identified lead vocal — the emotional centre is undefined.")
         warnings.append({
             "warning": "No lead vocal identified. Confirm the emotional centre before mixing.",
@@ -129,15 +141,15 @@ def _ramone(records: List[Dict], lead: Optional[Dict], events: List[Dict], warni
     else:
         bad_vocal = [e for e in events if lead["name"] in e["elements"] and e["classification"] == "bad_masking"]
         if bad_vocal:
-            score -= 6 * len(bad_vocal)
+            score -= c["vocal_masked"] * len(bad_vocal)
             ev.append(f"Vocal masked by {len(bad_vocal)} forward element(s).")
         else:
             ev.append("Vocal is not critically masked by forward elements.")
 
     n = len(records) or 1
     decorative = [r for r in records if r["sacredness"] in {"decorative", "expendable"}]
-    if len(decorative) / n > 0.4:
-        score -= 10
+    if len(decorative) / n > c["decorative_threshold"]:
+        score -= c["decorative_penalty"]
         ev.append(f"{len(decorative)} decorative/expendable element(s); risk of overmixing.")
         warnings.append({
             "warning": "Many decorative elements relative to core. Consider subtraction before processing.",
