@@ -36,28 +36,107 @@
   groups) and sources them; the PHYSICS/measurement code + presentation thresholds
   STAY hardcoded — producer-agnostic; byte-identical, no-aliasing-proven;
   `creative.py` / `governance.py` / `pipeline.py` byte-unchanged, regression
-  UNCHANGED)**. **P-028 COMPLETES THE EXTRACTION PHASE** — the whole judgment layer
-  is now profile-driven. The P-025 + P-026 + P-027 + P-028 product commits are
-  local-only (not pushed / merged). P-028's parent chain: `72e98a7` → `29b9dfe` →
-  `d5260a6` (active-packet confirmation) → `23850f7` (P-027 close). P-027's parent
-  chain: `7b1c26d` → `e4786ca` → `b8526a8` (active-packet confirmation) → `c4a092d`
-  (P-026).
+  UNCHANGED)** then **P-029 (`42d6ebd` + `ea1aaa9`, product — THE PIVOT:
+  `pipeline.analyze(..., producer="halee_ramone")` accepts a name OR a
+  `ProducerProfile` object, loads ONCE per call, and threads `profile=` to
+  `score_doctrine` / `run_creative_engine` / `run_governance`, which thread it to
+  ALL leaf scorers; each reads its producer-specific values from the PASSED
+  profile, defaulting to the module `_DEFAULT_PROFILE` when `profile is None`;
+  KILL_SWITCHES recomposed per call = 5 hardcoded SAFETY switches + the profile's
+  aesthetic switches; byte-identical default, selection proven GENUINELY LIVE +
+  load-bearing across all 3 layers; physics/analyzers untouched, regression
+  UNCHANGED)**. **P-028 COMPLETED THE EXTRACTION PHASE and P-029 IS THE PIVOT — the
+  profile is now a LIVE, SELECTABLE LEVER end-to-end.** The P-025 + P-026 + P-027 +
+  P-028 + P-029 product commits are local-only (not pushed / merged). P-029's parent
+  chain: `ea1aaa9` → `42d6ebd` → `d05105d` (active-packet confirmation) → `4fdae41`
+  (P-028 close). P-028's parent chain: `72e98a7` → `29b9dfe` → `d5260a6`
+  (active-packet confirmation) → `23850f7` (P-027 close).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-01, P-028):** suite **370 passed** (0 failed /
+- **Green baseline (verified 2026-07-01, P-029):** suite **384 passed** (0 failed /
   skipped / warnings; green even under `-W error`); regression **68/68** (0
-  critical / 0 warnings) — UNCHANGED (P-028 is byte-identical). Commit-1 green in
-  isolation = 364. (Prior baseline was 351 at P-027; P-028 added +19 —
-  `test_doctrine_profile_sourced.py` sourcing/value/behavior pins + no-aliasing +
-  determinism, plus the `doctrine.scorers` round-trips in `test_producer_profile.py`;
-  goldens & judgment untouched. Earlier: 331 → 351 at P-027; 319 → 331 at P-026;
-  293 → 319 at P-025.)
+  critical / 0 warnings) — UNCHANGED (P-029 default path is byte-identical).
+  Commit-1 green in isolation = 383. (Prior baseline was 370 at P-028; P-029 added
+  +14 — `test_producer_selection.py`: byte-identical default + selection-liveness
+  across doctrine/creative/governance, proven load-bearing both ways, + determinism;
+  existing tests UNEDITED. Earlier: 351 → 370 at P-028; 331 → 351 at P-027;
+  319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★ P-029 IS THE PIVOT — THE PRODUCER PROFILE IS NOW A LIVE, SELECTABLE LEVER
+  END-TO-END: `analyze(producer=…)` SELECTS WHICH PROFILE DRIVES THE JUDGMENT.**
+  The EXTRACTION PHASE (P-026/27/28) made the judgment layer read from a module
+  `_DEFAULT_PROFILE` singleton; **P-029 threads a PER-CALL profile through the whole
+  pipeline** so a different producer produces a different plan — the profile stops
+  being a mirror of today's hardcoded values and becomes a real lever.
+  **Last-closed = P-029.**
+  - **What P-029 shipped — the threading:** `pipeline.analyze(..., producer: str |
+    ProducerProfile = "halee_ramone")` accepts a NAME or a ready `ProducerProfile`
+    object (via `isinstance` dispatch — name → `load_profile`, object → used
+    directly), loads the profile ONCE per call, and threads `profile=` to the three
+    judgment entry points, which thread it to EVERY leaf scorer: doctrine
+    (`score_doctrine` + the 7 scorers `_halee`/`_ramone`/`_vocal_centrality`/
+    `_depth_hierarchy`/`_section_contrast`/`_static_mix`/`_dynamic_mix` + weights),
+    creative (`run_creative_engine` → `score_variant`/`_apply_nudges`/
+    `_apply_promotions`), governance (`run_governance` → `govern_branches`/
+    `govern_variant`/`taste_triangle`/`_apply_taste`). Each leaf reads its
+    producer-specific values from the PASSED profile, defaulting to the module
+    `_DEFAULT_PROFILE` when `profile is None` — so existing direct callers + the
+    no-arg path stay byte-identical.
+  - **★ KILL_SWITCHES recomposed PER CALL (the load-bearing safety boundary):** the
+    5 hardcoded producer-AGNOSTIC SAFETY switches + the passed profile's aesthetic
+    switches, in the same order — **a swapped producer can NEVER drop a safety
+    guarantee**, and the default composed list is byte-identical (no safety string
+    in the JSON). **No judgment VALUE changed; physics/analyzers untouched.**
+  - **Byte-identical default PROVEN:** reviewer INDEPENDENTLY byte-diffed the default
+    `analyze()` doctrine + creative + governance across all 3 fixtures pre-P-029 vs
+    HEAD → IDENTICAL. no-arg == `producer="halee_ramone"` == the reference object.
+    Regression **68/68, 0 critical, 0 warnings — UNCHANGED.** Existing tests UNEDITED.
+  - **★★ SELECTION IS GENUINELY LIVE across all 3 layers** — through the REAL
+    `analyze()` path with synthetic one-value-mutated profiles (NO monkeypatch):
+    doctrine `baselines.halee` −20 → `halee_score` delta exactly 20; creative boosted
+    `vocal_ride` kind_score → that variant's real `overall_score` → 100; governance
+    `truth_alignment["intimate"]["vocal_ride"]` 88→60 → governed
+    `emotional_truth_alignment` 60. **LOAD-BEARING proven BOTH ways (the P-016
+    lesson):** sabotaging each layer's threading fails ITS liveness test while
+    byte-identical/determinism stay green — byte-identical alone would NOT catch an
+    accepted-but-ignored profile. **Reviewer grep: ZERO module-global producer-value
+    reads inside any scorer body on the hot path — no leaf missed.**
+  - **Two commits `42d6ebd` (doctrine + creative + pipeline wiring + byte-identical +
+    doctrine/creative liveness — green in isolation = 383) + `ea1aaa9` (governance
+    threading + governance liveness).** Suite **370 → 384 passed** (+14; 0
+    failed/skipped/warnings, green under `-W error`); regression **68/68, 0 critical,
+    0 warnings — UNCHANGED.** Scope: exactly 5 files (4 product + 1 new test);
+    physics/analyzers/bridge/planners untouched. Safety grep clean; UI N/A. qa
+    **GREEN**; reviewer **pass**. **Codex NOT available — single-reviewer verdict.**
+    **P-029 local-only** (commits `42d6ebd`, `ea1aaa9` on the dev branch on top of
+    the P-028 commits on top of the `e79426a` base), not pushed/merged.
+  - **★★ MILESTONE — THE PIVOT: the producer-agnostic ARCHITECTURE is COMPLETE and
+    VALIDATED.** `analyze(producer=…)` genuinely drives a DIFFERENT plan for a
+    DIFFERENT profile, proven across doctrine + creative + governance and proven
+    load-bearing. The architecture = reference-profile-driven judgment + a
+    producer-AGNOSTIC physics/safety chassis + per-call producer selection. The
+    profile is now a LIVE, SELECTABLE LEVER end-to-end.
+  - **★ ALIASING CARRY-FORWARD (reviewer, non-blocking — for P-032):** the
+    module-level `_DEFAULT_PROFILE` singleton STILL exists in all 3 consumer modules
+    as the `None`-default fallback, so the per-module copy-before-mutate no-aliasing
+    discipline still carries on the DEFAULT path. When P-032 loads a SECOND live
+    profile per call, KEEP the aliasing discipline in mind — do NOT mutate a loaded
+    profile's structures in place.
+  - **★ EPIC ARC (updated):** **P-025 ✓ (foundation) → P-026 ✓ (creative sourced) →
+    P-027 ✓ (governance sourced + WIDENED) → P-028 ✓ (doctrine sourced + WIDENED —
+    extraction phase COMPLETE) → P-029 ✓ (THE PIVOT — profile is a live, selectable
+    lever; `analyze(producer=…)` real; architecture complete & validated)** →
+    **P-030 (rename the `halee`/`ramone` dims off the producer names)** → P-031
+    (confidence framework — consume the metadata stamp) → **P-032 (FIRST SECOND
+    PRODUCER — the payoff; USER-GATED: WHICH producer + grounding per the honesty
+    policy)** → P-033 (expose producer selection). Receipt:
+    `build-os/receipts/P-029-parameterize-pipeline-by-per-call-producer-profile.md`.
 
 - **★★ P-028 SOURCES `doctrine_engine.py` FROM THE REFERENCE PROFILE (WIDENED — THE
   LAST & LARGEST EXTRACTION) AND COMPLETES THE EXTRACTION PHASE OF THE
@@ -920,4 +999,4 @@
   propagated until P-031.
 
 ---
-_Updated by the archivist on close. Last advanced on P-025 close (2026-07-01) — the FOUNDATION step of the producer-agnostic epic (ProducerProfile extracted, round-trip-guarded, unwired)._
+_Updated by the archivist on close. Last advanced on P-029 close (2026-07-01) — THE PIVOT of the producer-agnostic epic: `analyze(producer=…)` selects the profile; the profile is now a LIVE, SELECTABLE LEVER end-to-end (byte-identical default, selection proven live + load-bearing across all 3 layers); architecture complete & validated._

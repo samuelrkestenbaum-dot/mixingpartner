@@ -44,7 +44,9 @@
 
 - **★★ THE ACTIVE ROADMAP IS THE PRODUCER-AGNOSTIC EPIC — P-025 ✓ (foundation) +
   P-026 ✓ (creative sourced) + P-027 ✓ (governance sourced + WIDENED) + P-028 ✓
-  (doctrine sourced + WIDENED — the EXTRACTION PHASE is COMPLETE).** Make the
+  (doctrine sourced + WIDENED — the EXTRACTION PHASE is COMPLETE) + P-029 ✓
+  (THE PIVOT — `analyze(producer=…)` selects the profile; it is now a LIVE,
+  SELECTABLE LEVER end-to-end; architecture complete & validated).** Make the
   engine select any producer's judgment as a
   swappable `ProducerProfile` (the physics stays fixed). **P-025 ✓** extracted
   today's 100%-hardcoded Halee/Ramone judgment into a frozen `ProducerProfile` + a
@@ -99,13 +101,25 @@
     sourced. The PHYSICS/measurement code + presentation thresholds STAY hardcoded.
     Byte-identical (regression 68/68 UNCHANGED + `doctrine_score` byte-match),
     round-trip non-vacuous, aliasing-proof DISCHARGED. **Extraction phase COMPLETE.**
-  - **P-029 — parameterize the pipeline by a per-call producer (THE PIVOT — NEXT).**
-    Thread a per-call `producer` so `analyze(producer=...)` SELECTS a profile — the
-    profile stops being a mirror and becomes a LIVE lever (the first SELECTABLE step).
-    Default = the `halee_ramone` reference, byte-identical (guarded by the P-025
-    round-trip + 68/68 regression). ALSO the STRUCTURAL fix that ENDS the
-    module-singleton aliasing risk (removes the shared mutable global each of
-    P-026/P-027/P-028 had to prove safe per-module).
+  - **P-029 — parameterize the pipeline by a per-call producer (THE PIVOT) — ✓ DONE.**
+    `pipeline.analyze(..., producer="halee_ramone")` accepts a NAME or a
+    `ProducerProfile` object (isinstance dispatch), loads ONCE per call, and threads
+    `profile=` to `score_doctrine` / `run_creative_engine` / `run_governance`, which
+    thread it to ALL leaf scorers; each reads its producer-specific values from the
+    PASSED profile, defaulting to `_DEFAULT_PROFILE` when `None`. KILL_SWITCHES
+    recomposed per call = 5 hardcoded SAFETY + profile aesthetic (a producer can never
+    drop a safety guarantee). Byte-identical default (reviewer independently
+    byte-diffed all 3 layers × 3 fixtures → IDENTICAL; regression 68/68 UNCHANGED);
+    selection GENUINELY LIVE + load-bearing across doctrine (baseline −20 → halee_score
+    delta 20), creative (kind_score boost → overall 100), governance
+    (truth_alignment 88→60 → governed 60), all through the REAL analyze() path, proven
+    both ways (sabotage fails the liveness test while byte-identical stays green — the
+    P-016 lesson). Two commits `42d6ebd` (green in isolation = 383) + `ea1aaa9`; suite
+    370 → 384 (+14). Codex NOT available — single-reviewer. **P-029 does NOT remove the
+    `_DEFAULT_PROFILE` singleton** — it stays as the `None`-default fallback in all 3
+    modules, so the per-module aliasing discipline still carries on the default path
+    (carry-forward for P-032). Receipt:
+    `build-os/receipts/P-029-parameterize-pipeline-by-per-call-producer-profile.md`.
   - **P-030 — rename** the `halee` / `ramone` dimension names off the producer
     names (they were kept verbatim in P-025 per the byte-identical-first decision).
   - **P-031 — confidence framework:** consume the profile metadata stamp
@@ -145,9 +159,14 @@
   doctrine:** grep confirmed no in-place mutation of the sourced structures; the
   no-aliasing test runs `score_doctrine` on a fixture (+ crafted multi-penalty inputs)
   and asserts the shared `_DEFAULT_PROFILE` structures are byte-unchanged afterward;
-  determinism holds. **So all three per-module proofs are in.** **P-029 (per-call
-  profile) is the STRUCTURAL fix** that removes the shared-mutable-global risk
-  entirely — after P-029 the per-module invariant is no longer the only guard.
+  determinism holds. **So all three per-module proofs are in.** **★ UPDATE (P-029):
+  P-029 threaded a per-call profile BUT DID NOT remove the module `_DEFAULT_PROFILE`
+  singleton** — it remains the `None`-default fallback in all 3 consumer modules, so
+  the shared-mutable-global still exists on the DEFAULT path and the per-module
+  copy-before-mutate discipline STILL CARRIES. **CARRY-FORWARD for P-032:** when a
+  SECOND live profile is loaded per call, keep the aliasing discipline in mind — do
+  NOT mutate a loaded profile's structures in place. The full structural removal of
+  the singleton is not yet done.
 
 - **★ TRAILER-SPEC STANDING NOTE — DROP the "NO model identifier" line from FUTURE
   packet specs (from P-027; reconciled).** The reviewer repeatedly re-flags the
@@ -424,6 +443,46 @@
 - Net-new **event-logging** producers remain behind the product decision.
 
 ## Done (resolved)
+
+- **★★ P-029 DONE — THE PIVOT: the producer profile is now a LIVE, SELECTABLE LEVER
+  end-to-end; `analyze(producer=…)` SELECTS which profile drives the judgment**
+  (`build-os/receipts/P-029-parameterize-pipeline-by-per-call-producer-profile.md`).
+  `pipeline.analyze(..., producer: str | ProducerProfile = "halee_ramone")` accepts a
+  NAME or a ready `ProducerProfile` (isinstance dispatch), loads ONCE per call, and
+  threads `profile=` to `score_doctrine` / `run_creative_engine` / `run_governance`,
+  which thread it to ALL leaf scorers (doctrine's 7 scorers + weights; creative's
+  `score_variant`/`_apply_nudges`/`_apply_promotions`; governance's
+  `govern_branches`/`govern_variant`/`taste_triangle`/`_apply_taste`) — each reads its
+  producer-specific values from the PASSED profile, defaulting to the module
+  `_DEFAULT_PROFILE` when `profile is None`. **KILL_SWITCHES recomposed per call = 5
+  hardcoded producer-AGNOSTIC SAFETY switches + the profile's aesthetic switches** (a
+  swapped producer can NEVER drop a safety guarantee; default composed list
+  byte-identical, no safety string in JSON). **No judgment VALUE changed;
+  physics/analyzers untouched.** **Byte-identical default PROVEN** (reviewer
+  independently byte-diffed default doctrine+creative+governance pre-P-029 vs HEAD
+  across all 3 fixtures → IDENTICAL; no-arg == `producer="halee_ramone"` == reference
+  object; regression **68/68, 0 critical, 0 warnings — UNCHANGED**). **Selection
+  GENUINELY LIVE across all 3 layers** through the REAL analyze() path (synthetic
+  one-value-mutated profiles, no monkeypatch): doctrine `baselines.halee` −20 →
+  `halee_score` delta exactly 20; creative boosted `vocal_ride` kind_score → variant
+  `overall_score` → 100; governance `truth_alignment["intimate"]["vocal_ride"]` 88→60
+  → governed `emotional_truth_alignment` 60. **LOAD-BEARING PROVEN BOTH WAYS (the
+  P-016 lesson):** sabotaging each layer's threading fails ITS liveness test while
+  byte-identical/determinism stay green. **Reviewer grep: ZERO module-global
+  producer-value reads inside any scorer body on the hot path — no leaf missed.** Two
+  commits `42d6ebd` (doctrine + creative + pipeline wiring + byte-identical +
+  doctrine/creative liveness — green in isolation = 383) + `ea1aaa9` (governance
+  threading + governance liveness). Suite **370 → 384 passed** (+14; 0
+  failed/skipped/warnings, green under `-W error`). Scope: exactly 5 files (4 product +
+  1 new test); existing tests UNEDITED; physics/analyzers/bridge/planners untouched.
+  Safety grep clean; UI N/A. qa **GREEN**; reviewer **pass**. **Codex NOT available —
+  single-reviewer verdict.** **★★ MILESTONE — THE PIVOT: the producer-agnostic
+  ARCHITECTURE is COMPLETE and VALIDATED** (reference-profile-driven judgment + a
+  producer-AGNOSTIC physics/safety chassis + per-call producer selection). **★
+  CARRY-FORWARD for P-032:** the `_DEFAULT_PROFILE` singleton STILL exists as the
+  `None`-default fallback in all 3 modules — keep the aliasing discipline when a
+  second live profile is loaded. **P-029 local-only** (`42d6ebd`, `ea1aaa9` on the dev
+  branch on top of the `e79426a` base), not pushed/merged.
 
 - **★★ P-028 DONE — doctrine sourced from the reference profile, WIDENED (the LAST
   & LARGEST extraction); THE EXTRACTION PHASE IS COMPLETE**
@@ -1068,6 +1127,16 @@
   environment limitation, not a fix-it item.
 
 ## Open boundaries (awaiting explicit go)
+
+- **P-029's product commits `42d6ebd`, `ea1aaa9` are local-only as of this close**
+  (this archivist close did not push). They sit on the dev branch
+  `claude/logic-mix-os-hardening-12-7hbeh1` on top of the `e79426a` (PR #16) merge
+  base — THE PIVOT: `analyze(producer=…)` selects the profile (byte-identical by
+  default). The build-os-only close commit is separate. The accumulated
+  producer-agnostic epic (P-025 → P-029) plus the earlier local-only arc remain
+  un-landed on default. Any push of the product commits — and any subsequent PR /
+  merge into the protected default — needs the user's explicit go. No push / merge /
+  deploy / secret action taken in this close.
 
 - **P-017 closed with NO product-code change (verified negative finding).** The
   ONLY committed change is the tests-only characterization guard

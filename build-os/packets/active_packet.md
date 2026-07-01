@@ -4,109 +4,56 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** ACTIVE
-- **Packet id:** P-029
-- **Title:** Parameterize the pipeline by a per-call producer profile — `analyze(producer=…)` (THE PIVOT)
+- **Status:** NONE ACTIVE
+- **Packet id:** —
+- **Title:** —
 
-## Why (producer-agnostic epic — the pivot)
+## Last-closed
 
-Extraction is complete (P-026/27/28): the judgment layer reads all producer-
-specific values from `_DEFAULT_PROFILE = load_profile("halee_ramone")` (a module
-singleton). P-029 threads a PER-CALL profile through the pipeline so
-`analyze(producer=…)` SELECTS which profile drives the judgment — the profile
-stops being a mirror of the reference and becomes a LIVE, selectable lever.
-Default = the `halee_ramone` reference → **byte-identical** (guarded by regression
-68/68). This is the first step where a different producer would produce a
-different plan.
+- **P-029 — Parameterize the pipeline by a per-call producer profile —
+  `analyze(producer=…)` (THE PIVOT). ✓ CLOSED** — qa GREEN, reviewer pass.
+  `analyze(producer=…)` now SELECTS which `ProducerProfile` drives the judgment
+  (name or object; loaded once per call; threaded to doctrine + creative +
+  governance and every leaf scorer). **Byte-identical default** (regression 68/68
+  UNCHANGED; reviewer independently byte-diffed all 3 layers × 3 fixtures →
+  IDENTICAL); **selection GENUINELY LIVE + load-bearing across all 3 layers** (the
+  P-016 lesson: sabotage fails the liveness test while byte-identical stays green);
+  KILL_SWITCHES recomposed per call = 5 hardcoded SAFETY + profile aesthetic.
+  Two commits `42d6ebd` (green in isolation = 383) + `ea1aaa9`; suite 370 → 384
+  (+14). Codex NOT available — single-reviewer. **P-029 local-only** on the dev
+  branch (base `e79426a`), not pushed/merged. **★★ MILESTONE — THE PIVOT: the
+  producer-agnostic ARCHITECTURE is COMPLETE and VALIDATED; the profile is now a
+  LIVE, SELECTABLE LEVER end-to-end.** Receipt:
+  `build-os/receipts/P-029-parameterize-pipeline-by-per-call-producer-profile.md`.
 
-## Authority
+## Next (staged — not yet confirmed active)
 
-**Build / feature — in authority, byte-identical default.** **Merge to default
-gated on explicit go; dev-branch commits under standing push-go.**
+- **P-030 — rename the `halee` / `ramone` dimension names off the producer names.**
+  The dimensions were kept verbatim in P-025 per the byte-identical-first decision;
+  P-030 renames them so they describe the aesthetic, not the producer, before a
+  second producer lands. Byte-identical judgment (a rename only).
+- **★ FLAG — the USER-GATED decision point is approaching: P-032 (the FIRST SECOND
+  PRODUCER).** After P-030 (rename) and P-031 (confidence / honesty framework),
+  **P-032 requires the user's decision** — WHICH producer to author + the grounding
+  per the confirmed honesty/sourcing policy (hand-curated → high / derived →
+  low-labeled / LLM → draft-only, NEVER high). This is the payoff of the epic and
+  the first real test of producer-agnosticism; surface it for the user before
+  building.
+- **★ CARRY-FORWARD (reviewer, non-blocking) — for P-032:** the module-level
+  `_DEFAULT_PROFILE` singleton still exists in all 3 consumer modules as the
+  `None`-default fallback, so the per-module copy-before-mutate no-aliasing
+  discipline still carries on the default path. When P-032 loads a SECOND live
+  profile per call, do NOT mutate a loaded profile's structures in place.
 
-## Scope (the builder implements EXACTLY this)
+## Epic arc
 
-### Thread a per-call profile through the pipeline + judgment entry points
-1. **`pipeline.analyze(..., producer: str = "halee_ramone")`** — add the opt-in
-   param (default `"halee_ramone"`). Load `profile = load_profile(producer)` once,
-   and pass it to the three judgment calls:
-   - `score_doctrine(..., profile=profile)` (pipeline.py:154)
-   - `run_creative_engine(result, mode, profile=profile)` (line 234)
-   - `run_governance(result, result.creative, taste_profile=_taste, profile=profile)` (line 235)
-2. **Entry points take `profile: Optional[ProducerProfile] = None`, defaulting to
-   the module `_DEFAULT_PROFILE`** (so existing direct callers + the no-arg path
-   stay byte-identical), and THREAD it to their callees:
-   - `run_creative_engine` → `score_variant(variant, result, profile)`,
-     `_apply_nudges(kind, result, profile)`, `_apply_promotions(...)`,
-     `winning_variant`, search-mode selection — every function that currently
-     reads a `creative` module global (`_KIND_SCORES`/`_NUDGE_TABLE`/
-     `_PROMOTION_TABLE`/caps/`_RISK_PENALTY`/`SEARCH_MODES`) reads it from the
-     passed `profile` instead.
-   - `run_governance` → `govern_branches`/`govern_variant`/`taste_triangle`/
-     `_apply_taste` — read `truth_alignment`/`taste_kind_bias`/`taste_max_delta`/
-     `taste_triangle`/`veto_thresholds`/aesthetic kill-switches from `profile`.
-   - `score_doctrine` → `_halee`/`_ramone`/`_vocal_centrality`/`_depth_hierarchy`/
-     `_section_contrast`/`_static_mix`/`_dynamic_mix` — read their constants from
-     `profile.doctrine`.
-   Keep `_DEFAULT_PROFILE` as the DEFAULT when `profile is None`. The module
-   globals (`_KIND_SCORES` etc.) may stay as the default-profile aliases for
-   backward-compat, but the SCORING must read the PASSED profile when one is given.
-3. **`analyze` also accepts a `ProducerProfile` object** for `producer` (name OR
-   profile) — optional but convenient for tests; the builder's call. If name-only,
-   the selection-liveness test needs another way to supply a second profile (see
-   below).
-4. Do NOT change any judgment VALUE. Do NOT touch the physics/analyzers. `pipeline`
-   still writes the same artifacts. The safety kill-switches path is unchanged.
-
-### The BINDING proof — selection is LIVE, not threaded-and-ignored (the P-016 lesson)
-Byte-identical-by-default is necessary but NOT sufficient — a bug where the
-profile is accepted but ignored would ALSO be byte-identical. So PROVE selection
-is real:
-- **Selection-liveness test:** construct/obtain a SECOND profile that differs from
-  `halee_ramone` in ONE value (e.g. a `kind_score` or a doctrine coefficient),
-  run the REAL `analyze()` with it (via `producer=<that profile/name>`), and
-  assert the output DIFFERS from `analyze(producer="halee_ramone")` in the way
-  that changed value predicts (e.g. a different `doctrine_score` component, or a
-  different creative winner). The test must FAIL if the profile is ignored
-  (i.e. if `analyze` doesn't actually thread the passed profile to the scorers).
-  Choose the cleanest mechanism for the second profile (a synthetic
-  `ProducerProfile` passed directly, a temp JSON, or a tiny test-only producer
-  file) — but it must flow through the REAL `analyze()` path, not a monkeypatched
-  scorer.
-
-### Tests — test-first
-- **Byte-identical default:** `analyze()` and `analyze(producer="halee_ramone")`
-  produce identical artifacts vs pre-P-029 (regression 68/68; existing tests
-  UNEDITED).
-- **Selection-liveness** (above) — the load-bearing proof the lever is real.
-- Determinism.
-
-Fake adapters only — no DAW / Logic / AppleScript / subprocess / `.logicx` /
-network.
-
-## Constraints
-
-- **≤2 commits.** Split cleanly (e.g. Commit-1: thread creative + doctrine +
-  pipeline wiring + byte-identical; Commit-2: governance threading + the
-  selection-liveness test). Commit-1 green in isolation.
-- **Byte-identical default** — if the no-arg / `producer="halee_ramone"` output
-  changes at all, STOP and report.
-- **No external mutation.** Author/committer `Claude <noreply@anthropic.com>`;
-  trailers required (`Co-Authored-By: Claude Opus 4.8` is the mandated form).
-
-## Expected proof (qa to report exact)
-
-- Full suite **370 → 370+N passed** (0 failed/skipped/warnings, green under
-  `-W error`) — existing tests UNEDITED.
-- Regression **68/68, 0 critical, 0 warnings** held — the default-path byte-
-  identical proof.
-- Commit-1 green in isolation.
-- **Byte-identical default proven** (no-arg == `producer="halee_ramone"` ==
-  pre-P-029). **Selection-liveness proven load-bearing** (a different profile
-  changes real `analyze()` output as predicted; fails if the profile is ignored).
-  Physics/analyzers/safety untouched. Safety grep clean; UI N/A.
+**P-025 ✓ (foundation) → P-026 ✓ (creative sourced) → P-027 ✓ (governance sourced +
+WIDENED) → P-028 ✓ (doctrine sourced + WIDENED — extraction phase COMPLETE) →
+P-029 ✓ (THE PIVOT — profile is a live, selectable lever) → P-030 (rename dims off
+producer names) → P-031 (confidence framework) → P-032 (FIRST SECOND PRODUCER —
+USER-GATED: which producer + grounding) → P-033 (expose producer selection).**
 
 ---
-_Confirmed as active by the orchestrator-in-chief (P-029), the pivot of the
-producer-agnostic epic — the profile becomes a live, selectable lever. One packet
-at a time._
+_Cleared by the archivist on P-029 close (2026-07-01). No packet in flight — the
+orchestrator confirms the next (staged: P-030) before the builder starts. One
+packet at a time._
