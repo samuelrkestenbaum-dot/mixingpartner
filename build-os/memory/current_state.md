@@ -55,27 +55,125 @@
     NEW producer-agnostic doctrine axis `beat_identity`, strength-form, weight-0 for
     halee_ramone so byte-identical), local-only, base `6d34c30` = the P-029 close.
     P-032e's parent chain: `9d6764e` → `8239f42` → `2491f42` (active-packet
-    confirmation) → `6d34c30` (P-029 close).** The base for MERGE decisions is still
-    `e79426a` = PR #16 (nothing since P-025 has been merged).
+    confirmation) → `6d34c30` (P-029 close). ★ ON TOP of P-032e, the dev branch now
+    ALSO carries P-032a (`3edcd9c`, single product commit — the SECOND new
+    producer-agnostic doctrine axis `negative_space`, absolute arrangement
+    room/sparsity, weight-0 for halee_ramone so byte-identical), local-only, base
+    `6d34c30`, atop the set-active `836bd22`. P-032a's parent chain: `3edcd9c` →
+    `836bd22` (active-packet confirmation) → `8a2892b` (P-032e close) → `9d6764e`.**
+    The base for MERGE decisions is still `e79426a` = PR #16 (nothing since P-025
+    has been merged).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-01, P-032e):** suite **396 passed** (0 failed /
+- **Green baseline (verified 2026-07-01, P-032a):** suite **413 passed** (0 failed /
   skipped / warnings; green even under `-W error`); regression **68/68** (0
-  critical / 0 warnings) — UNCHANGED (P-032e default path is byte-identical;
-  beat_identity weight-0 for halee_ramone). Commit-1 (`8239f42`) green in isolation
-  = 396 (verified in a throwaway worktree; the shared HEAD never moved). (Prior
-  baseline was 384 at P-029; P-032e added +12 — `test_beat_identity.py` (12):
-  byte-identical (all 3 fixtures + overall unchanged + 68/68) + value-discrimination
-  + liveness (load-bearing both ways) + no-aliasing; 2 existing guards updated
-  (`test_producer_profile.py` scorer-set, `test_doctrine_profile_sourced.py`
-  `_WEIGHTS` value-pin). Earlier: 370 → 384 at P-029; 351 → 370 at P-028;
-  331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
+  critical / 0 warnings) — UNCHANGED (P-032a default path is byte-identical;
+  negative_space weight-0 for halee_ramone). Commit-1 (`3edcd9c`) green in isolation
+  = 413 (HEAD IS Commit-1 — single-commit packet — so the tip is the isolation
+  point). (Prior baseline was 396 at P-032e; P-032a added +17 —
+  `test_negative_space.py` (17): byte-identical (0 mismatches / 27 comparisons; all
+  3 fixtures + overall unchanged + 68/68) + value-discrimination (incl. the
+  distinctness-from-dynamic_mix guard) + liveness (load-bearing both ways) +
+  no-aliasing; 3 existing guards updated (`test_producer_profile.py` scorers-set,
+  `test_doctrine_profile_sourced.py` `_WEIGHTS` value-pin, `test_beat_identity.py`
+  beat_identity now index 7 not tail). Earlier: 384 → 396 at P-032e; 370 → 384 at
+  P-029; 351 → 370 at P-028; 331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at
+  P-025.)
 
 ## Where we are
+
+- **★★ P-032a LANDS THE SECOND NEW PRODUCER-AGNOSTIC DOCTRINE AXIS —
+  `negative_space` — BYTE-IDENTICALLY FOR halee_ramone; the Timbaland sub-arc
+  (P-032.x) continues past the crux.** After P-032e front-loaded the hard/risky
+  `beat_identity` crux, P-032a takes the LOWEST-RISK remaining axis (all inputs
+  already visible to `score_doctrine`) and adds `negative_space`: absolute
+  arrangement room/sparsity ("silence is arrangement"), deliberately DISTINCT from
+  `_dynamic_mix` (section-to-section movement). **The doctrine engine now carries
+  9 component axes (7 original + beat_identity + negative_space), both new axes
+  weight-0 for halee_ramone (so output is BYTE-IDENTICAL). Last-closed = P-032a.**
+  - **What P-032a shipped:** a new agnostic scorer `_negative_space(records,
+    sections, mix_metrics, doctrine)` in `doctrine_engine.py` composing ABSOLUTE
+    ROOM as a STRENGTH from section-aggregate physics — low mean section spectral
+    `density` (room), a genuine dropout section (`min_section_density` / min RMS
+    meaningfully below max — "silence as arrangement"), and transient breathing
+    room (low mean section `transient_density`). Always returns a clamped float
+    (documented neutral fallback = 40.0 when no section/mix data) — mirrors
+    `_beat_identity`'s always-float discipline. Constants read (read-only) from
+    `doctrine["scorers"]["negative_space"]`.
+  - **★ BYTE-IDENTICAL MECHANISM (identical to P-032e):** `negative_space_score`
+    appended **LAST** to `component_scores` (after `beat_identity_score`) →
+    summation order preserved → overall bit-identical; `weights["negative_space_score"]
+    = 0` in `halee_ramone.json`. Proven **0 mismatches / 27 comparisons** vs
+    set-active base `836bd22` (overalls 73.8 / 70.7 / 74.3 unchanged); regression
+    **68/68, 0 critical, 0 warnings — UNCHANGED**.
+  - **★ DISTINCTNESS PROVEN (the design guard — non-tautological):** a
+    dense-but-moving case scores `dynamic_mix = 100.0` vs `negative_space = 15.0`
+    — an **85-pt gap** — so a wall-to-wall-dense mix that varies section-to-section
+    is HIGH on dynamic_mix but LOW on negative_space. Genuinely orthogonal, not a
+    re-derivation of dynamic_mix.
+  - **★ LIVENESS LOAD-BEARING (the P-016/P-029 lesson honored):** a profile
+    weighting `negative_space_score` non-zero MOVES the `analyze()` overall;
+    sabotage FAILS liveness while byte-identical stays green (drop the threading →
+    liveness FAIL/KeyError; hardcode the constant → 8 fail + 5 err) —
+    byte-identical alone would NOT catch an accepted-but-ignored axis. Live fixture
+    scores (weight-0, informational): **62.3** (roomy simple_vocal_piano) / **15.0**
+    (dense_chorus) / **20.0** (splice) — sparse ≥ 75, wall-to-wall ≤ 35, neutral
+    fallback 40. Zero effect on halee_ramone overall (weight 0).
+  - **★ HONEST DEFERRAL (documented in the scorer docstring, deliberately NOT
+    faked):** sample-level **inter-onset silence gaps** (space between individual
+    hits) need onset timing, not visible at `score_doctrine` time (it lives in the
+    post-doctrine groove analyzer) — deferred to **P-032b**'s groove live-wire.
+    negative_space works at the **section-aggregate grain only** — no instrument
+    labels, no onset timing.
+  - **★ AGNOSTIC-FIRST:** physics/measurement stays hardcoded & agnostic; only the
+    *weight* lives in the profile (all 8 tunables — `neutral 40.0`, `baseline 15.0`,
+    `density_ceiling 1.0`, `room_coeff 50`, `transient_ceiling 1.0`,
+    `breathing_coeff 20`, `dropout_coeff 25`, `dropout_floor 0.1` — in
+    `doctrine.scorers.negative_space`). `producer_profile._validate`
+    required-scorers now includes `negative_space` (structurally bound).
+    `doctrine_score.schema.json` gained the optional `negative_space_score`
+    property. No-aliasing: the scorer only reads `doctrine[...]`, never mutates.
+  - **Single commit `3edcd9c`** (base `6d34c30`, atop set-active `836bd22`) —
+    scorer + `doctrine.scorers.negative_space` constants + weight-0 + `_validate`
+    + `tests/test_negative_space.py` (17 tests) + 3 doctrine-key-pin updates
+    (`test_producer_profile.py` scorers-set, `test_doctrine_profile_sourced.py`
+    `_WEIGHTS` value-pin, `test_beat_identity.py` beat_identity now index 7). **One
+    logically-atomic commit; no Commit-2 needed.** Suite **396 → 413 passed** (+17;
+    0 failed/skipped/warnings, green under `-W error`); regression **68/68, 0
+    critical, 0 warnings — UNCHANGED**. Safety grep clean; honest-scope confirmed;
+    UI N/A. qa **GREEN**; reviewer **PASS** (all 8 scrutiny points; byte-identical
+    empirically proven base→HEAD; distinctness non-tautological; honesty gate
+    genuine; liveness load-bearing at suite level; agnostic-first; no-aliasing;
+    guard updates legitimate tightening; Product Trajectory Check pass; no
+    must-fix). **Codex NOT available — single-reviewer verdict.** **P-032a
+    local-only** (`3edcd9c` on the dev branch atop the `6d34c30` P-029-close base),
+    not pushed/merged.
+  - **★★ MILESTONE — the SECOND new producer-agnostic measurement axis. The engine
+    now carries 9 component axes**, the second added byte-identically for the
+    reference producer. **The producer-agnostic architecture (P-029) continues to
+    prove EXTENSIBLE, not just parameterizable.**
+  - **★ NON-BLOCKING NOTE (reviewer, carried to residue):** the two `liveness`
+    test docstrings in `tests/test_negative_space.py` (~lines 536-540, 553-557)
+    OVERCLAIM — a general hardcoded-constant sabotage is actually caught by the
+    *discrimination* tests, not the liveness tests themselves. The SAME imprecision
+    exists in the already-closed `test_beat_identity.py`. Cosmetic only (guard SET
+    sound); fold a one-line docstring fix for BOTH files into a future
+    doctrine-touching packet.
+  - **★ TIMBALAND SUB-ARC (P-032.x):** **P-032e ✓ (beat_identity — crux) → P-032a
+    ✓ (negative_space)** → **P-032b (groove_coherence live-wire — NEXT; the RISKIER
+    packet: relocate `analyze_groove` to BEFORE `score_doctrine` + a no-re-run
+    live-wire test, then the groove-coherence scorer — where onset-regularity/IOI,
+    deferred from P-032e AND P-032a, finally reaches doctrine)** → P-032c
+    (low_end_motion/pocket) → P-032d (rhythmic_surprise, weak-form) → P-032f
+    (vocal-role refinement) → P-032g (loop static-vs-iconic context) → **[fold
+    P-031 confidence here]** → P-032h (author `timbaland.json`, first
+    non-byte-identical output) → P-032i (Timbaland-vs-Halee/Ramone differential
+    proof). P-030 (rename dims) orthogonal/last. Receipt:
+    `build-os/receipts/P-032a-negative-space.md`.
 
 - **★★ P-032e LANDS THE FIRST NEW PRODUCER-AGNOSTIC DOCTRINE AXIS — `beat_identity`
   — AND PROVES THE ARCHITECTURE (P-029) IS EXTENSIBLE, NOT JUST PARAMETERIZABLE.**
