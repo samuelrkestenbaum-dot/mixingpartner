@@ -43,6 +43,8 @@ _REQUIRED_DATA_FIELDS = (
     "taste_kind_bias",
     "taste_max_delta",
     "aesthetic_kill_switches",
+    "taste_triangle",
+    "veto_thresholds",
     "doctrine",
     "default_creative_mode",
 )
@@ -83,6 +85,11 @@ class ProducerProfile:
     taste_kind_bias: Dict[str, Dict[str, int]]
     taste_max_delta: int
     aesthetic_kill_switches: List[str]
+    # governance.py — secondary constants (P-027 Finding A): the taste-triangle
+    # rules (intimate-width penalty + the emotion-blend dims) and the veto
+    # thresholds, previously inline literals in taste_triangle/govern_variant.
+    taste_triangle: Dict[str, Any]
+    veto_thresholds: Dict[str, int]
 
     # doctrine_engine.py (weights / baselines / inline penalty coefficients)
     doctrine: Dict[str, Any]
@@ -152,6 +159,8 @@ def load_profile(name: str = "halee_ramone") -> ProducerProfile:
         taste_kind_bias=raw["taste_kind_bias"],
         taste_max_delta=raw["taste_max_delta"],
         aesthetic_kill_switches=raw["aesthetic_kill_switches"],
+        taste_triangle=raw["taste_triangle"],
+        veto_thresholds=raw["veto_thresholds"],
         doctrine=raw["doctrine"],
         default_creative_mode=raw["default_creative_mode"],
     )

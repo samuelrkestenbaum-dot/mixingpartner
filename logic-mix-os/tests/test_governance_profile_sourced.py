@@ -146,6 +146,65 @@ def test_safety_switches_not_in_profile():
 
 
 # --------------------------------------------------------------------------- #
+# Part B value pins — the widened secondary governance constants, now sourced.
+# --------------------------------------------------------------------------- #
+def test_taste_triangle_rules_sourced_from_profile():
+    """``taste_triangle`` reads the intimate-width penalty and the emotion-blend
+    dims from the profile — no longer inline literals."""
+    tt = governance._DEFAULT_PROFILE.taste_triangle
+    assert tt["intimate_width_penalty"] == 30
+    assert tt["emotion_dims"] == [
+        "ramone_score", "listener_excitement_score", "vocal_belief_score",
+    ]
+
+
+def test_veto_thresholds_sourced_from_profile():
+    """``taste_triangle`` (reject line) and ``govern_variant`` (align veto +
+    fallback) read the veto thresholds from the profile — no longer inline."""
+    vt = governance._DEFAULT_PROFILE.veto_thresholds
+    assert vt["reject_below"] == 45
+    assert vt["align_veto_below"] == 50
+    assert vt["align_fallback"] == 75
+
+
+def test_taste_triangle_emotion_blend_byte_identical():
+    """The emotion blend must reproduce ``round((ramone + listener_excitement +
+    vocal_belief) / 3)`` EXACTLY — same order, same round(). Odd inputs exercise
+    Python banker's rounding at the .5 boundary."""
+    def _v(ramone, excite, belief):
+        return {
+            "variant_id": "x", "kind": "vocal_ride", "name": "vr", "changes": [],
+            "scores": {
+                "ramone_score": ramone, "listener_excitement_score": excite,
+                "vocal_belief_score": belief, "technical_score": 80,
+                "taste_alignment_score": 90, "overall_score": 90.0,
+            },
+        }
+
+    for ramone, excite, belief in [(91, 80, 60), (80, 80, 81), (80, 81, 80),
+                                   (100, 100, 99), (45, 44, 46), (1, 2, 3)]:
+        tri = governance.taste_triangle(_v(ramone, excite, belief), "neutral")
+        assert tri["emotion"] == round((ramone + excite + belief) / 3)
+
+
+def test_intimate_width_penalty_byte_identical():
+    """width_bloom under an intimate lean drops identity by exactly 30."""
+    def _v(taste):
+        return {
+            "variant_id": "x", "kind": "width_bloom", "name": "wb", "changes": [],
+            "scores": {
+                "ramone_score": 80, "listener_excitement_score": 80,
+                "vocal_belief_score": 80, "technical_score": 80,
+                "taste_alignment_score": taste, "overall_score": 90.0,
+            },
+        }
+
+    intimate = governance.taste_triangle(_v(90), "intimate")
+    neutral = governance.taste_triangle(_v(90), "neutral")
+    assert neutral["identity"] - intimate["identity"] == 30
+
+
+# --------------------------------------------------------------------------- #
 # NO-ALIASING proof (binding) — running governance leaves the shared profile
 # structures byte-unchanged. No consumer mutates a sourced global in place.
 # --------------------------------------------------------------------------- #

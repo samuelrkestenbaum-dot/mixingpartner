@@ -101,6 +101,94 @@ def test_safety_kill_switches_excluded():
         assert safety not in profile_switches
 
 
+def test_taste_triangle_round_trip_exact():
+    """P-027 Part B: the taste-triangle rules widened into the profile. The
+    intimate-width penalty and the emotion-blend dims were inline literals in
+    ``governance.taste_triangle`` (``identity -= 30`` and the mean of three named
+    scores). The JSON must reconstruct them exactly."""
+    tt = load_profile().taste_triangle
+    assert tt["intimate_width_penalty"] == 30
+    assert tt["emotion_dims"] == [
+        "ramone_score", "listener_excitement_score", "vocal_belief_score",
+    ]
+
+
+def test_veto_thresholds_round_trip_exact():
+    """P-027 Part B: the governance veto thresholds widened into the profile —
+    inline literals in ``taste_triangle`` (reject line) and ``govern_variant``
+    (align veto + fallback)."""
+    vt = load_profile().veto_thresholds
+    assert vt["reject_below"] == 45
+    assert vt["align_veto_below"] == 50
+    assert vt["align_fallback"] == 75
+
+
+def test_taste_triangle_round_trip_indirect():
+    """The widened taste-triangle rules were computed INLINE in
+    ``governance.taste_triangle``. Drive the real function and assert the captured
+    profile values reproduce its arithmetic byte-for-byte (the honest indirect
+    round-trip, per the P-025 pattern)."""
+    tt = load_profile().taste_triangle
+    vt = load_profile().veto_thresholds
+
+    def _variant(kind, ramone, excite, belief, taste):
+        return {
+            "variant_id": "x", "kind": kind, "name": kind, "changes": [],
+            "scores": {
+                "ramone_score": ramone, "listener_excitement_score": excite,
+                "vocal_belief_score": belief, "technical_score": 80,
+                "taste_alignment_score": taste, "overall_score": 90.0,
+            },
+        }
+
+    # emotion == round(mean of the three captured emotion_dims), in that order.
+    v = _variant("vocal_ride", 91, 80, 60, 90)
+    tri = governance.taste_triangle(v, "neutral")
+    dims = tt["emotion_dims"]
+    expected_emotion = round(sum(v["scores"][d] for d in dims) / len(dims))
+    assert tri["emotion"] == expected_emotion
+
+    # width_bloom under an intimate lean gets identity -= intimate_width_penalty.
+    v_wb = _variant("width_bloom", 80, 80, 80, 90)
+    intimate = governance.taste_triangle(v_wb, "intimate")
+    neutral = governance.taste_triangle(v_wb, "neutral")
+    assert neutral["identity"] - intimate["identity"] == tt["intimate_width_penalty"]
+
+    # reject_below drives the keep/reject verdict on identity and emotion.
+    below = _variant("vocal_ride", 80, 80, 80, vt["reject_below"] - 1)
+    at = _variant("vocal_ride", 80, 80, 80, vt["reject_below"])
+    assert governance.taste_triangle(below, "neutral")["verdict"] == "reject"
+    assert governance.taste_triangle(at, "neutral")["verdict"] == "keep"
+
+
+def test_veto_thresholds_round_trip_indirect():
+    """The align veto (``align < 50``) and the align fallback (unknown kind => 75)
+    were inline in ``govern_variant``. Drive it and assert the captured thresholds
+    reproduce the vetoes byte-for-byte."""
+    vt = load_profile().veto_thresholds
+
+    def _variant(kind, taste=90):
+        return {
+            "variant_id": "x", "kind": kind, "name": kind, "changes": [],
+            "scores": {
+                "ramone_score": 80, "listener_excitement_score": 80,
+                "vocal_belief_score": 80, "technical_score": 80,
+                "taste_alignment_score": taste, "overall_score": 90.0,
+            },
+        }
+
+    # align_fallback: an unknown kind falls back to the captured default (75).
+    g = governance.govern_variant(_variant("no_such_kind"), [], "neutral")
+    assert g["emotional_truth_alignment"] == vt["align_fallback"]
+
+    # align_veto_below: width_bloom under an intimate lean has align 45 (< 50) and
+    # is doctrine-vetoed; the captured threshold reproduces that veto.
+    g_wb = governance.govern_variant(_variant("width_bloom", taste=99), [], "intimate")
+    align = governance._TRUTH_ALIGNMENT["intimate"]["width_bloom"]
+    assert align < vt["align_veto_below"]
+    assert g_wb["vetoed"] is True
+
+
 def test_default_creative_mode_map_round_trip():
     """``pipeline._default_creative_mode`` is producer-specific: its truth words
     map onto producer-named search modes (``ramone_vocal_truth`` vs
@@ -269,7 +357,7 @@ def test_extraction_completeness_all_fields_present():
         "creative_nudge_cap", "creative_promotion_cap", "risk_penalty",
         "search_modes", "philosophy",
         "truth_alignment", "taste_kind_bias", "taste_max_delta",
-        "aesthetic_kill_switches",
+        "aesthetic_kill_switches", "taste_triangle", "veto_thresholds",
         "doctrine", "default_creative_mode",
     ]
     for field in required:

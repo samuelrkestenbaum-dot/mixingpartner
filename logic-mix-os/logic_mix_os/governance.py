@@ -113,6 +113,15 @@ def _apply_taste(kind: str, identity: int, statements: Optional[List[str]]):
 # does ``.get(...).get(...)`` reads only, never mutates it.
 _TRUTH_ALIGNMENT = _DEFAULT_PROFILE.truth_alignment
 
+# Secondary governance constants (P-027 Part B / Finding A), sourced from the
+# reference profile. ``taste_triangle`` = the intimate-width identity penalty
+# (30) and the emotion-blend dims (mean of ramone/listener_excitement/vocal_belief
+# scores). ``veto_thresholds`` = the keep/reject line (45), the align veto line
+# (50), and the align fallback for an unknown kind (75). Read-only in the
+# consumers; the JSON is now their single source of truth.
+_TASTE_TRIANGLE = _DEFAULT_PROFILE.taste_triangle
+_VETO_THRESHOLDS = _DEFAULT_PROFILE.veto_thresholds
+
 
 # --------------------------------------------------------------------------- #
 def _truth_lean(truth: str) -> str:
@@ -184,13 +193,19 @@ def _violates_constraints(variant: Dict, constraints: List[Dict]) -> List[Dict]:
 
 def taste_triangle(variant: Dict, truth_lean: str) -> Dict:
     s = variant["scores"]
-    emotion = round((s["ramone_score"] + s["listener_excitement_score"] + s["vocal_belief_score"]) / 3)
+    # Emotion blend + the intimate-width penalty + the reject threshold are
+    # sourced from the reference profile (P-027 Part B; the JSON is now home).
+    # The blend reproduces ``round(mean of the three emotion_dims)`` byte-for-byte
+    # — same fixed order, same round().
+    dims = _TASTE_TRIANGLE["emotion_dims"]
+    emotion = round(sum(s[d] for d in dims) / len(dims))
     craft = s["technical_score"]
     identity = s["taste_alignment_score"]
     if variant["kind"] == "width_bloom" and truth_lean == "intimate":
-        identity -= 30
+        identity -= _TASTE_TRIANGLE["intimate_width_penalty"]
     identity = max(0, identity)
-    verdict = "reject" if (identity < 45 or emotion < 45) else "keep"
+    reject_below = _VETO_THRESHOLDS["reject_below"]
+    verdict = "reject" if (identity < reject_below or emotion < reject_below) else "keep"
     return {"emotion": emotion, "craft": craft, "identity": identity, "verdict": verdict}
 
 
@@ -215,7 +230,12 @@ def emotional_overfit(variant: Dict, truth_lean: str) -> Optional[Dict]:
 
 def govern_variant(variant: Dict, constraints: List[Dict], truth_lean: str,
                    taste_profile: Optional[List[str]] = None) -> Dict:
-    align = _TRUTH_ALIGNMENT.get(truth_lean, _TRUTH_ALIGNMENT["neutral"]).get(variant["kind"], 75)
+    # Veto thresholds sourced from the reference profile (P-027 Part B; the JSON
+    # is now home): the align fallback for an unknown kind, the align veto line,
+    # and the reject line used to recompute the verdict after a taste nudge.
+    reject_below = _VETO_THRESHOLDS["reject_below"]
+    align = _TRUTH_ALIGNMENT.get(truth_lean, _TRUTH_ALIGNMENT["neutral"]).get(
+        variant["kind"], _VETO_THRESHOLDS["align_fallback"])
     triangle = taste_triangle(variant, truth_lean)
     taste_adjustments: List[str] = []
     if taste_profile:
@@ -225,13 +245,15 @@ def govern_variant(variant: Dict, constraints: List[Dict], truth_lean: str,
             triangle["identity"] = new_identity
             # Recompute the keep/reject verdict the same way taste_triangle does.
             triangle["verdict"] = (
-                "reject" if (triangle["identity"] < 45 or triangle["emotion"] < 45)
+                "reject" if (triangle["identity"] < reject_below
+                             or triangle["emotion"] < reject_below)
                 else "keep")
     violations = _violates_constraints(variant, constraints)
     fp = false_progress(variant)
     overfit = emotional_overfit(variant, truth_lean)
     high_violation = any(v["severity"] == "high" for v in violations)
-    vetoed = high_violation or align < 50 or triangle["verdict"] == "reject"
+    vetoed = (high_violation or align < _VETO_THRESHOLDS["align_veto_below"]
+              or triangle["verdict"] == "reject")
     out = {
         "emotional_truth_alignment": align,
         "taste_triangle": triangle,

@@ -80,6 +80,17 @@
     "Never allow a stock loop to dominate the song identity by accident."
   ],
 
+  "taste_triangle": {
+    "intimate_width_penalty": 30,
+    "emotion_dims": ["ramone_score", "listener_excitement_score", "vocal_belief_score"]
+  },
+
+  "veto_thresholds": {
+    "reject_below": 45,
+    "align_veto_below": 50,
+    "align_fallback": 75
+  },
+
   "doctrine": {
     "weights": {
       "halee_score": 1.0,
