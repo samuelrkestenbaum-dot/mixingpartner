@@ -12,6 +12,19 @@ from __future__ import annotations
 from typing import Dict, List, Optional
 
 from .constants import LOOP_SAMPLE_KINDS, RISK_CLASSES
+from .doctrine.producer_profile import load_profile
+
+# --- Producer-specific judgment: sourced from the reference ProducerProfile --
+# (P-027, third wiring step of the producer-agnostic epic — after creative.py in
+# P-026). The producer-specific values below are no longer hardcoded literals
+# here — they are SOURCED from the reference profile's JSON
+# (``doctrine/producers/halee_ramone.json``), which is now their single source of
+# truth. The loader returns fresh, JSON-parsed collections on every load, so these
+# globals keep the exact names/shapes/types the old literals had and downstream
+# code is untouched. Per-call producer selection is NOT threaded here (that is
+# P-029). NO-ALIASING contract: consumers never mutate a sourced global in place
+# (``_apply_taste`` mutates a LOCAL ``triangle`` dict, not the profile).
+_DEFAULT_PROFILE = load_profile("halee_ramone")
 
 # Section 76: decision review modes.
 REVIEW_MODES = [
@@ -20,18 +33,20 @@ REVIEW_MODES = [
 ]
 DEFAULT_REVIEW_MODE = "approve_before_apply"
 
-# Section 78: kill-switch rules (never auto-applied / blocked).
-KILL_SWITCHES = [
+# Section 78: kill-switch rules (never auto-applied / blocked). The five SAFETY
+# switches (non-destructive/Class-5) are producer-AGNOSTIC and STAY hardcoded here
+# — a swapped producer profile must never be able to weaken them. The four
+# AESTHETIC switches (items 6-9) are producer-specific and sourced from the
+# reference profile (the JSON is now their home); they are appended verbatim, in
+# order, so the composed list is byte-identical to the pre-P-027 literal.
+_SAFETY_KILL_SWITCHES = [
     "Never overwrite original audio.",
     "Never destructively tune or time-stretch source recordings.",
     "Never delete tracks without backup.",
     "Never flatten comped vocals without a duplicate.",
     "Never apply creative source edits without a versioned duplicate.",
-    "Never chase reference loudness at the mix stage.",
-    "Never widen the full mix to solve chorus lift.",
-    "Never make the lead vocal less intelligible unless explicitly approved.",
-    "Never allow a stock loop to dominate the song identity by accident.",
 ]
+KILL_SWITCHES = _SAFETY_KILL_SWITCHES + _DEFAULT_PROFILE.aesthetic_kill_switches
 _DESTRUCTIVE_PATTERNS = ["overwrite", "delete", "destructive", "flatten", "bounce in place", "render in place"]
 
 _INTIMATE_WORDS = {"intimate", "intimacy", "vulnerable", "vulnerability", "conflicted", "ache",
@@ -49,16 +64,16 @@ _BIG_WORDS = {"triumphant", "anthemic", "huge", "massive", "stadium", "euphoric"
 # Hard bound: total identity adjustment is clamped to ±TASTE_MAX_DELTA, strictly
 # below the existing intimate-truth -30 nudge, so taste can never out-pull
 # doctrine. Re-clamped to [0, 100] afterward.
-TASTE_MAX_DELTA = 15
+# Sourced from the reference profile (was a hardcoded literal; the JSON is now home).
+TASTE_MAX_DELTA = _DEFAULT_PROFILE.taste_max_delta
 
 # profile statement (verbatim from memory._TASTE_MAP) -> {variant kind: signed
 # identity delta}. Statements not listed here map to no governance kind in this
 # pass (creative/EQ surfaces, out of scope). Applied in a fixed order; pure.
-_TASTE_KIND_BIAS = {
-    "tends to prefer narrower stereo images": {"width_bloom": -TASTE_MAX_DELTA,
-                                               "drum_room_bloom": -TASTE_MAX_DELTA},
-    "prefers wider images": {"width_bloom": TASTE_MAX_DELTA},
-}
+# Sourced from the reference profile (was a hardcoded literal resolving
+# ``±TASTE_MAX_DELTA`` to ±15; the JSON is now home). Read as the profile object
+# (single source of truth) — never mutated in place (see NO-ALIASING contract).
+_TASTE_KIND_BIAS = _DEFAULT_PROFILE.taste_kind_bias
 
 
 def _apply_taste(kind: str, identity: int, statements: Optional[List[str]]):
@@ -93,14 +108,10 @@ def _apply_taste(kind: str, identity: int, statements: Optional[List[str]]):
     return new_identity, [line]
 
 # emotional-truth alignment (0-100) by variant kind, per truth lean.
-_TRUTH_ALIGNMENT = {
-    "intimate": {"vocal_ride": 88, "intimacy_pass": 90, "subtractive_drop": 84, "depth_cleanup": 82,
-                 "loop_deconstruct": 83, "drum_room_bloom": 58, "width_bloom": 45},
-    "big": {"width_bloom": 86, "drum_room_bloom": 86, "vocal_ride": 78, "subtractive_drop": 76,
-            "depth_cleanup": 76, "loop_deconstruct": 78, "intimacy_pass": 70},
-    "neutral": {"width_bloom": 72, "drum_room_bloom": 78, "vocal_ride": 84, "subtractive_drop": 82,
-                "depth_cleanup": 82, "loop_deconstruct": 80, "intimacy_pass": 82},
-}
+# Sourced from the reference profile (was a hardcoded literal; the JSON is now
+# home). Read as the profile object (single source of truth) — govern_variant
+# does ``.get(...).get(...)`` reads only, never mutates it.
+_TRUTH_ALIGNMENT = _DEFAULT_PROFILE.truth_alignment
 
 
 # --------------------------------------------------------------------------- #
