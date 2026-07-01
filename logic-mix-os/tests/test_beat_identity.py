@@ -112,9 +112,12 @@ def test_beat_identity_appended_last_preserves_summation_order(analyzed):
     for name in FIXTURE_NAMES:
         ds = analyzed[name].doctrine_score
         keys = [k for k in ds if k.endswith("_score") and k != "overall_mix_readiness_score"]
-        # The seven existing keys come first, in order; beat_identity_score is last.
+        # The seven existing keys come first, in order; beat_identity_score is
+        # appended right after them (position 7). P-032a then appends
+        # negative_space_score after beat_identity, so beat_identity is no longer
+        # the final key — but its position relative to the seven is unchanged.
         assert keys[:7] == EXISTING_COMPONENT_KEYS
-        assert keys[-1] == "beat_identity_score"
+        assert keys[7] == "beat_identity_score"
 
 
 def test_overall_is_byte_identical_to_seven_term_weighted_mean(analyzed):

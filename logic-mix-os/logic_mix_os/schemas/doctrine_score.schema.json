@@ -12,6 +12,7 @@
     "static_mix_score": { "type": ["number", "null"] },
     "dynamic_mix_score": { "type": ["number", "null"] },
     "beat_identity_score": { "type": ["number", "null"] },
+    "negative_space_score": { "type": ["number", "null"] },
     "overall_mix_readiness_score": { "type": ["number", "null"] },
     "evidence": { "type": "object" },
     "warnings": { "type": "array" }

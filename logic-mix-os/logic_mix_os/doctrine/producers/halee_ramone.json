@@ -100,7 +100,8 @@
       "section_contrast_score": 1.0,
       "static_mix_score": 1.0,
       "dynamic_mix_score": 0.8,
-      "beat_identity_score": 0
+      "beat_identity_score": 0,
+      "negative_space_score": 0
     },
     "baselines": {
       "halee": 86.0,
@@ -166,6 +167,16 @@
         "foreground_bonus": 18,
         "buried_penalty": 14,
         "masked_penalty": 12
+      },
+      "negative_space": {
+        "neutral": 40.0,
+        "baseline": 15.0,
+        "density_ceiling": 1.0,
+        "room_coeff": 50,
+        "transient_ceiling": 1.0,
+        "breathing_coeff": 20,
+        "dropout_coeff": 25,
+        "dropout_floor": 0.1
       }
     }
   },

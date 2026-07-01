@@ -69,6 +69,11 @@ def score_doctrine(
     # the pre-existing 7-term summation order is preserved and ``overall`` stays
     # bit-identical for halee_ramone (its beat_identity weight is 0).
     beat, beat_ev = _beat_identity(records, events, doctrine)
+    # P-032a: the second producer-agnostic axis — absolute arrangement room /
+    # sparsity. Appended LAST (after beat_identity) so the pre-existing 8-term
+    # summation order is preserved and ``overall`` stays bit-identical for
+    # halee_ramone (its negative_space weight is 0).
+    ns, ns_ev = _negative_space(records, sections_analysis, mix_metrics, doctrine)
 
     component_scores = {
         "halee_score": halee,
@@ -79,6 +84,7 @@ def score_doctrine(
         "static_mix_score": static,
         "dynamic_mix_score": dynamic,
         "beat_identity_score": beat,
+        "negative_space_score": ns,
     }
     weights = doctrine["weights"]
     present = {k: v for k, v in component_scores.items() if v is not None}
@@ -100,6 +106,7 @@ def score_doctrine(
             "static_mix": static_ev,
             "dynamic_mix": dynamic_ev,
             "beat_identity": beat_ev,
+            "negative_space": ns_ev,
         },
         "warnings": warnings,
     }
@@ -359,5 +366,104 @@ def _beat_identity(records: List[Dict], events: List[Dict], doctrine: Dict = _DO
         if masked:
             score -= c["masked_penalty"]
             ev.append("The fingerprint is masked by a forward element — its identity is challenged.")
+
+    return _clamp(score), ev
+
+
+def _negative_space(records: List[Dict], sections: List[Dict],
+                    mix_metrics: Optional[Dict], doctrine: Dict = _DOCTRINE):
+    """Producer-AGNOSTIC scorer for ABSOLUTE arrangement room / sparsity.
+
+    This is the SECOND new agnostic axis (P-032a), after the P-032e
+    ``beat_identity`` crux proved the add-an-axis-byte-identically pattern. It
+    answers a DIFFERENT question from ``dynamic_mix``: not *does the arrangement
+    MOVE section-to-section* (that is ``dynamic_mix``: pstdev of rms/width/
+    brightness + lift-fail), but *does the arrangement leave ROOM at all* —
+    "silence is arrangement" (the user's framing). A wall-to-wall-dense mix that
+    still varies section-to-section scores HIGH on ``dynamic_mix`` but LOW here,
+    because it is packed: the two axes are conceptually distinct, not a
+    re-derivation of one another.
+
+    Room, as a STRENGTH, is composed from section-aggregate physics only:
+      * Absolute room — reward low mean spectral ``density`` (occupancy):
+        ``room = (density_ceiling - mean_density) * room_coeff``. More empty
+        spectrum = more room = higher score. Falls back to whole-mix
+        ``mix_metrics["density"]`` when there are no sections.
+      * Sparse-section presence ("silence as arrangement") — reward a genuine
+        dropout: the spread ``max_section_density - min_section_density`` above a
+        small ``dropout_floor`` (so a section that pulls right back is rewarded).
+        Needs >=2 sections; skipped gracefully otherwise.
+      * Transient breathing room — reward low mean section ``transient_density``
+        (space between hits): ``(transient_ceiling - mean_transient) *
+        breathing_coeff``; a wall-to-wall-transient section earns none of it.
+
+    Always returns a clamped float (never None) — a documented NEUTRAL fallback
+    when there is neither section nor mix data — so the axis is always present
+    (mirrors ``_beat_identity``'s always-float discipline).
+
+    HONEST BOUNDARY — DEFERRED, NOT FAKED: this works at the SECTION-AGGREGATE
+    level. True sample-level **inter-onset silence gaps** — the actual space
+    BETWEEN individual hits — require onset timing, which is NOT visible at
+    ``score_doctrine`` time (it lives in the post-doctrine groove analyzer;
+    plumbing it in is P-032b). We do NOT claim sample-level gap detection here;
+    we measure occupancy and pull-back at the section grain only.
+    """
+    c = doctrine["scorers"]["negative_space"]
+    ev: List[str] = []
+
+    def _dens(s: Dict) -> Optional[float]:
+        v = s.get("metrics", {}).get("density")
+        return float(v) if v is not None else None
+
+    def _trans(s: Dict) -> Optional[float]:
+        v = s.get("metrics", {}).get("transient_density")
+        return float(v) if v is not None else None
+
+    densities = [d for d in (_dens(s) for s in sections) if d is not None]
+    transients = [t for t in (_trans(s) for s in sections) if t is not None]
+
+    # No section signal: fall back to the whole-mix density if present, else the
+    # documented neutral (the axis is always a float).
+    if not densities:
+        mix_density = None
+        if mix_metrics is not None and mix_metrics.get("density") is not None:
+            mix_density = float(mix_metrics["density"])
+        if mix_density is None:
+            ev.append("No section or mix density available — neutral room fallback.")
+            return _clamp(c["neutral"]), ev
+        score = c["baseline"] + max(0.0, c["density_ceiling"] - mix_density) * c["room_coeff"]
+        ev.append(f"No sections analysed; whole-mix occupancy {mix_density:.2f} gives room from the mix fallback.")
+        return _clamp(score), ev
+
+    mean_density = statistics.mean(densities)
+    score = c["baseline"]
+
+    # Absolute room: low occupancy => more empty spectrum => more room.
+    room = max(0.0, c["density_ceiling"] - mean_density) * c["room_coeff"]
+    score += room
+    ev.append(f"Mean section occupancy {mean_density:.2f} → absolute room {room:.1f}.")
+
+    # Transient breathing room: space between hits at the section grain.
+    if transients:
+        mean_trans = statistics.mean(transients)
+        breathing = max(0.0, c["transient_ceiling"] - mean_trans) * c["breathing_coeff"]
+        score += breathing
+        if mean_trans >= c["transient_ceiling"]:
+            ev.append("Wall-to-wall transients — no breathing room between hits.")
+        else:
+            ev.append(f"Transient breathing room (mean transient density {mean_trans:.2f}) → +{breathing:.1f}.")
+
+    # Sparse-section presence ("silence as arrangement"): reward a genuine
+    # dropout — a section that pulls right back below the busiest one.
+    if len(densities) >= 2:
+        spread = max(densities) - min(densities)
+        dropout = max(0.0, spread - c["dropout_floor"]) * c["dropout_coeff"]
+        if dropout > 0:
+            score += dropout
+            ev.append(f"A section pulls back (density spread {spread:.2f}) — silence used as arrangement.")
+        else:
+            ev.append("No section genuinely drops out — the arrangement stays uniformly filled.")
+    else:
+        ev.append("Only one section — a dropout cannot be assessed.")
 
     return _clamp(score), ev

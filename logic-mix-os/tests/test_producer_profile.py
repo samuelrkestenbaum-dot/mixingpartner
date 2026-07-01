@@ -564,9 +564,10 @@ def test_doctrine_subfields_present():
     assert set(d["penalty_coeffs"]) == {"halee", "ramone"}
     # P-028 Finding A: the five widened scorers each have a captured group.
     # P-032e added the sixth: the producer-agnostic ``beat_identity`` axis.
+    # P-032a added the seventh: the producer-agnostic ``negative_space`` axis.
     assert set(d["scorers"]) == {
         "vocal_centrality", "depth_hierarchy", "section_contrast",
-        "static_mix", "dynamic_mix", "beat_identity",
+        "static_mix", "dynamic_mix", "beat_identity", "negative_space",
     }
 
 

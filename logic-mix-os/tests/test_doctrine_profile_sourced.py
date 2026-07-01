@@ -79,6 +79,9 @@ def test_weights_value_pins():
         # P-032e — the producer-agnostic beat_identity axis, weight 0 for the
         # reference producer (the byte-identical anchor).
         "beat_identity_score": 0,
+        # P-032a — the producer-agnostic negative_space axis, weight 0 for the
+        # reference producer (the byte-identical anchor).
+        "negative_space_score": 0,
     }
 
 
