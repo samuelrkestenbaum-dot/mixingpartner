@@ -4,9 +4,8 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** NONE ACTIVE — P-032d closed (2026-07-01). The next packet is
-  staged below; the orchestrator must confirm it (and set it active) before the
-  builder touches anything.
+- **Status:** ACTIVE — P-032c confirmed by the orchestrator-in-chief
+  (2026-07-01), handed to builder.
 
 ## Last-closed
 
@@ -21,7 +20,7 @@
   scores 51.1 / 20.0 / 27.8. Local-only, NOT merged (merge base `e79426a` =
   PR #16). Receipt: `build-os/receipts/P-032d-rhythmic-surprise.md`.
 
-## Staged next (NOT active until the orchestrator confirms)
+## Active packet spec (confirmed)
 
 - **Packet id:** P-032c
 - **Title:** `low_end_motion` (pocket) — fifth new producer-agnostic doctrine
@@ -52,8 +51,8 @@
 
 ## Epic arc (Timbaland sub-arc P-032.x — RESEQUENCED)
 
-**P-032e ✓ → P-032a ✓ → P-032b ✓ → P-032d ✓ → P-032c (low_end_motion — STAGED
-NEXT) →** P-032g (loop static-vs-iconic) → P-032f (vocal-role — ★ USER-GATED) →
+**P-032e ✓ → P-032a ✓ → P-032b ✓ → P-032d ✓ → P-032c (low_end_motion — ACTIVE)
+→** P-032g (loop static-vs-iconic) → P-032f (vocal-role — ★ USER-GATED) →
 **[fold P-031 confidence here]** → P-032h (author `timbaland.json`) → P-032i
 (differential proof). P-030 (rename dims) orthogonal/last.
 
