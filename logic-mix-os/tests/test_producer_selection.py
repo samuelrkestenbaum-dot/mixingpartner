@@ -158,3 +158,50 @@ def _vocal_ride_overall(result):
             if v["kind"] == "vocal_ride":
                 return v["scores"]["overall_score"]
     return None
+
+
+# --------------------------------------------------------------------------- #
+# Selection-liveness — GOVERNANCE (P-029 Commit 2). A one-value-different
+# truth_alignment entry changes the REAL governance output as predicted.
+# --------------------------------------------------------------------------- #
+def test_truth_alignment_is_a_live_lever():
+    """Lowering ``truth_alignment["intimate"]["vocal_ride"]`` from 88 to 60 in a
+    second profile must change the REAL governance ``emotional_truth_alignment`` for
+    the ``vocal_ride`` winner from 88 to 60 — proving ``analyze(producer=…)`` threads
+    the governance profile to ``govern_variant``, not ignoring it. This FAILS if the
+    profile is accepted but ignored.
+
+    ``simple_vocal_piano_song`` has an intimate truth lean and its governed winner
+    is ``vocal_A`` (kind ``vocal_ride``), whose alignment is read directly from
+    ``truth_alignment[lean][kind]`` — the cleanest single-cell governance lever. 60
+    is chosen to stay ABOVE the align veto line (50) so the winner remains ``vocal_A``
+    and the changed alignment is the direct, predictable observable."""
+    name = "simple_vocal_piano_song"
+    ref = load_profile("halee_ramone")
+    assert ref.truth_alignment["intimate"]["vocal_ride"] == 88  # anchor the lever
+
+    truth_alignment = copy.deepcopy(ref.truth_alignment)
+    truth_alignment["intimate"]["vocal_ride"] = 60
+    lowered = dataclasses.replace(ref, truth_alignment=truth_alignment)
+
+    ref_align = _vocal_ride_governed_align(_analyze(name, producer="halee_ramone"))
+    low_align = _vocal_ride_governed_align(_analyze(name, producer=lowered))
+
+    assert ref_align == 88
+    assert low_align == 60
+
+
+def _vocal_ride_governed_align(result):
+    """The ``emotional_truth_alignment`` of the governed branch whose winner is a
+    ``vocal_ride`` variant (the alignment govern_variant read for that kind)."""
+    creative_variants = {
+        v["variant_id"]: v
+        for b in result.creative.get("branches", [])
+        for v in b.get("variants", [])
+    }
+    for gb in result.governance.get("governed_branches", []):
+        winner = gb.get("governed_winner")
+        gov = gb.get("governance") or {}
+        if winner and creative_variants.get(winner, {}).get("kind") == "vocal_ride":
+            return gov.get("emotional_truth_alignment")
+    return None

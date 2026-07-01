@@ -245,7 +245,7 @@ def analyze(
     # Creative experimentation engine + governance / taste protection.
     mode = creative_mode or _default_creative_mode(project.intent)
     result.creative = run_creative_engine(result, mode, profile=profile)
-    result.governance = run_governance(result, result.creative, taste_profile=_taste)
+    result.governance = run_governance(result, result.creative, taste_profile=_taste, profile=profile)
 
     # Session intelligence: render graph, plugin availability.
     result.render_graph = build_render_graph(project)

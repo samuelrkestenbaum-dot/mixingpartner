@@ -12,7 +12,7 @@ from __future__ import annotations
 from typing import Dict, List, Optional
 
 from .constants import LOOP_SAMPLE_KINDS, RISK_CLASSES
-from .doctrine.producer_profile import load_profile
+from .doctrine.producer_profile import ProducerProfile, load_profile
 
 # --- Producer-specific judgment: sourced from the reference ProducerProfile --
 # (P-027, third wiring step of the producer-agnostic epic — after creative.py in
@@ -76,7 +76,8 @@ TASTE_MAX_DELTA = _DEFAULT_PROFILE.taste_max_delta
 _TASTE_KIND_BIAS = _DEFAULT_PROFILE.taste_kind_bias
 
 
-def _apply_taste(kind: str, identity: int, statements: Optional[List[str]]):
+def _apply_taste(kind: str, identity: int, statements: Optional[List[str]],
+                 profile: Optional[ProducerProfile] = None):
     """Pure, deterministic taste bias on a variant's identity.
 
     Returns ``(new_identity, evidence_lines)``. Sums the signed deltas for every
@@ -84,20 +85,27 @@ def _apply_taste(kind: str, identity: int, statements: Optional[List[str]]):
     clamps the *total* adjustment to ±TASTE_MAX_DELTA, then re-clamps the result
     to [0, 100]. No time / I/O / randomness. ``evidence_lines`` is empty when no
     statement applies — callers omit the ``taste_adjustments`` key entirely then.
+
+    The taste-kind-bias table and the max delta are read from the PASSED
+    ``profile`` (default = the reference), so producer selection reaches the taste
+    layer.
     """
     if not statements:
         return identity, []
+    prof = profile or _DEFAULT_PROFILE
+    taste_kind_bias = prof.taste_kind_bias
+    taste_max_delta = prof.taste_max_delta
     delta = 0
     matched: List[str] = []
     for statement in statements:
-        bias = _TASTE_KIND_BIAS.get(statement)
+        bias = taste_kind_bias.get(statement)
         if not bias or kind not in bias:
             continue
         delta += bias[kind]
         matched.append(statement)
     if not matched:
         return identity, []
-    delta = max(-TASTE_MAX_DELTA, min(TASTE_MAX_DELTA, delta))
+    delta = max(-taste_max_delta, min(taste_max_delta, delta))
     new_identity = max(0, min(100, identity + delta))
     if new_identity == identity:
         return identity, []
@@ -191,20 +199,24 @@ def _violates_constraints(variant: Dict, constraints: List[Dict]) -> List[Dict]:
     return violations
 
 
-def taste_triangle(variant: Dict, truth_lean: str) -> Dict:
+def taste_triangle(variant: Dict, truth_lean: str,
+                   profile: Optional[ProducerProfile] = None) -> Dict:
     s = variant["scores"]
-    # Emotion blend + the intimate-width penalty + the reject threshold are
-    # sourced from the reference profile (P-027 Part B; the JSON is now home).
-    # The blend reproduces ``round(mean of the three emotion_dims)`` byte-for-byte
-    # — same fixed order, same round().
-    dims = _TASTE_TRIANGLE["emotion_dims"]
+    # Emotion blend + the intimate-width penalty + the reject threshold are read
+    # from the PASSED ``profile`` (default = the reference; P-027 sourced them, and
+    # P-029 threads per-call selection here). The blend reproduces
+    # ``round(mean of the three emotion_dims)`` byte-for-byte — same fixed order,
+    # same round().
+    prof = profile or _DEFAULT_PROFILE
+    taste_triangle_cfg = prof.taste_triangle
+    dims = taste_triangle_cfg["emotion_dims"]
     emotion = round(sum(s[d] for d in dims) / len(dims))
     craft = s["technical_score"]
     identity = s["taste_alignment_score"]
     if variant["kind"] == "width_bloom" and truth_lean == "intimate":
-        identity -= _TASTE_TRIANGLE["intimate_width_penalty"]
+        identity -= taste_triangle_cfg["intimate_width_penalty"]
     identity = max(0, identity)
-    reject_below = _VETO_THRESHOLDS["reject_below"]
+    reject_below = prof.veto_thresholds["reject_below"]
     verdict = "reject" if (identity < reject_below or emotion < reject_below) else "keep"
     return {"emotion": emotion, "craft": craft, "identity": identity, "verdict": verdict}
 
@@ -229,18 +241,23 @@ def emotional_overfit(variant: Dict, truth_lean: str) -> Optional[Dict]:
 
 
 def govern_variant(variant: Dict, constraints: List[Dict], truth_lean: str,
-                   taste_profile: Optional[List[str]] = None) -> Dict:
-    # Veto thresholds sourced from the reference profile (P-027 Part B; the JSON
-    # is now home): the align fallback for an unknown kind, the align veto line,
-    # and the reject line used to recompute the verdict after a taste nudge.
-    reject_below = _VETO_THRESHOLDS["reject_below"]
-    align = _TRUTH_ALIGNMENT.get(truth_lean, _TRUTH_ALIGNMENT["neutral"]).get(
-        variant["kind"], _VETO_THRESHOLDS["align_fallback"])
-    triangle = taste_triangle(variant, truth_lean)
+                   taste_profile: Optional[List[str]] = None,
+                   profile: Optional[ProducerProfile] = None) -> Dict:
+    # The truth-alignment table and veto thresholds are read from the PASSED
+    # ``profile`` (default = the reference; P-027 sourced them, P-029 threads
+    # per-call selection): the align fallback for an unknown kind, the align veto
+    # line, and the reject line used to recompute the verdict after a taste nudge.
+    prof = profile or _DEFAULT_PROFILE
+    truth_alignment = prof.truth_alignment
+    veto_thresholds = prof.veto_thresholds
+    reject_below = veto_thresholds["reject_below"]
+    align = truth_alignment.get(truth_lean, truth_alignment["neutral"]).get(
+        variant["kind"], veto_thresholds["align_fallback"])
+    triangle = taste_triangle(variant, truth_lean, prof)
     taste_adjustments: List[str] = []
     if taste_profile:
         new_identity, taste_adjustments = _apply_taste(
-            variant["kind"], triangle["identity"], taste_profile)
+            variant["kind"], triangle["identity"], taste_profile, prof)
         if taste_adjustments:
             triangle["identity"] = new_identity
             # Recompute the keep/reject verdict the same way taste_triangle does.
@@ -252,7 +269,7 @@ def govern_variant(variant: Dict, constraints: List[Dict], truth_lean: str,
     fp = false_progress(variant)
     overfit = emotional_overfit(variant, truth_lean)
     high_violation = any(v["severity"] == "high" for v in violations)
-    vetoed = (high_violation or align < _VETO_THRESHOLDS["align_veto_below"]
+    vetoed = (high_violation or align < veto_thresholds["align_veto_below"]
               or triangle["verdict"] == "reject")
     out = {
         "emotional_truth_alignment": align,
@@ -269,14 +286,16 @@ def govern_variant(variant: Dict, constraints: List[Dict], truth_lean: str,
 
 
 def govern_branches(branches: List[Dict], intent: Dict, truth_lean: str,
-                    taste_profile: Optional[List[str]] = None) -> List[Dict]:
+                    taste_profile: Optional[List[str]] = None,
+                    profile: Optional[ProducerProfile] = None) -> List[Dict]:
     constraints = negative_constraints(intent)
     out = []
     for branch in branches:
         ranked = sorted(branch["variants"], key=lambda v: v["scores"]["overall_score"], reverse=True)
         chosen, gov = None, None
         for v in ranked:
-            g = govern_variant(v, constraints, truth_lean, taste_profile=taste_profile)
+            g = govern_variant(v, constraints, truth_lean,
+                               taste_profile=taste_profile, profile=profile)
             v["governance"] = g
             if chosen is None and not g["vetoed"]:
                 chosen, gov = v, g
@@ -386,11 +405,20 @@ def mixer_communication(result, tone: str = "collaborative") -> str:
     return (f"I think we're getting close. The one thing I'd love to chase next is: {top['detail'].lower()}")
 
 
-def run_governance(result, creative: Dict, taste_profile: Optional[List[str]] = None) -> Dict:
+def run_governance(result, creative: Dict, taste_profile: Optional[List[str]] = None,
+                   profile: Optional[ProducerProfile] = None) -> Dict:
+    # P-029: per-call producer selection. The passed ``profile`` (default = the
+    # reference) drives the truth-alignment / taste / veto reads inside
+    # ``govern_branches``, and supplies the AESTHETIC kill-switches. The five
+    # SAFETY kill-switches are producer-AGNOSTIC and stay hardcoded — a swapped
+    # producer can never weaken them — appended-verbatim order preserved so the
+    # default composed list is byte-identical.
+    prof = profile or _DEFAULT_PROFILE
     intent = result.project.intent
     truth = emotional_truth_lock(intent)
     governed = govern_branches(creative.get("branches", []), intent, truth["lean"],
-                               taste_profile=taste_profile)
+                               taste_profile=taste_profile, profile=prof)
+    kill_switches = _SAFETY_KILL_SWITCHES + prof.aesthetic_kill_switches
     return {
         "emotional_truth_lock": truth,
         "reference_sanity": reference_sanity(result.reference_delta, intent),
@@ -399,7 +427,7 @@ def run_governance(result, creative: Dict, taste_profile: Optional[List[str]] = 
         "anti_template": anti_template(creative.get("branches", [])),
         "listener_panel": listener_panel(result),
         "stop_conditions": stop_conditions(result),
-        "kill_switches": KILL_SWITCHES,
+        "kill_switches": kill_switches,
         "review_modes": REVIEW_MODES,
         "default_review_mode": DEFAULT_REVIEW_MODE,
         "mixer_feedback": {
