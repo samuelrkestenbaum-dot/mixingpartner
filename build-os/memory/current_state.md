@@ -19,24 +19,82 @@
   bases: **PR #15** merge `6c40e2b` was the P-017 base; **PR #13** merge `0f4e7e9`
   landed P-001…P-012 + the canonical-alignment audit; the older shared ancestor is
   `694d19d`.) On top of the `e79426a` base the dev branch now carries the
-  producer-agnostic epic's foundation: **P-025 (`195127c` + `e6cb038`, product —
-  the `ProducerProfile` schema + pure `load_profile()` + the VERBATIM-extracted
+  producer-agnostic epic: **P-025 (`195127c` + `e6cb038`, product — the
+  `ProducerProfile` schema + pure `load_profile()` + the VERBATIM-extracted
   `halee_ramone.json` reference, byte-identical round-trip guard, honesty metadata
-  stamp; COMPLETELY UNWIRED — the four judgment sources byte-unchanged, regression
-  UNCHANGED)**. The P-025 product commits are local-only (not pushed / merged).
+  stamp; COMPLETELY UNWIRED)** then **P-026 (`c4a092d`, product — the FIRST WIRING:
+  `creative.py` sources its 8 producer-specific globals FROM
+  `load_profile("halee_ramone")`, the hardcoded literals DELETED, so
+  `halee_ramone.json` is now their single source of truth; byte-identical,
+  no-aliasing-proven; the other three judgment sources byte-unchanged, regression
+  UNCHANGED)**. The P-025 + P-026 product commits are local-only (not pushed /
+  merged). P-026's parent is `84d208d` (the active-packet confirmation).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-01, P-025):** suite **319 passed** (0 failed /
+- **Green baseline (verified 2026-07-01, P-026):** suite **331 passed** (0 failed /
   skipped / warnings; green even under `-W error`); regression **68/68** (0
-  critical / 0 warnings) — UNCHANGED (P-025 wired nothing). (Prior baseline was
-  293; P-025 added +26 — new schema/loader + round-trip/completeness/metadata
-  tests; goldens & judgment untouched.)
+  critical / 0 warnings) — UNCHANGED (P-026 is byte-identical). Commit-1 green in
+  isolation = 331. (Prior baseline was 319 at P-025; P-026 added +12 —
+  `test_creative_profile_sourced.py` value-pins / shape / no-aliasing; goldens &
+  judgment untouched. Earlier: 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★ P-026 LANDS THE FIRST WIRING OF THE PRODUCER-AGNOSTIC EPIC: `creative.py`
+  NOW SOURCES ITS PRODUCER-SPECIFIC VALUES FROM THE REFERENCE PROFILE — THE JSON IS
+  THE SINGLE SOURCE OF TRUTH, BYTE-IDENTICAL.** P-025 extracted the reference
+  `ProducerProfile` (`halee_ramone.json`) and proved byte-identical round-trip but
+  nothing consumed it; **P-026 makes `creative.py` the first consumer.**
+  **Last-closed = P-026.**
+  - **What P-026 shipped:** `creative.py` gains `_DEFAULT_PROFILE =
+    load_profile("halee_ramone")` and SOURCES its **8 producer-specific globals**
+    FROM the profile — `_KIND_SCORES`, `_NUDGE_TABLE`, `_PROMOTION_TABLE`,
+    `CREATIVE_NUDGE_CAP` (2.0), `CREATIVE_PROMOTION_CAP` (4.0), `_RISK_PENALTY`,
+    `SEARCH_MODES`, `PHILOSOPHY`. The **hardcoded literals are DELETED** — the
+    `halee_ramone.json` is now their **single source of truth.** Same names/shapes,
+    so every downstream consumer is untouched; nudge/promotion kinds stay SETS (the
+    loader rehydrates them).
+  - **Byte-identical by construction (the whole point):** the reference profile ==
+    the old literals (P-025's round-trip + the 68/68 regression guarantee it). **The
+    P-012 / P-013 / P-015 / P-016 creative tests pass UNEDITED (69 combined)** — the
+    same `analyze()` / `score_variant` output on the seeded fixtures, now sourced
+    from the JSON. Values spot-checked against the JSON AND the pre-P-026 git
+    literals (match).
+  - **No-aliasing PROVEN (the per-module safety invariant):** `score_variant` copies
+    each `_KIND_SCORES` row via `dict(_KIND_SCORES.get(...))` BEFORE mutating; qa
+    forced a nudge AND a promotion to fire, then confirmed the shared
+    `_DEFAULT_PROFILE.kind_scores` is byte-unchanged; determinism holds.
+  - **No signature/mechanism change; no per-call producer selection yet** (that is
+    P-029 — this packet only relocates the SOURCE of the values behind a single
+    `_DEFAULT_PROFILE`). `governance.py` / `doctrine_engine.py` / `pipeline.py`
+    **byte-unchanged** (P-027 / P-028 / P-029 own those).
+  - **Single commit `c4a092d`** (parent `84d208d` = the active-packet confirmation)
+    — `creative.py` (+47/−71) + new `test_creative_profile_sourced.py` (12 tests).
+    **Green in isolation = 331.** Suite **319 → 331 passed** (+12; 0
+    failed/skipped/warnings, green under `-W error`); regression **68/68, 0
+    critical, 0 warnings — UNCHANGED** (parent `84d208d` also 68/68 once fixtures
+    are generated). Scope: `creative.py` + the one new test only. Safety grep clean;
+    UI N/A. qa **GREEN**; reviewer **pass**. **Codex NOT available — single-reviewer
+    verdict.** **P-026 local-only** (commit `c4a092d` on the dev branch on top of the
+    P-025 commits on top of the `e79426a` base), not pushed/merged.
+  - **★ WATCH-ITEM (reviewer — binding for P-027 / P-028):** the copy-before-mutate
+    no-aliasing safety is a **PER-MODULE invariant, not a structural guarantee.** As
+    this sourcing pattern repeats for governance (P-027) and doctrine (P-028), EACH
+    extraction packet MUST independently PROVE its consumers never mutate a sourced
+    global in place — grep for in-place mutation + a no-aliasing test like P-026's.
+    P-029 (per-call profile) reduces this risk. Recorded in residue as binding.
+  - **★ EPIC ARC (updated):** **P-025 ✓ (foundation) → P-026 ✓ (creative sourced
+    from the profile)** → P-027 (governance extraction, **WIDENED** + **aliasing-
+    proof required**) → P-028 (doctrine extraction, **WIDENED** + **aliasing-proof
+    required**) → P-029 (parameterize the pipeline / per-call profile) → P-030
+    (rename the `halee` / `ramone` dims off the producer names) → P-031 (confidence
+    framework — consume the metadata stamp) → P-032 (second producer) → P-033
+    (expose producer selection). Receipt:
+    `build-os/receipts/P-026-creative-sources-values-from-reference-profile.md`.
 
 - **★★ A NEW EPIC OPENS — THE PRODUCER-AGNOSTIC EPIC — AND P-025 LANDS ITS
   FOUNDATION: TODAY'S HARDCODED HALEE/RAMONE JUDGMENT IS NOW A FROZEN,
@@ -94,9 +152,10 @@
     (`_vocal_centrality` / `_depth_hierarchy` / `_section_contrast` / `_static_mix`
     / `_dynamic_mix` — baselines 80.0/70.0/40, penalties, coefficients), not just
     `_halee` / `_ramone`.
-  - **★ EPIC ARC (the active roadmap):** **P-025 ✓ (foundation)** → P-026 (extract
-    creative-scoring judgment onto the profile, byte-identical) → P-027 (governance
-    extraction, **WIDENED**) → P-028 (doctrine extraction, **WIDENED**) → P-029
+  - **★ EPIC ARC (the active roadmap):** **P-025 ✓ (foundation) → P-026 ✓
+    (creative sources its values from the profile, byte-identical)** → P-027
+    (governance extraction, **WIDENED** + **aliasing-proof**) → P-028 (doctrine
+    extraction, **WIDENED** + **aliasing-proof**) → P-029
     (parameterize the pipeline to consume the profile) → P-030 (rename the
     `halee`/`ramone` dims off the producer names) → P-031 (confidence framework —
     consume the metadata stamp) → P-032 (second producer) → P-033 (expose producer

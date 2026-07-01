@@ -42,33 +42,41 @@
 
 ## Deferred (follow-up packets)
 
-- **★★ THE ACTIVE ROADMAP IS NOW THE PRODUCER-AGNOSTIC EPIC — P-025 ✓ LANDS ITS
-  FOUNDATION.** Make the engine select any producer's judgment as a swappable
-  `ProducerProfile` (the physics stays fixed). **P-025 ✓** extracted today's
-  100%-hardcoded Halee/Ramone judgment into a frozen `ProducerProfile` + a pure
-  `load_profile()` + the VERBATIM `halee_ramone.json` reference, byte-identical
-  round-trip-guarded (exact + non-vacuous indirect), honesty-metadata-stamped, and
-  **COMPLETELY UNWIRED** (the four judgment sources byte-unchanged; regression
-  68/68 UNCHANGED). Receipt:
-  `build-os/receipts/P-025-producer-profile-schema-loader-halee-ramone-extraction.md`.
+- **★★ THE ACTIVE ROADMAP IS THE PRODUCER-AGNOSTIC EPIC — P-025 ✓ (foundation) +
+  P-026 ✓ (FIRST WIRING).** Make the engine select any producer's judgment as a
+  swappable `ProducerProfile` (the physics stays fixed). **P-025 ✓** extracted
+  today's 100%-hardcoded Halee/Ramone judgment into a frozen `ProducerProfile` + a
+  pure `load_profile()` + the VERBATIM `halee_ramone.json` reference, byte-identical
+  round-trip-guarded, honesty-metadata-stamped, **COMPLETELY UNWIRED**. **P-026 ✓**
+  made `creative.py` the FIRST consumer: it now SOURCES its 8 producer-specific
+  globals (`_KIND_SCORES`, `_NUDGE_TABLE`, `_PROMOTION_TABLE`, `CREATIVE_NUDGE_CAP`,
+  `CREATIVE_PROMOTION_CAP`, `_RISK_PENALTY`, `SEARCH_MODES`, `PHILOSOPHY`) FROM
+  `load_profile("halee_ramone")` — the hardcoded literals DELETED, so
+  `halee_ramone.json` is now their single source of truth. Byte-identical (the
+  P-012/13/15/16 creative tests pass UNEDITED, 69 combined; regression 68/68
+  UNCHANGED), no-aliasing-proven (copy-before-mutate; profile byte-unchanged after a
+  nudge + promotion fire). Single commit `c4a092d`; suite 319 → 331 (+12). Receipts:
+  `build-os/receipts/P-025-producer-profile-schema-loader-halee-ramone-extraction.md`,
+  `build-os/receipts/P-026-creative-sources-values-from-reference-profile.md`.
   **The epic arc (next steps):**
-  - **P-026 — extract creative-scoring judgment onto the profile, byte-identical**
-    (NEXT). Move `creative.py`'s producer-specific structures behind the profile
-    surface the round-trip already pins; keep behavior byte-identical.
-  - **P-027 — governance extraction (WIDENED per Finding A).** In addition to
-    `_TRUTH_ALIGNMENT` / `_TASTE_KIND_BIAS` / `TASTE_MAX_DELTA` / the aesthetic
-    kill-switches, ALSO capture the inline `taste_triangle` rule
-    (`width_bloom + intimate → identity -= 30`, ~L179–182), the `<45` reject /
-    `<50` align-veto / `75` align-fallback thresholds, and the `emotion` blend
-    definition (~L176).
-  - **P-028 — doctrine extraction (WIDENED per Finding A).** Capture ALL doctrine
-    scoring functions' constants — `_vocal_centrality` / `_depth_hierarchy` /
-    `_section_contrast` / `_static_mix` / `_dynamic_mix` (baselines 80.0/70.0/40,
-    penalties, coefficients e.g. `30 + rms_std*8 + width_std*140`) — not just
-    `_halee` / `_ramone`.
-  - **P-029 — parameterize the pipeline** to CONSUME the profile (the first wiring
-    step; guarded by the P-025 round-trip so it stays byte-identical for
-    `halee_ramone`).
+  - **P-027 — governance extraction (WIDENED per Finding A + ALIASING-PROOF
+    required)** (NEXT). In addition to `_TRUTH_ALIGNMENT` / `_TASTE_KIND_BIAS` /
+    `TASTE_MAX_DELTA` / the aesthetic kill-switches, ALSO capture the inline
+    `taste_triangle` rule (`width_bloom + intimate → identity -= 30`, ~L179–182),
+    the `<45` reject / `<50` align-veto / `75` align-fallback thresholds, and the
+    `emotion` blend definition (~L176). MUST independently PROVE governance's
+    consumers never mutate the sourced globals in place (see the aliasing-proof
+    requirement below).
+  - **P-028 — doctrine extraction (WIDENED per Finding A + ALIASING-PROOF
+    required).** Capture ALL doctrine scoring functions' constants —
+    `_vocal_centrality` / `_depth_hierarchy` / `_section_contrast` / `_static_mix` /
+    `_dynamic_mix` (baselines 80.0/70.0/40, penalties, coefficients e.g.
+    `30 + rms_std*8 + width_std*140`) — not just `_halee` / `_ramone`. MUST
+    independently PROVE doctrine's consumers never mutate the sourced globals in
+    place.
+  - **P-029 — parameterize the pipeline** to CONSUME the profile per-call (the
+    per-call profile REDUCES the aliasing risk; guarded by the P-025 round-trip so
+    it stays byte-identical for `halee_ramone`).
   - **P-030 — rename** the `halee` / `ramone` dimension names off the producer
     names (they were kept verbatim in P-025 per the byte-identical-first decision).
   - **P-031 — confidence framework:** consume the profile metadata stamp
@@ -90,6 +98,20 @@
     (baselines 80.0/70.0/40, penalties, coefficients).
   These two packets OWN capturing these; the P-025 round-trip guard is the safety
   net they rely on as they widen the profile.
+
+- **★ ALIASING-PROOF REQUIREMENT — BINDING for P-027 / P-028 (reviewer, from P-026;
+  a PER-MODULE invariant, NOT a structural guarantee).** P-026 proved `creative.py`
+  never mutates its sourced globals in place — `score_variant` copies each
+  `_KIND_SCORES` row via `dict(_KIND_SCORES.get(...))` BEFORE mutating, and qa
+  confirmed `_DEFAULT_PROFILE.kind_scores` is byte-unchanged after forcing a nudge
+  AND a promotion to fire. **That safety is per-module.** As the sourcing pattern
+  repeats, **EACH of P-027 (governance) and P-028 (doctrine) MUST independently
+  PROVE its consumers never mutate a sourced global in place** — (a) grep for
+  in-place mutation of the sourced structures, and (b) add a no-aliasing test like
+  P-026's (fire the relevant path, then assert the shared profile object is
+  byte-unchanged) + a determinism check. **P-029 (per-call profile) is the
+  structural fix** that removes the shared-mutable-global risk. Do NOT close P-027
+  or P-028 without this proof.
 
 - **★ CONFIRMED HONESTY / SOURCING POLICY — a STANDING product decision governing
   P-031 / P-032 (confirmed by the user).** hand-curated → high-confidence;
