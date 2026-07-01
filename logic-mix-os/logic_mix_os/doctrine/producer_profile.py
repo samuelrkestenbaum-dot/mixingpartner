@@ -135,7 +135,8 @@ def _validate(raw: Dict[str, Any], name: str) -> None:
         if key not in doctrine:
             raise ValueError(f"profile {name!r}: doctrine missing {key!r}")
     for fn in ("vocal_centrality", "depth_hierarchy", "section_contrast",
-               "static_mix", "dynamic_mix", "beat_identity", "negative_space"):
+               "static_mix", "dynamic_mix", "beat_identity", "negative_space",
+               "groove_coherence"):
         if fn not in doctrine["scorers"]:
             raise ValueError(f"profile {name!r}: doctrine.scorers missing {fn!r}")
 

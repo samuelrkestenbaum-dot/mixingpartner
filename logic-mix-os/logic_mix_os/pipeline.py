@@ -162,10 +162,27 @@ def analyze(
     for entry in result.track_analysis:
         entry["metrics"]["masking_risk"] = risk.get(entry["track_id"])
 
+    # P-032b live wire: the groove signal (``analyze_groove`` →
+    # ``overall_regularity``) is a doctrine input for the ``groove_coherence`` axis,
+    # so it must be computed BEFORE ``score_doctrine`` (the P-016 lesson: an
+    # evidence-gated signal is only live if computed before its consumer, and
+    # computed ONCE). Its inputs — ``result.track_identity`` + ``loaded_by_id`` —
+    # are already filled by the per-track loop above, so this is a pure relocation
+    # of the ``rhythm_tracks``/``analyze_groove`` pair that used to live in the
+    # expanded suite below. The exact same ``groove`` object is REUSED in
+    # ``result.expanded["groove"]`` (never re-run), keeping that value
+    # byte-identical.
+    rhythm_tracks = [
+        {"name": ident["name"], "identity": ident["instrument_identity"], "loaded": loaded_by_id[ident["track_id"]]}
+        for ident in result.track_identity
+        if ident["instrument_identity"] in RHYTHM_IDENTITIES and ident["track_id"] in loaded_by_id
+    ]
+    groove = analyze_groove(rhythm_tracks)
+
     # Doctrine scoring.
     result.doctrine_score = score_doctrine(
         records, result.section_analysis, result.masking_report, result.mix_metrics,
-        project.intent, profile=profile,
+        project.intent, profile=profile, groove=groove,
     )
 
     # Reference delta.
@@ -179,18 +196,16 @@ def analyze(
     # Expanded analysis suite (translation, mono, density, narrative, etc.).
     lead_record = next((r for r in records if r["instrument_identity"] == "lead_vocal"), None)
     lead_present = lead_record is not None
-    rhythm_tracks = [
-        {"name": ident["name"], "identity": ident["instrument_identity"], "loaded": loaded_by_id[ident["track_id"]]}
-        for ident in result.track_identity
-        if ident["instrument_identity"] in RHYTHM_IDENTITIES and ident["track_id"] in loaded_by_id
-    ]
     result.expanded = {
         "translation": analyze_translation(result.mix_metrics, records),
         "mono_compatibility": analyze_mono(records, result.mix_metrics),
         "arrangement_density": map_density(records, result.section_analysis),
         "listener_experience": map_experience(result.section_analysis, lead_present),
         "transitions": analyze_transitions(mixdown, project.sections),
-        "groove": analyze_groove(rhythm_tracks),
+        # P-032b: REUSE the exact ``groove`` computed above (before doctrine) —
+        # never re-run ``analyze_groove`` here. This keeps the value byte-identical
+        # and honours the compute-once discipline (the no-re-run guard).
+        "groove": groove,
         "harmonic": analyze_harmony(mixdown, project.key),
         "vocal_performance": analyze_vocal(lead_vocal_loaded, lead_record["metrics"] if lead_record else None),
         "lyrics": analyze_lyrics(manifest, result.section_analysis, lead_present),

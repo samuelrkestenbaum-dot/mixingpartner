@@ -122,14 +122,18 @@ def test_negative_space_weight_is_zero_for_halee_ramone():
 
 
 def test_negative_space_appended_last_preserves_summation_order(analyzed):
-    """The new term is LAST in ``component_scores`` and every PRE-EXISTING key
-    (the 8 anchors, incl. beat_identity_score) keeps its exact value + position."""
+    """The new term keeps its position and every PRE-EXISTING key (the 8 anchors,
+    incl. beat_identity_score) keeps its exact value + position. P-032b then
+    appends groove_coherence_score after negative_space, so negative_space is no
+    longer the FINAL key — but its position (index 8, right after the 8 anchors)
+    is unchanged, which is what preserves the summation order."""
     for name in FIXTURE_NAMES:
         ds = analyzed[name].doctrine_score
         keys = [k for k in ds if k.endswith("_score") and k != "overall_mix_readiness_score"]
-        # The eight existing keys come first, in order; negative_space_score is last.
+        # The eight existing keys come first, in order; negative_space_score is
+        # appended right after them (position 8).
         assert keys[:8] == EXISTING_COMPONENT_KEYS
-        assert keys[-1] == "negative_space_score"
+        assert keys[8] == "negative_space_score"
 
 
 def test_overall_is_byte_identical_to_eight_term_weighted_mean(analyzed):

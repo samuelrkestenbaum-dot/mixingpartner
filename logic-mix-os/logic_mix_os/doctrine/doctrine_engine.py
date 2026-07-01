@@ -48,6 +48,7 @@ def score_doctrine(
     mix_metrics: Optional[Dict],
     intent: Optional[Dict] = None,
     profile: Optional[ProducerProfile] = None,
+    groove: Optional[Dict] = None,
 ) -> Dict:
     # P-029: per-call producer selection. When ``profile is None`` the reference
     # ``_DEFAULT_PROFILE`` is used, so every existing caller (and the no-arg
@@ -74,6 +75,14 @@ def score_doctrine(
     # summation order is preserved and ``overall`` stays bit-identical for
     # halee_ramone (its negative_space weight is 0).
     ns, ns_ev = _negative_space(records, sections_analysis, mix_metrics, doctrine)
+    # P-032b: the third producer-agnostic axis — groove regularity/consistency as
+    # a proxy for coherence. This is the FIRST live-wired axis: ``groove`` is
+    # computed by ``analyze_groove`` BEFORE this call in the pipeline and threaded
+    # in (default ``None`` keeps every existing caller byte-identical, via the
+    # scorer's neutral fallback). Appended LAST (after negative_space) so the
+    # pre-existing 9-term summation order is preserved and ``overall`` stays
+    # bit-identical for halee_ramone (its groove_coherence weight is 0).
+    gc, gc_ev = _groove_coherence(groove, doctrine)
 
     component_scores = {
         "halee_score": halee,
@@ -85,6 +94,7 @@ def score_doctrine(
         "dynamic_mix_score": dynamic,
         "beat_identity_score": beat,
         "negative_space_score": ns,
+        "groove_coherence_score": gc,
     }
     weights = doctrine["weights"]
     present = {k: v for k, v in component_scores.items() if v is not None}
@@ -107,6 +117,7 @@ def score_doctrine(
             "dynamic_mix": dynamic_ev,
             "beat_identity": beat_ev,
             "negative_space": ns_ev,
+            "groove_coherence": gc_ev,
         },
         "warnings": warnings,
     }
@@ -465,5 +476,78 @@ def _negative_space(records: List[Dict], sections: List[Dict],
             ev.append("No section genuinely drops out — the arrangement stays uniformly filled.")
     else:
         ev.append("Only one section — a dropout cannot be assessed.")
+
+    return _clamp(score), ev
+
+
+def _groove_coherence(groove: Optional[Dict], doctrine: Dict = _DOCTRINE):
+    """Producer-AGNOSTIC scorer for groove REGULARITY / CONSISTENCY.
+
+    This is the THIRD new agnostic axis (P-032b) and the FIRST *live-wired* one:
+    it reads a signal — ``analyze_groove``'s ``overall_regularity`` (mean per-track
+    ``1 − CoV(IOIs)``, i.e. rhythmic tightness) — that used to be computed AFTER
+    ``score_doctrine`` in the pipeline. To feed it to doctrine the pipeline now
+    computes ``groove`` ONCE, BEFORE this call, and threads it in here; the same
+    object is reused for ``result.expanded["groove"]`` (behavior-preserving).
+
+    HONEST NAMING — this does NOT overclaim. ``overall_regularity`` measures
+    rhythmic tightness/consistency, NOT "identity coherence" in the full sense. We
+    therefore score groove regularity/consistency as a *proxy* for coherence, and
+    say so in the evidence. And we do NOT bake in a "tighter = better" bias — the
+    groove analyzer's own doctrine is "the doctrine does not assume tighter is
+    better — it reports the feel." A machine-tight groove and a loose/human one are
+    both valid; the AGNOSTIC layer stays neutral and only reports how consistent
+    the groove is. A *producer* chooses whether (and how) to weight this axis (for
+    ``halee_ramone`` the weight is 0, so it is inert). The evidence never asserts
+    that any regularity is objectively "better".
+
+    Mapping (all constants sourced read-only from
+    ``doctrine["scorers"]["groove_coherence"]``):
+      * ``overall_regularity`` present (0..1) → ``baseline + regularity *
+        regularity_scale``, clamped 0..100. A coherent, consistent groove
+        (regularity near 1) scores high; an incoherent/loose one (regularity near
+        0) scores low. This is a report of consistency, not a value judgement.
+      * ``groove is None`` (no rhythm-track signal available at all — e.g. the
+        backward-compat default when doctrine is called without threading) OR
+        ``overall_regularity is None`` (rhythm stems present but too few onsets to
+        judge, or no rhythm stems) → a documented NEUTRAL fallback float. Never
+        None, never a crash. The neutral sits deliberately BETWEEN a coherent and
+        an incoherent groove: absence is neither rewarded as coherence nor punished
+        as maximal incoherence.
+
+    Optionally reads per-track regularities for evidence colour only; the score is
+    driven by ``overall_regularity`` (the analyzer's aggregate).
+    """
+    c = doctrine["scorers"]["groove_coherence"]
+    ev: List[str] = []
+
+    overall = None if groove is None else groove.get("overall_regularity")
+
+    if overall is None:
+        if groove is None:
+            ev.append("No groove signal available — neutral groove-coherence fallback.")
+        else:
+            ev.append("No rhythm-track regularity to judge — neutral groove-coherence fallback.")
+        return _clamp(c["neutral"]), ev
+
+    overall = float(overall)
+    score = c["baseline"] + overall * c["regularity_scale"]
+
+    # Evidence names REGULARITY/CONSISTENCY as a PROXY for coherence — never
+    # "tighter is better". We report the feel; the producer decides how to weight.
+    graded = [
+        t for t in (groove.get("per_track") or [])
+        if t.get("regularity") is not None
+    ]
+    if graded:
+        ev.append(
+            f"Groove regularity/consistency {overall:.3f} across {len(graded)} "
+            f"rhythm track(s) — scored as a proxy for coherence (not 'tighter is good')."
+        )
+    else:
+        ev.append(
+            f"Groove regularity/consistency {overall:.3f} — scored as a proxy for "
+            f"coherence (not 'tighter is good')."
+        )
 
     return _clamp(score), ev
