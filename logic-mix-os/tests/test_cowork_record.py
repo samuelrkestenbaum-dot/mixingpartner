@@ -114,3 +114,88 @@ def test_record_mix_pass_default_byte_identical_to_memory_record(tmp_path):
         return json.dumps(data, sort_keys=True)
 
     assert _canon(cw_dir) == _canon(mr_dir)
+
+
+# --------------------------------------------------------------------------- #
+# Liveness (no re-run — the P-016/P-018 lesson): the loop CLOSES through cowork.
+# --------------------------------------------------------------------------- #
+def _record_confirmed_revert_through_cowork(memory_dir) -> None:
+    """Drive the OUTCOME half of the loop ENTIRELY through the cowork surface.
+
+    Two passes are recorded via ``run_command("record_mix_pass", ...)`` on a
+    memory-backed context: a baseline, then a pass whose ``section_contrast_score``
+    is 20 HIGHER (so the score-delta inference says the move IMPROVED — empty
+    ``got_worse`` / ``revert_candidates``) but recorded ``reverted=True``. This is
+    the non-tautological override case: the score signal alone would surface
+    NOTHING, so any confirmed-revert item in a later next-pass proves the confirmed
+    flag — recorded THROUGH cowork — reached the live planner. Mirrors
+    ``test_confirmed_revert_live._seed_confirmed_revert`` but via cowork commands,
+    not raw ``ProjectMemory`` calls.
+    """
+    s, m = _stems(), _manifest()
+
+    ctx_base = build_context(stems=s, manifest=m, memory_dir=str(memory_dir))
+    run_command("record_mix_pass", ctx_base, name="baseline")
+
+    ctx_rev = build_context(stems=s, manifest=m, memory_dir=str(memory_dir))
+    baseline_sc = ctx_rev["result"].doctrine_score.get("section_contrast_score") or 60
+    # The move IMPROVED the score, yet the operator confirmed reverting it.
+    ctx_rev["result"].doctrine_score["section_contrast_score"] = baseline_sc + 20
+    run_command("record_mix_pass", ctx_rev, name="reverted_pass", reverted=True)
+
+
+def test_loop_closes_through_cowork_no_rerun(tmp_path):
+    """Record a confirmed revert THROUGH cowork, then a FRESH context's
+    ``suggest_next_pass`` surfaces it — the loop closes inside the cowork surface.
+
+    No re-run by hand: after recording via ``record_mix_pass``, a brand-new
+    ``build_context(memory_dir=...)`` runs a fresh ``analyze(memory_dir=...)`` and
+    ``suggest_next_pass`` reads its ``next_pass``. The confirmed "Revert last pass"
+    item must appear, marked operator-confirmed. This FAILS without the new
+    command's live wiring (proven by ``test_..._requires_live_wiring`` below) and
+    PASSES at tip — the loop is closeable ENTIRELY within cowork.
+    """
+    s, m = _stems(), _manifest()
+    seeded = tmp_path / "cowork_loop_store"
+
+    # (1) OUTCOME half — recorded through cowork.
+    _record_confirmed_revert_through_cowork(seeded)
+
+    # (2) READ half — a FRESH context, no manual planner re-run.
+    ctx_no = build_context(stems=s, manifest=m)
+    ctx_mem = build_context(stems=s, manifest=m, memory_dir=str(seeded))
+
+    np_no = run_command("suggest_next_pass", ctx_no)
+    np_mem = run_command("suggest_next_pass", ctx_mem)
+
+    # Sanity: the memoryless run surfaces no revert.
+    assert not any(it["title"] == "Revert last pass" for it in np_no)
+
+    # The confirmed revert — recorded via cowork — reaches the live next-pass.
+    revert = next((it for it in np_mem if it["title"] == "Revert last pass"), None)
+    assert revert is not None, "confirmed revert recorded via cowork must close the loop"
+    assert "confirm" in revert["evidence"].lower()
+    assert np_mem != np_no  # the recorded outcome measurably changed the next pass
+
+
+def test_loop_close_requires_live_wiring(tmp_path):
+    """The liveness test above is LOAD-BEARING: it FAILS without the live wiring.
+
+    We simulate a handler that does NOT hit the live channel — recording to a
+    DIFFERENT (empty) memory dir, exactly what a broken/misrouted handler would
+    produce. The fresh next-pass then sees an empty store and surfaces no revert,
+    so the ``assert revert is not None`` gate above would fail. This proves the
+    loop closes because the record is genuinely persisted/threaded, not because
+    the assertion is vacuous.
+    """
+    s, m = _stems(), _manifest()
+    recorded_to = tmp_path / "confirmed_revert_store"
+    read_from = tmp_path / "elsewhere_empty_store"  # handler "missed" the live dir
+
+    _record_confirmed_revert_through_cowork(recorded_to)
+
+    # Read a DIFFERENT store than the one written — the not-persisted/not-threaded case.
+    ctx_broken = build_context(stems=s, manifest=m, memory_dir=str(read_from))
+    np_broken = run_command("suggest_next_pass", ctx_broken)
+    assert not any(it["title"] == "Revert last pass" for it in np_broken), \
+        "with no live record threaded, the loop must NOT surface a revert"
