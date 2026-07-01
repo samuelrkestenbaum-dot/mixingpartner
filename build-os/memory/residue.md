@@ -43,7 +43,8 @@
 ## Deferred (follow-up packets)
 
 - **★★ THE ACTIVE ROADMAP IS THE PRODUCER-AGNOSTIC EPIC — P-025 ✓ (foundation) +
-  P-026 ✓ (creative sourced) + P-027 ✓ (governance sourced + WIDENED).** Make the
+  P-026 ✓ (creative sourced) + P-027 ✓ (governance sourced + WIDENED) + P-028 ✓
+  (doctrine sourced + WIDENED — the EXTRACTION PHASE is COMPLETE).** Make the
   engine select any producer's judgment as a
   swappable `ProducerProfile` (the physics stays fixed). **P-025 ✓** extracted
   today's 100%-hardcoded Halee/Ramone judgment into a frozen `ProducerProfile` + a
@@ -66,27 +67,45 @@
   governance/taste tests pass UNEDITED; emotion-blend round() proven byte-identical
   across all 1,030,301 integer triples; regression 68/68 UNCHANGED), no-aliasing
   DISCHARGED (mutation local-only; shared profile byte-unchanged). Two commits
-  `e4786ca` (green in isolation = 343) + `7b1c26d`; suite 331 → 351 (+20). Receipts:
+  `e4786ca` (green in isolation = 343) + `7b1c26d`; suite 331 → 351 (+20). **P-028 ✓**
+  sourced `doctrine_engine.py` from the profile (all 8 scorers: Part A the
+  P-025-captured `weights` + `_halee`/`_ramone` baselines/coeffs; Part B WIDENED the
+  profile with `doctrine.scorers` — 5 function groups — and sourced them) while the
+  PHYSICS/measurement code + presentation thresholds (`stereo_width > 0.6`,
+  `distinct <= 1`, `score < 55`) STAY hardcoded (producer-AGNOSTIC). Byte-identical
+  (existing doctrine tests UNEDITED; regression 68/68 UNCHANGED; reviewer confirmed
+  live `doctrine_score` byte-matches the golden on all 3 fixtures incl.
+  `overall_mix_readiness_score`), round-trip NON-VACUOUS (18→17 flip fails +
+  shifts `_section_contrast` 64→66), no-aliasing DISCHARGED. Two commits `29b9dfe`
+  (green in isolation = 364) + `72e98a7`; suite 351 → 370 (+19). **P-028 COMPLETES the
+  EXTRACTION PHASE — the whole judgment layer is now profile-driven, byte-identical,
+  physics chassis separate.** Receipts:
   `build-os/receipts/P-025-producer-profile-schema-loader-halee-ramone-extraction.md`,
   `build-os/receipts/P-026-creative-sources-values-from-reference-profile.md`,
-  `build-os/receipts/P-027-governance-sources-values-from-reference-profile.md`.
+  `build-os/receipts/P-027-governance-sources-values-from-reference-profile.md`,
+  `build-os/receipts/P-028-doctrine-sources-values-from-reference-profile.md`.
   **The epic arc (next steps):**
   - **P-027 — governance extraction (WIDENED per Finding A + ALIASING-PROOF) — ✓
     DONE.** `governance.py` sources `_TRUTH_ALIGNMENT` / `_TASTE_KIND_BIAS` /
     `TASTE_MAX_DELTA` + the 4 AESTHETIC kill-switches from the profile; the profile
     widened with `taste_triangle` + `veto_thresholds`, now sourced; the 5 SAFETY
     kill-switches STAY hardcoded (producer-agnostic). Aliasing-proof DISCHARGED.
-  - **P-028 — doctrine extraction (WIDENED per Finding A + ALIASING-PROOF
-    required) — NEXT, the LAST and LARGEST extraction.** Capture ALL doctrine
-    scoring functions' constants —
-    `_vocal_centrality` / `_depth_hierarchy` / `_section_contrast` / `_static_mix` /
-    `_dynamic_mix` (baselines 80.0/70.0/40, penalties, coefficients e.g.
-    `30 + rms_std*8 + width_std*140`) — not just `_halee` / `_ramone`. MUST
-    independently PROVE doctrine's consumers never mutate the sourced globals in
-    place.
-  - **P-029 — parameterize the pipeline** to CONSUME the profile per-call (the
-    per-call profile REDUCES the aliasing risk; guarded by the P-025 round-trip so
-    it stays byte-identical for `halee_ramone`).
+  - **P-028 — doctrine extraction (WIDENED per Finding A + ALIASING-PROOF) — ✓
+    DONE.** `doctrine_engine.py` sources ALL 8 scorers' aesthetic constants from the
+    profile — Part A the P-025-captured `weights` + `_halee`/`_ramone` baselines
+    (86.0) + penalty coeffs; Part B WIDENED the profile with a `doctrine.scorers`
+    group (5 function groups: `_vocal_centrality` / `_depth_hierarchy` /
+    `_section_contrast` / `_static_mix` / `_dynamic_mix`) captured VERBATIM and
+    sourced. The PHYSICS/measurement code + presentation thresholds STAY hardcoded.
+    Byte-identical (regression 68/68 UNCHANGED + `doctrine_score` byte-match),
+    round-trip non-vacuous, aliasing-proof DISCHARGED. **Extraction phase COMPLETE.**
+  - **P-029 — parameterize the pipeline by a per-call producer (THE PIVOT — NEXT).**
+    Thread a per-call `producer` so `analyze(producer=...)` SELECTS a profile — the
+    profile stops being a mirror and becomes a LIVE lever (the first SELECTABLE step).
+    Default = the `halee_ramone` reference, byte-identical (guarded by the P-025
+    round-trip + 68/68 regression). ALSO the STRUCTURAL fix that ENDS the
+    module-singleton aliasing risk (removes the shared mutable global each of
+    P-026/P-027/P-028 had to prove safe per-module).
   - **P-030 — rename** the `halee` / `ramone` dimension names off the producer
     names (they were kept verbatim in P-025 per the byte-identical-first decision).
   - **P-031 — confidence framework:** consume the profile metadata stamp
@@ -96,36 +115,39 @@
   - **P-033 — expose producer selection** (the user-facing selection surface).
 
 - **★ FINDING A — SECONDARY PRODUCER-AESTHETIC CONSTANTS (reviewer, from P-025;
-  deferred by design, NOT drift). NOW PARTIALLY RESOLVED (governance ✓; doctrine
-  OPEN for P-028).** P-025 captured what its scope declared, but additional
-  producer-specific constants must be captured before FULL producer-agnosticism:
-  - **→ P-027 (governance): ✓ RESOLVED.** The profile now holds `taste_triangle`
-    (`intimate_width_penalty: 30` — the `width_bloom + intimate → identity -= 30`
-    penalty — + `emotion_dims: [ramone_score, listener_excitement_score,
-    vocal_belief_score]` — the emotion blend) + `veto_thresholds` (`reject_below: 45`
-    / `align_veto_below: 50` / `align_fallback: 75`), all sourced + round-trip-
-    guarded, byte-identical.
-  - **→ P-028 (doctrine): OPEN — the remaining Finding-A work.** ALL scoring
-    functions' constants — `_vocal_centrality`, `_depth_hierarchy`,
-    `_section_contrast`, `_static_mix`, `_dynamic_mix` (baselines 80.0/70.0/40,
-    penalties, coefficients).
-  P-028 OWNS the remaining capture; the P-025 round-trip guard is the safety net it
-  relies on as it widens the profile.
+  deferred by design, NOT drift). ✓ NOW FULLY RESOLVED (governance ✓ P-027; doctrine
+  ✓ P-028).** P-025 captured what its scope declared; the remaining producer-specific
+  constants have now ALL been captured:
+  - **→ P-027 (governance): ✓ RESOLVED.** The profile holds `taste_triangle`
+    (`intimate_width_penalty: 30` + `emotion_dims: [ramone_score,
+    listener_excitement_score, vocal_belief_score]`) + `veto_thresholds`
+    (`reject_below: 45` / `align_veto_below: 50` / `align_fallback: 75`), all sourced +
+    round-trip-guarded, byte-identical.
+  - **→ P-028 (doctrine): ✓ RESOLVED.** The profile's new `doctrine.scorers` group
+    holds ALL 5 remaining scoring functions' constants — `_vocal_centrality`
+    (no_lead 35.0 / baseline 70.0 / bonuses 10,10 / masked_coeff 6), `_depth_hierarchy`
+    (baseline 40 / per_distinct 12 / forward_threshold 0.6 / forward_occupancy 60),
+    `_section_contrast` (baseline 100 / lift_fail_penalty 18), `_static_mix` (baseline
+    80.0 / peak_ceiling -0.1 / peak_penalty 10 / dominant_band_threshold 0.55 /
+    dominant_band_penalty 10 / crit_low_coeff 8 / no_lead_penalty 8), `_dynamic_mix`
+    (insufficient_sections_score 40.0 / baseline 30 / rms_coeff 8 / width_coeff 140 /
+    bright_coeff 140 / lift_fail_penalty 10), captured VERBATIM and sourced,
+    byte-identical.
+  **Finding A carries NO remaining deferred capture** — the reference profile now
+  fully drives creative + governance + doctrine.
 
-- **★ ALIASING-PROOF REQUIREMENT — DISCHARGED for creative (P-026) + governance
-  (P-027); STILL BINDING for P-028 (reviewer, from P-026; a PER-MODULE invariant,
-  NOT a structural guarantee).** P-026 proved `creative.py` never mutates its sourced
-  globals in place (copy-before-mutate; `kind_scores` byte-unchanged after a nudge +
-  promotion fire). **P-027 DISCHARGED it for governance:** grep confirmed no in-place
-  mutation; `_apply_taste` / `govern_variant` mutate only a LOCAL `triangle`; the
-  no-aliasing test confirmed the shared `_DEFAULT_PROFILE` structures are
-  byte-unchanged after governance runs on a real fixture. **That safety is
-  per-module.** **P-028 (doctrine) MUST STILL independently PROVE its consumers never
-  mutate a sourced global in place** — (a) grep for in-place mutation of the sourced
-  structures, and (b) add a no-aliasing test (fire the relevant path, then assert the
-  shared profile object is byte-unchanged) + a determinism check. **P-029 (per-call
-  profile) is the structural fix** that removes the shared-mutable-global risk. Do
-  NOT close P-028 without this proof.
+- **★ ALIASING-PROOF REQUIREMENT — ✓ DISCHARGED for ALL THREE consumer modules
+  (creative P-026, governance P-027, doctrine P-028); a PER-MODULE invariant, NOT a
+  structural guarantee (reviewer, from P-026).** P-026 proved `creative.py`
+  copy-before-mutate (`kind_scores` byte-unchanged after a nudge + promotion fire).
+  **P-027 DISCHARGED it for governance** (mutation local to `triangle`; shared
+  `_DEFAULT_PROFILE` byte-unchanged after a fixture run). **P-028 DISCHARGED it for
+  doctrine:** grep confirmed no in-place mutation of the sourced structures; the
+  no-aliasing test runs `score_doctrine` on a fixture (+ crafted multi-penalty inputs)
+  and asserts the shared `_DEFAULT_PROFILE` structures are byte-unchanged afterward;
+  determinism holds. **So all three per-module proofs are in.** **P-029 (per-call
+  profile) is the STRUCTURAL fix** that removes the shared-mutable-global risk
+  entirely — after P-029 the per-module invariant is no longer the only guard.
 
 - **★ TRAILER-SPEC STANDING NOTE — DROP the "NO model identifier" line from FUTURE
   packet specs (from P-027; reconciled).** The reviewer repeatedly re-flags the
@@ -402,6 +424,42 @@
 - Net-new **event-logging** producers remain behind the product decision.
 
 ## Done (resolved)
+
+- **★★ P-028 DONE — doctrine sourced from the reference profile, WIDENED (the LAST
+  & LARGEST extraction); THE EXTRACTION PHASE IS COMPLETE**
+  (`build-os/receipts/P-028-doctrine-sources-values-from-reference-profile.md`).
+  `doctrine_engine.py` gains `_DEFAULT_PROFILE = load_profile("halee_ramone")`; all 8
+  scorers now read their aesthetic constants from the profile — **Part A** the
+  P-025-captured `weights` (halee 1.0 / ramone 1.2 / vocal_centrality 1.2 / depth 1.0 /
+  contrast 1.0 / static 1.0 / dynamic 0.8) + `_halee`/`_ramone` baselines (86.0) +
+  penalty coeffs; **Part B WIDENED** the profile with a new `doctrine.scorers` group (5
+  function groups: `_vocal_centrality` / `_depth_hierarchy` / `_section_contrast` /
+  `_static_mix` / `_dynamic_mix`), each constant captured VERBATIM, then sourced. **The
+  PHYSICS/measurement code (fg_frac, band max, pstdev, distinct counting, section
+  detection) + the presentation thresholds (`stereo_width > 0.6`, `distinct <= 1`,
+  `score < 55`) STAY hardcoded — producer-AGNOSTIC.** Clean literal→`c["…"]`
+  substitution; formula shape/order preserved; int/float types match. **Byte-identical:**
+  existing doctrine tests UNEDITED; regression **68/68, 0 critical, 0 warnings —
+  UNCHANGED** (the corpus proof — doctrine feeds `doctrine_score`, golden-pinned;
+  reviewer INDEPENDENTLY confirmed live `doctrine_score` byte-matches the golden on all
+  3 fixtures incl. `overall_mix_readiness_score`). **Round-trip NON-VACUOUS** (18→17
+  flip fails the test + shifts `_section_contrast` 64→66). **No-aliasing DISCHARGED**
+  (grep clean; no-aliasing test + determinism). `creative.py`/`governance.py`/
+  `pipeline.py` untouched. **Two commits `29b9dfe` (Part A + no-aliasing test — green in
+  isolation = 364) + `72e98a7` (Part B widen + source + round-trip).** Suite **351 →
+  370 passed** (+19; 0 failed/skipped/warnings, green under `-W error`). Safety grep
+  clean; UI N/A. qa **GREEN**; reviewer **pass**. **Codex NOT available — single-reviewer
+  verdict.** **★★ MILESTONE — the EXTRACTION PHASE is COMPLETE:** the entire
+  producer-specific judgment layer (creative P-026 + governance P-027 + doctrine P-028)
+  is now sourced from the reference `ProducerProfile`, BYTE-IDENTICAL, with the physics
+  chassis + safety kill-switches cleanly separated and left hardcoded; **the reference
+  profile FULLY DRIVES the judgment layer.** Finding A FULLY RESOLVED; aliasing-proof
+  DISCHARGED for all 3 modules. **★ Reviewer observation (carry into P-029):** the
+  measurement-vs-aesthetic thresholds (`stereo_width > 0.6`, `distinct <= 1`,
+  `score < 55`) are correctly left hardcoded as physics/presentation, NOT producer taste
+  — keep them OUT of the profile when P-029 threads the profile per-call. **P-028 is
+  local-only** (commits `29b9dfe`, `72e98a7` on the dev branch on top of the P-027
+  commits on top of the `e79426a` base), not pushed/merged at close.
 
 - **★ P-025 DONE — the FOUNDATION of the producer-agnostic epic: today's
   hardcoded Halee/Ramone judgment is now a frozen, round-trip-guarded, UNWIRED

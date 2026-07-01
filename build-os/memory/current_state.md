@@ -29,25 +29,106 @@
   profile is WIDENED, per Finding A, with `taste_triangle` + `veto_thresholds`,
   now sourced too; the 5 SAFETY kill-switches STAY hardcoded — producer-agnostic;
   byte-identical, no-aliasing-proven; `doctrine_engine.py` / `pipeline.py`
-  byte-unchanged, regression UNCHANGED)**. The P-025 + P-026 + P-027 product
-  commits are local-only (not pushed / merged). P-027's parent chain: `7b1c26d` →
-  `e4786ca` → `b8526a8` (active-packet confirmation) → `c4a092d` (P-026).
+  byte-unchanged, regression UNCHANGED)** then **P-028 (`29b9dfe` + `72e98a7`,
+  product — `doctrine_engine.py` sources ALL 8 scorers' aesthetic constants from
+  the profile: Part A sources the P-025-captured `weights` + `_halee`/`_ramone`
+  baselines/coeffs, Part B WIDENS the profile with `doctrine.scorers` (5 function
+  groups) and sources them; the PHYSICS/measurement code + presentation thresholds
+  STAY hardcoded — producer-agnostic; byte-identical, no-aliasing-proven;
+  `creative.py` / `governance.py` / `pipeline.py` byte-unchanged, regression
+  UNCHANGED)**. **P-028 COMPLETES THE EXTRACTION PHASE** — the whole judgment layer
+  is now profile-driven. The P-025 + P-026 + P-027 + P-028 product commits are
+  local-only (not pushed / merged). P-028's parent chain: `72e98a7` → `29b9dfe` →
+  `d5260a6` (active-packet confirmation) → `23850f7` (P-027 close). P-027's parent
+  chain: `7b1c26d` → `e4786ca` → `b8526a8` (active-packet confirmation) → `c4a092d`
+  (P-026).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-01, P-027):** suite **351 passed** (0 failed /
+- **Green baseline (verified 2026-07-01, P-028):** suite **370 passed** (0 failed /
   skipped / warnings; green even under `-W error`); regression **68/68** (0
-  critical / 0 warnings) — UNCHANGED (P-027 is byte-identical). Commit-1 green in
-  isolation = 343. (Prior baseline was 331 at P-026; P-027 added +20 —
-  `test_governance_profile_sourced.py` value-pins / kill-switch boundary /
-  no-aliasing / exhaustive emotion-blend round() proof + the widened-fields
-  round-trip in `test_producer_profile.py`; goldens & judgment untouched. Earlier:
-  319 → 331 at P-026; 293 → 319 at P-025.)
+  critical / 0 warnings) — UNCHANGED (P-028 is byte-identical). Commit-1 green in
+  isolation = 364. (Prior baseline was 351 at P-027; P-028 added +19 —
+  `test_doctrine_profile_sourced.py` sourcing/value/behavior pins + no-aliasing +
+  determinism, plus the `doctrine.scorers` round-trips in `test_producer_profile.py`;
+  goldens & judgment untouched. Earlier: 331 → 351 at P-027; 319 → 331 at P-026;
+  293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★ P-028 SOURCES `doctrine_engine.py` FROM THE REFERENCE PROFILE (WIDENED — THE
+  LAST & LARGEST EXTRACTION) AND COMPLETES THE EXTRACTION PHASE OF THE
+  PRODUCER-AGNOSTIC EPIC.** P-026 sourced `creative.py`; P-027 sourced `governance.py`
+  (widened); **P-028 sources `doctrine_engine.py` (widened)** — so the ENTIRE
+  producer-specific judgment layer is now driven by the reference `ProducerProfile`,
+  byte-identical, with the physics chassis + safety kill-switches cleanly separated
+  and left hardcoded. **Last-closed = P-028.**
+  - **What P-028 shipped — Part A (source already-captured values):** `doctrine_engine.py`
+    gains `_DEFAULT_PROFILE = load_profile("halee_ramone")` and SOURCES `score_doctrine`'s
+    component **weights** (halee 1.0 / ramone 1.2 / vocal_centrality 1.2 / depth 1.0 /
+    contrast 1.0 / static 1.0 / dynamic 0.8) + `_halee`/`_ramone` **baselines (86.0)** +
+    penalty coeffs FROM `_DEFAULT_PROFILE.doctrine.*` — the values P-025 already captured
+    and round-trip-guarded; the inline literals are relocated behind the profile.
+  - **Part B — WIDEN the profile (Finding A, the doctrine portion):** `ProducerProfile` +
+    `halee_ramone.json` + the loader validation + the round-trip gain a new
+    `doctrine.scorers` group (5 function groups), captured VERBATIM, then each scorer
+    reads its constants from `_DEFAULT_PROFILE.doctrine["scorers"]` —
+    `_vocal_centrality` (no_lead 35.0 / baseline 70.0 / sacred_bonus 10 / forward_bonus 10
+    / masked_coeff 6), `_depth_hierarchy` (baseline 40 / per_distinct 12 /
+    forward_threshold 0.6 / forward_occupancy 60), `_section_contrast` (baseline 100 /
+    lift_fail_penalty 18), `_static_mix` (baseline 80.0 / peak_ceiling -0.1 / peak_penalty
+    10 / dominant_band_threshold 0.55 / dominant_band_penalty 10 / crit_low_coeff 8 /
+    no_lead_penalty 8), `_dynamic_mix` (insufficient_sections_score 40.0 / baseline 30 /
+    rms_coeff 8 / width_coeff 140 / bright_coeff 140 / lift_fail_penalty 10).
+  - **★ THE PHYSICS / AESTHETIC BOUNDARY (load-bearing — what did NOT move):** only the
+    aesthetic CONSTANTS moved. The PHYSICS/measurement code stays IN the functions —
+    `fg_frac`, band max, `pstdev` spread, distinct depth-band counting, section detection
+    — and the measurement/presentation thresholds (`stereo_width > 0.6`, `distinct <= 1`,
+    the `score < 55` evidence gate) stay hardcoded (producer-AGNOSTIC, not producer
+    taste). Clean literal→`c["…"]` substitution; formula shape/order preserved; int/float
+    types match. The formula's numeric result is unchanged.
+  - **Byte-identical by construction:** existing doctrine tests pass UNEDITED; regression
+    **68/68, 0 critical, 0 warnings — UNCHANGED** (the corpus byte-identical proof —
+    doctrine feeds `doctrine_score`, golden-pinned). Reviewer INDEPENDENTLY confirmed live
+    `doctrine_score` byte-matches the golden on all 3 fixtures, incl.
+    `overall_mix_readiness_score`. Round-trip NON-VACUOUS (an 18→17 flip fails the test +
+    shifts `_section_contrast` 64→66).
+  - **No-aliasing PROVEN (the per-module safety invariant — DISCHARGED for doctrine):**
+    grep confirmed no in-place mutation of the sourced structures; the no-aliasing test
+    runs `score_doctrine` on a fixture (+ crafted multi-penalty inputs) and asserts the
+    shared `_DEFAULT_PROFILE` structures are byte-unchanged afterward. Determinism holds.
+    `creative.py` / `governance.py` / `pipeline.py` byte-unchanged.
+  - **Two commits `29b9dfe` (Part A + no-aliasing test — green in isolation = 364) +
+    `72e98a7` (Part B widen + source + round-trip).** Suite **351 → 370 passed** (+19; 0
+    failed/skipped/warnings, green under `-W error`); regression **68/68, 0 critical, 0
+    warnings — UNCHANGED.** Safety grep clean; UI N/A. qa **GREEN**; reviewer **pass.**
+    **Codex NOT available — single-reviewer verdict.** **P-028 local-only** (commits
+    `29b9dfe`, `72e98a7` on the dev branch on top of the P-027 commits on top of the
+    `e79426a` base), not pushed/merged.
+  - **★★ MILESTONE — THE EXTRACTION PHASE IS COMPLETE.** The entire producer-specific
+    judgment layer — creative (P-026), governance (P-027, widened), doctrine (P-028,
+    widened) — is now sourced from the reference `ProducerProfile`, BYTE-IDENTICAL, with
+    the producer-AGNOSTIC physics chassis + safety kill-switches cleanly separated and left
+    hardcoded. **The reference profile now FULLY DRIVES the judgment layer.** **Finding A
+    is FULLY RESOLVED** (governance + doctrine secondary constants all captured). **The
+    aliasing-proof requirement is DISCHARGED for all 3 consumer modules** (creative,
+    governance, doctrine).
+  - **★ WATCH-ITEM (reviewer):** a few measurement-vs-aesthetic thresholds
+    (`stereo_width > 0.6`, `distinct <= 1`, `score < 55`) are correctly left HARDCODED as
+    physics/presentation, NOT producer taste — keep them OUT of the profile when P-029
+    threads the profile per-call.
+  - **★ EPIC ARC (updated):** **P-025 ✓ (foundation) → P-026 ✓ (creative sourced) →
+    P-027 ✓ (governance sourced + WIDENED) → P-028 ✓ (doctrine sourced + WIDENED — the
+    LAST & LARGEST; extraction phase COMPLETE)** → **P-029 (THE PIVOT — parameterize the
+    pipeline by a per-call producer; `analyze(producer=...)` selects a profile; default =
+    reference, byte-identical; ALSO the structural fix that ends the module-singleton
+    aliasing risk)** → P-030 (rename the `halee`/`ramone` dims off the producer names) →
+    P-031 (confidence framework — consume the metadata stamp) → P-032 (second producer) →
+    P-033 (expose producer selection). Receipt:
+    `build-os/receipts/P-028-doctrine-sources-values-from-reference-profile.md`.
 
 - **★★ P-027 SOURCES `governance.py` FROM THE REFERENCE PROFILE AND WIDENS THE
   PROFILE (FINDING A) — THE JSON IS THE SINGLE SOURCE OF TRUTH, BYTE-IDENTICAL, WITH
@@ -607,7 +688,11 @@
   align-vetoed before it can reorder a truth-ranked winner. The reachable taste
   claim is proven on real data by
   `tests/test_live_wire.py::test_taste_axis_changes_governance`.
-- **Last closed packet:** **P-021** — verified end-to-end agent walkthrough
+- **Last closed packet:** **P-028** (doctrine sourced from the reference profile,
+  WIDENED — the last & largest extraction; the EXTRACTION PHASE is COMPLETE). See the
+  P-028 block at the TOP of "Where we are" for the authoritative snapshot. The
+  chronological narrative below is retained as HISTORY (P-021 → P-020 → …).
+- **[HISTORY] P-021** — verified end-to-end agent walkthrough
   through the cowork surface (TESTS-ONLY) — **the MILESTONE** (THIRD step of the arc
   P-019→P-023; the step that PROVES the Cowork-usable end-to-end state). Drives a
   full plan-only mixing session THROUGH the cowork surface only (`build_context` +
