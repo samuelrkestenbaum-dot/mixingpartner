@@ -4,8 +4,8 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** NONE ACTIVE — P-032c closed by the archivist (2026-07-01).
-  **P-032g is STAGED below**, awaiting orchestrator confirmation.
+- **Status:** ACTIVE — P-032g confirmed by the orchestrator-in-chief
+  (2026-07-01), handed to builder.
 
 ## Last-closed
 
@@ -28,7 +28,7 @@
   weight authoring). Local-only, NOT merged (merge base `e79426a` = PR #16).
   Receipt: `build-os/receipts/P-032c-low-end-motion.md`.
 
-## Staged next (awaiting orchestrator confirmation)
+## Active packet spec (confirmed)
 
 - **Packet id:** P-032g
 - **Title:** loop static-vs-iconic (`_loop_context`) — **THE HINGE**: the
@@ -64,7 +64,7 @@
 ## Epic arc (Timbaland sub-arc P-032.x — RESEQUENCED)
 
 **P-032e ✓ → P-032a ✓ → P-032b ✓ → P-032d ✓ → P-032c ✓ → P-032g (loop
-static-vs-iconic — THE HINGE, staged) →** P-032f (vocal-role — ★ USER-GATED) →
+static-vs-iconic — THE HINGE, ACTIVE) →** P-032f (vocal-role — ★ USER-GATED) →
 **[fold P-031 confidence here]** → P-032h (author `timbaland.json`) → P-032i
 (differential proof). P-030 (rename dims) orthogonal/last.
 
