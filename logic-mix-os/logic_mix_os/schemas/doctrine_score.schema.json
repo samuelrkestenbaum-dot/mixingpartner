@@ -15,6 +15,7 @@
     "negative_space_score": { "type": ["number", "null"] },
     "groove_coherence_score": { "type": ["number", "null"] },
     "rhythmic_surprise_score": { "type": ["number", "null"] },
+    "low_end_motion_score": { "type": ["number", "null"] },
     "overall_mix_readiness_score": { "type": ["number", "null"] },
     "evidence": { "type": "object" },
     "warnings": { "type": "array" }

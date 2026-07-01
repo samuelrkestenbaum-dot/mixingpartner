@@ -178,7 +178,7 @@ def test_rhythmic_surprise_appended_last_preserves_summation_order(analyzed):
         ds = analyzed[name].doctrine_score
         keys = [k for k in ds if k.endswith("_score") and k != "overall_mix_readiness_score"]
         assert keys[:10] == EXISTING_COMPONENT_KEYS
-        assert keys[-1] == "rhythmic_surprise_score"
+        assert keys[10] == "rhythmic_surprise_score"
 
 
 def test_every_preexisting_component_score_is_byte_identical(analyzed):

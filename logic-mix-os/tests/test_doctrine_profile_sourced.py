@@ -89,6 +89,10 @@ def test_weights_value_pins():
         # section-aggregate form), weight 0 for the reference producer (the
         # byte-identical anchor).
         "rhythmic_surprise_score": 0,
+        # P-032c — the producer-agnostic low_end_motion axis (the low-end
+        # pocket), weight 0 for the reference producer (the byte-identical
+        # anchor).
+        "low_end_motion_score": 0,
     }
 
 

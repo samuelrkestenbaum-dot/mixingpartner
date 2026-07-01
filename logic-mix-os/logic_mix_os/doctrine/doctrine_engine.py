@@ -90,6 +90,14 @@ def score_doctrine(
     # and ``overall`` stays bit-identical for halee_ramone (its
     # rhythmic_surprise weight is 0).
     rs, rs_ev = _rhythmic_surprise(sections_analysis, doctrine)
+    # P-032c: the fifth producer-agnostic axis — the low-end POCKET (kick/sub
+    # relationship + room around the bass). Presence is a GATE only; the score
+    # rewards the relationship and the room, never sheer bass level. Pure
+    # additive: every input below is already in this function's arguments (zero
+    # new plumbing). Appended LAST (after rhythmic_surprise) so the pre-existing
+    # 11-term summation order is preserved and ``overall`` stays bit-identical
+    # for halee_ramone (its low_end_motion weight is 0).
+    lem, lem_ev = _low_end_motion(records, sections_analysis, masking_report, mix_metrics, doctrine)
 
     component_scores = {
         "halee_score": halee,
@@ -103,6 +111,7 @@ def score_doctrine(
         "negative_space_score": ns,
         "groove_coherence_score": gc,
         "rhythmic_surprise_score": rs,
+        "low_end_motion_score": lem,
     }
     weights = doctrine["weights"]
     present = {k: v for k, v in component_scores.items() if v is not None}
@@ -127,6 +136,7 @@ def score_doctrine(
             "negative_space": ns_ev,
             "groove_coherence": gc_ev,
             "rhythmic_surprise": rs_ev,
+            "low_end_motion": lem_ev,
         },
         "warnings": warnings,
     }
@@ -632,4 +642,205 @@ def _rhythmic_surprise(sections: List[Dict], doctrine: Dict = _DOCTRINE):
             "Transient density is constant across sections — no rhythmic "
             "surprise at the section grain."
         )
+    return _clamp(score), ev
+
+
+def _low_end_motion(records: List[Dict], sections_analysis: List[Dict],
+                    masking_report: Dict, mix_metrics: Optional[Dict],
+                    doctrine: Dict = _DOCTRINE):
+    """Producer-AGNOSTIC scorer for the low-end POCKET — the kick/sub
+    relationship plus ROOM around the bass.
+
+    This is the FIFTH new agnostic axis (P-032c) and a PRODUCER-PROFILE
+    PRIMITIVE, not any single producer's hack: it measures a neutral,
+    relational property of the low end that different profiles weight and
+    interpret differently (a pocket/impact/sub-kick producer, a natural-
+    foundation balance producer, a translation/controlled-sub-density pop
+    profile, a sub-identity/808-space trap profile). The scorer itself stays
+    relational; the producer decides what it is worth (for ``halee_ramone``
+    the weight is 0, so it is inert).
+
+    THE CORE DESIGN RULE — "more bass" must NOT win: a clean low-end
+    RELATIONSHIP beats high low-end QUANTITY, always. Low-end PRESENCE is a
+    GATE only: ``band_energy["low"]`` (the 20-120Hz sub fraction) is only ever
+    COMPARED against the ``low_floor`` / ``stack_floor`` thresholds, never
+    multiplied into the score. The SCORE comes from the RELATIONSHIP and the
+    ROOM:
+      * Presence GATE — at least one stem clears ``low_floor`` on its sub
+        fraction (falling back to ``mix_metrics["band_energy"]["low"]`` when
+        no stem does); else the documented ``no_low_end`` neutral-low float
+        (the ``_beat_identity`` ``no_beat`` idiom). No records AND no mix
+        band data at all → the documented ``neutral`` fallback instead
+        (absence of signal is not evidence of an absent low end). Always a
+        clamped float, never None.
+      * Reserved sub / room — QUALIFIED, never sufficient on its own. FEW
+        stems carrying the sub band (1..``reserved_max`` clearing
+        ``stack_floor``) read as reserved room ONLY when the carriers also
+        BEHAVE like a pocket: no critical collision (clean) AND a defined,
+        non-smeared envelope somewhere in the low end (the punchiest carrier
+        clears ``defined_crest_db``). Then ``reserved_bonus`` fires. One
+        giant smeared or colliding blob swallowing the whole floor is
+        technically "fewest carriers" but is the OPPOSITE of room — it takes
+        ``blob_penalty`` instead. A pile-up over the ceiling is penalized per
+        extra stem (``stack_penalty``); gate passed via the mix fallback only
+        (a diffuse low end no stem distinctly carries) earns nothing.
+      * Relationship, weak form — existing ``low_end_conflict`` masking
+        events break the pocket, scaled by severity
+        (``critical_conflict_penalty`` / ``moderate_conflict_penalty``; a
+        critical collision ALSO disqualifies the reserved reading above); and
+        complementary punch-vs-sustain among the carriers is rewarded: the
+        punchiest carrier's ``crest_factor_db`` minus the most sustained
+        carrier's, capped at ``complement_cap_db`` and scaled by
+        ``complement_coeff``. A single smeared carrier with no punch partner
+        earns no complementarity — a blob, not a defined pocket.
+
+    PHYSICS PRIMARY — ``instrument_identity`` / ``identity_family`` labels are
+    a corroborating tie-break ONLY, never the gate: they break exact
+    crest-factor ties when picking the punchiest/most-sustained carrier, and
+    colour the evidence when they agree with the physics. A mislabeled 808
+    still gates presence, still counts as a carrier, still forms the pocket.
+
+    DISTINCTNESS vs ``_static_mix`` — static_mix applies a hygiene PENALTY for
+    critical ``low_end_conflict`` events (pass/fail fault-checking); this axis
+    scores the POSITIVE relationship (reserved sub, punch-vs-sustain, room).
+    A mix with NO conflicts but NO defined pocket leaves static_mix healthy
+    and scores low here — a strength axis, not a sign-flipped duplicate.
+
+    DEFERRED, NOT FAKED — three real signals are NOT visible at doctrine time
+    and are never claimed in the evidence:
+      1. Kick/sub TEMPORAL interlock (sidechain-pocket alternation) — bass
+         onset times are never computed (bass is excluded from
+         ``RHYTHM_IDENTITIES``; onset timing lives in the groove analyzer for
+         drum stems only).
+      2. Low-end MOTIF detection (a recurring bass figure) — needs a
+         pitch/onset sequence.
+      3. Per-section true-sub (20-120Hz) movement — sections expose
+         ``low_mid_energy`` (120-500Hz) ONLY, which is also why
+         ``sections_analysis`` is accepted for the axis's declared surface
+         but read by nothing in this v1.
+    """
+    c = doctrine["scorers"]["low_end_motion"]
+    ev: List[str] = []
+    events = masking_report.get("events", []) if masking_report else []
+
+    def _low(r: Dict) -> float:
+        return float((r.get("metrics", {}).get("band_energy") or {}).get("low", 0.0) or 0.0)
+
+    def _crest(r: Dict) -> float:
+        return float(r.get("metrics", {}).get("crest_factor_db", 0.0) or 0.0)
+
+    mix_low = None
+    if mix_metrics and mix_metrics.get("band_energy"):
+        mix_low = float(mix_metrics["band_energy"].get("low", 0.0) or 0.0)
+
+    # No signal at all: neither per-stem records nor a mix band read exists.
+    if not records and mix_low is None:
+        ev.append("No stem or mix low-band signal available — neutral low-end fallback.")
+        return _clamp(c["neutral"]), ev
+
+    # Presence GATE (gate ONLY — the level is never multiplied into the score).
+    carriers = [r for r in records if _low(r) >= c["low_floor"]]
+    if not carriers and (mix_low is None or mix_low < c["low_floor"]):
+        ev.append(
+            "No stem (or mix) carries sub weight above the low floor — "
+            "no low-end foundation to pocket."
+        )
+        return _clamp(c["no_low_end"]), ev
+
+    score = c["baseline"]
+
+    crit = [e for e in events
+            if e.get("classification") == "low_end_conflict" and e.get("severity") == "critical"]
+    mod = [e for e in events
+           if e.get("classification") == "low_end_conflict" and e.get("severity") == "moderate"]
+
+    # Reserved sub / room: the sub band carried by FEW stems is room around
+    # the bass — but ONLY when those carriers behave like a pocket. Few-ness
+    # is never sufficient on its own: the reserve is QUALIFIED by a clean
+    # (no critical collision) and defined (non-smeared envelope) low end,
+    # so one giant muddy blob swallowing the floor cannot masquerade as a
+    # reserved pocket. A pile-up is the opposite of room.
+    stack = [r for r in records if _low(r) >= c["stack_floor"]]
+    n_stack = len(stack)
+    if 1 <= n_stack <= c["reserved_max"]:
+        best_crest = max(_crest(r) for r in stack)
+        defined = best_crest >= c["defined_crest_db"]
+        clean = not crit
+        if defined and clean:
+            score += c["reserved_bonus"]
+            names = ", ".join(r["name"] for r in stack)
+            ev.append(
+                f"Sub band reserved: {n_stack} stem(s) carry it ({names}), clean and "
+                f"with envelope definition (best crest {best_crest:.1f} dB) — "
+                f"the arrangement makes room for the low end."
+            )
+        else:
+            score -= c["blob_penalty"]
+            reasons = []
+            if not clean:
+                reasons.append("it collides (critical low-end conflict)")
+            if not defined:
+                reasons.append(f"its envelope is smeared (best crest {best_crest:.1f} dB)")
+            ev.append(
+                f"Few low carriers but not a pocket: {' and '.join(reasons)} — "
+                f"a low-end blob occupying the floor, not reserved room."
+            )
+    elif n_stack > c["reserved_max"]:
+        extra = n_stack - c["reserved_max"]
+        score -= extra * c["stack_penalty"]
+        ev.append(
+            f"Low-end pile-up: {n_stack} stems stack the sub band "
+            f"({extra} over the reserved ceiling) — no room around the bass."
+        )
+    else:
+        ev.append(
+            "Low end present in the mix but no stem distinctly carries it — "
+            "a diffuse, undefined pocket earns no reserved-sub reward."
+        )
+
+    # Relationship (weak form): existing kick/bass collisions break the pocket.
+    if crit or mod:
+        score -= len(crit) * c["critical_conflict_penalty"] + len(mod) * c["moderate_conflict_penalty"]
+        ev.append(
+            f"Kick/bass collision: {len(crit)} critical and {len(mod)} moderate "
+            f"low-end conflict(s) break the pocket."
+        )
+    elif n_stack >= 1:
+        ev.append("No kick/bass collision — the pocket is clean.")
+
+    # Complementarity: punch vs sustain among the carriers. Physics (crest)
+    # picks the roles; identity labels only break exact ties and corroborate.
+    if len(carriers) >= 2:
+        punchy = max(
+            carriers,
+            key=lambda r: (_crest(r), 1 if r.get("identity_family") == "drums" else 0),
+        )
+        sustained = min(
+            carriers,
+            key=lambda r: (_crest(r), 0 if r.get("identity_family") == "bass" else 1),
+        )
+        gap = _crest(punchy) - _crest(sustained)
+        if gap > 0:
+            score += min(gap, c["complement_cap_db"]) * c["complement_coeff"]
+            ev.append(
+                f"Complementary pocket: '{punchy['name']}' punches (crest "
+                f"{_crest(punchy):.1f} dB) against '{sustained['name']}' sustaining "
+                f"(crest {_crest(sustained):.1f} dB)."
+            )
+            if punchy.get("identity_family") == "drums" and sustained.get("identity_family") == "bass":
+                ev.append(
+                    "Identity labels corroborate the physics (drum punch vs bass "
+                    "sustain) — corroboration only, never the gate."
+                )
+        else:
+            ev.append(
+                "Low carriers show no punch-vs-sustain differentiation — "
+                "an undifferentiated low end."
+            )
+    elif len(carriers) == 1:
+        ev.append(
+            f"A single reserved low carrier ('{carriers[0]['name']}') — "
+            f"punch-vs-sustain complementarity is not applicable."
+        )
+
     return _clamp(score), ev

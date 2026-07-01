@@ -103,7 +103,8 @@
       "beat_identity_score": 0,
       "negative_space_score": 0,
       "groove_coherence_score": 0,
-      "rhythmic_surprise_score": 0
+      "rhythmic_surprise_score": 0,
+      "low_end_motion_score": 0
     },
     "baselines": {
       "halee": 86.0,
@@ -190,6 +191,22 @@
         "baseline": 20.0,
         "spread_coeff": 160,
         "swing_coeff": 60
+      },
+      "low_end_motion": {
+        "neutral": 40.0,
+        "no_low_end": 25.0,
+        "baseline": 40.0,
+        "low_floor": 0.2,
+        "stack_floor": 0.2,
+        "reserved_max": 2,
+        "reserved_bonus": 20,
+        "defined_crest_db": 10.0,
+        "blob_penalty": 12,
+        "stack_penalty": 12,
+        "critical_conflict_penalty": 14,
+        "moderate_conflict_penalty": 6,
+        "complement_coeff": 2.0,
+        "complement_cap_db": 12.0
       }
     }
   },

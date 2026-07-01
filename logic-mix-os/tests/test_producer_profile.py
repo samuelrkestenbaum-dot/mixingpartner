@@ -568,10 +568,12 @@ def test_doctrine_subfields_present():
     # P-032b added the eighth: the producer-agnostic ``groove_coherence`` axis.
     # P-032d added the ninth: the producer-agnostic ``rhythmic_surprise`` axis
     # (weak, section-aggregate form).
+    # P-032c added the tenth: the producer-agnostic ``low_end_motion`` axis
+    # (the low-end pocket: kick/sub relationship + room around the bass).
     assert set(d["scorers"]) == {
         "vocal_centrality", "depth_hierarchy", "section_contrast",
         "static_mix", "dynamic_mix", "beat_identity", "negative_space",
-        "groove_coherence", "rhythmic_surprise",
+        "groove_coherence", "rhythmic_surprise", "low_end_motion",
     }
 
 
