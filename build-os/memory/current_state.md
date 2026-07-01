@@ -27,17 +27,80 @@
   loop INSIDE the cowork surface, additive / byte-identical by default)**, and
   **P-020 (`942a68a`, product — `describe_session` makes the cowork surface
   self-describing as an ordered, phase-grouped session flow; additive / read-only /
-  byte-identical to every existing command)**; the local-only-at-close commits
-  (P-013, P-015, P-017's guard, P-018, P-019, P-020) are not pushed.
+  byte-identical to every existing command)**, and
+  **P-021 (`dce156b`, TESTS-ONLY — the MILESTONE: an executable proof that an
+  agent driving ONLY the cowork surface completes a full plan-only mixing session
+  AND closes the learning loop; no product change)**; the local-only-at-close
+  commits (P-013, P-015, P-017's guard, P-018, P-019, P-020, P-021) are not pushed.
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression`.
-- **Green baseline (verified 2026-07-01):** suite **269 passed** (0 failed /
+- **Green baseline (verified 2026-07-01):** suite **277 passed** (0 failed /
   skipped / warnings; green even under `-W error`); regression **68/68** (0
-  critical / 0 warnings). (Prior baseline was 259; P-020 added +10.)
+  critical / 0 warnings). (Prior baseline was 269; P-021 added +8 — tests-only.)
 
 ## Where we are
+
+- **★★ MILESTONE — P-021 PROVES THE COWORK SURFACE IS AGENT-DRIVABLE END-TO-END
+  (arc step 3 of 5; the step that PROVES it).** The canonical target — Logic Mix
+  OS as a tool Claude Cowork can drive END-TO-END in a Logic Pro mixing session
+  (plan-only v1) — is now essentially **MET AT THE DECISION-SYSTEM LEVEL.** P-021
+  (TESTS-ONLY) drives a full mixing session THROUGH the cowork surface only
+  (`build_context` + `run_command`), in `describe_session`'s canonical order, and
+  the learning loop CLOSES within the surface. No product change; no honesty-clause
+  gap found — every phase's essential command was reachable and the loop closed
+  across the full session.
+  - **The driven spine (8 phases, via `run_command`, NOT bypassing to
+    `analyze()` / `record_pass`):** intake → `intake_project`, classify →
+    `classify_tracks`, diagnose → `detect_masking`, plan → `generate_mix_plan`,
+    checklist → `render_logic_checklist`, validate → `validate_mix_pass`,
+    record-outcome → `record_mix_pass` (LIVE), next-pass → `suggest_next_pass`.
+    Each output JSON-serializable + shape-asserted; the chain never drops out of
+    the surface.
+  - **The loop CLOSES (milestone assertion — load-bearing + non-tautological):**
+    `record_mix_pass(..., reverted=True)` on the LIVE channel → a FRESH
+    `build_context(memory_dir=...)` → `suggest_next_pass` surfaces the confirmed
+    "Revert last pass" (evidence contains "confirm"), NO hand re-run. **Proven
+    load-bearing** (qa AND reviewer independently — dropping `reverted` / routing
+    off the live channel → the assertion FAILS; reviewer via monkeypatch) and
+    **non-tautological** (the identical score-IMPROVED sequence with
+    `reverted=False` surfaces NO revert).
+  - **Live-vs-dead pinned as an EXECUTABLE fact (resolves the carried P-020 clarity
+    nudge):** `write_mix_decision` (DEAD ledger — writes only `decision_ledger.json`,
+    runtime-verified) does NOT change next-pass; `record_mix_pass` (LIVE history)
+    does. Only `record_mix_pass` closes the loop.
+  - **Honest skips (none an essential linear phase):** `compare_to_reference`
+    (needs a reference bounce → `{"note": "no reference supplied"}`),
+    `override_track_identity` (param-heavy / mutating), `build_missing_tool` /
+    `run_creative_engine` / `describe_session` (auxiliary / off-axis).
+  - **PRECISION (do NOT overstate):** the coverage-honesty test
+    (`test_walkthrough_covers_the_registry_honestly`) guards PHASE-COMPLETENESS
+    (every `describe_session` phase has a driven essential command belonging to it)
+    + test-1's exact 8-phase order pin — it does NOT assert a full
+    `driven ∪ skipped == 34` registry partition (it references 13 of 34). The full
+    34-command exact-cover partition is guarded SEPARATELY by P-020's
+    `test_cowork_session_flow.py` (31 phases + 3 auxiliary = 34). Together the two
+    files tell the truth about registry coverage.
+  - **Single commit `dce156b` (TESTS-ONLY):** adds exactly ONE file
+    `tests/test_cowork_session_walkthrough.py` (8 tests, +372); no product/runtime
+    file changed, no existing test edited. Suite **269 → 277 passed** (+8; 0
+    failed/skipped/warnings, green under `-W error`); regression **68/68, 0
+    critical, 0 warnings** held; Commit-1 green in isolation (277; single commit =
+    tip); determinism confirmed (two contexts → byte-identical plan/next-pass);
+    safety grep clean; UI N/A. qa **GREEN**; reviewer **pass** (empirically
+    re-verified load-bearing via monkeypatch; genuine drive, not a bypass; honest
+    skips). **Codex NOT available — single-reviewer verdict.** **P-021 local-only**
+    (commit `dce156b` on the dev branch on top of the `6c40e2b` PR #15 base), not
+    pushed/merged.
+  - **★ SYNTHESIS (the strategic headline):** the canonical target is essentially
+    MET at the decision-system level — an agent using ONLY the cowork surface can
+    drive the complete plan-only session (intake → … → next-pass) AND learn from
+    outcomes (record → loop closes), entirely within the surface, proven
+    executably. What remains is genuinely only **transport packaging** — **P-023**
+    (MCP server vs documented raw-CLI contract), a USER-GATED architecture
+    decision. **P-022 stays OPTIONAL / UNNEEDED** — the honesty clause surfaced no
+    real gap requiring it.
 
 - **★ THE ARC ADVANCES — P-020 MAKES THE COWORK SURFACE SELF-DESCRIBING AS AN
   ORDERED, PHASE-GROUPED SESSION FLOW (arc step 2 of 5).** `list_commands` is a flat
@@ -290,7 +353,43 @@
   align-vetoed before it can reorder a truth-ranked winner. The reachable taste
   claim is proven on real data by
   `tests/test_live_wire.py::test_taste_axis_changes_governance`.
-- **Last closed packet:** **P-020** — `describe_session` session-flow
+- **Last closed packet:** **P-021** — verified end-to-end agent walkthrough
+  through the cowork surface (TESTS-ONLY) — **the MILESTONE** (THIRD step of the arc
+  P-019→P-023; the step that PROVES the Cowork-usable end-to-end state). Drives a
+  full plan-only mixing session THROUGH the cowork surface only (`build_context` +
+  `run_command`), in `describe_session`'s canonical order, and closes the learning
+  loop within the surface. **The driven spine (8 phases, via `run_command`, NOT
+  bypassing to `analyze()`/`record_pass`):** intake→`intake_project`,
+  classify→`classify_tracks`, diagnose→`detect_masking`, plan→`generate_mix_plan`,
+  checklist→`render_logic_checklist`, validate→`validate_mix_pass`,
+  record-outcome→`record_mix_pass` (LIVE), next-pass→`suggest_next_pass` (each
+  JSON-serializable + shape-asserted). **The loop CLOSES (milestone assertion):**
+  `record_mix_pass(..., reverted=True)` (LIVE) → FRESH `build_context(memory_dir=...)`
+  → `suggest_next_pass` surfaces the confirmed "Revert last pass" (evidence contains
+  "confirm"), NO hand re-run — **proven load-bearing** (qa AND reviewer independently;
+  reviewer via monkeypatch) and **non-tautological** (identical score-IMPROVED
+  sequence with `reverted=False` → NO revert). **Live-vs-dead pinned executably**
+  (resolves the carried P-020 nudge): `write_mix_decision` (DEAD ledger) does NOT
+  change next-pass; `record_mix_pass` (LIVE history) does. **Honest skips**
+  (`compare_to_reference` needs a reference, `override_track_identity`,
+  `build_missing_tool`/`run_creative_engine`/`describe_session`) — none an essential
+  phase. **PRECISION:** the coverage-honesty test guards PHASE-COMPLETENESS + the
+  8-phase order (references 13 of 34), NOT a full 34-registry partition — P-020's
+  `test_cowork_session_flow.py` holds the 34-command exact cover (31+3=34); together
+  they tell the truth about coverage. **Single commit `dce156b`** (TESTS-ONLY; one
+  new file `tests/test_cowork_session_walkthrough.py`, 8 tests, +372; no
+  product/runtime file changed, no existing test edited; single commit = tip, green
+  in isolation = 277). Suite **269 → 277 passed** (+8; 0 failed/skipped/warnings,
+  green under `-W error`); regression **68/68, 0 critical, 0 warnings** held;
+  determinism confirmed; safety grep clean; UI N/A. qa **GREEN**; reviewer **pass**
+  (empirically re-verified load-bearing via monkeypatch; genuine drive; honest skips).
+  **Codex NOT available — single-reviewer verdict.** **★ SYNTHESIS:** the canonical
+  target is essentially MET at the decision-system level; only P-023 transport
+  packaging (USER-GATED) remains; **P-022 optional/unneeded (no gap surfaced).**
+  **P-021 is local-only** (commit `dce156b` on the dev branch on top of the `6c40e2b`
+  PR #15 base), not pushed/merged. Receipt:
+  `build-os/receipts/P-021-verified-end-to-end-cowork-walkthrough.md`.
+- **P-020 (prior close)** — `describe_session` session-flow
   discoverability (SECOND step of the arc P-019→P-023 to the Cowork-usable
   end-to-end state). Adds a pure `_SESSION_FLOW` structure + a read-only
   `describe_session` command to the cowork registry (count **33 → 34**) that returns
@@ -337,20 +436,18 @@
   not pushed/merged. Receipt:
   `build-os/receipts/P-019-record-mix-pass-closes-loop-in-cowork.md`.
 - **Now:** **none active.** No product packet in flight.
-- **Next — THE ACTIVE ROADMAP IS THE ARC TO THE COWORK-USABLE END-TO-END STATE
-  (P-021 → P-023).** P-019 closed the learning loop inside the cowork surface (step
-  1); **P-020 made the surface self-describing as an ordered, phase-grouped session
-  flow (step 2, now DONE — 34 commands).** The remaining arc:
-  - **P-021 — verified end-to-end agent walkthrough (TESTS-ONLY):** drive a full
-    Logic-Pro mixing session through the cowork surface start-to-finish. **Also the
-    home for the carried live-vs-dead-ledger clarity nudge** (surface, in the
-    walkthrough/session view, that `record_mix_pass` writes the LIVE history channel
-    while `write_mix_decision` writes the display-only DEAD ledger — both sit under
-    `record-outcome` but only the former closes the loop).
-  - **P-022 — optional session-efficiency / override-propagation.** Sequence only if
-    P-021 surfaces a real need.
-  - **P-023 — USER-GATED decision: MCP server vs a documented raw-CLI contract as
-    the agent transport. Do NOT open blind; sequenced LAST.**
+- **Next — THE ARC IS DOWN TO ITS LAST STEP: P-023 TRANSPORT (USER-GATED).**
+  P-019 closed the learning loop inside the cowork surface (step 1); P-020 made the
+  surface self-describing as an ordered, phase-grouped session flow (step 2);
+  **P-021 PROVED the surface is agent-drivable end-to-end and the loop closes within
+  it (step 3 — the MILESTONE).** The canonical target is now essentially MET at the
+  decision-system level, so what remains is only transport packaging:
+  - **P-022 — OPTIONAL / UNNEEDED.** The P-021 honesty clause surfaced NO real gap
+    requiring session-efficiency / override-propagation work. Do NOT open unless a
+    concrete gap emerges.
+  - **P-023 — the ONLY remaining arc step: USER-GATED transport decision — MCP
+    server vs a documented raw-CLI contract as the agent transport. Do NOT open
+    blind; sequenced LAST; needs an explicit user ask.**
 - **Also standing — the judgment layer is at a DOCTRINE-HONEST EQUILIBRIUM (flip
   program complete); the OUTCOME→learning axis is OPEN (P-018 + P-019).** The
   penalty, reward, and base-value re-curation levers have all converged:
@@ -462,4 +559,4 @@
   explicit go.
 
 ---
-_Updated by the archivist on close. Last advanced on P-020 close (2026-07-01)._
+_Updated by the archivist on close. Last advanced on P-021 close (2026-07-01) — the MILESTONE step of the arc._
