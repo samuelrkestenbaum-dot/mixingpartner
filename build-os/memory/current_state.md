@@ -20,17 +20,62 @@
   the older shared ancestor `694d19d`.) On top of the `6c40e2b` base the dev branch
   carries P-013 (`172cfd0`, tests-only), **P-015 (`1756f61`, product)**,
   **P-016 (`b15b957` + `a9f4e26`, product — now also landed on default via PR #15)**,
-  and **P-017 (`1b03ad3`, tests-only guard — verified finding, no product change)**;
-  the local-only-at-close commits (P-013, P-015, P-017's guard) are not pushed.
+  **P-017 (`1b03ad3`, tests-only guard — verified finding, no product change)**,
+  and **P-018 (`736fa8b` + `6134d27`, product — the first confirmed-outcome
+  learning signal, opt-in / byte-identical by default)**; the local-only-at-close
+  commits (P-013, P-015, P-017's guard, P-018) are not pushed.
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression`.
-- **Green baseline (verified 2026-07-01):** suite **240 passed** (0 failed /
+- **Green baseline (verified 2026-07-01):** suite **253 passed** (0 failed /
   skipped / warnings; green even under `-W error`); regression **68/68** (0
-  critical / 0 warnings).
+  critical / 0 warnings). (Prior baseline was 240; P-018 added +13.)
 
 ## Where we are
+
+- **★ THE OUTCOME→LEARNING AXIS IS NOW OPEN — P-018 SHIPS THE FIRST
+  CONFIRMED-OUTCOME SIGNAL IN THE LEARNING LOOP (a PIVOT off the complete
+  judgment-tuning path onto the feedback frontier; user said "Yes").** Until
+  now every loop signal was score-INFERRED (`record_pass` guesses "that
+  regressed, maybe revert" from score deltas). P-018 adds a CONFIRMED one. An
+  opt-in `memory-record --reverted` records a confirmed operator revert on a
+  pass (`record_pass(..., reverted=True)` → `mix_pass_history.json`); the live
+  `_apply_history` consumer (already threaded to real `analyze(--memory-dir)`
+  via P-009) then, on a confirmed revert, DEMOTES the recommended-then-reverted
+  moves and surfaces exactly ONE confirmed "Revert last pass" item at priority
+  95 — **regardless of the score-delta `got_worse` inference (OVERRIDE)**, with
+  an early-return that prevents double-up with the score-inferred revert. Distinct
+  honest evidence line ("…because the operator confirmed reverting the last
+  pass" — contains "confirm", vs the score-inferred "recorded revert
+  candidate(s): …").
+  - **OVERRIDE semantics (chosen by the orchestrator-in-chief; user may redirect
+    at the merge gate):** a confirmed operator revert is GROUND TRUTH and takes
+    precedence over the score-inferred guess when they disagree — the
+    doctrine-honest, operator-serving choice (a confirmed action outranks a
+    heuristic proxy).
+  - **Why THIS seam (the dead-ledger finding):** the decision LEDGER
+    (`add_decision` → `decision_ledger.json`) has ZERO analyze-path consumers
+    (`mem.ledger()` is display-only at `cli.py:315`), so a producer for any
+    reserved ledger event would be INERT — the hollow trap. The ONLY reachable
+    LIVE seam was the history axis (`record_pass` → `_apply_history`), which is
+    why the confirmed revert lands there.
+  - **Opt-in / byte-identical by default:** no `--reverted` → the `reverted` key
+    is not written and `next_pass` is unchanged vs today.
+  - **LIVENESS proven load-bearing (the P-016 lesson honored):** the no-re-run
+    liveness test asserts on real `analyze(memory_dir=...)` `next_pass` and FAILS
+    with the pre-P-018 `_apply_history` (confirmed revert doesn't reach analyze
+    output = would be inert) and PASSES at tip — NOT inert. **Override
+    non-vacuous:** with an IMPROVED score delta (`got_worse` empty) but
+    `reverted=True`, the confirmed item still surfaces at rank 0 and the reverted
+    move is demoted — proving override, not an echo of the score signal.
+  - Two commits (≤2): `736fa8b` Commit-1 (`record_pass` field + `_apply_history`
+    override + 9 unit tests; green in isolation = 249) + `6134d27` Commit-2
+    (`--reverted` CLI wire + 4 no-re-run liveness/CLI tests). qa **GREEN**
+    (mutation-verified liveness + non-vacuous override); reviewer **pass**
+    (override bounded/deterministic; early-return skips only the score-inferred
+    revert; demotes exactly the reverted pass's recommended moves). **Codex NOT
+    available — single-reviewer verdict.**
 
 - **★ THE JUDGMENT LAYER IS AT A DOCTRINE-HONEST EQUILIBRIUM — P-017 (the FIRST
   base-value re-curation attempt) CLOSED AS A VERIFIED NEGATIVE FINDING.** The user
@@ -159,27 +204,41 @@
   align-vetoed before it can reorder a truth-ranked winner. The reachable taste
   claim is proven on real data by
   `tests/test_live_wire.py::test_taste_axis_changes_governance`.
-- **Last closed packet:** **P-017** — Minimal doctrine-honest `_KIND_SCORES`
-  re-curation (density → depth_cleanup), the FIRST base-value change attempt.
-  User-signed-off ("A"). **Resolved to a VERIFIED NEGATIVE FINDING: an honest
-  re-curation CANNOT flip the `density` branch — arithmetically forced by the
-  doctrine, verified adversarially. `_KIND_SCORES` LEFT UNTOUCHED — NO product
-  change.** The builder committed ONLY the 12-test characterization guard
-  (`tests/test_density_recuration.py`, +183, commit **`1b03ad3`** — the sole packet
-  commit, green in isolation = 12 passed). Suite **228 → 240 passed** (+12; 0
+- **Last closed packet:** **P-018** — Confirmed-revert outcome feeds the live
+  next-pass loop (the FIRST confirmed-outcome signal in the learning loop). A
+  PIVOT off the complete judgment-tuning path onto the feedback frontier (user
+  "Yes"). Opt-in `memory-record --reverted` records a confirmed operator revert
+  (`record_pass(..., reverted=True)`); `_apply_history` then, on a confirmed
+  revert, DEMOTES the reverted move and surfaces one confirmed "Revert last
+  pass" item at priority 95 **regardless of the score-delta `got_worse`
+  inference (OVERRIDE)** — measurably changing real `analyze(--memory-dir)`
+  `next_pass`; opt-in / byte-identical by default. **OVERRIDE semantics chosen by
+  the orchestrator-in-chief (user may redirect at the merge gate).** Two commits:
+  `736fa8b` (Commit-1: `record_pass` field + `_apply_history` override + 9 unit
+  tests; green in isolation = 249) + `6134d27` (Commit-2: `--reverted` CLI wire +
+  4 no-re-run liveness/CLI tests). Suite **240 → 253 passed** (+13; 0
   failed/skipped/warnings, green under `-W error`); regression **68/68, 0 critical,
-  0 warnings** held; safety grep clean; UI N/A; P-012/P-013/P-015/P-016 test files
-  NOT edited and pass (69). The guard is load-bearing (an injected inflated
-  `depth_cleanup` makes it FAIL — density → density_A). qa **GREEN — FINDING
-  CONFIRMED**; reviewer **pass**. **Codex NOT available — single-reviewer verdict.**
-  **P-017's guard commit `1b03ad3` is local-only** (dev branch on top of the
+  0 warnings** held; byte-identical default; liveness proven load-bearing (FAILS
+  pre-P-018, PASSES at tip); override non-vacuous; safety grep clean; UI N/A;
+  P-008 `test_next_pass_history.py` + P-009 `test_live_wire.py` unedited and green
+  (17). qa **GREEN** (mutation-verified liveness + non-vacuous override); reviewer
+  **pass**. **Codex NOT available — single-reviewer verdict.** **P-018 is
+  local-only** (commits `736fa8b`, `6134d27` on the dev branch on top of the
   `6c40e2b` PR #15 merge), not pushed/merged at close. Receipt:
-  `build-os/receipts/P-017-doctrine-honest-kind-scores-recuration.md`.
+  `build-os/receipts/P-018-confirmed-revert-feeds-next-pass-loop.md`.
 - **Now:** **none active.** No product packet in flight.
-- **Next — the judgment layer is at a DOCTRINE-HONEST EQUILIBRIUM; the flip program
-  is essentially complete.** The penalty, reward, and base-value re-curation levers
-  have all converged: subtractive_drop's dominance is legitimate and no honest
-  further flip exists in the current dimension set. Remaining threads:
+- **Next — the judgment layer is at a DOCTRINE-HONEST EQUILIBRIUM (flip program
+  complete); the OUTCOME→learning axis is now OPEN (P-018 landed the first
+  confirmed-outcome signal).** The penalty, reward, and base-value re-curation
+  levers have all converged: subtractive_drop's dominance is legitimate and no
+  honest further flip exists in the current dimension set. Remaining threads:
+  - **★ Outcome-enum generalization (reviewer's P-018 trajectory note — candidate,
+    NOT staged):** widen the `reverted: bool` field to a small outcome enum
+    (`reverted`/`kept`/`refined`) to round out the outcome→learning loop — widens
+    WITHOUT breaking the byte-identical default; user-gated for the semantics.
+  - **The ledger is DEAD (P-018 finding):** `add_decision`/`decision_ledger` has
+    NO analyze-path consumer (display-only). A confirmed-outcome producer is only
+    real if it lands on a LIVE channel (history or taste), not the ledger.
   - **★ The one open honest thread — SYMMETRIC re-judgment (user-gated, NOT
     staged):** is `subtractive_drop` at 85.29 (high on every dim) itself slightly
     OVER-valued? Lowering it (rather than inflating a rival) would be a different,
@@ -253,10 +312,30 @@
   even →100 = 85.14, still below); the residual deficit lives entirely in
   `excitement` (66 vs 78), which is off-limits to inflate. `_KIND_SCORES` stays
   UNTOUCHED. Binding guard: `tests/test_density_recuration.py`.
+- **★ THE DECISION LEDGER IS DISPLAY-ONLY — the LIVE learning channels are HISTORY
+  and TASTE (P-018 finding):** `add_decision` → `decision_ledger.json` has NO
+  analyze-path consumer; `mem.ledger()` is called only at `cli.py:315` (display).
+  So a producer for any reserved ledger event (`manual_note`/`taste_feedback`/
+  `mix_decision`/`validation_check`) would be INERT (the hollow-packet trap). The
+  LIVE learning channels are HISTORY (`mix_pass_history.json` → `_apply_history`)
+  and TASTE (`taste_profile.json` → governance). **A confirmed-outcome producer is
+  only real if it lands on one of those, NOT the ledger.**
+- **The confirmed-revert OVERRIDE CAN change real `analyze(--memory-dir)`
+  `next_pass` (P-018 — the FIRST confirmed-outcome signal):** an opt-in
+  `record_pass(reverted=True)` (via `memory-record --reverted`) makes
+  `_apply_history` demote the reverted move + surface one confirmed "Revert last
+  pass" item at priority 95 **regardless of the score-inferred `got_worse`**
+  (early-return anti-double-up; distinct evidence line containing "confirm").
+  Opt-in / byte-identical by default. Binding guard:
+  `tests/test_confirmed_revert.py` (unit + override non-vacuity) +
+  `tests/test_confirmed_revert_live.py` (no-re-run liveness — FAILS pre-P-018,
+  PASSES at tip). The variant/golden path won't catch memory/next-pass changes, so
+  these unit + liveness tests are the binding guard (mirrors the P-016 live-wire
+  lesson: assert on real `analyze` output with NO re-run).
 - **Orchestration:** this repo runs Build OS at project scope (`.claude/` +
   `build-os/`). Route every task via the build-orchestrator; ≤2 commits/packet;
   Commit-1 green in isolation; STOP at any push/merge/deploy/secret boundary for
   explicit go.
 
 ---
-_Updated by the archivist on close. Last advanced on P-017 close (2026-07-01)._
+_Updated by the archivist on close. Last advanced on P-018 close (2026-07-01)._

@@ -150,6 +150,27 @@
   behind the same unanswered product decision: **should validation / taste / revert
   / note signals actually be written to the decision ledger?** Keep deferred; do
   NOT start as packets until that product decision lands.
+  **★ CORRECTION (P-018 finding — read before routing any such producer):** the
+  decision LEDGER (`add_decision` → `decision_ledger.json`) has **ZERO analyze-path
+  consumers** — `mem.ledger()` is display-only (`cli.py:315`). So a producer that
+  merely WRITES to the ledger is **INERT** (the hollow trap). `validation_check` /
+  `manual_note` producers now **need a NEW consumer — not just a ledger write.**
+  The only LIVE learning channels are HISTORY (`mix_pass_history.json` →
+  `_apply_history`) and TASTE (`taste_profile.json` → governance); P-018's
+  confirmed `revert` correctly landed on the history channel (not the ledger).
+- **★ Outcome-enum generalization (reviewer's P-018 trajectory note — non-blocking;
+  a candidate, NOT staged):** capturing only `revert` leaves the outcome vocabulary
+  lopsided. A future generalization to a small outcome enum
+  (`reverted` / `kept` / `refined`) would round out the outcome→learning loop, and
+  the P-018 `reverted: bool` field can widen to that later **WITHOUT breaking the
+  byte-identical default.** Reachable, user-gated for the semantics; do NOT open
+  without an explicit ask.
+- **★ THE LEDGER-IS-DEAD FINDING (P-018 — a standing routing guard):** the decision
+  LEDGER (`add_decision`/`decision_ledger`) has NO decision-making consumer — it is
+  display-only (`cli.py:315`). **Do NOT route an inert ledger producer.** A
+  confirmed-outcome / event producer is only real if it lands on a LIVE channel
+  (history `mix_pass_history.json` → `_apply_history`, or taste `taste_profile.json`
+  → governance). This is why P-018's confirmed revert lands on the history axis.
 
 ## Genuinely real carried follow-ups (verified)
 
@@ -165,7 +186,8 @@
 > the creative-scoring aesthetic decision is RESOLVED (P-012 option B, MERGED PR
 > #13; P-015 decisive; P-016 reward, MERGED PR #15), and the judgment layer is now
 > at a DOCTRINE-HONEST EQUILIBRIUM (P-017 — no honest further flip in the current
-> dimension set). For orchestrator re-survey:
+> dimension set), and the OUTCOME→learning axis is now OPEN (P-018 — the first
+> confirmed-outcome signal is live). For orchestrator re-survey:
 
 - **THE FLIP PROGRAM IS ESSENTIALLY COMPLETE — DOCTRINE-HONEST EQUILIBRIUM
   (P-017).** The three levers have converged: penalty (P-012/P-015), reward
@@ -178,6 +200,14 @@
   itself slightly OVER-valued? Lowering it (rather than inflating a rival) would be
   a different, un-signed-off packet. Surface to the user; do NOT open without an
   explicit ask.
+- **★ THE OUTCOME→LEARNING AXIS IS NOW OPEN (P-018).** The first confirmed-outcome
+  signal is live: `memory-record --reverted` overrides the score-inference and
+  measurably changes real `analyze(--memory-dir)` next_pass (opt-in / byte-identical
+  default). The reachable next move is the **outcome-enum generalization**
+  (`reverted`/`kept`/`refined`, widening the `reverted: bool` without breaking the
+  default) — reachable but **user-gated for the semantics; NOT staged.** Route any
+  further outcome/event producer onto a LIVE channel (history or taste), never the
+  display-only ledger.
 - **Option-B-visibility / decisiveness** — the CREATIVE half is fully closed:
   **P-013** proved the nudge fires on real data through `analyze()` (option-(a)
   no-flip on a clear ranking), **P-014** proved a near-tie FLIP was unreachable
@@ -190,6 +220,57 @@
 - Net-new **event-logging** producers remain behind the product decision.
 
 ## Done (resolved)
+
+- **Confirmed-revert outcome feeds the live next-pass loop (the FIRST
+  confirmed-outcome signal in the learning loop) — DONE via P-018**
+  (`build-os/receipts/P-018-confirmed-revert-feeds-next-pass-loop.md`).
+  **PRODUCT-code feature; a PIVOT off the complete judgment-tuning path onto the
+  learning-loop / feedback frontier** (user said "Yes"); orchestrator-routed;
+  **OVERRIDE semantics chosen by the orchestrator-in-chief (user may redirect at
+  the merge gate).** Until now every loop signal was score-INFERRED; P-018 adds a
+  CONFIRMED one. **The mechanism:** an opt-in `memory-record --reverted` records a
+  confirmed operator revert on a pass (`record_pass(..., reverted=True)` →
+  `mix_pass_history.json`); the live `_apply_history` consumer (already threaded to
+  real `analyze(--memory-dir)` via P-009) then, on a confirmed revert, DEMOTES the
+  recommended-then-reverted moves and surfaces exactly ONE confirmed "Revert last
+  pass" item at priority 95 — **regardless of the score-delta `got_worse`
+  inference (OVERRIDE)**, with an early return that prevents double-up with the
+  score-inferred revert candidate; distinct honest evidence line (contains
+  "confirm", vs the score-inferred "recorded revert candidate(s): …").
+  **OVERRIDE rationale:** a confirmed operator revert is GROUND TRUTH and outranks
+  the heuristic proxy (Halee/Ramone operator-serving judgment). **Why THIS seam:**
+  the decision LEDGER (`add_decision` → `decision_ledger.json`) has ZERO
+  analyze-path consumers (display-only, `cli.py:315`), so any reserved-ledger-event
+  producer would be INERT; the ONLY reachable LIVE seam was the history axis
+  (`record_pass` → `_apply_history`) — hence the confirmed revert lands there.
+  **Two commits (≤2):** `736fa8b` Commit-1 (`record_pass` `reverted` field +
+  `_apply_history` override + 9 unit tests; test-first, green in isolation = 249) +
+  `6134d27` Commit-2 (`--reverted` CLI wire + 4 no-re-run liveness/CLI tests).
+  `memory.py`, `planners/next_pass_planner.py`, `cli.py` are the only product files
+  touched. **Proof:** suite **240 → 253 passed** (+13; 0 failed/skipped/warnings,
+  green under `-W error`); regression **68/68, 0 critical, 0 warnings** held (no
+  `memory_dir` → falsy no-op → goldens untouched). **LIVENESS proven load-bearing
+  (the P-016 lesson honored):** the no-re-run liveness test asserts on real
+  `analyze(memory_dir=...)` `next_pass` and FAILS with the pre-P-018
+  `_apply_history` (would be inert) and PASSES at tip — NOT inert. **OVERRIDE
+  non-vacuous:** with an IMPROVED score delta (`got_worse` empty) but
+  `reverted=True`, the confirmed "Revert last pass" still surfaces at rank 0 and
+  the reverted move is demoted — override, not a score echo. **Byte-identical
+  default:** no `--reverted` → next_pass identical to today; no `reverted` key when
+  unused. **Scope clean:** ledger/`add_decision`/reserved ledger events, taste axis,
+  `_KIND_SCORES`/creative/governance UNTOUCHED; P-008 `test_next_pass_history.py` +
+  P-009 `test_live_wire.py` unedited and green (17). Safety grep clean; UI N/A. qa
+  **GREEN** (independently mutation-verified liveness + non-vacuous override; qa
+  self-flagged a transient stale-state artifact in one of its OWN scratch scripts —
+  a qa-harness quirk, NOT a product defect — and confirmed the traced re-runs are
+  authoritative). Reviewer **pass** (override bounded/deterministic; early-return
+  skips only the score-inferred revert; demotes exactly the reverted pass's
+  recommended moves; mutation-verified load-bearing). **Codex NOT available —
+  single-reviewer verdict.** **Reviewer trajectory note (non-blocking, candidate,
+  NOT staged):** a future outcome enum (`reverted`/`kept`/`refined`) would round
+  out the loop — the `reverted: bool` field can widen to it WITHOUT breaking the
+  byte-identical default. **P-018 is local-only** (commits `736fa8b`, `6134d27` on
+  the dev branch on top of the `6c40e2b` PR #15 merge), not pushed/merged at close.
 
 - **Base-value `_KIND_SCORES` re-curation (density → depth_cleanup) — RESOLVED as
   a VERIFIED NEGATIVE FINDING via P-017**
@@ -635,4 +716,4 @@
   taken in this close.
 
 ---
-_Append-only working notes. Last advanced on P-017 close (2026-07-01)._
+_Append-only working notes. Last advanced on P-018 close (2026-07-01)._
