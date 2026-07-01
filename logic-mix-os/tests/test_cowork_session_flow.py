@@ -151,6 +151,10 @@ def test_describe_session_output_is_jsonable():
     json.dumps(_describe())  # must not raise
 
 
-def test_registry_count_is_34():
-    assert len(COMMANDS) == 34
+def test_registry_count_is_35():
+    # P-023 added describe_contract (34 -> 35); it is parked in _SESSION_FLOW's
+    # auxiliary bucket alongside describe_session, so the completeness invariant
+    # above stays satisfied.
+    assert len(COMMANDS) == 35
     assert "describe_session" in COMMANDS
+    assert "describe_contract" in COMMANDS

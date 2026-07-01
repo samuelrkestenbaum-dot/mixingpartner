@@ -13,12 +13,18 @@ Usage::
 
 from __future__ import annotations
 
+import inspect
 from typing import Dict, List, Optional
 
 from .constants import IDENTITY_FAMILY
 from .memory import ProjectMemory
 from .pipeline import analyze
 from .renderers.checklist_renderer import render_logic_checklist
+
+# P-023 — the raw-CLI agent contract is VERSIONED. Bump this (semantic: MAJOR on a
+# breaking change to a command's params/side_effect/removal, MINOR on additive) so
+# Claude Cowork can pin the surface it introspected. Stable string; do not compute.
+API_VERSION = "1.0"
 
 
 def build_context(stems=None, manifest=None, memory_dir=None, bounce=None,
@@ -199,8 +205,10 @@ _SESSION_FLOW = {
     # here rather than shoehorned into a phase.
     #   run_creative_engine  — parallel creative exploration, not a pipeline step.
     #   build_missing_tool   — meta: specs a helper tool for a capability gap.
-    #   describe_session     — this self-describing navigation command.
-    "auxiliary": ["run_creative_engine", "build_missing_tool", "describe_session"],
+    #   describe_session     — self-describing session-flow navigation command.
+    #   describe_contract    — self-describing versioned contract (P-023).
+    "auxiliary": ["run_creative_engine", "build_missing_tool", "describe_session",
+                  "describe_contract"],
 }
 
 
@@ -217,6 +225,97 @@ def _describe_session(ctx, **k):
             for p in _SESSION_FLOW["phases"]
         ],
         "auxiliary": list(_SESSION_FLOW["auxiliary"]),
+    }
+
+
+# --------------------------------------------------------------------------- #
+# P-023 — the versioned, self-describing raw-CLI contract.
+#
+# ``describe_contract`` returns the machine-readable contract Claude Cowork calls
+# to introspect this surface instead of reverse-engineering an ad-hoc CLI. Three
+# facts per command, each grounded in code so the contract cannot drift:
+#   * purpose      — the registry ``desc`` string (single source).
+#   * phase        — the ``_SESSION_FLOW`` phase the command sits in, else
+#                    ``"auxiliary"`` (off-axis: creative / meta / self-describing).
+#   * params       — DERIVED from the handler signature via ``inspect.signature``:
+#                    every parameter after the leading context arg, excluding
+#                    ``**k`` / ``*args``. Never hand-maintained.
+#   * side_effect  — an HONEST, declared classification. This is where the
+#                    live-vs-dead distinction is pinned as a first-class contract
+#                    fact (resolving the P-020/P-021 clarity nudge at the contract
+#                    level). Only the four commands that actually write/mutate are
+#                    non-``none``; every read-only projection is ``none``:
+#                      record_mix_pass          -> writes:history(live)   (mem.record_pass; feeds next-pass planner)
+#                      update_taste_calibration -> writes:taste(live)     (mem.add_feedback)
+#                      write_mix_decision       -> writes:ledger(dead)    (mem.add_decision; audit log, not a live input)
+#                      override_track_identity  -> mutates:session        (in-session dict mutation, no disk write)
+#
+# INVARIANT (guarded by tests/test_cowork_contract.py): the contract's command
+# keys are EXACTLY the ``COMMANDS`` keys, params equal the real signatures, and
+# every side_effect is one of the sanctioned classifications. Adding a command
+# without a truthful side_effect classification here fails those tests.
+# --------------------------------------------------------------------------- #
+_SIDE_EFFECTS = {
+    "record_mix_pass": "writes:history(live)",
+    "update_taste_calibration": "writes:taste(live)",
+    "write_mix_decision": "writes:ledger(dead)",
+    "override_track_identity": "mutates:session",
+}
+
+
+def _phase_index() -> Dict[str, str]:
+    """Map each command name to its ``_SESSION_FLOW`` phase (or ``"auxiliary"``)."""
+    index: Dict[str, str] = {}
+    for phase in _SESSION_FLOW["phases"]:
+        for cmd in phase["commands"]:
+            index[cmd] = phase["phase"]
+    for cmd in _SESSION_FLOW["auxiliary"]:
+        index[cmd] = "auxiliary"
+    return index
+
+
+def _contract_params(fn) -> List[Dict]:
+    """Derive the caller-facing kwargs from the handler signature.
+
+    Every parameter after the leading context arg (named ``ctx`` in def-based
+    handlers, ``c`` in the lambda handlers — so we drop by POSITION, not by name),
+    excluding ``**k`` / ``*args``. Each entry carries the param name and, when the
+    signature declares one, its default — so the contract stays in lock-step with
+    the code and cannot be hand-drifted.
+    """
+    params = list(inspect.signature(fn).parameters.values())[1:]  # drop context arg
+    out: List[Dict] = []
+    for p in params:
+        if p.kind in (inspect.Parameter.VAR_KEYWORD, inspect.Parameter.VAR_POSITIONAL):
+            continue
+        entry: Dict = {"name": p.name}
+        if p.default is not inspect.Parameter.empty:
+            entry["default"] = p.default
+        out.append(entry)
+    return out
+
+
+def _describe_contract(ctx, **k):
+    """Return the versioned, machine-readable agent contract for this surface.
+
+    Pure and deterministic: derived entirely from ``API_VERSION``, the ``COMMANDS``
+    registry, the handler signatures and ``_SESSION_FLOW``. Reads no analysis result
+    and no memory — the ctx is ignored. See ``COWORK_CONTRACT.md`` for the human
+    orientation; this is the source of truth.
+    """
+    phase_of = _phase_index()
+    commands = {}
+    for name, meta in COMMANDS.items():
+        commands[name] = {
+            "purpose": meta["desc"],
+            "phase": phase_of.get(name, "auxiliary"),
+            "params": _contract_params(meta["fn"]),
+            "side_effect": _SIDE_EFFECTS.get(name, "none"),
+        }
+    return {
+        "api_version": API_VERSION,
+        "invocation": "python -m logic_mix_os.cli cowork --name <command> --params '<json>'",
+        "commands": commands,
     }
 
 
@@ -255,6 +354,7 @@ COMMANDS = {
     "update_taste_calibration": {"desc": "Record taste feedback (params: label)", "fn": _update_taste},
     "build_missing_tool": {"desc": "Spec a helper tool for a capability gap", "fn": _build_missing_tool},
     "describe_session": {"desc": "Canonical ordered, phase-grouped view of the command flow", "fn": _describe_session},
+    "describe_contract": {"desc": "Versioned, machine-readable agent contract (api_version, invocation, per-command purpose/phase/params/side_effect)", "fn": _describe_contract},
 }
 
 
