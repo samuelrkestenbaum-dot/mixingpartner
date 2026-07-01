@@ -76,6 +76,9 @@ def test_weights_value_pins():
         "section_contrast_score": 1.0,
         "static_mix_score": 1.0,
         "dynamic_mix_score": 0.8,
+        # P-032e — the producer-agnostic beat_identity axis, weight 0 for the
+        # reference producer (the byte-identical anchor).
+        "beat_identity_score": 0,
     }
 
 

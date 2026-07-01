@@ -65,6 +65,10 @@ def score_doctrine(
     contrast, contrast_ev = _section_contrast(sections_analysis, warnings, doctrine)
     static, static_ev = _static_mix(records, lead, events, mix_metrics, doctrine)
     dynamic, dynamic_ev = _dynamic_mix(sections_analysis, doctrine)
+    # P-032e: the new producer-agnostic beat_identity axis. Appended LAST below so
+    # the pre-existing 7-term summation order is preserved and ``overall`` stays
+    # bit-identical for halee_ramone (its beat_identity weight is 0).
+    beat, beat_ev = _beat_identity(records, events, doctrine)
 
     component_scores = {
         "halee_score": halee,
@@ -74,6 +78,7 @@ def score_doctrine(
         "section_contrast_score": contrast,
         "static_mix_score": static,
         "dynamic_mix_score": dynamic,
+        "beat_identity_score": beat,
     }
     weights = doctrine["weights"]
     present = {k: v for k, v in component_scores.items() if v is not None}
@@ -94,6 +99,7 @@ def score_doctrine(
             "section_contrast": contrast_ev,
             "static_mix": static_ev,
             "dynamic_mix": dynamic_ev,
+            "beat_identity": beat_ev,
         },
         "warnings": warnings,
     }
@@ -264,4 +270,94 @@ def _dynamic_mix(sections: List[Dict], doctrine: Dict = _DOCTRINE):
     ]
     if score < 55:
         ev.append("Sections are too similar — the mix is balanced but emotionally static.")
+    return _clamp(score), ev
+
+
+def _beat_identity(records: List[Dict], events: List[Dict], doctrine: Dict = _DOCTRINE):
+    """Producer-AGNOSTIC scorer for the STRENGTH of a central rhythmic fingerprint.
+
+    This is the "first second producer" epic's hardest axis (P-032e), front-loaded
+    to prove the signal is HONESTLY MEASURABLE on exported stems. It answers ONE
+    question — *is there a central, undeniable rhythmic element* — from transient
+    physics alone. Candidacy is by ``transient_density`` (a stem PUNCHES), NEVER by
+    instrument label, so the axis is producer-agnostic: a mouth-beat, a tabla, a
+    synth knock and a chopped loop are all just "high-transient stems" here.
+
+    HONEST BOUNDARIES — three things are explicitly OUT OF SCOPE and NOT faked:
+      1. Fingerprint TYPING (mouth-sound vs tabla vs synth-knock vs beatbox) — NOT
+         measurable on exported stems. We never name WHAT the beat is, only that a
+         strong one exists.
+      2. Onset REGULARITY / IOI — a real signal, but it is NOT visible at
+         ``score_doctrine`` time (it lives in the post-doctrine groove analyzer;
+         wiring it in is P-032b). We do NOT use it here.
+      3. "More undeniable after a move" — needs a before/after render; out of scope
+         in plan-only v1.
+
+    Strength is composed from:
+      * Presence — at least one stem clears the ``transient_floor`` (else ``no_beat``).
+      * Distinctness/dominance — the top candidate's ``transient_density`` above the
+        track-median transient_density (a beat that stands out from the bed is more
+        undeniable), scaled by ``dominance_coeff``.
+      * Definition — the dominant stem's ``crest_factor_db`` above threshold (punchy,
+        defined hits vs smeared) → ``definition_bonus``.
+      * Foreground/unmasked — the dominant stem sits in a forward/heard layer and is
+        NOT ``bad_masking`` → ``foreground_bonus``; buried (felt/background) → a
+        ``buried_penalty``; masked → a ``masked_penalty`` (the fingerprint exists but
+        is not *undeniable*).
+    """
+    c = doctrine["scorers"]["beat_identity"]
+    ev: List[str] = []
+
+    def _td(r: Dict) -> float:
+        return float(r.get("metrics", {}).get("transient_density", 0.0) or 0.0)
+
+    def _crest(r: Dict) -> float:
+        return float(r.get("metrics", {}).get("crest_factor_db", 0.0) or 0.0)
+
+    densities = [_td(r) for r in records]
+    # Agnostic candidacy: a rhythmic candidate is any stem whose transient physics
+    # clear the floor — decided by transient_density, not by instrument identity.
+    candidates = [r for r in records if _td(r) >= c["transient_floor"]]
+    if not candidates:
+        ev.append("No stem clears the transient floor — no defined rhythmic element present.")
+        return _clamp(c["no_beat"]), ev
+
+    dominant = max(candidates, key=_td)
+    dom_td = _td(dominant)
+    median_td = statistics.median(densities) if densities else 0.0
+
+    score = c["baseline"]
+    ev.append(f"Rhythmic fingerprint present: '{dominant['name']}' punches hardest (transient_density {dom_td:.2f}).")
+
+    # Distinctness/dominance: how far the top candidate stands above the bed.
+    lift = max(0.0, dom_td - median_td)
+    if lift > 0:
+        score += lift * c["dominance_coeff"]
+        ev.append(f"It stands out from the bed (+{lift:.2f} over the track median).")
+    else:
+        ev.append("It does not stand out above the track median — the beat blends into the bed.")
+
+    # Definition: punchy, defined hits vs a smeared transient.
+    dom_crest = _crest(dominant)
+    if dom_crest >= c["definition_crest_db"]:
+        score += c["definition_bonus"]
+        ev.append(f"Hits are well-defined (crest {dom_crest:.1f} dB).")
+
+    # Foreground/unmasked: an undeniable fingerprint is heard, forward and clear.
+    masked = any(
+        dominant["name"] in e.get("elements", []) and e.get("classification") == "bad_masking"
+        for e in events
+    )
+    forward = dominant["depth_default"] in FORWARD and dominant["perceptual_role"] in {"heard", "structural"}
+    if forward and not masked:
+        score += c["foreground_bonus"]
+        ev.append("The fingerprint is foregrounded and unmasked — undeniable.")
+    else:
+        if not forward:
+            score -= c["buried_penalty"]
+            ev.append("The fingerprint is buried (felt/background) — present but not undeniable.")
+        if masked:
+            score -= c["masked_penalty"]
+            ev.append("The fingerprint is masked by a forward element — its identity is challenged.")
+
     return _clamp(score), ev

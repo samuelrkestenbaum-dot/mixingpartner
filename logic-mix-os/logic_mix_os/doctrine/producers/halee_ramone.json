@@ -99,7 +99,8 @@
       "depth_hierarchy_score": 1.0,
       "section_contrast_score": 1.0,
       "static_mix_score": 1.0,
-      "dynamic_mix_score": 0.8
+      "dynamic_mix_score": 0.8,
+      "beat_identity_score": 0
     },
     "baselines": {
       "halee": 86.0,
@@ -154,6 +155,17 @@
         "width_coeff": 140,
         "bright_coeff": 140,
         "lift_fail_penalty": 10
+      },
+      "beat_identity": {
+        "no_beat": 20.0,
+        "transient_floor": 0.35,
+        "baseline": 50.0,
+        "dominance_coeff": 40,
+        "definition_crest_db": 12.0,
+        "definition_bonus": 12,
+        "foreground_bonus": 18,
+        "buried_penalty": 14,
+        "masked_penalty": 12
       }
     }
   },
