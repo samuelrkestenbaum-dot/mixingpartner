@@ -43,34 +43,55 @@
 ## Deferred (follow-up packets)
 
 - **★★ THE TIMBALAND SUB-ARC (P-032.x) IS UNDERWAY — P-032e ✓ (beat_identity —
-  the front-loaded CRUX) + P-032a ✓ (negative_space) LANDED.** The user
-  front-loaded the hardest/riskiest axis (P-032e) to de-risk the whole sub-arc;
-  P-032a then took the LOWEST-RISK remaining axis. Both add a new
-  producer-agnostic doctrine axis weight-0 for halee_ramone → byte-identical,
-  proving the P-029 architecture is EXTENSIBLE, not just parameterizable. **The
-  engine now carries 9 component axes** (7 original + beat_identity +
-  negative_space). Receipts: `build-os/receipts/P-032e-beat-identity.md`,
-  `build-os/receipts/P-032a-negative-space.md`. **Carry-forwards:**
-  - **★ NEXT IN THE SUB-ARC — P-032b (groove_coherence live-wire) — the RISKIER
-    packet.** It relocates `analyze_groove` to BEFORE `score_doctrine` and threads
-    it in (the P-016 live-wire lesson: an evidence-gated signal is only live if
-    computed BEFORE its consumer — needs a no-re-run live-wire test asserting on
-    real `analyze()` output), THEN adds the groove-coherence scorer. This is where
-    onset-regularity/IOI (deferred from P-032e AND P-032a) finally reaches
-    doctrine. Sub-arc sequence: **P-032e ✓ → P-032a ✓** → P-032b (groove_coherence
-    live-wire — NEXT) → P-032c (low_end_motion/pocket) → P-032d (rhythmic_surprise,
-    weak-form) → P-032f (vocal-role refinement) → P-032g (loop static-vs-iconic
-    context) → **[fold P-031 confidence here]** → P-032h (author `timbaland.json`,
-    the first non-byte-identical output) → P-032i (Timbaland-vs-Halee/Ramone
-    differential proof). P-030 (rename dims) orthogonal/last.
-  - **★ NEW LIVENESS-DOCSTRING OVERCLAIM (non-blocking, from P-032a — reviewer):**
+  the front-loaded CRUX) + P-032a ✓ (negative_space) + P-032b ✓
+  (groove_coherence LIVE-WIRE — the RISKIEST packet so far, triple-verified: qa
+  GREEN + reviewer PASS + a 3-skeptic adversarial pass, all claims HELD)
+  LANDED.** All three add a new producer-agnostic doctrine axis weight-0 for
+  halee_ramone → byte-identical, proving the P-029 architecture is EXTENSIBLE.
+  **The engine now carries 10 component axes** (7 original + beat_identity +
+  negative_space + groove_coherence), and the onset/IOI signal is now LIVE at
+  doctrine time (`analyze_groove` relocated BEFORE `score_doctrine`, computed
+  exactly ONCE, same object reused in `expanded["groove"]`). Receipts:
+  `build-os/receipts/P-032e-beat-identity.md`,
+  `build-os/receipts/P-032a-negative-space.md`,
+  `build-os/receipts/P-032b-groove-coherence-livewire.md`. **Carry-forwards:**
+  - **★ RESEQUENCED REMAINING ORDER (from the read-only scoping workflow,
+    evidence-backed — recorded so the next orchestrator needn't re-derive):**
+    **P-032d (rhythmic_surprise — NEXT, smallest/safest: one input, section
+    transient_density variance, pure additive) → P-032c (low_end_motion — pure
+    additive, 5 in-arg inputs; distinctness-vs-static_mix needs care: POSITIVE
+    relationship vs hygiene penalty) → P-032g (loop static-vs-iconic — medium:
+    scorer + creative.py promotion gate behind a profile flag; SECOND
+    byte-identity surface = creative variant/promotion scores) → P-032f
+    (vocal-role — HIGH risk, LAST; ★ USER-GATED: needs explicit go on the
+    "masked chop/stack = acceptable-blend" aesthetic rule + the conservative
+    default protect-as-lead-when-uncertain)** → **[fold P-031 confidence
+    here]** → P-032h (author `timbaland.json`, the first non-byte-identical
+    output) → P-032i (Timbaland-vs-Halee/Ramone differential proof). P-030
+    (rename dims) orthogonal/last.
+  - **★ SCOPING-WORKFLOW FINDINGS for the remaining axes (evidence-backed):**
+    P-032d and P-032c need ZERO new plumbing (`score_doctrine` already receives
+    everything they read); P-032g's `creative.py` gate must default to current
+    behavior (the halee_ramone promotion fires exactly as today) and needs the
+    creative-scores byte-identity surface; P-032f must NOT edit
+    `role_classifier.py` in place (new `vocal_type_classifier.py` + an additive
+    record field), must cap at `hook_candidate` (no recurrence signal at
+    doctrine time), and defaults to protect-as-lead when uncertain.
+  - **★ NEW (P-032b adversarial skeptic — cosmetic): shared mutable groove
+    dict.** `result.expanded["groove"]` IS the same dict passed to
+    `score_doctrine` (shared mutable state); nothing mutates it today
+    (deepcopy-proven), but a FUTURE doctrine change mutating its `groove` arg
+    would silently corrupt the expanded artifact. Consider a defensive copy or
+    a read-only test pin in a future doctrine-touching packet.
+  - **★ LIVENESS-DOCSTRING OVERCLAIM (non-blocking, from P-032a — reviewer):**
     the two `liveness` test docstrings in `tests/test_negative_space.py` (~lines
     536-540, 553-557) OVERCLAIM — a general hardcoded-constant sabotage is actually
     caught by the *discrimination* tests, not the liveness tests themselves (the
     direction test reads the score from the SAME reference dict a constant poisons).
-    The SAME imprecision exists in the already-closed `tests/test_beat_identity.py`.
-    **Cosmetic only** (the guard SET as a whole is sound) — fold a one-line
-    docstring fix for BOTH files into a future doctrine-touching packet.
+    The SAME imprecision exists in the already-closed `tests/test_beat_identity.py`
+    — and CHECK `tests/test_groove_coherence.py` for the same pattern when folding
+    the fix. **Cosmetic only** (the guard SET as a whole is sound) — fold a
+    one-line docstring fix into a future doctrine-touching packet.
   - **★ DOCSTRING DRIFT (non-blocking, from P-032e):** `_beat_identity`'s docstring
     says candidacy is "optionally corroborated by crest/spectral_flatness" but the
     body reads only `crest_factor_db`, never `spectral_flatness`. The spec made
@@ -79,13 +100,12 @@
   - **★ HONEST DEFERRALS baked into the sub-arc (documented in-code as P-014-style
     boundaries, NOT faked — do NOT let a later packet quietly claim them):** from
     P-032e — (1) fingerprint TYPING (mouth-sound/tabla/synth-knock), not measurable
-    on exported stems; (2) onset REGULARITY / IOI — real but not visible at
-    `score_doctrine` time (post-doctrine groove analyzer) → **P-032b**'s live-wire;
-    (3) "more undeniable after a move" — needs a before/after render, plan-only v1
-    out of scope. From P-032a — sample-level **inter-onset silence gaps** (space
-    between individual hits) need onset timing, not visible at `score_doctrine`
-    time → **P-032b**'s groove live-wire; negative_space works at the
-    section-aggregate grain only.
+    on exported stems; (2) onset REGULARITY / IOI — **✓ RESOLVED by P-032b** (the
+    groove live-wire landed; the signal now reaches doctrine via
+    `groove_coherence`); (3) "more undeniable after a move" — needs a before/after
+    render, plan-only v1 out of scope. From P-032a — sample-level **inter-onset
+    silence gaps**: the groove object is now visible at doctrine time (P-032b),
+    but `negative_space` itself still works at the section-aggregate grain only.
 
 - **★★ THE ACTIVE ROADMAP IS THE PRODUCER-AGNOSTIC EPIC — P-025 ✓ (foundation) +
   P-026 ✓ (creative sourced) + P-027 ✓ (governance sourced + WIDENED) + P-028 ✓
@@ -212,8 +232,9 @@
   SECOND live profile is loaded per call, keep the aliasing discipline in mind — do
   NOT mutate a loaded profile's structures in place. The full structural removal of
   the singleton is not yet done. **★ REINFORCED by
-  P-032e AND P-032a:** both new scorers (`_beat_identity`, `_negative_space`) only
-  READ `doctrine[...]` and never mutate the profile, each guarded by a no-aliasing
+  P-032e, P-032a AND P-032b:** all three new scorers (`_beat_identity`,
+  `_negative_space`, `_groove_coherence`) only READ `doctrine[...]` /
+  `groove[...]` and never mutate the profile, each guarded by a no-aliasing
   test — so the per-module copy-before-mutate discipline still holds. When a SECOND
   live profile is loaded per call (P-032h authors `timbaland.json`), do NOT mutate a
   loaded profile's structures in place.
@@ -493,6 +514,56 @@
 - Net-new **event-logging** producers remain behind the product decision.
 
 ## Done (resolved)
+
+- **★★ P-032b DONE — the THIRD new producer-agnostic doctrine axis
+  `groove_coherence` + the `analyze_groove` LIVE-WIRE relocation land
+  byte-identically for halee_ramone; the RISKIEST packet of the sub-arc so far
+  (moved code, not just added), TRIPLE-VERIFIED (qa GREEN + reviewer PASS +
+  3-skeptic adversarial pass, all claims HELD)**
+  (`build-os/receipts/P-032b-groove-coherence-livewire.md`). `pipeline.py`:
+  `analyze_groove` relocated to BEFORE `score_doctrine` (pipeline.py:180 vs
+  :183), the groove threaded in via `score_doctrine(..., groove: Optional[Dict]
+  = None)` (keyword default None — every existing caller byte-identical), and
+  the SAME groove object REUSED in `result.expanded["groove"]` (:208) —
+  computed exactly ONCE (the P-016 lesson made structural; exactly one
+  `analyze_groove(` call site, spy-counted). New agnostic scorer
+  `_groove_coherence(groove, doctrine)` is the 10th doctrine component —
+  constants `neutral 45.0` (absence neither rewarded nor punished) / `baseline
+  15.0` / `regularity_scale 85.0` (linear map: regularity 0 → 15, 1.0 → 100;
+  dense fixture 0.989 → 99.1); honest naming test-guarded
+  (regularity/consistency scored as a PROXY for coherence, never "tighter is
+  better" — the agnostic layer stays neutral, the producer decides the
+  weighting). **Byte-identical INDEPENDENT proof** (qa's own capture, not
+  builder pins): all 9 pre-existing component scores + overall +
+  `expanded["groove"]`, all 3 fixtures → diff EMPTY (overalls 73.8 / 70.7 /
+  74.3); regression 68/68, 0 warnings, 0 critical. Liveness + sabotage pass
+  (gc(0.989)=99.1, neutral 45.0; `groove=None` collapses 99.1 → 45.0).
+  **Reviewer verified the relocation crux by INJECTED REGRESSIONS** in an
+  isolated worktree (a second `analyze_groove` call →
+  `test_analyze_groove_called_exactly_once` red 2==1; `groove=None` threading →
+  `test_score_doctrine_receives_the_real_groove` red 45.0 ≠ 99.1 — both guards
+  genuinely load-bearing); backward-compat + None-handling (`is None` guard — a
+  real 0.0 → 15.0, not swallowed; no KeyError path) + guard updates legitimate
+  (negative_space now index 8, `keys[:8]` anchor intact). **3-skeptic
+  adversarial pass (all claims HELD):** (1) float-determinism bit-identical,
+  `gc*0==0.0` exact, `nan*0` poisoning UNREACHABLE (`_clamp` neutralizes
+  non-finites; `analyze_groove` emits only None or float[0,1]), all 8 non-groove
+  `expanded` keys byte-identical; (2) call-count 1 across ALL branches
+  (ref-delta, creative, memory), `is`-identity of the reused groove, nothing
+  mutates it on the real path; (3) every None/empty/missing-key case → clamped
+  neutral 45.0, boundaries clamp to [0,100], out-of-contract crash inputs
+  proven UNREACHABLE from the sole producer. Single commit `e9f793f` (HEAD IS
+  Commit-1 → green in isolation by construction = 433; suite also verified
+  independently at base `bd98777` = 413 in a throwaway worktree); suite 413 →
+  433 (+20); safety grep NONE FOUND (582 insertions / 13 deletions, 9 in-packet
+  files). **Codex NOT available — single-model review.** **★★ MILESTONE — the
+  engine now carries 10 component axes; the onset/IOI signal is now LIVE at
+  doctrine time, unblocking the axes that need rhythm timing.** **P-032b
+  local-only** (`e9f793f` atop set-active `bd98777` on the dev branch), not
+  pushed/merged (merge base still `e79426a` = PR #16). NEW cosmetic residue
+  carried to Deferred: the shared mutable groove dict (`expanded["groove"]` IS
+  the doctrine arg). Next per the resequenced order: **P-032d
+  (rhythmic_surprise)**.
 
 - **★★ P-032a DONE — the SECOND new producer-agnostic doctrine axis
   `negative_space` (absolute arrangement room/sparsity) lands byte-identically for

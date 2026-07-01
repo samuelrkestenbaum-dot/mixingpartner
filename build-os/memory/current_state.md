@@ -60,7 +60,13 @@
     producer-agnostic doctrine axis `negative_space`, absolute arrangement
     room/sparsity, weight-0 for halee_ramone so byte-identical), local-only, base
     `6d34c30`, atop the set-active `836bd22`. P-032a's parent chain: `3edcd9c` →
-    `836bd22` (active-packet confirmation) → `8a2892b` (P-032e close) → `9d6764e`.**
+    `836bd22` (active-packet confirmation) → `8a2892b` (P-032e close) → `9d6764e`.
+    ★ ON TOP of P-032a, the dev branch now ALSO carries P-032b (`e9f793f`, single
+    product commit — the THIRD new producer-agnostic doctrine axis
+    `groove_coherence` PLUS the `analyze_groove` LIVE-WIRE relocation to before
+    `score_doctrine`, weight-0 for halee_ramone so byte-identical), local-only,
+    atop the set-active `bd98777`. P-032b's parent chain: `e9f793f` → `bd98777`
+    (active-packet confirmation) → `3e991a5` (P-032a close) → `3edcd9c`.**
     The base for MERGE decisions is still `e79426a` = PR #16 (nothing since P-025
     has been merged).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
@@ -69,22 +75,111 @@
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-01, P-032a):** suite **413 passed** (0 failed /
-  skipped / warnings; green even under `-W error`); regression **68/68** (0
-  critical / 0 warnings) — UNCHANGED (P-032a default path is byte-identical;
-  negative_space weight-0 for halee_ramone). Commit-1 (`3edcd9c`) green in isolation
-  = 413 (HEAD IS Commit-1 — single-commit packet — so the tip is the isolation
-  point). (Prior baseline was 396 at P-032e; P-032a added +17 —
-  `test_negative_space.py` (17): byte-identical (0 mismatches / 27 comparisons; all
-  3 fixtures + overall unchanged + 68/68) + value-discrimination (incl. the
-  distinctness-from-dynamic_mix guard) + liveness (load-bearing both ways) +
-  no-aliasing; 3 existing guards updated (`test_producer_profile.py` scorers-set,
-  `test_doctrine_profile_sourced.py` `_WEIGHTS` value-pin, `test_beat_identity.py`
-  beat_identity now index 7 not tail). Earlier: 384 → 396 at P-032e; 370 → 384 at
-  P-029; 351 → 370 at P-028; 331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at
-  P-025.)
+- **Green baseline (verified 2026-07-01, P-032b):** suite **433 passed** (0 failed /
+  skipped); regression **68/68** (0 critical / 0 warnings) — UNCHANGED (P-032b
+  default path is byte-identical; groove_coherence weight-0 for halee_ramone).
+  Commit-1 (`e9f793f`) green in isolation = 433 (HEAD IS Commit-1 — single-commit
+  packet — so the tip is the isolation point; the 413 base was ALSO independently
+  verified at `bd98777` in a throwaway worktree). (Prior baseline was 413 at
+  P-032a; P-032b added +20 — `test_groove_coherence.py`: byte-identical
+  INDEPENDENT capture (all 9 pre-existing component scores + overall +
+  `expanded["groove"]`, all 3 fixtures → diff EMPTY; 68/68 unchanged) + the P-016
+  no-re-run guard (`analyze_groove` called exactly ONCE, spy-counted) +
+  real-groove-threading proof + value-discrimination + liveness/sabotage +
+  no-aliasing + honest-naming; 3 pre-existing pins updated
+  (`test_producer_profile.py` scorers-set, `test_doctrine_profile_sourced.py`
+  `_WEIGHTS` value-pin, `test_negative_space.py` negative_space now index 8 with
+  the `keys[:8]` anchor intact). Earlier: 396 → 413 at P-032a; 384 → 396 at
+  P-032e; 370 → 384 at P-029; 351 → 370 at P-028; 331 → 351 at P-027; 319 → 331
+  at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★ P-032b LANDS THE THIRD NEW PRODUCER-AGNOSTIC DOCTRINE AXIS —
+  `groove_coherence` — AND THE `analyze_groove` LIVE-WIRE, BYTE-IDENTICALLY FOR
+  halee_ramone; the RISKIEST packet of the sub-arc so far (moved code, not just
+  added), TRIPLE-VERIFIED (qa GREEN + reviewer PASS + a 3-skeptic adversarial
+  pass with ALL claims HELD).** This is the packet where onset-regularity/IOI —
+  deferred from P-032e AND P-032a — finally reached doctrine. **The doctrine
+  engine now carries 10 component axes (7 original + beat_identity +
+  negative_space + groove_coherence), all three new axes weight-0 for
+  halee_ramone (so output is BYTE-IDENTICAL). Last-closed = P-032b.**
+  - **What P-032b shipped — the LIVE-WIRE (the P-016 lesson made structural):**
+    `pipeline.py` relocates `analyze_groove` to BEFORE `score_doctrine`
+    (pipeline.py:180 vs :183), threads `groove=groove` into
+    `score_doctrine(..., groove: Optional[Dict] = None)` (keyword, default None —
+    every existing caller stays byte-identical), and REUSES the exact same
+    groove object in `result.expanded["groove"]` (:208) — computed exactly ONCE
+    (exactly one `analyze_groove(` call site; spy-counted no-re-run guard). Plus
+    the new agnostic scorer `_groove_coherence(groove, doctrine)` as the 10th
+    doctrine component.
+  - **★ BYTE-IDENTICAL (INDEPENDENT — qa's own capture, not builder pins):** all
+    9 pre-existing component scores + overall + `expanded["groove"]`, all 3
+    fixtures → diff EMPTY (overalls 73.8 / 70.7 / 74.3 unchanged); regression
+    **68/68, 0 critical, 0 warnings — UNCHANGED**.
+  - **★ LIVENESS + SABOTAGE (load-bearing — reviewer-verified by INJECTED
+    REGRESSIONS in an isolated worktree):** gc(0.989) = 99.1, neutral 45.0;
+    re-adding a second `analyze_groove` call turns
+    `test_analyze_groove_called_exactly_once` red (2==1); threading `groove=None`
+    turns `test_score_doctrine_receives_the_real_groove` red (45.0 ≠ 99.1) —
+    both guards genuinely load-bearing. None-handling: an `is None` guard, so a
+    real 0.0 regularity → 15.0, not swallowed; no KeyError path. Guard updates
+    legitimate (negative_space now index 8 with the `keys[:8]` anchor intact).
+  - **★ ADVERSARIAL VERIFICATION (3 independent skeptics — ALL claims HELD):**
+    (1) *byte-identical/float-determinism* — 9-component recomputation
+    bit-identical on all fixtures; `gc*0 == 0.0` exactly; the `nan*0` poisoning
+    path is UNREACHABLE (`_clamp` neutralizes non-finites; `analyze_groove` can
+    only emit None or float[0,1]); relocation side-effects — all 8 non-groove
+    `expanded` keys byte-identical. (2) *compute-once/threading* — call-count 1
+    across ALL branches (ref-delta, creative, memory); `expanded["groove"]` IS
+    the object passed to doctrine (`is`-identity); nothing mutates it on the
+    real path; the `groove=None` sabotage collapses 99.1 → 45.0. (3) *None/edge
+    robustness* — every None/empty/missing-key case → clamped neutral 45.0;
+    boundaries clamp to [0,100]; out-of-contract crash inputs (strings/lists)
+    proven UNREACHABLE from the sole producer.
+  - **★ HONEST NAMING (test-guarded, deliberately NOT overclaimed):**
+    `overall_regularity` measures rhythmic tightness/CONSISTENCY —
+    regularity/consistency scored as a **PROXY for coherence**, never "tighter
+    is better"; the agnostic layer stays neutral and the *producer* decides the
+    weighting. Constants (all in `doctrine.scorers.groove_coherence`):
+    `neutral 45.0` (absence neither rewarded nor punished), `baseline 15.0`,
+    `regularity_scale 85.0` (linear map: regularity 0 → 15, 1.0 → 100; dense
+    fixture 0.989 → 99.1).
+  - **Single commit `e9f793f`** (atop set-active `bd98777`, branch
+    `claude/logic-mix-os-hardening-12-7hbeh1` — HEAD IS Commit-1, green in
+    isolation by construction). Suite **413 → 433 passed** (+20; 0 failed /
+    skipped; verified at HEAD AND independently at base `bd98777` in a throwaway
+    worktree); regression **68/68 — UNCHANGED**. Safety grep NONE FOUND (582
+    insertions / 13 deletions, 9 in-packet files). qa **GREEN**; reviewer
+    **PASS (no must-fix)**. **Codex NOT available — single-model review.**
+    **P-032b local-only**, not pushed/merged (merge base still `e79426a` =
+    PR #16).
+  - **★ NEW COSMETIC RESIDUE (adversarial skeptic):** `result.expanded["groove"]`
+    IS the same dict passed to `score_doctrine` (shared mutable state); nothing
+    mutates it today (deepcopy-proven), but a FUTURE doctrine change mutating its
+    `groove` arg would silently corrupt the expanded artifact — consider a
+    defensive copy or a read-only test pin in a future doctrine-touching packet.
+  - **★★ MILESTONE — the engine now carries 10 component axes** (7 original +
+    beat_identity + negative_space + groove_coherence), all three new ones
+    weight-0 byte-identical for the reference producer. **The onset/IOI signal
+    is now LIVE at doctrine time — unblocking the axes that need rhythm
+    timing.**
+  - **★ TIMBALAND SUB-ARC (P-032.x) — RESEQUENCED REMAINING ORDER (from the
+    read-only scoping workflow, evidence-backed):** **P-032e ✓ → P-032a ✓ →
+    P-032b ✓ → P-032d (rhythmic_surprise — NEXT, smallest/safest: one input,
+    section transient_density variance, pure additive, zero new plumbing) →
+    P-032c (low_end_motion — pure additive, 5 in-arg inputs;
+    distinctness-vs-static_mix needs care: POSITIVE relationship vs hygiene
+    penalty) → P-032g (loop static-vs-iconic — medium: scorer + creative.py
+    promotion gate behind a profile flag; SECOND byte-identity surface =
+    creative variant/promotion scores) → P-032f (vocal-role — HIGH risk, LAST;
+    ★ USER-GATED: needs explicit go on the "masked chop/stack =
+    acceptable-blend" aesthetic rule + the conservative default
+    protect-as-lead-when-uncertain)** → **[fold P-031 confidence here]** →
+    P-032h (author `timbaland.json`, first non-byte-identical output) → P-032i
+    (Timbaland-vs-Halee/Ramone differential proof). P-030 (rename dims)
+    orthogonal/last. Receipt:
+    `build-os/receipts/P-032b-groove-coherence-livewire.md`.
 
 - **★★ P-032a LANDS THE SECOND NEW PRODUCER-AGNOSTIC DOCTRINE AXIS —
   `negative_space` — BYTE-IDENTICALLY FOR halee_ramone; the Timbaland sub-arc
