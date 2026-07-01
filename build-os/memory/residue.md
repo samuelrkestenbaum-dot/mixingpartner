@@ -47,57 +47,73 @@
   (groove_coherence LIVE-WIRE — the RISKIEST packet so far, triple-verified) +
   P-032d ✓ (rhythmic_surprise, weak form) + P-032c ✓ (low_end_motion — the
   low-end POCKET, dual-green vs the USER'S explicit acceptance invariant;
-  reviewer AST + 20k-configuration adversarial proof) LANDED.** All five add a
+  reviewer AST + 20k-configuration adversarial proof) + P-032g ✓
+  (loop_context + protect_iconic_loops — THE HINGE: sixth axis + the FIRST
+  profile-decided creative gate, DUAL byte-identical — doctrine AND creative,
+  the USER-MANDATED surface; the status→score map lives in the profile JSON —
+  even the axis's polarity is profile-authored) LANDED.** All six add a
   new producer-agnostic doctrine axis weight-0 for halee_ramone →
   byte-identical, proving the P-029 architecture is EXTENSIBLE. **The engine
-  now carries 12 component axes** (7 original + beat_identity + negative_space
-  + groove_coherence + rhythmic_surprise + low_end_motion) — 5 of the 7
-  Timbaland "weight up" axes landed, all
+  now carries 13 component axes** (7 original + beat_identity + negative_space
+  + groove_coherence + rhythmic_surprise + low_end_motion + loop_context) —
+  6 of the 7 Timbaland "weight up" axes landed, all
   append-last/weight-0/profile-sourced, zero plumbing debt; the onset/IOI
   signal is LIVE at doctrine time (`analyze_groove` relocated BEFORE
   `score_doctrine`, computed exactly ONCE, same object reused in
-  `expanded["groove"]`). Receipts:
+  `expanded["groove"]`); the reusable profile-decided-creative-gate pattern is
+  established (P-032f/P-032h will reuse it). Receipts:
   `build-os/receipts/P-032e-beat-identity.md`,
   `build-os/receipts/P-032a-negative-space.md`,
   `build-os/receipts/P-032b-groove-coherence-livewire.md`,
   `build-os/receipts/P-032d-rhythmic-surprise.md`,
-  `build-os/receipts/P-032c-low-end-motion.md`. **Carry-forwards:**
+  `build-os/receipts/P-032c-low-end-motion.md`,
+  `build-os/receipts/P-032g-loop-context-hinge.md`. **Carry-forwards:**
   - **★ RESEQUENCED REMAINING ORDER (from the read-only scoping workflow,
     evidence-backed — recorded so the next orchestrator needn't re-derive):**
-    **P-032d ✓ → P-032c ✓ (low_end_motion — DONE; the user's acceptance
-    invariant proven: clean relationship BEATS quantity, blob loophole CLOSED,
-    presence leakage FENCED, static_mix DISTINCT) → P-032g (loop
-    static-vs-iconic — THE HINGE, NEXT; medium: scorer + creative.py
-    promotion gate behind a profile flag; see the USER-MANDATED staging notes
-    below) → P-032f
-    (vocal-role — HIGH risk, LAST; ★ USER-GATED: needs explicit go on the
-    "masked chop/stack = acceptable-blend" aesthetic rule + the conservative
-    default protect-as-lead-when-uncertain)** → **[fold P-031 confidence
-    here]** → P-032h (author `timbaland.json`, the first non-byte-identical
-    output) → P-032i (Timbaland-vs-Halee/Ramone differential proof). P-030
-    (rename dims) orthogonal/last.
-  - **★ P-032g STAGING NOTES (USER-MANDATED, BINDING — recorded at P-032c
-    close):** the SECOND byte-identity surface is **NOT optional** — qa must
-    prove BOTH (a) doctrine overall byte-identical AND (b) **creative variant
-    scores + `loop_deconstruct` promotion firing behavior byte-identical under
-    Halee/Ramone defaults** (the risk is the recommendation engine subtly
-    changing behavior before `timbaland.json` turns the interpretation on).
-    Engine language must be OBSERVATIONAL (dominant+no-evolution = static;
-    dominant+groove/fingerprint-function = iconic) with ZERO judgment words;
-    the profile decides deconstruct-vs-protect via a flag defaulting to
-    CURRENT behavior. Scoping cautions: Commit-1 = the pure additive
-    `_loop_context` scorer, byte-identical; Commit-2 = the `creative.py`
-    promotion gate behind a `protect_iconic_loops` profile flag defaulting
-    False/current-behavior; do NOT modify the `_halee` loop_foregrounded
-    penalty coefficient; iconic must NOT override a masked lead.
+    **P-032d ✓ → P-032c ✓ → P-032g ✓ (loop_context + protect_iconic_loops —
+    THE HINGE, DONE; dual byte-identity proven — doctrine AND creative; the
+    reusable profile-decided-gate pattern established) → P-032f
+    (vocal-role — HIGH risk, NEXT AND LAST; ★ USER-GATED: needs explicit go
+    on the "masked chop/stack = acceptable-blend" aesthetic rule + the
+    conservative default protect-as-lead-when-uncertain — see the P-032f
+    staging notes below; do NOT open without the user's explicit go)** →
+    **[fold P-031 confidence here]** → P-032h (author `timbaland.json`, the
+    first non-byte-identical output) → P-032i (Timbaland-vs-Halee/Ramone
+    differential proof). P-030 (rename dims) orthogonal/last.
+  - **★ P-032g STAGING NOTES — ✓ DISCHARGED IN FULL (P-032g close):** the
+    USER-MANDATED dual byte-identity surface was PROVEN — (a) doctrine 0
+    mismatches × 3 fixtures AND (b) creative full `result.creative` sorted-key
+    JSON base vs HEAD → EMPTY diff / `cmp` byte-identical; engine language
+    OBSERVATIONAL (zero judgment words across all 7 reachable statuses);
+    `protect_iconic_loops` is a REQUIRED profile field with halee_ramone=false
+    = current behavior; the `_halee` loop_foregrounded coefficient UNTOUCHED
+    (=6, promotion table verbatim, `test_packet_cautions_untouched`); iconic
+    structurally cannot override a masked lead (the Ramone gate fires FIRST).
+  - **★ P-032f STAGING NOTES (USER-GATED — do NOT open without explicit user
+    go; recorded at P-032g close):** the orchestrator must PRESENT to the USER
+    for explicit go BEFORE any building: **(a) the aesthetic rule** — masking
+    of a chopped/stuttered/adlib vocal or background stack is ACCEPTABLE-BLEND
+    (context-dependent), flipping masking from fault to accepted for a whole
+    vocal class; **(b) the conservative default** — when vocal_type is
+    UNCERTAIN, protect-as-lead (never "percussion, masking ok"); **(c) the
+    blast radius** — new `vocal_type_classifier.py` (NOT in-place edits to
+    `role_classifier.py`), additive record field, interacts with 3 live
+    scorers (`_ramone` / `_vocal_centrality` / `_static_mix`), caps at
+    `hook_candidate` (no recurrence signal at doctrine time). The reusable
+    P-032g gate pattern (a profile-decided creative gate on a shared detection
+    basis) applies.
   - **★ SCOPING-WORKFLOW FINDINGS for the remaining axes (evidence-backed):**
     P-032c ✓ CONFIRMED in practice (ZERO new plumbing; kick/sub temporal
     interlock + low-end motif + per-section true-sub movement landed as
     DEFERRED honest docstring boundaries; physics primary — `identity_family`
     a corroborating tie-break only, `instrument_identity` never read);
-    P-032g's `creative.py` gate must default to current
-    behavior (the halee_ramone promotion fires exactly as today) and needs the
-    creative-scores byte-identity surface; P-032f must NOT edit
+    P-032g ✓ CONFIRMED in practice (the `creative.py` gate defaults to
+    current behavior — halee_ramone declares protect_iconic_loops=false and
+    the promotion fires exactly as today — and the creative-scores
+    byte-identity surface was proven EMPTY-diff/`cmp`-identical;
+    cultural/recognizability iconic-ness + per-loop bar-level variation +
+    onset-sequence needs landed as DEFERRED honest boundaries, test-guarded
+    out of evidence); P-032f must NOT edit
     `role_classifier.py` in place (new `vocal_type_classifier.py` + an additive
     record field), must cap at `hook_candidate` (no recurrence signal at
     doctrine time), and defaults to protect-as-lead when uncertain.
@@ -119,8 +135,15 @@
     `timbaland.json` weights (P-032h). (2) the defensive `r.get("metrics",{})`
     None edge in the scorer — defensive-only; same future-doctrine-packet
     ride-along.
+  - **★ NEW (P-032g — cosmetic ride-alongs):** (1) the creative gate keys on
+    the literal promotion kind `"loop_deconstruct"` (`creative.py:232`) — if
+    promotion kinds ever generalize, move the gating into the table row; (2)
+    the `dominant_unassessed` docstring is slightly loose (per-metric, not
+    per-section); (3) `read_loop_context` shares the defensive None-value edge
+    family. All defensive/cosmetic — same future-doctrine-packet ride-along
+    bucket.
   - **★ LIVENESS-DOCSTRING OVERCLAIM (non-blocking — reviewer; NOW A
-    FIVE-FILE FAMILY, fold ONE sweep):** the `liveness` test docstrings OVERCLAIM — a
+    SIX-FILE FAMILY, fold ONE sweep):** the `liveness` test docstrings OVERCLAIM — a
     general hardcoded-constant sabotage is actually caught by the
     *discrimination* tests, not the liveness tests themselves (the direction
     test reads the score from the SAME reference dict a constant poisons; a
@@ -128,10 +151,11 @@
     `tests/test_negative_space.py` (~lines 536-540, 553-557, from P-032a);
     `tests/test_beat_identity.py` (same imprecision); **NEW from P-032d:**
     `tests/test_rhythmic_surprise.py::test_liveness_direction_tracks_the_rhythmic_surprise_score`;
-    **NEW from P-032c:** `tests/test_low_end_motion.py:518-526` — and CHECK
+    **NEW from P-032c:** `tests/test_low_end_motion.py:518-526`; **NEW from
+    P-032g:** `tests/test_loop_context.py:566-570` — and CHECK
     `tests/test_groove_coherence.py` for the same pattern when
     folding the fix. **Cosmetic only** (the guard SET as a whole is sound) —
-    fold ONE docstring sweep across ALL FIVE files into a future
+    fold ONE docstring sweep across ALL SIX files into a future
     doctrine-touching packet.
   - **★ DOCSTRING DRIFT (non-blocking, from P-032e):** `_beat_identity`'s docstring
     says candidacy is "optionally corroborated by crest/spectral_flatness" but the
@@ -147,6 +171,10 @@
     render, plan-only v1 out of scope. From P-032a — sample-level **inter-onset
     silence gaps**: the groove object is now visible at doctrine time (P-032b),
     but `negative_space` itself still works at the section-aggregate grain only.
+    From P-032g — cultural/recognizability iconic-ness (needs
+    provenance/manifest — the acoustic proxy is what ships); per-loop
+    bar-level variation; onset-sequence needs — all test-guarded out of
+    evidence.
 
 - **★★ THE ACTIVE ROADMAP IS THE PRODUCER-AGNOSTIC EPIC — P-025 ✓ (foundation) +
   P-026 ✓ (creative sourced) + P-027 ✓ (governance sourced + WIDENED) + P-028 ✓

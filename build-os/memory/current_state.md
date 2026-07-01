@@ -26,7 +26,9 @@
 - The landed axes under this doctrine: beat_identity = fingerprint;
   negative_space = rhythmic absence; groove_coherence = pocket stability;
   rhythmic_surprise = movement/interruption; low_end_motion = kick/sub/room
-  relationship (✓ landed, P-032c); loop_context = static-vs-iconic hinge (next).
+  relationship (✓ landed, P-032c); loop_context = static-vs-iconic hinge
+  (✓ landed, P-032g — THE HINGE: detection in the engine, the status→score map
+  + the `protect_iconic_loops` gate decision in profile JSON).
 - This is not a Timbaland profile being built — it is a producer-profile
   FRAMEWORK emerging under the Timbaland work.
 
@@ -108,7 +110,15 @@
     score), weight-0 for halee_ramone so byte-identical), local-only, atop the
     build-os doctrine pin `b7e116a` and the set-active `fe5f6b4`. P-032c's
     parent chain: `ab14ac7` → `b7e116a` (doctrine pin, build-os only) →
-    `fe5f6b4` (active-packet confirmation) → `89e7106` (P-032d close).**
+    `fe5f6b4` (active-packet confirmation) → `89e7106` (P-032d close).
+    ★ ON TOP of P-032c, the dev branch now ALSO carries P-032g (`835e907` +
+    `e9e804d`, two product commits — the SIXTH new producer-agnostic doctrine
+    axis `loop_context` (static-vs-iconic — THE HINGE, 13th component) + the
+    FIRST profile-decided creative gate `protect_iconic_loops` (REQUIRED
+    profile field; halee_ramone=false = current behavior), DUAL byte-identical
+    for halee_ramone — doctrine AND creative), local-only, atop the set-active
+    `6af00fa`. P-032g's parent chain: `e9e804d` → `835e907` → `6af00fa`
+    (active-packet confirmation) → `211e04c` (P-032c close).**
     The base for MERGE decisions is still `e79426a` = PR #16 (nothing since P-025
     has been merged).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
@@ -117,26 +127,108 @@
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-01, P-032c):** suite **473 passed** (0 failed /
-  skipped); regression **68/68** (0 critical / 0 warnings) — UNCHANGED (P-032c
-  default path is byte-identical; low_end_motion weight-0 for halee_ramone).
-  Commit-1 (`ab14ac7`) green in isolation = 473 (HEAD IS Commit-1 — single-commit
-  packet — so the tip is the isolation point; the 451 base was ALSO independently
-  verified at `fe5f6b4`). (Prior baseline was 451 at P-032d; P-032c added +22 —
-  `tests/test_low_end_motion.py`: byte-identical INDEPENDENT capture (36/36
-  pre-existing values repr-identical × 3 fixtures; overalls 73.8 / 70.7 / 74.3;
-  68/68 unchanged) + the user's acceptance-invariant suite (mud-loses,
-  blob-loophole-closed, presence-leakage-fenced, static_mix-distinctness) +
-  liveness/sabotage BOTH directions (DROP → 2 liveness FAIL / anchors PASS;
-  HARDCODE → 4 discrimination FAIL / anchors PASS) + no-aliasing +
-  honest-scope; pins updated (`test_producer_profile.py` scorers-set,
-  `test_doctrine_profile_sourced.py` `_WEIGHTS` value-pin,
-  `test_rhythmic_surprise.py` index shift). Earlier: 433 → 451 at P-032d;
+- **Green baseline (verified 2026-07-01, P-032g):** suite **512 passed** (0 failed /
+  skipped); regression **68/68** (0 critical / 0 warnings) — UNCHANGED (P-032g
+  default path is DUAL byte-identical — doctrine AND creative; loop_context
+  weight-0 + protect_iconic_loops=false for halee_ramone). Commit-1 (`835e907`)
+  green in isolation = **499 passed + 68/68** in a real worktree check. (Prior
+  baseline was 473 at P-032c; P-032g added +39 = 26 (`tests/test_loop_context.py`)
+  + 13 (`tests/test_protect_iconic_loops.py`): DUAL byte-identity, independent —
+  (a) doctrine 0 mismatches × 3 fixtures (overalls 73.8 / 70.7 / 74.3;
+  `loop_context_score` 50.0 / 15.0 / 15.0 at weight 0) AND (b) creative full
+  `result.creative` sorted-key JSON base vs HEAD → EMPTY diff / `cmp`
+  byte-identical; flag liveness LIVE (A/B 85.9/loop_A(False) ↔
+  81.9/loop_B(True); STATIC+protect → still fires; masked-lead+iconic+protect
+  → still fires — Ramone gate FIRST); shared basis identity-asserted
+  (`creative.read_loop_context is doctrine_engine.read_loop_context`); cautions
+  untouched (`loop_foregrounded`=6, promotion table verbatim,
+  `test_packet_cautions_untouched`); observational language (zero judgment
+  words across all 7 reachable statuses) + honest-scope. Earlier: 451 → 473
+  at P-032c; 433 → 451 at P-032d;
   413 → 433 at P-032b; 396 → 413 at P-032a; 384 → 396 at P-032e; 370 → 384
   at P-029; 351 → 370 at P-028; 331 → 351 at P-027; 319 → 331 at P-026;
   293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★ P-032g LANDS THE HINGE — `loop_context` (static-vs-iconic), the SIXTH
+  new producer-agnostic doctrine axis (the 13th component), PLUS
+  `protect_iconic_loops`, the FIRST profile-decided creative gate — DUAL
+  byte-identical for halee_ramone (doctrine AND creative — the USER-MANDATED
+  surface); qa GREEN + reviewer PASS (no must-fix).** The doctrine-pin
+  exemplar realized: **the engine DETECTS agnostically** (static = dominant +
+  no evolution; iconic = dominant + groove/fingerprint function — an ACOUSTIC
+  PROXY; cultural recognizability deferred), **the profile DECIDES**
+  (`protect_iconic_loops`, a REQUIRED profile field; halee_ramone=false =
+  current behavior). **13 component axes; 6 of the 7 Timbaland weight-up axes
+  landed. Last-closed = P-032g.**
+  - **★ REVIEWER'S DOCTRINE FINDING (recorded prominently):** the
+    status→score map (iconic 90 / evolving 60 / neutral 50 / unassessed 45 /
+    static 15) lives in `doctrine.scorers.loop_context` IN THE PROFILE JSON —
+    even the axis's POLARITY is profile-authored; the engine's fixed
+    contribution is status DETECTION only. A future profile could invert the
+    entire mapping without touching code. "The strongest possible form of the
+    doctrine, not a leak."
+  - **Two commits:** `835e907` (Commit-1 — pure additive `_loop_context`
+    scorer + shared `read_loop_context()` helper, 8 files, 957+/3−, GREEN IN
+    ISOLATION: 499 passed + 68/68 in a real worktree check) + `e9e804d`
+    (Commit-2 — the creative gate: `_protected_iconic_loop()` in
+    `_apply_promotions`, flag as REQUIRED profile field, 4 files, 481+/2−).
+    Parent `6af00fa` (set-active), atop `211e04c` (P-032c close).
+  - **★ qa GREEN:** suite 473 → **512** (+39: 26+13); regression **68/68, 0
+    warnings**; **DUAL byte-identity, independent:** (a) doctrine — 0
+    mismatches × 3 fixtures, overalls 73.8 / 70.7 / 74.3,
+    `loop_context_score` 50.0 / 15.0 / 15.0 at weight 0 (both loop fixtures
+    read STATIC — thematically exact); (b) creative — full `result.creative`
+    sorted-key JSON base vs HEAD → EMPTY diff, `cmp` byte-identical. Flag
+    liveness LIVE: A/B 85.9/loop_A(False) ↔ 81.9/loop_B(True); STATIC+protect
+    → still fires; masked-lead+iconic+protect → still fires (Ramone gate
+    FIRST). Shared basis identity-asserted (`creative.read_loop_context is
+    doctrine_engine.read_loop_context`). Cautions untouched
+    (`loop_foregrounded`=6; promotion table verbatim;
+    `test_packet_cautions_untouched`). Observational language: zero judgment
+    words across all 7 reachable statuses (the one "bad_masking" hit is a
+    data-vocabulary key read, not emitted language). Safety grep NONE.
+  - **★ reviewer PASS (no must-fix):** default path PROVEN unreachable (the
+    flag is checked before any input; 5,000-trial randomized search through
+    the gated promotion path → 0 divergences); protection structurally cannot
+    beat a masked lead (ordering flag → `_lead_masked` → iconic; no
+    short-circuit path); FIVE own sabotages ALL caught (drop axis / hardcode /
+    ignore flag / drop the Ramone gate / fork the detection); required-field
+    judgment ENDORSED (every producer JSON must state its loop philosophy
+    explicitly — `timbaland.json` will declare it in writing); evolution
+    floors are threshold GATES only (spreads in zero arithmetic — no
+    `_dynamic_mix` re-derivation). **Codex NOT available — single-model
+    review.**
+  - **Constants (`doctrine.scorers.loop_context`):** status scores
+    no_loop/not_dominant 50, dominant_unassessed 45, dominant_evolving 60,
+    static 15, iconic 90; floors width 0.6, transient_lift 0.15,
+    groove_transient 0.35, crest 12.0, rms 1.0 dB / width 0.05 / brightness
+    0.05.
+  - **★ HONEST DEFERRALS (test-guarded out of evidence, NOT faked):**
+    cultural/recognizability iconic-ness (needs provenance/manifest — the
+    acoustic proxy is what ships); per-loop bar-level variation;
+    onset-sequence needs.
+  - **★ NEW RESIDUE (carried to residue.md):** liveness-docstring-overclaim
+    family now SIX files (+`tests/test_loop_context.py:566-570`); the gate
+    keys on the literal kind `"loop_deconstruct"` (creative.py:232 — if
+    promotion kinds generalize, move gating into the table row); the
+    `dominant_unassessed` docstring slightly loose (per-metric, not
+    per-section); `read_loop_context` shares the defensive None-value edge
+    family.
+  - **★★ MILESTONE — 13 component axes; 6 of the 7 Timbaland weight-up axes
+    landed. The reusable pattern is established: a profile-decided creative
+    gate on a shared detection basis (P-032f / P-032h will reuse it).**
+  - **★ TIMBALAND SUB-ARC (P-032.x) — remaining order:** P-032e ✓ → P-032a ✓
+    → P-032b ✓ → P-032d ✓ → P-032c ✓ → **P-032g ✓ → P-032f (vocal-role —
+    NEXT, ★ USER-GATED: the orchestrator must present the "masked chop/stack
+    = acceptable-blend" aesthetic rule + the protect-as-lead-when-uncertain
+    conservative default to the USER for explicit go BEFORE any building)** →
+    **[fold P-031 confidence here]** → P-032h (author `timbaland.json`, first
+    non-byte-identical output) → P-032i (Timbaland-vs-Halee/Ramone
+    differential proof). P-030 (rename dims) orthogonal/last. **P-032g
+    local-only, NOT merged** (merge base still `e79426a` = PR #16). Receipt:
+    `build-os/receipts/P-032g-loop-context-hinge.md`.
 
 - **★★ P-032c LANDS THE FIFTH NEW PRODUCER-AGNOSTIC DOCTRINE AXIS —
   `low_end_motion` (the low-end POCKET: kick/sub relationship + room around
