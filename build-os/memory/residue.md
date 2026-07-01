@@ -42,6 +42,63 @@
 
 ## Deferred (follow-up packets)
 
+- **★★ THE ACTIVE ROADMAP IS NOW THE PRODUCER-AGNOSTIC EPIC — P-025 ✓ LANDS ITS
+  FOUNDATION.** Make the engine select any producer's judgment as a swappable
+  `ProducerProfile` (the physics stays fixed). **P-025 ✓** extracted today's
+  100%-hardcoded Halee/Ramone judgment into a frozen `ProducerProfile` + a pure
+  `load_profile()` + the VERBATIM `halee_ramone.json` reference, byte-identical
+  round-trip-guarded (exact + non-vacuous indirect), honesty-metadata-stamped, and
+  **COMPLETELY UNWIRED** (the four judgment sources byte-unchanged; regression
+  68/68 UNCHANGED). Receipt:
+  `build-os/receipts/P-025-producer-profile-schema-loader-halee-ramone-extraction.md`.
+  **The epic arc (next steps):**
+  - **P-026 — extract creative-scoring judgment onto the profile, byte-identical**
+    (NEXT). Move `creative.py`'s producer-specific structures behind the profile
+    surface the round-trip already pins; keep behavior byte-identical.
+  - **P-027 — governance extraction (WIDENED per Finding A).** In addition to
+    `_TRUTH_ALIGNMENT` / `_TASTE_KIND_BIAS` / `TASTE_MAX_DELTA` / the aesthetic
+    kill-switches, ALSO capture the inline `taste_triangle` rule
+    (`width_bloom + intimate → identity -= 30`, ~L179–182), the `<45` reject /
+    `<50` align-veto / `75` align-fallback thresholds, and the `emotion` blend
+    definition (~L176).
+  - **P-028 — doctrine extraction (WIDENED per Finding A).** Capture ALL doctrine
+    scoring functions' constants — `_vocal_centrality` / `_depth_hierarchy` /
+    `_section_contrast` / `_static_mix` / `_dynamic_mix` (baselines 80.0/70.0/40,
+    penalties, coefficients e.g. `30 + rms_std*8 + width_std*140`) — not just
+    `_halee` / `_ramone`.
+  - **P-029 — parameterize the pipeline** to CONSUME the profile (the first wiring
+    step; guarded by the P-025 round-trip so it stays byte-identical for
+    `halee_ramone`).
+  - **P-030 — rename** the `halee` / `ramone` dimension names off the producer
+    names (they were kept verbatim in P-025 per the byte-identical-first decision).
+  - **P-031 — confidence framework:** consume the profile metadata stamp
+    (provenance / confidence / risk_class) per the confirmed honesty policy.
+  - **P-032 — second producer** (a real non-Halee/Ramone profile — the first test
+    of true producer-agnosticism; governed by the honesty policy).
+  - **P-033 — expose producer selection** (the user-facing selection surface).
+
+- **★ FINDING A — SECONDARY PRODUCER-AESTHETIC CONSTANTS carried forward to
+  P-027 / P-028 (reviewer, from P-025; deferred by design, NOT drift).** P-025
+  captured what its scope declared, but there are additional producer-specific
+  constants the epic MUST capture before it can claim FULL producer-agnosticism:
+  - **→ P-027 (governance):** the inline `taste_triangle` rule
+    `width_bloom + intimate → identity -= 30` (~L179–182, a sibling of
+    `_TASTE_KIND_BIAS`); the `<45` reject / `<50` align-veto / `75` align-fallback
+    thresholds; the `emotion` blend definition (~L176).
+  - **→ P-028 (doctrine):** ALL scoring functions' constants — `_vocal_centrality`,
+    `_depth_hierarchy`, `_section_contrast`, `_static_mix`, `_dynamic_mix`
+    (baselines 80.0/70.0/40, penalties, coefficients).
+  These two packets OWN capturing these; the P-025 round-trip guard is the safety
+  net they rely on as they widen the profile.
+
+- **★ CONFIRMED HONESTY / SOURCING POLICY — a STANDING product decision governing
+  P-031 / P-032 (confirmed by the user).** hand-curated → high-confidence;
+  derived → low-confidence (labeled); LLM → draft-only, NEVER high-confidence. The
+  `halee_ramone` reference is `hand-curated-documented` → `high` / `risk_class 0`,
+  consistent with the policy. The profile metadata stamp exists now (P-025) but is
+  not enforced / propagated until P-031; authoring a SECOND profile (P-032) must
+  obey this policy (no LLM-authored profile may claim `high` confidence).
+
 - **★ THE ARC IS DOWN TO ITS LAST STEP — P-024 (MCP SERVER, option C step 2).**
   Canonical target: Logic Mix OS as a tool Claude Cowork can drive END-TO-END in a
   Logic Pro mixing session (plan-only v1). **P-019 ✓** closed the learning loop
@@ -290,6 +347,19 @@
 - Net-new **event-logging** producers remain behind the product decision.
 
 ## Done (resolved)
+
+- **★ P-025 DONE — the FOUNDATION of the producer-agnostic epic: today's
+  hardcoded Halee/Ramone judgment is now a frozen, round-trip-guarded, UNWIRED
+  `ProducerProfile`** (`build-os/receipts/P-025-producer-profile-schema-loader-halee-ramone-extraction.md`).
+  `logic_mix_os/doctrine/producer_profile.py` (frozen dataclass + pure
+  `load_profile()`) + `doctrine/producers/halee_ramone.json` (VERBATIM reference +
+  honesty metadata stamp). Byte-identical round-trip guard (exact for clean
+  constants incl. `KILL_SWITCHES[5:9]` with safety items 1–5 correctly EXCLUDED;
+  indirect + non-vacuous for the inline-computed doctrine weights / 86.0 baselines
+  / penalty_coeffs / default_creative_mode). The four judgment sources
+  byte-unchanged; nothing consumes the profile; regression 68/68 UNCHANGED. Two
+  commits `195127c` + `e6cb038`; suite 293 → 319 (+26). qa GREEN; reviewer pass
+  (hand-verified every value byte-accurate); Codex unavailable (single-reviewer).
 
 - **★★ THE MILESTONE — P-021 PROVES THE COWORK SURFACE IS AGENT-DRIVABLE
   END-TO-END; the canonical target is essentially MET at the decision-system level
@@ -947,5 +1017,15 @@
   commit — and any subsequent PR / merge into the protected default — needs the
   user's explicit go. No push / merge / deploy / secret action taken in this close.
 
+- **P-025's product commits `195127c`, `e6cb038` are local-only as of this close**
+  (this archivist close did not push). They sit on the dev branch
+  `claude/logic-mix-os-hardening-12-7hbeh1` on top of the `e79426a` (PR #16) merge
+  base — the `ProducerProfile` schema + `load_profile()` + extracted
+  `halee_ramone.json` reference (data + loader + tests only; COMPLETELY UNWIRED —
+  the four judgment sources byte-unchanged, regression 68/68 UNCHANGED). The
+  build-os-only close commit is separate. Any push of the product commits — and any
+  subsequent PR / merge into the protected default — needs the user's explicit go.
+  No push / merge / deploy / secret action taken in this close.
+
 ---
-_Append-only working notes. Last advanced on P-021 close (2026-07-01) — the MILESTONE step._
+_Append-only working notes. Last advanced on P-025 close (2026-07-01) — the FOUNDATION step of the producer-agnostic epic._

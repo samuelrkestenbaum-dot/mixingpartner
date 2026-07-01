@@ -11,42 +11,97 @@
   layer). Not an auto-mixer, preset generator, or mastering tool. All product
   code lives under `logic-mix-os/`.
 - **Primary branch / base:** default branch `claude/dreamy-turing-z0oxll`;
-  active dev branch `claude/logic-mix-os-hardening-12-7hbeh1`. **P-016 is now
-  MERGED to default via PR #15 — merge commit `6c40e2b`, which is the current
-  default-branch tip and the base for P-017** (confirmed: `6c40e2b` is an ancestor
-  of the dev HEAD, and is exactly the commit before P-017's active-packet
-  confirmation). (Earlier, **PR #13** — P-001…P-012 + the canonical-alignment
-  audit — merged at `0f4e7e9`; the whole-branch `git merge-base` with default is
-  the older shared ancestor `694d19d`.) On top of the `6c40e2b` base the dev branch
-  carries P-013 (`172cfd0`, tests-only), **P-015 (`1756f61`, product)**,
-  **P-016 (`b15b957` + `a9f4e26`, product — now also landed on default via PR #15)**,
-  **P-017 (`1b03ad3`, tests-only guard — verified finding, no product change)**,
-  **P-018 (`736fa8b` + `6134d27`, product — the first confirmed-outcome
-  learning signal, opt-in / byte-identical by default)**, and
-  **P-019 (`b7572b7` + `de5679f`, product — `record_mix_pass` closes the learning
-  loop INSIDE the cowork surface, additive / byte-identical by default)**, and
-  **P-020 (`942a68a`, product — `describe_session` makes the cowork surface
-  self-describing as an ordered, phase-grouped session flow; additive / read-only /
-  byte-identical to every existing command)**, and
-  **P-021 (`dce156b`, TESTS-ONLY — the MILESTONE: an executable proof that an
-  agent driving ONLY the cowork surface completes a full plan-only mixing session
-  AND closes the learning loop; no product change)**, and
-  **P-023 (`60b3b92` + `dcc4c5b`, product — option C step 1: the raw-CLI agent
-  transport is now a VERSIONED, SELF-DESCRIBING contract; `describe_contract`
-  (registry 34→35) with inspect-derived params + an honest side_effect
-  classification making live-vs-dead a first-class contract fact; + a concise
-  `COWORK_CONTRACT.md`; additive / read-only)**; the local-only-at-close
-  commits (P-013, P-015, P-017's guard, P-018, P-019, P-020, P-021, P-023) are not pushed.
+  active dev branch `claude/logic-mix-os-hardening-12-7hbeh1`. **The accumulated
+  cowork arc (P-017 guard + P-018 → P-023) is now MERGED to default via PR #16 —
+  merge commit `e79426a`, which is the CURRENT default-branch tip and the base for
+  P-025** (confirmed: `git merge-base HEAD e79426a` = `e79426a`; the P-025
+  active-packet confirmation `4e9eaa2` sits directly on top of it). (Earlier
+  bases: **PR #15** merge `6c40e2b` was the P-017 base; **PR #13** merge `0f4e7e9`
+  landed P-001…P-012 + the canonical-alignment audit; the older shared ancestor is
+  `694d19d`.) On top of the `e79426a` base the dev branch now carries the
+  producer-agnostic epic's foundation: **P-025 (`195127c` + `e6cb038`, product —
+  the `ProducerProfile` schema + pure `load_profile()` + the VERBATIM-extracted
+  `halee_ramone.json` reference, byte-identical round-trip guard, honesty metadata
+  stamp; COMPLETELY UNWIRED — the four judgment sources byte-unchanged, regression
+  UNCHANGED)**. The P-025 product commits are local-only (not pushed / merged).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
-  `python -m logic_mix_os.cli regression`.
-- **Green baseline (verified 2026-07-01):** suite **293 passed** (0 failed /
+  `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
+  (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
+  GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
+- **Green baseline (verified 2026-07-01, P-025):** suite **319 passed** (0 failed /
   skipped / warnings; green even under `-W error`); regression **68/68** (0
-  critical / 0 warnings). (Prior baseline was 277; P-023 added +16 — additive
-  read-only product + contract tests; goldens untouched.)
+  critical / 0 warnings) — UNCHANGED (P-025 wired nothing). (Prior baseline was
+  293; P-025 added +26 — new schema/loader + round-trip/completeness/metadata
+  tests; goldens & judgment untouched.)
 
 ## Where we are
+
+- **★★ A NEW EPIC OPENS — THE PRODUCER-AGNOSTIC EPIC — AND P-025 LANDS ITS
+  FOUNDATION: TODAY'S HARDCODED HALEE/RAMONE JUDGMENT IS NOW A FROZEN,
+  ROUND-TRIP-GUARDED, UNWIRED `ProducerProfile`.** The new epic: make the engine
+  PRODUCER-AGNOSTIC — select any producer (Timbaland, Quincy, Ramone, …) and the
+  same stems get driven toward that producer's state. The producer-agnostic
+  *physics* (analyzers, safety kill-switches, the bounded-nudge mechanism, the
+  determinism/evidence contract, the move-kind vocabulary) stays FIXED; the
+  producer-specific *judgment* becomes a swappable **`ProducerProfile`.** That
+  judgment is **100% hardcoded in Python today** (the pre-existing
+  `roy_halee.json` / `phil_ramone.json` are PROSE the scorer never reads) — so the
+  reference profile had to be **extracted FROM CODE.** **Last-closed = P-025.**
+  - **What P-025 shipped (data + loader ONLY — no wiring):** a frozen
+    **`ProducerProfile`** dataclass + a pure **`load_profile(name="halee_ramone")`**
+    (`logic_mix_os/doctrine/producer_profile.py`) + the VERBATIM reference
+    **`logic_mix_os/doctrine/producers/halee_ramone.json`** holding today's
+    producer-specific values. Metadata stamp `{name: halee_ramone, display_name:
+    "Roy Halee / Phil Ramone", provenance: hand-curated-documented, confidence:
+    high, risk_class: 0}` — the honesty scaffolding for the confirmed sourcing
+    policy (consumed in P-031).
+  - **The byte-identical ROUND-TRIP guard (the load-bearing safety net for the
+    whole extraction arc):** **exact-equal** for clean module constants
+    (`kind_scores` = `_KIND_SCORES`, `nudge_table` / `promotion_table`, caps
+    `2.0` / `4.0`, `_RISK_PENALTY`, `SEARCH_MODES`, `PHILOSOPHY`, `_TRUTH_ALIGNMENT`,
+    `_TASTE_KIND_BIAS`, `TASTE_MAX_DELTA`, aesthetic kill-switches
+    `KILL_SWITCHES[5:9]` = items 6–9; **safety items 1–5 correctly EXCLUDED** —
+    they are producer-agnostic and stay universal); **indirect** for the
+    INLINE-COMPUTED values (`doctrine.weights` / `baselines` 86.0 / `penalty_coeffs`
+    / `default_creative_mode`), asserted by driving `_halee` / `_ramone` /
+    `_default_creative_mode` one condition at a time. **Proven NON-VACUOUS:** qa
+    mutated `ramone.vocal_masked` 6→7 → the test FAILS.
+  - **The NO-WIRING guarantee (load-bearing):** `creative.py` / `governance.py` /
+    `doctrine_engine.py` / `pipeline.py` are **byte-for-byte unchanged** (verified
+    absent from the `e79426a..HEAD` diff); NOTHING in the runtime imports
+    `load_profile`; the regression is UNCHANGED because nothing consumes the
+    profile. Extract, don't change.
+  - **Two commits `195127c` (Commit-1: schema + loader + JSON + round-trip /
+    determinism tests; green in isolation = 311) + `e6cb038` (Commit-2:
+    extraction-completeness + schema/metadata tests).** Suite **293 → 319 passed**
+    (+26; 0 failed/skipped/warnings, green under `-W error`); regression **68/68,
+    0 critical, 0 warnings — UNCHANGED** across both commits. Scope: 3 new files
+    only; the 4 judgment sources byte-unchanged. Round-trip is an honest set-vs-set
+    compare, not loosened. Safety grep clean; UI N/A. qa **GREEN**; reviewer
+    **pass** (hand-verified every extracted value byte-accurate against source).
+    **Codex NOT available — single-reviewer verdict.** **P-025 local-only**
+    (commits `195127c`, `e6cb038` on the dev branch on top of the `e79426a` PR #16
+    base), not pushed/merged.
+  - **★ COMPLETENESS carry-forward (reviewer Finding A — IMPORTANT for the arc):**
+    P-025 captured what its scope declared, but ADDITIONAL producer-aesthetic
+    constants are NOT yet in the profile (deferred by design, not drift). **WIDEN
+    P-027** to also capture governance's inline `taste_triangle` rule
+    (`width_bloom + intimate → identity -= 30`) + the `<45` reject / `<50`
+    align-veto / `75` align-fallback thresholds + the `emotion` blend; **WIDEN
+    P-028** to capture ALL doctrine scoring functions' constants
+    (`_vocal_centrality` / `_depth_hierarchy` / `_section_contrast` / `_static_mix`
+    / `_dynamic_mix` — baselines 80.0/70.0/40, penalties, coefficients), not just
+    `_halee` / `_ramone`.
+  - **★ EPIC ARC (the active roadmap):** **P-025 ✓ (foundation)** → P-026 (extract
+    creative-scoring judgment onto the profile, byte-identical) → P-027 (governance
+    extraction, **WIDENED**) → P-028 (doctrine extraction, **WIDENED**) → P-029
+    (parameterize the pipeline to consume the profile) → P-030 (rename the
+    `halee`/`ramone` dims off the producer names) → P-031 (confidence framework —
+    consume the metadata stamp) → P-032 (second producer) → P-033 (expose producer
+    selection). The prior cowork arc closed at PR #16; the optional P-024 (MCP
+    transport) remains a standing, un-opened candidate.
 
 - **★ THE ARC'S TRANSPORT BEGINS — P-023 MAKES THE RAW-CLI AGENT TRANSPORT A
   VERSIONED, SELF-DESCRIBING CONTRACT (option C, step 1 — the first of two
@@ -625,6 +680,28 @@
   `build-os/`). Route every task via the build-orchestrator; ≤2 commits/packet;
   Commit-1 green in isolation; STOP at any push/merge/deploy/secret boundary for
   explicit go.
+- **★ REGRESSION REQUIRES GENERATED FIXTURES — a bare worktree shows FALSE
+  critical failures (P-025 env fact).** `fixtures/` content is GENERATED, not
+  committed. Run `fixtures/generate_fixtures.py` (or pytest via conftest) BEFORE
+  `python -m logic_mix_os.cli regression` in a fresh / detached checkout. Observed
+  during P-025: the base `e79426a` (PR #16 tip) reported "22 critical" in a
+  detached worktree WITHOUT generated fixtures — a worktree artifact, NOT a real
+  breakage; with fixtures generated it passes **68/68** (orchestrator re-ran it
+  directly). The default branch is HEALTHY. Do NOT re-litigate this as a defect.
+- **★ THE PRODUCER-SPECIFIC JUDGMENT IS 100% HARDCODED IN PYTHON — the prose
+  `roy_halee.json` / `phil_ramone.json` are NEVER read by the scorer (P-025
+  finding).** The real judgment lives in `creative.py` / `governance.py` /
+  `doctrine_engine.py` constants + inline-computed coefficients. P-025 extracted
+  the actual values into a frozen `ProducerProfile` (`load_profile()` +
+  `doctrine/producers/halee_ramone.json`), guarded byte-identical by a round-trip
+  test — but WIRED NOTHING. Any future producer-agnostic change relies on that
+  round-trip guard; extract from CODE, never from the prose files.
+- **★ CONFIRMED HONESTY / SOURCING POLICY (standing product decision, governs
+  P-031 / P-032):** hand-curated → high-confidence; derived → low-confidence
+  (labeled); LLM → draft-only, NEVER high-confidence. The `halee_ramone` reference
+  is `hand-curated-documented` → `high` / `risk_class 0`, consistent with the
+  policy. The profile metadata stamp exists now (P-025) but is not enforced /
+  propagated until P-031.
 
 ---
-_Updated by the archivist on close. Last advanced on P-021 close (2026-07-01) — the MILESTONE step of the arc._
+_Updated by the archivist on close. Last advanced on P-025 close (2026-07-01) — the FOUNDATION step of the producer-agnostic epic (ProducerProfile extracted, round-trip-guarded, unwired)._
