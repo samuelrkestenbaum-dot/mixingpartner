@@ -30,17 +30,85 @@
   byte-identical to every existing command)**, and
   **P-021 (`dce156b`, TESTS-ONLY — the MILESTONE: an executable proof that an
   agent driving ONLY the cowork surface completes a full plan-only mixing session
-  AND closes the learning loop; no product change)**; the local-only-at-close
-  commits (P-013, P-015, P-017's guard, P-018, P-019, P-020, P-021) are not pushed.
+  AND closes the learning loop; no product change)**, and
+  **P-023 (`60b3b92` + `dcc4c5b`, product — option C step 1: the raw-CLI agent
+  transport is now a VERSIONED, SELF-DESCRIBING contract; `describe_contract`
+  (registry 34→35) with inspect-derived params + an honest side_effect
+  classification making live-vs-dead a first-class contract fact; + a concise
+  `COWORK_CONTRACT.md`; additive / read-only)**; the local-only-at-close
+  commits (P-013, P-015, P-017's guard, P-018, P-019, P-020, P-021, P-023) are not pushed.
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression`.
-- **Green baseline (verified 2026-07-01):** suite **277 passed** (0 failed /
+- **Green baseline (verified 2026-07-01):** suite **293 passed** (0 failed /
   skipped / warnings; green even under `-W error`); regression **68/68** (0
-  critical / 0 warnings). (Prior baseline was 269; P-021 added +8 — tests-only.)
+  critical / 0 warnings). (Prior baseline was 277; P-023 added +16 — additive
+  read-only product + contract tests; goldens untouched.)
 
 ## Where we are
+
+- **★ THE ARC'S TRANSPORT BEGINS — P-023 MAKES THE RAW-CLI AGENT TRANSPORT A
+  VERSIONED, SELF-DESCRIBING CONTRACT (option C, step 1 — the first of two
+  transport steps).** P-021 proved the cowork CLI is agent-drivable end-to-end;
+  P-023 turns that surface into a STABLE, VERSIONED, SELF-DESCRIBING contract
+  Claude Cowork can introspect instead of reverse-engineering. The user chose
+  **option C (sequenced): documented raw-CLI contract now, MCP server as the
+  follow-on P-024.** Last-closed = P-023.
+  - **`describe_contract` (registry 34 → 35)** returns pure deterministic JSON
+    `{api_version, invocation, commands:{name:{purpose, phase, params,
+    side_effect}}}`. `API_VERSION = "1.0"` is a stable string an agent can pin.
+  - **`params` DERIVED from each handler's real `inspect.signature`** — dropping
+    the leading context arg BY POSITION (def-handlers name it `ctx`, lambdas name
+    it `c`) and skipping `**k` — so the contract CANNOT DRIFT from the code
+    (`record_mix_pass` → `[name, reverted]`, `detect_masking` → `[]`).
+  - **`side_effect` makes live-vs-dead a FIRST-CLASS CONTRACT FACT** (was
+    telegraphed by `desc` through P-020, executably pinned by a test in P-021 —
+    now a declared contract field): exactly 4 writers — `record_mix_pass` →
+    `writes:history(live)`, `update_taste_calibration` → `writes:taste(live)`,
+    `write_mix_decision` → `writes:ledger(dead)`, `override_track_identity` →
+    `mutates:session` — all other 31 commands `none`. Verified against handler
+    BODIES by both qa and reviewer (reviewer scanned all 31 `none` commands; no
+    mislabel).
+  - **Completeness invariant HELD at 35:** `describe_contract` parked in
+    `_SESSION_FLOW.auxiliary` (mirroring P-020's `describe_session`), so P-020's
+    exact-cover invariant still holds — contract keys == 35 registry keys
+    (orphan/phantom fail).
+  - **`COWORK_CONTRACT.md`** — a concise integrator-facing doc (invocation
+    pattern, api-version/stability guarantee, side_effect vocabulary, product
+    guarantees local/non-destructive/plan-only/evidence+risk/Class-5-never, the
+    8-phase session flow), pointing at `describe_contract` / `describe_session` as
+    the machine-readable source of truth. Verified accurate against the code.
+  - **Two commits `60b3b92` (Commit-1: `API_VERSION` + `describe_contract` +
+    helpers + `tests/test_cowork_contract.py` + registry 34→35; green in
+    isolation = 293) + `dcc4c5b` (Commit-2: `COWORK_CONTRACT.md`).** Suite
+    **277 → 293 passed** (+16; 0 failed/skipped/warnings, green under `-W error`);
+    regression **68/68, 0 critical, 0 warnings** held (additive read-only →
+    goldens untouched). Params match real signatures (no drift); side_effect
+    honesty verified against bodies; versioned + deterministic; registry 35, both
+    count assertions 34→35, no stale 34. Scope: only 5 authorized files; `cli.py`/
+    creative/governance/ledger/memory/pipeline untouched; existing tests changed
+    only the count assertion. Safety grep clean; UI N/A. qa **GREEN**; reviewer
+    **pass**. **Codex NOT available — single-reviewer verdict.** **P-023
+    local-only** (commits `60b3b92`, `dcc4c5b` on the dev branch on top of the
+    `6c40e2b` PR #15 base), not pushed/merged.
+  - **Reviewer watch-item carried to P-024 (non-blocking):** `API_VERSION` is a
+    hand-maintained string with NO test that fails when a command's `params` /
+    `side_effect` changes without a version bump — so the VERSION can drift from
+    the surface even though params/side_effect cannot drift from code. **P-024
+    (the MCP server) is where to add a version-fingerprint guard** (a test pinning
+    a hash of the contract surface). P-024 can also reuse `describe_contract`'s
+    per-command metadata directly as MCP tool schemas.
+  - **★ ARC STATUS:** P-019 ✓ (loop closeable inside cowork), P-020 ✓
+    (self-describing session flow), **P-021 ✓ (MILESTONE — end-to-end drive +
+    loop-close proven)**, **P-023 ✓ (option C step 1 — versioned self-describing
+    raw-CLI contract).** **The ONLY remaining arc step is P-024 (option C step 2 —
+    a thin MCP server wrapping the same registry, reusing `describe_contract`
+    metadata for tool schemas + the version-fingerprint guard) — the FINAL step.**
+    After P-024, the arc to the Cowork-usable final state is COMPLETE; landing the
+    accumulated P-017-guard → P-024 work on default is the natural close
+    (USER-GATED). **P-022 stays OPTIONAL / UNNEEDED.**
+
 
 - **★★ MILESTONE — P-021 PROVES THE COWORK SURFACE IS AGENT-DRIVABLE END-TO-END
   (arc step 3 of 5; the step that PROVES it).** The canonical target — Logic Mix

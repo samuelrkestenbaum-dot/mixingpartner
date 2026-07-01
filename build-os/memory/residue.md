@@ -42,33 +42,59 @@
 
 ## Deferred (follow-up packets)
 
-- **★ THE ARC IS DOWN TO ITS LAST STEP — P-023 TRANSPORT (USER-GATED).**
+- **★ THE ARC IS DOWN TO ITS LAST STEP — P-024 (MCP SERVER, option C step 2).**
   Canonical target: Logic Mix OS as a tool Claude Cowork can drive END-TO-END in a
   Logic Pro mixing session (plan-only v1). **P-019 ✓** closed the learning loop
   INSIDE the cowork surface (`record_mix_pass`, read/write symmetric); **P-020 ✓**
   made the surface self-describing as an ordered, phase-grouped session flow
-  (`describe_session`, 34 commands, completeness invariant load-bearing);
-  **P-021 ✓ (the MILESTONE)** PROVED, executably, that an agent driving ONLY the
-  cowork surface completes a full plan-only session AND closes the learning loop
-  within the surface (load-bearing + non-tautological). **So the canonical target is
-  now essentially MET at the decision-system level;** what remains is only transport
-  packaging:
+  (`describe_session`, completeness invariant load-bearing); **P-021 ✓ (the
+  MILESTONE)** PROVED, executably, that an agent driving ONLY the cowork surface
+  completes a full plan-only session AND closes the learning loop within the surface
+  (load-bearing + non-tautological); **P-023 ✓ (option C step 1)** turned the raw-CLI
+  transport into a VERSIONED, SELF-DESCRIBING contract (`describe_contract`, registry
+  35, inspect-derived params, honest side_effect making live-vs-dead a first-class
+  contract fact, + `COWORK_CONTRACT.md`). The user chose **option C (sequenced):
+  documented raw-CLI contract now [P-023, done], MCP server as the follow-on
+  [P-024].** **So the canonical target is essentially MET at the decision-system
+  level and the transport is now a documented, versioned contract;** the ONLY
+  remaining step is:
+  - **P-024 — the ONLY remaining arc step (option C step 2, the FINAL step): a thin
+    MCP server wrapping the SAME cowork registry.** Reuse `describe_contract`'s
+    per-command `params` / `side_effect` metadata DIRECTLY as the MCP tool schemas
+    (do NOT re-derive). **Fold in the P-023 carry-forward version-fingerprint
+    guard** — a test pinning a hash of the contract surface so any change to
+    `params` / `side_effect` forces a conscious `API_VERSION` decision (closes the
+    reviewer watch-item that the hand-maintained version can silently lag the
+    surface). Architecture/transport fork — confirm active via the orchestrator; do
+    NOT open blind. **After P-024 the arc is COMPLETE; landing the accumulated
+    P-017-guard → P-024 work on default is the natural close (USER-GATED).**
   - **P-022 — OPTIONAL / UNNEEDED.** The P-021 honesty clause surfaced NO real gap
     requiring session-efficiency / override-propagation work. Do NOT open unless a
     concrete gap emerges.
-  - **P-023 — the ONLY remaining arc step: USER-GATED transport decision — MCP
-    server vs a documented raw-CLI contract.** **Do NOT open blind; sequenced LAST**
-    — it is a product/architecture fork that needs an explicit user ask.
 
-- **✓ RESOLVED by P-021 — the LIVE-vs-DEAD-ledger distinction is now EXECUTABLY
-  PINNED** (was the P-020 carry-forward reviewer flag). P-021's live-vs-dead test
-  asserts, on the real surface, that `write_mix_decision` (the display-only DEAD
-  `decision_ledger.json`, runtime-verified) does NOT change `suggest_next_pass`,
-  whereas `record_mix_pass` (the LIVE history channel → `_apply_history`) DOES — so
-  only `record_mix_pass` closes the loop. The distinction is no longer merely
-  telegraphed by `desc` strings; it is an executable fact a future agent/reader
-  cannot mistake. Ties into the standing LEDGER-IS-DEAD routing guard below, which is
-  now executably pinned rather than a note-only.
+- **P-023 CARRY-FORWARD (non-blocking reviewer watch-item, for P-024):** the
+  contract's `params` and `side_effect` cannot drift from the code (inspect-derived
+  / verified against handler bodies), BUT `API_VERSION` is a hand-maintained string
+  with NO test that fails when the surface changes without a version bump — so the
+  declared VERSION can silently lag a surface change. **P-024 is where to add the
+  version-fingerprint guard.** Minor note (NOT a bug): `update_taste_calibration`
+  exposes `[label, context]` via inspect — MORE honest than the hand-written `desc`
+  "(params: label)"; the inspect derivation is the truthful one.
+
+- **✓ RESOLVED by P-021, then ELEVATED TO A CONTRACT FACT by P-023 — the
+  LIVE-vs-DEAD distinction** (was the P-020 carry-forward reviewer flag). P-021's
+  live-vs-dead test asserts, on the real surface, that `write_mix_decision` (the
+  display-only DEAD `decision_ledger.json`, runtime-verified) does NOT change
+  `suggest_next_pass`, whereas `record_mix_pass` (the LIVE history channel →
+  `_apply_history`) DOES — only `record_mix_pass` closes the loop. **P-023 then made
+  this a FIRST-CLASS CONTRACT FIELD:** `describe_contract`'s `side_effect` declares
+  each write honestly — `record_mix_pass` → `writes:history(live)`,
+  `update_taste_calibration` → `writes:taste(live)`, `write_mix_decision` →
+  `writes:ledger(dead)`, `override_track_identity` → `mutates:session`, all other 31
+  `none` (verified against handler bodies by qa + reviewer). So the distinction is no
+  longer merely telegraphed by `desc` strings or only executably pinned by a test —
+  it is a declared, machine-readable contract fact a future agent/reader cannot
+  mistake. Ties into the standing LEDGER-IS-DEAD routing guard below.
 
 - **Reward-nudges family — NOW CLOSED as SATURATED / EQUILIBRIUM (P-017).**
   P-016 shipped the FIRST reward/promotion nudge (the `loop` branch:
