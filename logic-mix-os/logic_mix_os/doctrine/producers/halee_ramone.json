@@ -1,0 +1,119 @@
+{
+  "metadata": {
+    "name": "halee_ramone",
+    "display_name": "Roy Halee / Phil Ramone",
+    "provenance": "hand-curated-documented",
+    "confidence": "high",
+    "risk_class": 0
+  },
+
+  "kind_scores": {
+    "width_bloom":      {"technical": 82, "halee": 78, "ramone": 79, "contrast": 91, "vocal_belief": 74, "excitement": 88, "taste": 80, "translation": "medium", "mono": "medium"},
+    "subtractive_drop": {"technical": 85, "halee": 88, "ramone": 86, "contrast": 88, "vocal_belief": 86, "excitement": 78, "taste": 86, "translation": "low", "mono": "low"},
+    "vocal_ride":       {"technical": 84, "halee": 84, "ramone": 92, "contrast": 70, "vocal_belief": 92, "excitement": 70, "taste": 88, "translation": "low", "mono": "low"},
+    "drum_room_bloom":  {"technical": 80, "halee": 89, "ramone": 78, "contrast": 82, "vocal_belief": 76, "excitement": 83, "taste": 82, "translation": "low", "mono": "low"},
+    "loop_deconstruct": {"technical": 83, "halee": 87, "ramone": 84, "contrast": 78, "vocal_belief": 85, "excitement": 72, "taste": 84, "translation": "low", "mono": "low"},
+    "depth_cleanup":    {"technical": 84, "halee": 90, "ramone": 85, "contrast": 72, "vocal_belief": 86, "excitement": 66, "taste": 85, "translation": "low", "mono": "low"},
+    "intimacy_pass":    {"technical": 82, "halee": 85, "ramone": 88, "contrast": 72, "vocal_belief": 90, "excitement": 64, "taste": 87, "translation": "low", "mono": "low"}
+  },
+
+  "risk_penalty": {"low": 0, "medium": 6, "high": 14},
+
+  "creative_nudge_cap": 2.0,
+  "creative_promotion_cap": 4.0,
+
+  "nudge_table": [
+    {
+      "kinds": ["width_bloom", "vocal_ride"],
+      "evidence": "lead_masked",
+      "dim": "vocal_belief",
+      "delta": -14,
+      "reason": "vocal_belief -14: lead vocal is masked (bad_masking) — pushing the vocal forward by level/width is risky here; bring it into intimate focus instead"
+    },
+    {
+      "kinds": ["width_bloom"],
+      "evidence": "width_crowding",
+      "dim": "vocal_belief",
+      "delta": -6,
+      "reason": "vocal_belief -6: stereo image is already width-crowded"
+    }
+  ],
+
+  "promotion_table": [
+    {
+      "kinds": ["loop_deconstruct"],
+      "evidence": "foregrounded_loop",
+      "dim": "excitement",
+      "delta": 35,
+      "reason": "loop_promotion +4.0: a foregrounded/dominating loop — deconstruct it (source material respected), don't just accent it"
+    }
+  ],
+
+  "search_modes": {
+    "conservative": {"allowed_risk": "low", "bias": "preserve identity, subtle improvements, vocal belief"},
+    "halee_depth": {"allowed_risk": "medium", "bias": "physical room/chamber/plate depth, space as storytelling"},
+    "ramone_vocal_truth": {"allowed_risk": "low", "bias": "vocal rides, phrase emotion, clarity, restraint"},
+    "dramatic_contrast": {"allowed_risk": "medium", "bias": "push verse/chorus/bridge contrast harder"},
+    "deconstructive": {"allowed_risk": "medium", "bias": "remove, mute, chop, filter, simplify"},
+    "experimental": {"allowed_risk": "high", "bias": "unusual transforms, reverses, extreme depth shifts"}
+  },
+
+  "philosophy": "A mix is not finished when it is balanced. It is finished when the static balance supports the song and the dynamic movement makes the song feel inevitable. The best mix is the version where the song feels most inevitable, not the most processed.",
+
+  "truth_alignment": {
+    "intimate": {"vocal_ride": 88, "intimacy_pass": 90, "subtractive_drop": 84, "depth_cleanup": 82, "loop_deconstruct": 83, "drum_room_bloom": 58, "width_bloom": 45},
+    "big": {"width_bloom": 86, "drum_room_bloom": 86, "vocal_ride": 78, "subtractive_drop": 76, "depth_cleanup": 76, "loop_deconstruct": 78, "intimacy_pass": 70},
+    "neutral": {"width_bloom": 72, "drum_room_bloom": 78, "vocal_ride": 84, "subtractive_drop": 82, "depth_cleanup": 82, "loop_deconstruct": 80, "intimacy_pass": 82}
+  },
+
+  "taste_max_delta": 15,
+
+  "taste_kind_bias": {
+    "tends to prefer narrower stereo images": {"width_bloom": -15, "drum_room_bloom": -15},
+    "prefers wider images": {"width_bloom": 15}
+  },
+
+  "aesthetic_kill_switches": [
+    "Never chase reference loudness at the mix stage.",
+    "Never widen the full mix to solve chorus lift.",
+    "Never make the lead vocal less intelligible unless explicitly approved.",
+    "Never allow a stock loop to dominate the song identity by accident."
+  ],
+
+  "doctrine": {
+    "weights": {
+      "halee_score": 1.0,
+      "ramone_score": 1.2,
+      "vocal_centrality_score": 1.2,
+      "depth_hierarchy_score": 1.0,
+      "section_contrast_score": 1.0,
+      "static_mix_score": 1.0,
+      "dynamic_mix_score": 0.8
+    },
+    "baselines": {
+      "halee": 86.0,
+      "ramone": 86.0
+    },
+    "penalty_coeffs": {
+      "halee": {
+        "forward_threshold": 0.6,
+        "forward_occupancy": 70,
+        "felt_forward": 4,
+        "width_crowding": 6,
+        "loop_foregrounded": 6
+      },
+      "ramone": {
+        "no_lead": 35,
+        "vocal_masked": 6,
+        "decorative_threshold": 0.4,
+        "decorative_penalty": 10
+      }
+    }
+  },
+
+  "default_creative_mode": {
+    "intimate_truth_words": ["intimate", "vulnerable", "conflicted", "ache", "quiet", "restrained", "composed"],
+    "intimate_mode": "ramone_vocal_truth",
+    "default_mode": "dramatic_contrast"
+  }
+}
