@@ -24,21 +24,40 @@
   `build-os/receipts/P-013-nudge-visibility-fixture.md`. (Options (a) leave
   as-is and (c) fuller song-derived rescoring were NOT chosen.)
 
+- **THE BASE-VALUE RE-CURATION LEVER IS PROBED AND THE JUDGMENT LAYER IS AT A
+  DOCTRINE-HONEST EQUILIBRIUM (P-017).** The user chose "A" -- attempt the FIRST
+  change to a base `_KIND_SCORES` value (re-curate `depth_cleanup` so the
+  depth/hierarchy move wins the `density` branch). **FINDING: an honest re-curation
+  CANNOT flip `density` -- arithmetically forced by the doctrine, verified
+  adversarially. `_KIND_SCORES` LEFT UNTOUCHED (no product change).** THREE
+  independent levers have now converged on the same place: penalty (P-012/P-015),
+  reward/promotion (P-016), and base-value re-curation (P-017) all confirm that
+  `subtractive_drop`'s default dominance is legitimate, the masked-vocal near-tie
+  (P-015) and foregrounded-loop promotion (P-016) are the ONLY doctrinally-warranted
+  flips, and **there is NO honest further flip move inside the current dimension
+  set.** The evidence/re-curation program to make judgment decisive is essentially
+  COMPLETE. The one remaining honest thread is a SYMMETRIC re-judgment (is
+  `subtractive_drop` itself slightly over-valued?) -- user-gated, un-signed-off, NOT
+  staged. Receipt: `build-os/receipts/P-017-doctrine-honest-kind-scores-recuration.md`.
+
 ## Deferred (follow-up packets)
 
-- **Reward-nudges family — OPENED by P-016 (the penalty-only line is CROSSED).**
+- **Reward-nudges family — NOW CLOSED as SATURATED / EQUILIBRIUM (P-017).**
   P-016 shipped the FIRST reward/promotion nudge (the `loop` branch:
   `loop_deconstruct` promoted +4.0 past `subtractive_drop` when a loop is
-  genuinely foregrounded), evidence-gated and LIVE in production. Precedent is
-  set. Future reward rows on OTHER branches — e.g. `density → depth_cleanup`,
-  `chorus_lift → drum_room_bloom` (and the old orchestrator rows 3+4:
-  `depth_cleanup +6 halee` / `subtractive_drop +4 taste` on non-empty
-  `crowded_sections`) — are now **in-doctrine follow-ups**, NOT out-of-doctrine.
-  BUT each is **user-gated per-row** and must clear the SAME bar as P-016: its own
-  evidence gate + a non-vacuity mutation check + a collateral-safety proof + a
-  **live-wire check** (evidence computed BEFORE `run_creative_engine`; asserted on
-  the real `result.creative`/`result.governance` with NO re-run). Do NOT batch;
-  do NOT open a given row without the user asking for it.
+  genuinely foregrounded), evidence-gated and LIVE in production, and it MERGED via
+  PR #15. **But the further-reward-rows thread is now CLOSED:** the reward layer is
+  saturated at cap 4.0 — only `loop` (gap 3.43) was cleanly reachable; `density`
+  (gap 4.14) is unreachable + circular-gated; `drum_room_bloom` is hollow (no
+  evidence signal). And P-017 confirmed the base-value re-curation lever cannot
+  honestly flip `density` either. The three levers (penalty, reward, base-value)
+  have all converged on a DOCTRINE-HONEST EQUILIBRIUM: **there is no honest further
+  flip move inside the current dimension set.** Should the user ever ask for a NEW
+  reward row anyway, it would still be user-gated per-row and must clear the SAME
+  bar as P-016 (its own evidence gate + a non-vacuity mutation check + a
+  collateral-safety proof + a live-wire check: evidence computed BEFORE
+  `run_creative_engine`; asserted on the real `result.creative`/`result.governance`
+  with NO re-run) — but this is no longer an in-flight candidate.
 - **Near-tie-creative-FLIP fixture — RESOLVED-as-UNREACHABLE (P-014 verified
   negative finding).** This was the reachable-deferred complement to P-013's
   no-flip case; **P-014 proved a flip is structurally UNREACHABLE test-only**
@@ -143,16 +162,22 @@
 
 > The learning loop is real in production (P-007→P-008→P-009), the cross-song
 > coherence axis is open (P-010), the album-means truth is single-sourced (P-011),
-> and the creative-scoring aesthetic decision is RESOLVED via option B (P-012,
-> penalty-only — awaiting PR #13 sign-off). For orchestrator re-survey:
+> the creative-scoring aesthetic decision is RESOLVED (P-012 option B, MERGED PR
+> #13; P-015 decisive; P-016 reward, MERGED PR #15), and the judgment layer is now
+> at a DOCTRINE-HONEST EQUILIBRIUM (P-017 — no honest further flip in the current
+> dimension set). For orchestrator re-survey:
 
-- **Reward nudges — NOW OPENED (first shipped by P-016).** The penalty-only line
-  is crossed: P-016's `loop`-branch promotion is the first reward nudge, live in
-  production. Further reward rows on other branches are the natural ADDITIVE
-  follow-on and now IN-DOCTRINE, but **user-gated per-row** + each must clear the
-  P-016 bar (evidence gate + non-vacuity + collateral safety + live-wire check).
-  The deeper `_KIND_SCORES` re-curation remains the bigger lever, untouched by
-  P-012/P-015/P-016 by design.
+- **THE FLIP PROGRAM IS ESSENTIALLY COMPLETE — DOCTRINE-HONEST EQUILIBRIUM
+  (P-017).** The three levers have converged: penalty (P-012/P-015), reward
+  (P-016), and base-value re-curation (P-017) all confirm `subtractive_drop`'s
+  dominance is legitimate; the masked-vocal and foregrounded-loop overrides are the
+  only warranted flips; **NO honest further flip exists in the current dimension
+  set.** The reward-family (further rows) and re-curation-for-flips threads are
+  CLOSED as saturated. **The ONE remaining honest thread — user-gated, NOT staged:**
+  a SYMMETRIC re-judgment — is `subtractive_drop` at 85.29 (high on every dim)
+  itself slightly OVER-valued? Lowering it (rather than inflating a rival) would be
+  a different, un-signed-off packet. Surface to the user; do NOT open without an
+  explicit ask.
 - **Option-B-visibility / decisiveness** — the CREATIVE half is fully closed:
   **P-013** proved the nudge fires on real data through `analyze()` (option-(a)
   no-flip on a clear ranking), **P-014** proved a near-tie FLIP was unreachable
@@ -165,6 +190,51 @@
 - Net-new **event-logging** producers remain behind the product decision.
 
 ## Done (resolved)
+
+- **Base-value `_KIND_SCORES` re-curation (density → depth_cleanup) — RESOLVED as
+  a VERIFIED NEGATIVE FINDING via P-017**
+  (`build-os/receipts/P-017-doctrine-honest-kind-scores-recuration.md`).
+  **User-signed-off ("A"); the FIRST attempt to change a base `_KIND_SCORES`
+  value** (crossing the line P-012/P-015/P-016 held: they layered evidence nudges
+  on an UNTOUCHED base). **FINDING: an honest re-curation of `depth_cleanup` CANNOT
+  flip the `density` branch — arithmetically forced by the DOCTRINE (which dims are
+  honestly movable), not a search failure. `_KIND_SCORES` LEFT UNTOUCHED — NO
+  product change** (the honesty clause held; P-014 discipline). **The forced
+  arithmetic:** `overall = mean(7 dims) − risk_penalty`; `depth_cleanup` 81.14
+  (dim sum 568) vs `subtractive_drop` 85.29 (dim sum 597, low risk) → gap 4.14; the
+  only doctrine-defensible under-valuation is `contrast` (dc 72 vs sd 88): →88 =
+  83.43 (short 1.86), →100 (impossible ceiling) = 85.14 (STILL below); a FULL honest
+  re-curation (contrast→88, technical→85, ramone→86, taste→86; halee stays 90=max,
+  vocal_belief stays 86; **excitement LOCKED at 66**) reaches only 83.86 (short
+  1.43); the entire residual deficit lives in `excitement` (66 vs 78), OFF-LIMITS to
+  inflate (subtle depth work is honestly un-flashy) — the only flips require
+  inflating excitement or re-labeling a depth pass as vocal-forward, both dishonest.
+  **The committed guard (load-bearing, non-tautological):** the builder committed
+  ONLY `tests/test_density_recuration.py` (NEW, 12 tests, +183, sole packet commit
+  `1b03ad3`) pinning the 5-branch winner table UNCHANGED on the real `analyze()`
+  path + the honest-ceiling arithmetic + `_KIND_SCORES` untouched; an injected
+  inflated `depth_cleanup` (contrast=88+excitement=90, or all dims=100) makes it
+  FAIL (density → density_A), so it genuinely catches an accidental/dishonest
+  density flip. Committing executable arithmetic is defensible here (unlike P-014's
+  no-commit finding) because the finding IS arithmetic and the variant-scoring path
+  is golden-unguarded. **Before/after winner table (all 5 branches, real path)
+  UNCHANGED:** chorus_lift→subtractive_drop 85.3; density→subtractive_drop 85.3;
+  loop→subtractive_drop 85.3 (default); depth→depth_cleanup 81.1 (single-variant);
+  vocal_belief→vocal_ride 82.9. **Proof:** suite **228 → 240 passed** (+12; 0
+  failed/skipped/warnings, green under `-W error`); regression **68/68, 0 critical,
+  0 warnings** held; Commit-1 (the sole commit) green in isolation (new file alone
+  12 passed); safety grep clean; UI N/A; P-012/P-013/P-015/P-016 test files NOT
+  edited and pass (69). qa **GREEN — FINDING CONFIRMED**; reviewer **pass** (judged
+  the finding doctrine-HONEST, not a masked search failure). **Codex NOT available
+  — single-reviewer verdict.** **THE EQUILIBRIUM SYNTHESIS:** three levers converge
+  — penalty (P-012/P-015, saturated: only vocal_belief gap 1.71<cap 2.0 flippable),
+  reward (P-016, saturated at cap 4.0: only loop gap 3.43 reachable), base-value
+  re-curation (P-017: density unflippable honestly) — **the judgment layer is at a
+  DOCTRINE-HONEST EQUILIBRIUM; no honest further flip exists in the current
+  dimension set.** The one open thread: is `subtractive_drop` itself over-valued? —
+  a symmetric re-judgment, user-gated, un-signed-off, NOT staged. **P-017's guard
+  commit `1b03ad3` is local-only** (dev branch on top of the `6c40e2b` PR #15
+  merge), not pushed/merged at close.
 
 - **Evidence-gated loop-deconstruct PROMOTION — the FIRST reward nudge — DONE via
   P-016** (`build-os/receipts/P-016-evidence-gated-loop-promotion.md`).
@@ -529,6 +599,18 @@
 
 ## Open boundaries (awaiting explicit go)
 
+- **P-017 closed with NO product-code change (verified negative finding).** The
+  ONLY committed change is the tests-only characterization guard
+  (`tests/test_density_recuration.py`, commit `1b03ad3`) plus the `fecc4e5`
+  active-packet confirmation and this build-os close. All sit on the dev branch
+  `claude/logic-mix-os-hardening-12-7hbeh1` on top of the `6c40e2b` (PR #15) merge.
+  **`1b03ad3` is local-only at this close.** Any push of it — and any subsequent
+  PR / merge into the protected default — needs the user's explicit go. No push /
+  merge / deploy / secret action taken in this close.
+- **P-016 is now MERGED to default via PR #15** (merge commit `6c40e2b`, the current
+  default-branch tip and the base for P-017). The earlier P-016 dev commits
+  (`b15b957`, `a9f4e26`) are landed on default via that merge. That boundary is
+  resolved. (Earlier stale note said "P-016 local-only on `0f4e7e9`" — superseded.)
 - **P-014 closed with NO product/test commit (verified negative finding).** Only
   the build-os memory advance (this close) and the prior `596174d` active-packet
   confirmation sit on the dev branch `claude/logic-mix-os-hardening-12-7hbeh1` on
@@ -553,4 +635,4 @@
   taken in this close.
 
 ---
-_Append-only working notes._
+_Append-only working notes. Last advanced on P-017 close (2026-07-01)._
