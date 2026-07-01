@@ -227,7 +227,9 @@ def test_low_end_motion_appended_last_preserves_summation_order(analyzed):
         ds = analyzed[name].doctrine_score
         keys = [k for k in ds if k.endswith("_score") and k != "overall_mix_readiness_score"]
         assert keys[:11] == EXISTING_COMPONENT_KEYS
-        assert keys[-1] == "low_end_motion_score"
+        # P-032g appended loop_context_score after this axis, so the anchor is
+        # positional (index 11), no longer the tail.
+        assert keys[11] == "low_end_motion_score"
 
 
 def test_every_preexisting_component_score_is_byte_identical(analyzed):

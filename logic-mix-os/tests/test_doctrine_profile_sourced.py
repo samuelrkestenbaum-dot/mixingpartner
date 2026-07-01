@@ -93,6 +93,10 @@ def test_weights_value_pins():
         # pocket), weight 0 for the reference producer (the byte-identical
         # anchor).
         "low_end_motion_score": 0,
+        # P-032g — the producer-agnostic loop_context axis (loop
+        # static-vs-iconic — the hinge), weight 0 for the reference producer
+        # (the byte-identical anchor).
+        "loop_context_score": 0,
     }
 
 

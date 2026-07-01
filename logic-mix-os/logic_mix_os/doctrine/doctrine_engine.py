@@ -98,6 +98,16 @@ def score_doctrine(
     # 11-term summation order is preserved and ``overall`` stays bit-identical
     # for halee_ramone (its low_end_motion weight is 0).
     lem, lem_ev = _low_end_motion(records, sections_analysis, masking_report, mix_metrics, doctrine)
+    # P-032g: the sixth producer-agnostic axis — loop context (static vs
+    # iconic). THE HINGE / the doctrine-pin exemplar: the engine DETECTS the
+    # loop's context OBSERVATIONALLY (dominant + no sectional evolution =
+    # static; dominant + groove-carrying function = iconic); the PROFILE
+    # decides what to do about the reading (deconstruct vs protect — that
+    # decision lives in profile JSON, never here). Appended LAST (after
+    # low_end_motion) so the pre-existing 12-term summation order is preserved
+    # and ``overall`` stays bit-identical for halee_ramone (its loop_context
+    # weight is 0).
+    lc, lc_ev = _loop_context(records, sections_analysis, masking_report, doctrine)
 
     component_scores = {
         "halee_score": halee,
@@ -112,6 +122,7 @@ def score_doctrine(
         "groove_coherence_score": gc,
         "rhythmic_surprise_score": rs,
         "low_end_motion_score": lem,
+        "loop_context_score": lc,
     }
     weights = doctrine["weights"]
     present = {k: v for k, v in component_scores.items() if v is not None}
@@ -137,6 +148,7 @@ def score_doctrine(
             "groove_coherence": gc_ev,
             "rhythmic_surprise": rs_ev,
             "low_end_motion": lem_ev,
+            "loop_context": lc_ev,
         },
         "warnings": warnings,
     }
@@ -844,3 +856,277 @@ def _low_end_motion(records: List[Dict], sections_analysis: List[Dict],
         )
 
     return _clamp(score), ev
+
+
+def read_loop_context(records: List[Dict], sections: List[Dict],
+                      events: List[Dict], c: Dict):
+    """The SHARED observational loop-context read (P-032g).
+
+    Returns ``(status, facts)`` where ``status`` is one of:
+
+      * ``"no_loop"``             — no imported loop/sample stem present.
+      * ``"not_dominant"``        — loop material present, but it sits in the
+                                    bed (no dominance signal fires).
+      * ``"dominant_unassessed"`` — a dominant loop, but fewer than two
+                                    sections carry metrics, so evolution
+                                    around it cannot be assessed.
+      * ``"static"``              — a dominant loop with NO sectional
+                                    evolution around it.
+      * ``"iconic"``              — a dominant loop with groove-carrying
+                                    FUNCTION (transient character + envelope
+                                    definition + heard/unmasked) while the mix
+                                    evolves around it.
+      * ``"dominant_evolving"``   — dominant, the mix evolves, but the loop
+                                    does not read as the groove carrier — an
+                                    ambiguous context.
+
+    and ``facts`` carries the measured detail the caller needs for evidence.
+
+    This helper is the SINGLE detection basis used by BOTH the doctrine scorer
+    ``_loop_context`` and (P-032g Commit-2) the creative engine's
+    profile-decided ``protect_iconic_loops`` gate — the two consumers can
+    never fork the physics. Every read is observational; every constant comes
+    from the passed ``c`` (``doctrine["scorers"]["loop_context"]``,
+    read-only).
+
+    Detection, all from in-argument fields:
+      * Loop presence — ``source_kind`` in ``LOOP_SAMPLE_KINDS``.
+      * Dominance (any single signal suffices — three honest ways a loop can
+        dominate): foregrounded (``depth_default`` in the forward layers),
+        wide (``stereo_width`` above ``width_floor``, the stereo field), or
+        transient lift (``metrics.transient_density`` at least
+        ``transient_lift_floor`` above the whole-track median — the loop
+        punches above the bed). Among dominant loops the most transient-
+        forward one is read.
+      * Evolution — whether the mix around the loop MOVES at the section
+        grain: pstdev of section ``rms_dbfs`` / ``width`` / ``brightness``
+        compared against the ``evolution_*`` floors (threshold comparisons
+        ONLY — the spreads are never multiplied into any score, so this is
+        not a re-derivation of ``_dynamic_mix``). ``contrast_vs_previous``
+        warnings are counted as corroborating colour.
+      * Groove/fingerprint function (the ICONIC read — an acoustic proxy):
+        the dominant loop's ``transient_density`` clears
+        ``groove_transient_floor`` (it carries rhythm), its
+        ``crest_factor_db`` clears ``definition_crest_db`` (defined, not
+        smeared hits), its ``perceptual_role`` is heard/structural, and no
+        ``bad_masking`` event buries it.
+    """
+    facts: Dict = {}
+    loops = [r for r in records if r.get("source_kind") in LOOP_SAMPLE_KINDS]
+    if not loops:
+        return "no_loop", facts
+
+    def _td(r: Dict) -> float:
+        return float(r.get("metrics", {}).get("transient_density", 0.0) or 0.0)
+
+    def _crest(r: Dict) -> float:
+        return float(r.get("metrics", {}).get("crest_factor_db", 0.0) or 0.0)
+
+    densities = [_td(r) for r in records]
+    median_td = statistics.median(densities) if densities else 0.0
+    facts["loops"] = [r["name"] for r in loops]
+
+    def _signals(r: Dict) -> List[str]:
+        s: List[str] = []
+        if r.get("depth_default") in FORWARD:
+            s.append("foregrounded")
+        if float(r.get("stereo_width", 0) or 0) > c["width_floor"]:
+            s.append("wide")
+        if _td(r) - median_td >= c["transient_lift_floor"]:
+            s.append("transient lift above the bed")
+        return s
+
+    dominant_loops = [(r, _signals(r)) for r in loops]
+    dominant_loops = [(r, s) for r, s in dominant_loops if s]
+    if not dominant_loops:
+        return "not_dominant", facts
+
+    dom, signals = max(dominant_loops, key=lambda pair: _td(pair[0]))
+    facts["dominant"] = dom["name"]
+    facts["signals"] = signals
+
+    def _vals(key: str) -> List[float]:
+        return [
+            float(v)
+            for v in (s.get("metrics", {}).get(key) for s in sections)
+            if v is not None
+        ]
+
+    rms, width, bright = _vals("rms_dbfs"), _vals("width"), _vals("brightness")
+    if len(rms) < 2 and len(width) < 2 and len(bright) < 2:
+        return "dominant_unassessed", facts
+
+    rms_std = statistics.pstdev(rms) if len(rms) > 1 else 0.0
+    width_std = statistics.pstdev(width) if len(width) > 1 else 0.0
+    bright_std = statistics.pstdev(bright) if len(bright) > 1 else 0.0
+    lift_fails = sum(1 for s in sections if "warning" in s.get("contrast_vs_previous", {}))
+    facts.update(rms_std=rms_std, width_std=width_std, bright_std=bright_std,
+                 lift_fails=lift_fails)
+
+    evolving = (
+        rms_std >= c["evolution_rms_floor_db"]
+        or width_std >= c["evolution_width_floor"]
+        or bright_std >= c["evolution_brightness_floor"]
+    )
+    if not evolving:
+        return "static", facts
+
+    # The ICONIC read — groove-carrying FUNCTION, an acoustic proxy only.
+    groove_char = _td(dom) >= c["groove_transient_floor"]
+    defined = _crest(dom) >= c["definition_crest_db"]
+    heard = dom.get("perceptual_role") in {"heard", "structural"}
+    masked = any(
+        dom["name"] in e.get("elements", []) and e.get("classification") == "bad_masking"
+        for e in events
+    )
+    facts.update(transient_density=_td(dom), crest_db=_crest(dom),
+                 groove_char=groove_char, defined=defined, heard=heard,
+                 masked=masked, role=dom.get("perceptual_role"))
+    if groove_char and defined and heard and not masked:
+        return "iconic", facts
+    return "dominant_evolving", facts
+
+
+def _loop_context(records: List[Dict], sections_analysis: List[Dict],
+                  masking_report: Dict, doctrine: Dict = _DOCTRINE):
+    """Producer-AGNOSTIC scorer for LOOP CONTEXT — static vs iconic. THE HINGE.
+
+    This is the SIXTH new agnostic axis (P-032g) and the exemplar of the
+    pinned architecture doctrine: **the engine DETECTS agnostically; the
+    profile DECIDES.** A dominating loop is not, by itself, a fault or a
+    virtue — one profile may deconstruct it, another may treat it as the very
+    identity of the record and protect it. That reversal lives in profile
+    JSON (weights here; the ``protect_iconic_loops`` creative gate in
+    Commit-2), never in this function. The language is therefore strictly
+    OBSERVATIONAL (USER-MANDATED): the evidence reports what IS — dominant,
+    static, iconic-functioning, ambiguous — and never rules on it.
+
+    The reading (all detection shared with the creative gate via
+    ``read_loop_context`` — one basis, never forked):
+
+      * **No loop** — no stem with a loop/sample ``source_kind`` → the
+        documented ``no_loop`` NEUTRAL float. Sectional evolution alone can
+        never move this axis (with no loop the movement axes own that signal
+        — see DISTINCTNESS below).
+      * **Loop present, not dominant** — no dominance signal (not
+        foregrounded, not wide, no transient lift above the bed's median
+        transient density) → the ``not_dominant`` neutral: a loop sitting in
+        the bed is neither static-dominating nor iconic-functioning.
+      * **Dominant + evolution unassessable** (fewer than two sections with
+        metrics) → the ``dominant_unassessed`` fallback, a documented
+        ambiguous reading, never a guess.
+      * **Dominant + no sectional evolution = STATIC** → the LOW ``static``
+        float. The mix does not move around the loop at the section grain
+        (RMS/width/brightness spreads all under the evolution floors).
+      * **Dominant + evolution + groove/fingerprint FUNCTION = ICONIC** → the
+        HIGH ``iconic`` float: the loop carries the rhythm (transient density
+        over ``groove_transient_floor``), with defined hits
+        (``crest_factor_db`` over ``definition_crest_db``), heard and
+        unmasked, while the mix evolves around it.
+      * **Dominant + evolution, but no groove-function read** → the
+        ``dominant_evolving`` mid float — an ambiguous context.
+
+    The score is a CONTEXT reading, not a verdict: high = iconic-functioning
+    dominant loop, mid = no loop / ambiguous, low = static-dominating loop.
+    Always a clamped float, never None. Constants are read-only from
+    ``doctrine["scorers"]["loop_context"]``.
+
+    WHAT "ICONIC" HONESTLY MEANS HERE — an ACOUSTIC PROXY, nothing more: the
+    measurable groove-carrying FUNCTION of the dominant loop on the exported
+    stems. It does NOT and cannot mean CULTURAL recognizability ("everyone
+    knows this break") — that is provenance/manifest territory (sample
+    identification, clearance metadata), not audio measurement, and it is
+    DEFERRED, not faked. The evidence names the proxy explicitly.
+
+    DISTINCTNESS — evolution is a context INPUT here, never the score:
+    ``_dynamic_mix`` scores the section spreads themselves,
+    ``_rhythmic_surprise`` scores transient-density variation,
+    ``_section_contrast`` scores lift failures. This axis only COMPARES the
+    spreads against floors to interpret the LOOP; with no loop present the
+    sectional movement has zero effect on this axis.
+
+    DEFERRED, NOT FAKED (docstring, never claimed in evidence):
+      1. Cultural/recognizability iconic-ness — provenance/manifest, not
+         audio (above).
+      2. Per-loop bar-level variation (does the LOOP itself vary bar to bar,
+         or repeat verbatim) — needs an onset/bar sequence, post-doctrine
+         groove territory.
+      3. Anything else needing the onset sequence (chop-pattern detection,
+         loop-vs-arrangement phase) — same territory.
+    """
+    c = doctrine["scorers"]["loop_context"]
+    events = masking_report.get("events", []) if masking_report else []
+    status, facts = read_loop_context(records, sections_analysis, events, c)
+    ev: List[str] = []
+
+    if status == "no_loop":
+        ev.append("No imported loop/sample material present — loop context is neutral.")
+        return _clamp(c[status]), ev
+
+    if status == "not_dominant":
+        names = ", ".join(facts["loops"])
+        ev.append(
+            f"Imported loop material present ({names}) without dominance "
+            f"signals — it sits in the bed (not foregrounded, not wide, no "
+            f"transient lift above the bed)."
+        )
+        return _clamp(c[status]), ev
+
+    dom = facts["dominant"]
+    signals = " + ".join(facts["signals"])
+
+    if status == "dominant_unassessed":
+        ev.append(
+            f"Dominant loop '{dom}' ({signals}); fewer than two sections with "
+            f"metrics, so evolution around it cannot be assessed — an "
+            f"ambiguous loop context."
+        )
+        return _clamp(c[status]), ev
+
+    spreads = (
+        f"RMS spread {facts['rms_std']:.2f} dB, width spread "
+        f"{facts['width_std']:.3f}, brightness spread {facts['bright_std']:.3f}"
+    )
+
+    if status == "static":
+        lift_txt = (
+            f"; {facts['lift_fails']} section(s) do not lift vs the previous"
+            if facts["lift_fails"] else ""
+        )
+        ev.append(
+            f"Dominant loop '{dom}' ({signals}) with no sectional evolution "
+            f"around it ({spreads}{lift_txt}) — the loop reads STATIC: "
+            f"dominant while the mix around it does not move."
+        )
+        return _clamp(c[status]), ev
+
+    if status == "iconic":
+        ev.append(
+            f"Dominant loop '{dom}' ({signals}) reads ICONIC-functioning — an "
+            f"acoustic proxy for groove-carrying function: transient density "
+            f"{facts['transient_density']:.2f} with defined hits (crest "
+            f"{facts['crest_db']:.1f} dB), heard and unmasked, while the mix "
+            f"evolves around it ({spreads})."
+        )
+        return _clamp(c[status]), ev
+
+    # dominant_evolving — the ambiguous mid reading; report WHY it does not
+    # read as the groove carrier, observationally.
+    reasons: List[str] = []
+    if not facts["groove_char"]:
+        reasons.append(
+            f"transient density {facts['transient_density']:.2f} under the groove floor"
+        )
+    if not facts["defined"]:
+        reasons.append(f"crest {facts['crest_db']:.1f} dB under the definition floor")
+    if not facts["heard"]:
+        reasons.append(f"perceptual role '{facts['role']}', not heard")
+    if facts["masked"]:
+        reasons.append("masked by a forward element")
+    detail = "; ".join(reasons) if reasons else "no groove-function read"
+    ev.append(
+        f"Dominant loop '{dom}' ({signals}); the mix evolves around it "
+        f"({spreads}), and the loop does not read as the groove carrier "
+        f"({detail}) — an ambiguous loop context."
+    )
+    return _clamp(c[status]), ev

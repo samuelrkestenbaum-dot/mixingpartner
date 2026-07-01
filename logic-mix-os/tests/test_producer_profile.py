@@ -570,10 +570,14 @@ def test_doctrine_subfields_present():
     # (weak, section-aggregate form).
     # P-032c added the tenth: the producer-agnostic ``low_end_motion`` axis
     # (the low-end pocket: kick/sub relationship + room around the bass).
+    # P-032g added the eleventh: the producer-agnostic ``loop_context`` axis
+    # (loop static-vs-iconic — the hinge; the engine detects, the profile
+    # decides).
     assert set(d["scorers"]) == {
         "vocal_centrality", "depth_hierarchy", "section_contrast",
         "static_mix", "dynamic_mix", "beat_identity", "negative_space",
         "groove_coherence", "rhythmic_surprise", "low_end_motion",
+        "loop_context",
     }
 
 

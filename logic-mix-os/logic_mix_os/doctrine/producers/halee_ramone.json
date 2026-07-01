@@ -104,7 +104,8 @@
       "negative_space_score": 0,
       "groove_coherence_score": 0,
       "rhythmic_surprise_score": 0,
-      "low_end_motion_score": 0
+      "low_end_motion_score": 0,
+      "loop_context_score": 0
     },
     "baselines": {
       "halee": 86.0,
@@ -207,6 +208,21 @@
         "moderate_conflict_penalty": 6,
         "complement_coeff": 2.0,
         "complement_cap_db": 12.0
+      },
+      "loop_context": {
+        "no_loop": 50.0,
+        "not_dominant": 50.0,
+        "dominant_unassessed": 45.0,
+        "dominant_evolving": 60.0,
+        "static": 15.0,
+        "iconic": 90.0,
+        "width_floor": 0.6,
+        "transient_lift_floor": 0.15,
+        "groove_transient_floor": 0.35,
+        "definition_crest_db": 12.0,
+        "evolution_rms_floor_db": 1.0,
+        "evolution_width_floor": 0.05,
+        "evolution_brightness_floor": 0.05
       }
     }
   },
