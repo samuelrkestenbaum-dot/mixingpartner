@@ -3,6 +3,33 @@
 > The "where are we" snapshot. The orchestrator reads this first every session.
 > The archivist advances it when a packet closes. Keep it short and true.
 
+## ★ Architecture doctrine (USER-ISSUED, 2026-07-01 — standing, applies to every producer-profile packet)
+
+> **Axes are shared measurable substrate. Taste is the weighting layer.
+> Safety/governance is invariant.**
+
+- Every new producer profile REUSES the same measured axes where possible, then
+  changes: **weights, thresholds, promotion rules, penalty interpretation,
+  recommendation language.**
+- A profile NEVER changes: **safety, non-destructive guarantees, audit,
+  rollback, source integrity.**
+- The engine DETECTS agnostically; the profile DECIDES. (P-032g exemplar:
+  engine says "dominant loop + low contrast = static / dominant loop +
+  groove-carrying identity = iconic"; Halee/Ramone may deconstruct, Timbaland
+  may protect — the reversal lives in JSON, never in engine code.)
+- Axis semantics are RELATIONAL, not quantitative ("clean low-end relationship
+  beats high low-end quantity"); scorer language stays neutral so different
+  profiles can interpret the same axis differently (e.g. low-end: Timbaland =
+  pocket/impact/negative-space/sub-kick relationship; Halee/Ramone =
+  balance/natural foundation; modern pop = translation/controlled sub density;
+  trap = sub identity/808 envelope/space around transient).
+- The landed axes under this doctrine: beat_identity = fingerprint;
+  negative_space = rhythmic absence; groove_coherence = pocket stability;
+  rhythmic_surprise = movement/interruption; low_end_motion = kick/sub/room
+  relationship (in flight); loop_context = static-vs-iconic hinge (next).
+- This is not a Timbaland profile being built — it is a producer-profile
+  FRAMEWORK emerging under the Timbaland work.
+
 ## Project
 
 - **What this repo is:** Logic Mix OS — a local-first, deterministic mix-decision
