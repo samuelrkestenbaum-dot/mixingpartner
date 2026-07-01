@@ -42,6 +42,23 @@
 
 ## Deferred (follow-up packets)
 
+- **★ THE ACTIVE ROADMAP — THE ARC TO A COWORK-USABLE END-TO-END STATE
+  (P-020 → P-023).** Canonical target: Logic Mix OS as a tool Claude Cowork can
+  drive END-TO-END in a Logic Pro mixing session (plan-only v1). **P-019 closed the
+  FIRST step** — the learning loop is now closeable INSIDE the cowork surface
+  (`record_mix_pass`, read/write symmetric). The rest of the arc, in sequence:
+  - **P-020 — session-flow discoverability:** phase-grouped commands so an agent
+    can navigate the 33-command surface (intake → classify → diagnose → plan →
+    checklist → validate → record → next-pass). In-authority, additive.
+  - **P-021 — verified end-to-end agent walkthrough (TESTS-ONLY):** drive a full
+    Logic-Pro mixing session through the cowork surface start-to-finish; prove the
+    whole chain works as one session.
+  - **P-022 — OPTIONAL session-efficiency / override-propagation.** Sequence only
+    if P-020/P-021 surface a real need.
+  - **P-023 — USER-GATED transport decision: MCP server vs a documented raw-CLI
+    contract.** **Do NOT open blind; sequenced LAST** — it is a product/architecture
+    fork that needs an explicit user ask.
+
 - **Reward-nudges family — NOW CLOSED as SATURATED / EQUILIBRIUM (P-017).**
   P-016 shipped the FIRST reward/promotion nudge (the `loop` branch:
   `loop_deconstruct` promoted +4.0 past `subtractive_drop` when a loop is
@@ -186,8 +203,10 @@
 > the creative-scoring aesthetic decision is RESOLVED (P-012 option B, MERGED PR
 > #13; P-015 decisive; P-016 reward, MERGED PR #15), and the judgment layer is now
 > at a DOCTRINE-HONEST EQUILIBRIUM (P-017 — no honest further flip in the current
-> dimension set), and the OUTCOME→learning axis is now OPEN (P-018 — the first
-> confirmed-outcome signal is live). For orchestrator re-survey:
+> dimension set), the OUTCOME→learning axis is OPEN (P-018 — the first
+> confirmed-outcome signal is live), and the learning loop is now CLOSEABLE INSIDE
+> the cowork surface (P-019 — read/write symmetric; FIRST step of the arc
+> P-019→P-023 to a Cowork-usable end-to-end state). For orchestrator re-survey:
 
 - **THE FLIP PROGRAM IS ESSENTIALLY COMPLETE — DOCTRINE-HONEST EQUILIBRIUM
   (P-017).** The three levers have converged: penalty (P-012/P-015), reward
@@ -200,14 +219,19 @@
   itself slightly OVER-valued? Lowering it (rather than inflating a rival) would be
   a different, un-signed-off packet. Surface to the user; do NOT open without an
   explicit ask.
-- **★ THE OUTCOME→LEARNING AXIS IS NOW OPEN (P-018).** The first confirmed-outcome
-  signal is live: `memory-record --reverted` overrides the score-inference and
-  measurably changes real `analyze(--memory-dir)` next_pass (opt-in / byte-identical
-  default). The reachable next move is the **outcome-enum generalization**
-  (`reverted`/`kept`/`refined`, widening the `reverted: bool` without breaking the
-  default) — reachable but **user-gated for the semantics; NOT staged.** Route any
-  further outcome/event producer onto a LIVE channel (history or taste), never the
-  display-only ledger.
+- **★ THE OUTCOME→LEARNING AXIS IS OPEN (P-018) AND NOW CLOSEABLE INSIDE COWORK
+  (P-019).** P-018 landed the first confirmed-outcome signal (`memory-record
+  --reverted` overrides the score-inference and measurably changes real
+  `analyze(--memory-dir)` next_pass; opt-in / byte-identical default). **P-019
+  brought the RECORD side onto the cowork surface** — a `record_mix_pass` command
+  (registry 32→33) records a pass on the LIVE history channel, so an agent can close
+  the loop (record → see `suggest_next_pass` change) without leaving the surface
+  (read/write symmetric). The reachable outcome-side next move is the **outcome-enum
+  generalization** (`reverted`/`kept`/`refined`, widening the `reverted: bool`
+  without breaking the default) — **user-gated for the semantics; NOT staged.** The
+  in-flight roadmap now is the cowork ARC (P-020→P-023, see the Deferred section).
+  **Standing routing guard:** route any outcome/event producer onto a LIVE channel
+  (history or taste), never the display-only ledger.
 - **Option-B-visibility / decisiveness** — the CREATIVE half is fully closed:
   **P-013** proved the nudge fires on real data through `analyze()` (option-(a)
   no-flip on a clear ranking), **P-014** proved a near-tie FLIP was unreachable
@@ -220,6 +244,52 @@
 - Net-new **event-logging** producers remain behind the product decision.
 
 ## Done (resolved)
+
+- **`record_mix_pass` closes the learning loop INSIDE the cowork surface (FIRST
+  step of the arc P-019→P-023 to a Cowork-usable end-to-end state) — DONE via
+  P-019** (`build-os/receipts/P-019-record-mix-pass-closes-loop-in-cowork.md`).
+  **PRODUCT-code feature; in-authority (reuses the already-live
+  `record_pass`/`_apply_history` channel — no new product decision).** Adds a
+  **`record_mix_pass`** command to the cowork `COMMANDS` registry (count **32 →
+  33**). **The mechanism:** its handler (`cowork.py:97-106`) records a pass on the
+  LIVE history channel — `ctx["memory"].record_pass(name, ctx["result"],
+  reverted=...)` → `mix_pass_history.json` — passing through the P-018 `reverted`
+  ground-truth flag (opt-in, default False), returning the record JSON; clean
+  `{"error": "no memory_dir configured"}` when no memory dir (mirrors
+  `_write_mix_decision`). So an agent driving through the cowork surface can now
+  RECORD an outcome and see `suggest_next_pass` change WITHOUT leaving the surface —
+  the read/write cowork surface is symmetric (the READ side was already live via
+  P-009). Routes to the LIVE channel, NOT the dead decision ledger. **One surface
+  finding, resolved minimally (NOT a wall):** the cowork `--params '{...}'` path
+  unpacks user JSON into `run_command(name, ctx, **params)`, so a handler param
+  named `name` collided with the dispatcher's positional `name`; fixed by making
+  the dispatcher's `name`/`ctx` **positional-only** (`run_command(name, ctx, /,
+  **params)`) — behavior-preserving (repo-wide grep found ZERO callers passing
+  `name=`/`ctx=` by keyword; the sole product caller `cli.py:237` passes
+  positionally). **Two commits (≤2):** `b7572b7` Commit-1 (handler + registry row +
+  positional-only + unit tests; test-first, green in isolation = 257) + `de5679f`
+  Commit-2 (no-re-run liveness guard). `cowork.py` is the only product file touched.
+  **Proof:** suite **253 → 259 passed** (+6; 0 failed/skipped/warnings, green under
+  `-W error`); regression **68/68, 0 critical, 0 warnings** held (opt-in memory path
+  → goldens untouched; byte-identical default). **LIVENESS proven load-bearing (the
+  P-016/P-018 lesson honored):** `test_loop_closes_through_cowork_no_rerun` records
+  a confirmed revert via `run_command("record_mix_pass", ...)` on a score-IMPROVED
+  override case, then a FRESH `build_context(memory_dir=...)` →
+  `run_command("suggest_next_pass")` surfaces the confirmed "Revert last pass" — NO
+  hand re-run. Both qa and reviewer INDEPENDENTLY broke the wiring (handler off the
+  live channel) → FAILS; restored → PASSES. **Routes to the live channel (runtime
+  probe):** only `mix_pass_history.json` created, never `decision_ledger.json`.
+  **Byte-identical default:** date-neutralised canonical JSON equal to standalone
+  `memory-record`. Registry 33, no stale 32. Scope: only 3 files (`cowork.py`
+  additive, `test_cowork.py` count assertion 32→33, new `tests/test_cowork_record.py`);
+  `memory.py`/`cli.py`/`pipeline.py`/ledger/creative/governance UNTOUCHED;
+  P-008/P-009/P-018/existing-cowork tests green. Safety grep clean; UI N/A. qa
+  **GREEN** (mutation-verified liveness + non-tautological override + live-channel
+  routing probe). Reviewer **pass** (handler correct + routes live [verified by
+  breaking it]; positional-only safe/minimal; loop closes through cowork;
+  non-tautological override case). **Codex NOT available — single-reviewer
+  verdict.** **P-019 is local-only** (commits `b7572b7`, `de5679f` on the dev branch
+  on top of the `6c40e2b` PR #15 merge base), not pushed/merged at close.
 
 - **Confirmed-revert outcome feeds the live next-pass loop (the FIRST
   confirmed-outcome signal in the learning loop) — DONE via P-018**
@@ -715,5 +785,13 @@
   default — needs the user's explicit go. No push / merge / deploy / secret action
   taken in this close.
 
+- **P-019's product commits `b7572b7`, `de5679f` are local-only as of this close**
+  (this archivist close did not push). They sit on the dev branch
+  `claude/logic-mix-os-hardening-12-7hbeh1` on top of the `6c40e2b` (PR #15) merge
+  base — the additive `record_mix_pass` cowork command (byte-identical by default).
+  The build-os-only close commit is separate. Any push of the product commits — and
+  any subsequent PR / merge into the protected default — needs the user's explicit
+  go. No push / merge / deploy / secret action taken in this close.
+
 ---
-_Append-only working notes. Last advanced on P-018 close (2026-07-01)._
+_Append-only working notes. Last advanced on P-019 close (2026-07-01)._
