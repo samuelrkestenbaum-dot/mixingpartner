@@ -133,12 +133,28 @@ def _apply_history(
 ) -> List[Tuple[int, Dict]]:
     """Pure, deterministic reprioritizer driven by the most recent pass.
 
-    Demotes (does not delete) any candidate whose ``_MOVE_TARGET`` target is in
-    ``last.got_worse`` AND whose title is in ``last.next_recommended``; attaches an
-    ``evidence`` line ONLY to candidates it actually moves. Surfaces exactly one
-    ``"Revert last pass"`` move when ``last.revert_candidates`` is non-empty. No
-    time / I/O / randomness; output order is a deterministic function of the input.
+    Two signals, in precedence order:
+
+    * **Score-inferred (default):** demotes (does not delete) any candidate whose
+      ``_MOVE_TARGET`` target is in ``last.got_worse`` AND whose title is in
+      ``last.next_recommended``; attaches an ``evidence`` line ONLY to candidates
+      it actually moves. Surfaces exactly one ``"Revert last pass"`` move when
+      ``last.revert_candidates`` is non-empty.
+    * **Confirmed operator revert (P-018 — OVERRIDE):** when the most recent pass
+      carries ``last.reverted == True`` (a CONFIRMED operator outcome, opt-in and
+      absent by default), that ground truth OVERRIDES the score-delta guess. Every
+      move the pass recommended (``last.next_recommended``) is demoted regardless
+      of whether the score delta recorded it as ``got_worse``, and a single
+      confirmed ``"Revert last pass"`` move surfaces regardless of
+      ``last.revert_candidates``. The confirmed items carry honestly-distinct
+      wording/evidence ("operator confirmed") so they are never mistaken for the
+      score-inferred guess, and exactly one revert move is emitted (no double-up
+      when both signals fire).
+
+    No time / I/O / randomness; output order is a deterministic function of the
+    input. ``reverted`` absent/False => byte-identical to the score-inferred path.
     """
+    confirmed_revert = bool(last.get("reverted"))
     regressed = {_score_key(d) for d in last.get("got_worse", [])}
     recommended = set(last.get("next_recommended", []))
 
@@ -146,7 +162,21 @@ def _apply_history(
     for priority, item in candidates:
         title = item["title"]
         target = _MOVE_TARGET.get(title)
-        if target is not None and target in regressed and title in recommended:
+        score_demote = (
+            target is not None and target in regressed and title in recommended
+        )
+        # OVERRIDE: a confirmed revert demotes every recommended-then-reverted move
+        # regardless of the score delta (which may even say it improved).
+        confirmed_demote = confirmed_revert and title in recommended and target is not None
+        if confirmed_demote:
+            new_priority = max(0, priority - HISTORY_DEMOTE)
+            new_item = dict(item)
+            new_item["evidence"] = (
+                f"demoted: operator confirmed reverting the last pass, which "
+                f"recommended this move ({target})"
+            )
+            out.append((new_priority, new_item))
+        elif score_demote:
             new_priority = max(0, priority - HISTORY_DEMOTE)
             new_item = dict(item)
             new_item["evidence"] = (
@@ -155,6 +185,29 @@ def _apply_history(
             out.append((new_priority, new_item))
         else:
             out.append((priority, item))
+
+    # A confirmed operator revert is ground truth: surface the revert move on the
+    # confirmed signal even when the score never flagged a candidate. This OVERRIDES
+    # (and replaces, never duplicates) the score-inferred revert below.
+    if confirmed_revert:
+        regressed_named = sorted(regressed)
+        if regressed_named:
+            detail = (
+                "The operator confirmed reverting the previous pass (it regressed "
+                + ", ".join(regressed_named)
+                + "). Re-approach the targeted change more conservatively."
+            )
+        else:
+            detail = (
+                "The operator confirmed reverting the previous pass. Re-approach "
+                "the targeted change more conservatively."
+            )
+        out.append((HISTORY_REVERT_PRIORITY, {
+            "title": "Revert last pass",
+            "detail": detail,
+            "evidence": "surfaced because the operator confirmed reverting the last pass",
+        }))
+        return out
 
     revert = sorted(_score_key(d) for d in last.get("revert_candidates", []))
     if revert:

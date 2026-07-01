@@ -287,7 +287,8 @@ def _run_memory_record(args) -> int:
     manifest = _load_manifest(args.manifest)
     result = analyze(args.stems, manifest, bounce_path=args.bounce)
     mem = ProjectMemory(args.memory_dir)
-    record = mem.record_pass(args.name, result, input_bounce=args.bounce)
+    record = mem.record_pass(args.name, result, input_bounce=args.bounce,
+                             reverted=args.reverted)
     mem.record_plan_decisions(result)
     print(f"Recorded pass '{record['pass_name']}' ({record['date']}).")
     if record["improved"]:
@@ -463,6 +464,10 @@ def build_parser() -> argparse.ArgumentParser:
     mr.add_argument("--bounce", help="Optional stereo bounce")
     mr.add_argument("--memory-dir", required=True, help="Project memory directory")
     mr.add_argument("--name", required=True, help="Mix pass name (e.g. mix_pass_03)")
+    mr.add_argument("--reverted", action="store_true",
+                    help="Record that the operator CONFIRMED reverting this pass "
+                         "(ground-truth outcome; overrides the score-inferred guess "
+                         "in the next-pass planner)")
     mr.set_defaults(func=_run_memory_record)
 
     ms = sub.add_parser("memory-show", help="Show mix pass history, taste profile, and ledger size")

@@ -13,12 +13,18 @@ Usage::
 
 from __future__ import annotations
 
+import inspect
 from typing import Dict, List, Optional
 
 from .constants import IDENTITY_FAMILY
 from .memory import ProjectMemory
 from .pipeline import analyze
 from .renderers.checklist_renderer import render_logic_checklist
+
+# P-023 — the raw-CLI agent contract is VERSIONED. Bump this (semantic: MAJOR on a
+# breaking change to a command's params/side_effect/removal, MINOR on additive) so
+# Claude Cowork can pin the surface it introspected. Stable string; do not compute.
+API_VERSION = "1.0"
 
 
 def build_context(stems=None, manifest=None, memory_dir=None, bounce=None,
@@ -94,6 +100,18 @@ def _write_mix_decision(ctx, decision=None, **k):
     return mem.add_decision(decision or {}, event_type="mix_decision")
 
 
+def _record_mix_pass(ctx, name=None, reverted=False, **k):
+    # P-019 — CLOSE the learning loop inside cowork. Records a pass OUTCOME on the
+    # LIVE history channel (memory.record_pass, P-008/P-009) against this context's
+    # analysis result, passing through the P-018 ``reverted`` ground-truth flag
+    # (opt-in, default False). Mirrors ``_write_mix_decision``'s no-memory error
+    # path; unlike the DEAD decision ledger, this feeds the live next-pass planner.
+    mem = ctx.get("memory")
+    if not mem:
+        return {"error": "no memory_dir configured"}
+    return mem.record_pass(name, _r(ctx), reverted=reverted)
+
+
 def _update_taste(ctx, label=None, context=None, **k):
     mem = ctx.get("memory")
     if not mem:
@@ -107,6 +125,198 @@ def _build_missing_tool(ctx, capability_gap="", **k):
                               "that emits metrics matching the existing schemas.",
             "candidate_tools": ["Mix Probe", "Room Send Auditor", "Vocal Masking Detector",
                                 "Stereo Loop Auditor", "Depth Layer Meter", "Reference Delta Meter"]}
+
+
+# --------------------------------------------------------------------------- #
+# P-020 — session-flow discoverability.
+#
+# ``list_commands`` is the FLAT, alphabetised catalog. ``_SESSION_FLOW`` adds the
+# missing dimension: the canonical END-TO-END SEQUENCE an agent should drive a
+# mixing session through. It is a pure, ordered data structure over the SAME
+# ``COMMANDS`` registry — it invents no behaviour and mutates nothing.
+#
+# The phase order is grounded in the README pipeline
+# (source -> identity -> metrics -> role -> sections -> depth -> masking ->
+# doctrine -> plan -> checklist -> next-pass) plus the P-019 record + validate/
+# govern steps. Commands that are NOT a linear session step (creative
+# exploration, the tooling-gap meta helper, and this self-describing command)
+# live in ``auxiliary`` rather than being forced into a phase they don't fit.
+#
+# INVARIANT (guarded by tests/test_cowork_session_flow.py): every key in
+# ``COMMANDS`` appears exactly once across the phases + ``auxiliary``. Adding a
+# command without placing it here fails that test — the flow stays honest and
+# complete as the registry grows.
+# --------------------------------------------------------------------------- #
+_SESSION_FLOW = {
+    "phases": [
+        {
+            "phase": "intake",
+            "purpose": "Load the project and learn what each track IS and how it can be manipulated.",
+            "commands": ["intake_project", "detect_source_materials",
+                         "map_manipulation_capabilities"],
+        },
+        {
+            "phase": "classify",
+            "purpose": "Fix instrument identity and assign musical / perceptual / sacredness roles.",
+            "commands": ["detect_track_identities", "review_uncertain_identities",
+                         "override_track_identity", "classify_tracks",
+                         "classify_musical_roles", "classify_felt_vs_heard",
+                         "classify_sacred_vs_expendable"],
+        },
+        {
+            "phase": "diagnose",
+            "purpose": "Analyse sections, depth, masking and per-source audits — the mix problems.",
+            "commands": ["detect_sections", "analyze_section_contrast",
+                         "map_arrangement_density", "assign_depth_layers",
+                         "detect_masking", "detect_bad_masking_by_depth",
+                         "analyze_live_track", "analyze_synth_patch",
+                         "audit_sample_loop"],
+        },
+        {
+            "phase": "plan",
+            "purpose": "Generate the mix plan, automation, reference delta, scores and mute candidates.",
+            "commands": ["generate_mix_plan", "generate_automation_plan",
+                         "compare_to_reference", "score_mix",
+                         "identify_mute_candidates"],
+        },
+        {
+            "phase": "checklist",
+            "purpose": "Export the plan as a Logic-native, human-executable checklist.",
+            "commands": ["render_logic_checklist"],
+        },
+        {
+            "phase": "validate",
+            "purpose": "Check the pass against stop conditions and taste-protection governance.",
+            "commands": ["validate_mix_pass", "run_governance"],
+        },
+        {
+            "phase": "record-outcome",
+            "purpose": "Record the decision, the pass outcome, and taste feedback on the live channel.",
+            "commands": ["write_mix_decision", "record_mix_pass",
+                         "update_taste_calibration"],
+        },
+        {
+            "phase": "next-pass",
+            "purpose": "Read the history-informed next pass to start the next iteration.",
+            "commands": ["suggest_next_pass"],
+        },
+    ],
+    # Off-axis commands: not a step in the linear session, so honestly parked
+    # here rather than shoehorned into a phase.
+    #   run_creative_engine  — parallel creative exploration, not a pipeline step.
+    #   build_missing_tool   — meta: specs a helper tool for a capability gap.
+    #   describe_session     — self-describing session-flow navigation command.
+    #   describe_contract    — self-describing versioned contract (P-023).
+    "auxiliary": ["run_creative_engine", "build_missing_tool", "describe_session",
+                  "describe_contract"],
+}
+
+
+def _describe_session(ctx, **k):
+    """Return the canonical, ordered, phase-grouped view of the command registry.
+
+    Pure and deterministic: a static projection of ``_SESSION_FLOW`` (deep-copied
+    so callers can't mutate the module-level structure). Reads no analysis result
+    and no memory — the ctx is ignored.
+    """
+    return {
+        "phases": [
+            {"phase": p["phase"], "purpose": p["purpose"], "commands": list(p["commands"])}
+            for p in _SESSION_FLOW["phases"]
+        ],
+        "auxiliary": list(_SESSION_FLOW["auxiliary"]),
+    }
+
+
+# --------------------------------------------------------------------------- #
+# P-023 — the versioned, self-describing raw-CLI contract.
+#
+# ``describe_contract`` returns the machine-readable contract Claude Cowork calls
+# to introspect this surface instead of reverse-engineering an ad-hoc CLI. Three
+# facts per command, each grounded in code so the contract cannot drift:
+#   * purpose      — the registry ``desc`` string (single source).
+#   * phase        — the ``_SESSION_FLOW`` phase the command sits in, else
+#                    ``"auxiliary"`` (off-axis: creative / meta / self-describing).
+#   * params       — DERIVED from the handler signature via ``inspect.signature``:
+#                    every parameter after the leading context arg, excluding
+#                    ``**k`` / ``*args``. Never hand-maintained.
+#   * side_effect  — an HONEST, declared classification. This is where the
+#                    live-vs-dead distinction is pinned as a first-class contract
+#                    fact (resolving the P-020/P-021 clarity nudge at the contract
+#                    level). Only the four commands that actually write/mutate are
+#                    non-``none``; every read-only projection is ``none``:
+#                      record_mix_pass          -> writes:history(live)   (mem.record_pass; feeds next-pass planner)
+#                      update_taste_calibration -> writes:taste(live)     (mem.add_feedback)
+#                      write_mix_decision       -> writes:ledger(dead)    (mem.add_decision; audit log, not a live input)
+#                      override_track_identity  -> mutates:session        (in-session dict mutation, no disk write)
+#
+# INVARIANT (guarded by tests/test_cowork_contract.py): the contract's command
+# keys are EXACTLY the ``COMMANDS`` keys, params equal the real signatures, and
+# every side_effect is one of the sanctioned classifications. Adding a command
+# without a truthful side_effect classification here fails those tests.
+# --------------------------------------------------------------------------- #
+_SIDE_EFFECTS = {
+    "record_mix_pass": "writes:history(live)",
+    "update_taste_calibration": "writes:taste(live)",
+    "write_mix_decision": "writes:ledger(dead)",
+    "override_track_identity": "mutates:session",
+}
+
+
+def _phase_index() -> Dict[str, str]:
+    """Map each command name to its ``_SESSION_FLOW`` phase (or ``"auxiliary"``)."""
+    index: Dict[str, str] = {}
+    for phase in _SESSION_FLOW["phases"]:
+        for cmd in phase["commands"]:
+            index[cmd] = phase["phase"]
+    for cmd in _SESSION_FLOW["auxiliary"]:
+        index[cmd] = "auxiliary"
+    return index
+
+
+def _contract_params(fn) -> List[Dict]:
+    """Derive the caller-facing kwargs from the handler signature.
+
+    Every parameter after the leading context arg (named ``ctx`` in def-based
+    handlers, ``c`` in the lambda handlers — so we drop by POSITION, not by name),
+    excluding ``**k`` / ``*args``. Each entry carries the param name and, when the
+    signature declares one, its default — so the contract stays in lock-step with
+    the code and cannot be hand-drifted.
+    """
+    params = list(inspect.signature(fn).parameters.values())[1:]  # drop context arg
+    out: List[Dict] = []
+    for p in params:
+        if p.kind in (inspect.Parameter.VAR_KEYWORD, inspect.Parameter.VAR_POSITIONAL):
+            continue
+        entry: Dict = {"name": p.name}
+        if p.default is not inspect.Parameter.empty:
+            entry["default"] = p.default
+        out.append(entry)
+    return out
+
+
+def _describe_contract(ctx, **k):
+    """Return the versioned, machine-readable agent contract for this surface.
+
+    Pure and deterministic: derived entirely from ``API_VERSION``, the ``COMMANDS``
+    registry, the handler signatures and ``_SESSION_FLOW``. Reads no analysis result
+    and no memory — the ctx is ignored. See ``COWORK_CONTRACT.md`` for the human
+    orientation; this is the source of truth.
+    """
+    phase_of = _phase_index()
+    commands = {}
+    for name, meta in COMMANDS.items():
+        commands[name] = {
+            "purpose": meta["desc"],
+            "phase": phase_of.get(name, "auxiliary"),
+            "params": _contract_params(meta["fn"]),
+            "side_effect": _SIDE_EFFECTS.get(name, "none"),
+        }
+    return {
+        "api_version": API_VERSION,
+        "invocation": "python -m logic_mix_os.cli cowork --name <command> --params '<json>'",
+        "commands": commands,
+    }
 
 
 COMMANDS = {
@@ -140,8 +350,11 @@ COMMANDS = {
     "run_creative_engine": {"desc": "Creative variants + governance", "fn": lambda c, **k: _r(c).creative},
     "run_governance": {"desc": "Taste protection report", "fn": lambda c, **k: _r(c).governance},
     "write_mix_decision": {"desc": "Append a decision to the ledger (params: decision)", "fn": _write_mix_decision},
+    "record_mix_pass": {"desc": "Record a pass outcome on the live history channel (params: name, reverted)", "fn": _record_mix_pass},
     "update_taste_calibration": {"desc": "Record taste feedback (params: label)", "fn": _update_taste},
     "build_missing_tool": {"desc": "Spec a helper tool for a capability gap", "fn": _build_missing_tool},
+    "describe_session": {"desc": "Canonical ordered, phase-grouped view of the command flow", "fn": _describe_session},
+    "describe_contract": {"desc": "Versioned, machine-readable agent contract (api_version, invocation, per-command purpose/phase/params/side_effect)", "fn": _describe_contract},
 }
 
 
@@ -149,7 +362,11 @@ def list_commands() -> List[Dict]:
     return [{"command": name, "description": meta["desc"]} for name, meta in sorted(COMMANDS.items())]
 
 
-def run_command(name: str, ctx: Dict, **params):
+def run_command(name: str, ctx: Dict, /, **params):
+    # ``name``/``ctx`` are positional-only so a handler param may itself be called
+    # ``name`` (e.g. record_mix_pass's pass name) without colliding with this
+    # dispatcher's own ``name`` — the cowork ``--params '{...}'`` path unpacks
+    # straight into ``**params``.
     if name not in COMMANDS:
         raise KeyError(f"Unknown command '{name}'. Use list_commands() to see the catalog.")
     return COMMANDS[name]["fn"](ctx, **params)
