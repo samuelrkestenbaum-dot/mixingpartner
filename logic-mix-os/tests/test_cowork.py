@@ -21,7 +21,8 @@ def test_command_catalog_is_broad():
                  "detect_masking", "generate_mix_plan", "score_mix", "suggest_next_pass",
                  "run_creative_engine", "run_governance", "map_manipulation_capabilities"]:
         assert name in cmds
-    assert len(COMMANDS) >= 25
+    # P-019 added record_mix_pass, taking the registry from 32 to 33 commands.
+    assert len(COMMANDS) == 33
 
 
 def test_commands_return_jsonable(ctx):

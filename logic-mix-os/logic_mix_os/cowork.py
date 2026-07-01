@@ -94,6 +94,18 @@ def _write_mix_decision(ctx, decision=None, **k):
     return mem.add_decision(decision or {}, event_type="mix_decision")
 
 
+def _record_mix_pass(ctx, name=None, reverted=False, **k):
+    # P-019 — CLOSE the learning loop inside cowork. Records a pass OUTCOME on the
+    # LIVE history channel (memory.record_pass, P-008/P-009) against this context's
+    # analysis result, passing through the P-018 ``reverted`` ground-truth flag
+    # (opt-in, default False). Mirrors ``_write_mix_decision``'s no-memory error
+    # path; unlike the DEAD decision ledger, this feeds the live next-pass planner.
+    mem = ctx.get("memory")
+    if not mem:
+        return {"error": "no memory_dir configured"}
+    return mem.record_pass(name, _r(ctx), reverted=reverted)
+
+
 def _update_taste(ctx, label=None, context=None, **k):
     mem = ctx.get("memory")
     if not mem:
@@ -140,6 +152,7 @@ COMMANDS = {
     "run_creative_engine": {"desc": "Creative variants + governance", "fn": lambda c, **k: _r(c).creative},
     "run_governance": {"desc": "Taste protection report", "fn": lambda c, **k: _r(c).governance},
     "write_mix_decision": {"desc": "Append a decision to the ledger (params: decision)", "fn": _write_mix_decision},
+    "record_mix_pass": {"desc": "Record a pass outcome on the live history channel (params: name, reverted)", "fn": _record_mix_pass},
     "update_taste_calibration": {"desc": "Record taste feedback (params: label)", "fn": _update_taste},
     "build_missing_tool": {"desc": "Spec a helper tool for a capability gap", "fn": _build_missing_tool},
 }
@@ -149,7 +162,11 @@ def list_commands() -> List[Dict]:
     return [{"command": name, "description": meta["desc"]} for name, meta in sorted(COMMANDS.items())]
 
 
-def run_command(name: str, ctx: Dict, **params):
+def run_command(name: str, ctx: Dict, /, **params):
+    # ``name``/``ctx`` are positional-only so a handler param may itself be called
+    # ``name`` (e.g. record_mix_pass's pass name) without colliding with this
+    # dispatcher's own ``name`` — the cowork ``--params '{...}'`` path unpacks
+    # straight into ``**params``.
     if name not in COMMANDS:
         raise KeyError(f"Unknown command '{name}'. Use list_commands() to see the catalog.")
     return COMMANDS[name]["fn"](ctx, **params)
