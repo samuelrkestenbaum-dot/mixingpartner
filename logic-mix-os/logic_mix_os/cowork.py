@@ -121,6 +121,105 @@ def _build_missing_tool(ctx, capability_gap="", **k):
                                 "Stereo Loop Auditor", "Depth Layer Meter", "Reference Delta Meter"]}
 
 
+# --------------------------------------------------------------------------- #
+# P-020 — session-flow discoverability.
+#
+# ``list_commands`` is the FLAT, alphabetised catalog. ``_SESSION_FLOW`` adds the
+# missing dimension: the canonical END-TO-END SEQUENCE an agent should drive a
+# mixing session through. It is a pure, ordered data structure over the SAME
+# ``COMMANDS`` registry — it invents no behaviour and mutates nothing.
+#
+# The phase order is grounded in the README pipeline
+# (source -> identity -> metrics -> role -> sections -> depth -> masking ->
+# doctrine -> plan -> checklist -> next-pass) plus the P-019 record + validate/
+# govern steps. Commands that are NOT a linear session step (creative
+# exploration, the tooling-gap meta helper, and this self-describing command)
+# live in ``auxiliary`` rather than being forced into a phase they don't fit.
+#
+# INVARIANT (guarded by tests/test_cowork_session_flow.py): every key in
+# ``COMMANDS`` appears exactly once across the phases + ``auxiliary``. Adding a
+# command without placing it here fails that test — the flow stays honest and
+# complete as the registry grows.
+# --------------------------------------------------------------------------- #
+_SESSION_FLOW = {
+    "phases": [
+        {
+            "phase": "intake",
+            "purpose": "Load the project and learn what each track IS and how it can be manipulated.",
+            "commands": ["intake_project", "detect_source_materials",
+                         "map_manipulation_capabilities"],
+        },
+        {
+            "phase": "classify",
+            "purpose": "Fix instrument identity and assign musical / perceptual / sacredness roles.",
+            "commands": ["detect_track_identities", "review_uncertain_identities",
+                         "override_track_identity", "classify_tracks",
+                         "classify_musical_roles", "classify_felt_vs_heard",
+                         "classify_sacred_vs_expendable"],
+        },
+        {
+            "phase": "diagnose",
+            "purpose": "Analyse sections, depth, masking and per-source audits — the mix problems.",
+            "commands": ["detect_sections", "analyze_section_contrast",
+                         "map_arrangement_density", "assign_depth_layers",
+                         "detect_masking", "detect_bad_masking_by_depth",
+                         "analyze_live_track", "analyze_synth_patch",
+                         "audit_sample_loop"],
+        },
+        {
+            "phase": "plan",
+            "purpose": "Generate the mix plan, automation, reference delta, scores and mute candidates.",
+            "commands": ["generate_mix_plan", "generate_automation_plan",
+                         "compare_to_reference", "score_mix",
+                         "identify_mute_candidates"],
+        },
+        {
+            "phase": "checklist",
+            "purpose": "Export the plan as a Logic-native, human-executable checklist.",
+            "commands": ["render_logic_checklist"],
+        },
+        {
+            "phase": "validate",
+            "purpose": "Check the pass against stop conditions and taste-protection governance.",
+            "commands": ["validate_mix_pass", "run_governance"],
+        },
+        {
+            "phase": "record-outcome",
+            "purpose": "Record the decision, the pass outcome, and taste feedback on the live channel.",
+            "commands": ["write_mix_decision", "record_mix_pass",
+                         "update_taste_calibration"],
+        },
+        {
+            "phase": "next-pass",
+            "purpose": "Read the history-informed next pass to start the next iteration.",
+            "commands": ["suggest_next_pass"],
+        },
+    ],
+    # Off-axis commands: not a step in the linear session, so honestly parked
+    # here rather than shoehorned into a phase.
+    #   run_creative_engine  — parallel creative exploration, not a pipeline step.
+    #   build_missing_tool   — meta: specs a helper tool for a capability gap.
+    #   describe_session     — this self-describing navigation command.
+    "auxiliary": ["run_creative_engine", "build_missing_tool", "describe_session"],
+}
+
+
+def _describe_session(ctx, **k):
+    """Return the canonical, ordered, phase-grouped view of the command registry.
+
+    Pure and deterministic: a static projection of ``_SESSION_FLOW`` (deep-copied
+    so callers can't mutate the module-level structure). Reads no analysis result
+    and no memory — the ctx is ignored.
+    """
+    return {
+        "phases": [
+            {"phase": p["phase"], "purpose": p["purpose"], "commands": list(p["commands"])}
+            for p in _SESSION_FLOW["phases"]
+        ],
+        "auxiliary": list(_SESSION_FLOW["auxiliary"]),
+    }
+
+
 COMMANDS = {
     "intake_project": {"desc": "Project summary", "fn": _intake_project},
     "detect_source_materials": {"desc": "Source material per track", "fn": lambda c, **k: _r(c).source_material},
@@ -155,6 +254,7 @@ COMMANDS = {
     "record_mix_pass": {"desc": "Record a pass outcome on the live history channel (params: name, reverted)", "fn": _record_mix_pass},
     "update_taste_calibration": {"desc": "Record taste feedback (params: label)", "fn": _update_taste},
     "build_missing_tool": {"desc": "Spec a helper tool for a capability gap", "fn": _build_missing_tool},
+    "describe_session": {"desc": "Canonical ordered, phase-grouped view of the command flow", "fn": _describe_session},
 }
 
 
