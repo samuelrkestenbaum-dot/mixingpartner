@@ -45,12 +45,14 @@
 - **★★ THE TIMBALAND SUB-ARC (P-032.x) IS UNDERWAY — P-032e ✓ (beat_identity —
   the front-loaded CRUX) + P-032a ✓ (negative_space) + P-032b ✓
   (groove_coherence LIVE-WIRE — the RISKIEST packet so far, triple-verified) +
-  P-032d ✓ (rhythmic_surprise, weak form — first of the RESEQUENCED remaining
-  order) LANDED.** All four add a new producer-agnostic doctrine axis weight-0
-  for halee_ramone → byte-identical, proving the P-029 architecture is
-  EXTENSIBLE. **The engine now carries 11 component axes** (7 original +
-  beat_identity + negative_space + groove_coherence + rhythmic_surprise) — 4 of
-  the 7 Timbaland "weight up" axes landed, all
+  P-032d ✓ (rhythmic_surprise, weak form) + P-032c ✓ (low_end_motion — the
+  low-end POCKET, dual-green vs the USER'S explicit acceptance invariant;
+  reviewer AST + 20k-configuration adversarial proof) LANDED.** All five add a
+  new producer-agnostic doctrine axis weight-0 for halee_ramone →
+  byte-identical, proving the P-029 architecture is EXTENSIBLE. **The engine
+  now carries 12 component axes** (7 original + beat_identity + negative_space
+  + groove_coherence + rhythmic_surprise + low_end_motion) — 5 of the 7
+  Timbaland "weight up" axes landed, all
   append-last/weight-0/profile-sourced, zero plumbing debt; the onset/IOI
   signal is LIVE at doctrine time (`analyze_groove` relocated BEFORE
   `score_doctrine`, computed exactly ONCE, same object reused in
@@ -58,30 +60,42 @@
   `build-os/receipts/P-032e-beat-identity.md`,
   `build-os/receipts/P-032a-negative-space.md`,
   `build-os/receipts/P-032b-groove-coherence-livewire.md`,
-  `build-os/receipts/P-032d-rhythmic-surprise.md`. **Carry-forwards:**
+  `build-os/receipts/P-032d-rhythmic-surprise.md`,
+  `build-os/receipts/P-032c-low-end-motion.md`. **Carry-forwards:**
   - **★ RESEQUENCED REMAINING ORDER (from the read-only scoping workflow,
     evidence-backed — recorded so the next orchestrator needn't re-derive):**
-    **P-032d ✓ (rhythmic_surprise — DONE; smallest/safest confirmed in
-    practice: one input, zero new plumbing, pure additive) → P-032c
-    (low_end_motion — NEXT: pure additive, 5 in-arg inputs;
-    distinctness-vs-static_mix needs care: POSITIVE relationship vs hygiene
-    penalty; presence is a GATE only — "more bass" must not win) → P-032g
-    (loop static-vs-iconic — medium:
-    scorer + creative.py promotion gate behind a profile flag; SECOND
-    byte-identity surface = creative variant/promotion scores) → P-032f
+    **P-032d ✓ → P-032c ✓ (low_end_motion — DONE; the user's acceptance
+    invariant proven: clean relationship BEATS quantity, blob loophole CLOSED,
+    presence leakage FENCED, static_mix DISTINCT) → P-032g (loop
+    static-vs-iconic — THE HINGE, NEXT; medium: scorer + creative.py
+    promotion gate behind a profile flag; see the USER-MANDATED staging notes
+    below) → P-032f
     (vocal-role — HIGH risk, LAST; ★ USER-GATED: needs explicit go on the
     "masked chop/stack = acceptable-blend" aesthetic rule + the conservative
     default protect-as-lead-when-uncertain)** → **[fold P-031 confidence
     here]** → P-032h (author `timbaland.json`, the first non-byte-identical
     output) → P-032i (Timbaland-vs-Halee/Ramone differential proof). P-030
     (rename dims) orthogonal/last.
+  - **★ P-032g STAGING NOTES (USER-MANDATED, BINDING — recorded at P-032c
+    close):** the SECOND byte-identity surface is **NOT optional** — qa must
+    prove BOTH (a) doctrine overall byte-identical AND (b) **creative variant
+    scores + `loop_deconstruct` promotion firing behavior byte-identical under
+    Halee/Ramone defaults** (the risk is the recommendation engine subtly
+    changing behavior before `timbaland.json` turns the interpretation on).
+    Engine language must be OBSERVATIONAL (dominant+no-evolution = static;
+    dominant+groove/fingerprint-function = iconic) with ZERO judgment words;
+    the profile decides deconstruct-vs-protect via a flag defaulting to
+    CURRENT behavior. Scoping cautions: Commit-1 = the pure additive
+    `_loop_context` scorer, byte-identical; Commit-2 = the `creative.py`
+    promotion gate behind a `protect_iconic_loops` profile flag defaulting
+    False/current-behavior; do NOT modify the `_halee` loop_foregrounded
+    penalty coefficient; iconic must NOT override a masked lead.
   - **★ SCOPING-WORKFLOW FINDINGS for the remaining axes (evidence-backed):**
-    P-032c needs ZERO new plumbing (`score_doctrine` already receives
-    everything it reads — P-032d ✓ confirmed the same claim in practice, and
-    also confirmed the further P-032c cautions: kick/sub temporal interlock +
-    low-end motif + per-section true-sub movement are DEFERRED honest
-    boundaries, and physics stays primary with identity labels only a
-    corroborating tie-break); P-032g's `creative.py` gate must default to current
+    P-032c ✓ CONFIRMED in practice (ZERO new plumbing; kick/sub temporal
+    interlock + low-end motif + per-section true-sub movement landed as
+    DEFERRED honest docstring boundaries; physics primary — `identity_family`
+    a corroborating tie-break only, `instrument_identity` never read);
+    P-032g's `creative.py` gate must default to current
     behavior (the halee_ramone promotion fires exactly as today) and needs the
     creative-scores byte-identity surface; P-032f must NOT edit
     `role_classifier.py` in place (new `vocal_type_classifier.py` + an additive
@@ -99,18 +113,25 @@
     "largest adjacent swing" compute across NON-adjacent sections.
     Defensive-only — the pipeline always emits the metric — same
     future-doctrine-packet ride-along as the docstring sweep below.
-  - **★ LIVENESS-DOCSTRING OVERCLAIM (non-blocking — reviewer; NOW A FOUR-FILE
-    FAMILY, fold ONE sweep):** the `liveness` test docstrings OVERCLAIM — a
+  - **★ NEW (P-032c — cosmetic ride-alongs):** (1) `_low_end_motion`'s
+    theoretical score ceiling is **84** (40 baseline + 20 reserved bonus + 24
+    headroom), never 100 — fine by design, but RELEVANT when authoring
+    `timbaland.json` weights (P-032h). (2) the defensive `r.get("metrics",{})`
+    None edge in the scorer — defensive-only; same future-doctrine-packet
+    ride-along.
+  - **★ LIVENESS-DOCSTRING OVERCLAIM (non-blocking — reviewer; NOW A
+    FIVE-FILE FAMILY, fold ONE sweep):** the `liveness` test docstrings OVERCLAIM — a
     general hardcoded-constant sabotage is actually caught by the
     *discrimination* tests, not the liveness tests themselves (the direction
     test reads the score from the SAME reference dict a constant poisons; a
     hardcoded constant still moves the mean directionally). Known instances:
     `tests/test_negative_space.py` (~lines 536-540, 553-557, from P-032a);
     `tests/test_beat_identity.py` (same imprecision); **NEW from P-032d:**
-    `tests/test_rhythmic_surprise.py::test_liveness_direction_tracks_the_rhythmic_surprise_score`
-    — and CHECK `tests/test_groove_coherence.py` for the same pattern when
+    `tests/test_rhythmic_surprise.py::test_liveness_direction_tracks_the_rhythmic_surprise_score`;
+    **NEW from P-032c:** `tests/test_low_end_motion.py:518-526` — and CHECK
+    `tests/test_groove_coherence.py` for the same pattern when
     folding the fix. **Cosmetic only** (the guard SET as a whole is sound) —
-    fold ONE docstring sweep across ALL FOUR files into a future
+    fold ONE docstring sweep across ALL FIVE files into a future
     doctrine-touching packet.
   - **★ DOCSTRING DRIFT (non-blocking, from P-032e):** `_beat_identity`'s docstring
     says candidacy is "optionally corroborated by crest/spectral_flatness" but the
@@ -1403,6 +1424,18 @@
   environment limitation, not a fix-it item.
 
 ## Open boundaries (awaiting explicit go)
+
+- **P-032c's product commit `ab14ac7` is local-only as of this close** (this
+  archivist close did not push; the orchestrator owns the build-os close commit
+  + the standing dev-branch push — NO merge). It sits on the dev branch
+  `claude/logic-mix-os-hardening-12-7hbeh1` atop the build-os doctrine pin
+  `b7e116a` and the set-active `fe5f6b4`, with the whole producer-agnostic epic
+  (P-025 → P-029 → P-032e/a/b/d/c) still un-landed on default — merge base
+  `e79426a` (PR #16). Any PR / merge into the protected default needs the
+  user's explicit go. No merge / deploy / secret action taken in this close.
+  P-032f remains ★ USER-GATED (explicit go needed on the "masked chop/stack =
+  acceptable-blend" aesthetic rule + the conservative
+  protect-as-lead-when-uncertain default).
 
 - **P-032d's product commit `8a81516` is local-only as of this close** (this
   archivist close did not push; the orchestrator owns the build-os close commit

@@ -26,7 +26,7 @@
 - The landed axes under this doctrine: beat_identity = fingerprint;
   negative_space = rhythmic absence; groove_coherence = pocket stability;
   rhythmic_surprise = movement/interruption; low_end_motion = kick/sub/room
-  relationship (in flight); loop_context = static-vs-iconic hinge (next).
+  relationship (✓ landed, P-032c); loop_context = static-vs-iconic hinge (next).
 - This is not a Timbaland profile being built — it is a producer-profile
   FRAMEWORK emerging under the Timbaland work.
 
@@ -100,7 +100,15 @@
     transient-density variation (pstdev spread + largest adjacent swing),
     weight-0 for halee_ramone so byte-identical), local-only, atop the
     set-active `8c03f14`. P-032d's parent chain: `8a81516` → `8c03f14`
-    (active-packet confirmation) → `2fdf77d` (P-032b close) → `e9f793f`.**
+    (active-packet confirmation) → `2fdf77d` (P-032b close) → `e9f793f`.
+    ★ ON TOP of P-032d, the dev branch now ALSO carries P-032c (`ab14ac7`,
+    single product commit — the FIFTH new producer-agnostic doctrine axis
+    `low_end_motion`, the low-end POCKET — kick/sub relationship + room around
+    the bass, presence a GATE only (level structurally cannot leak into the
+    score), weight-0 for halee_ramone so byte-identical), local-only, atop the
+    build-os doctrine pin `b7e116a` and the set-active `fe5f6b4`. P-032c's
+    parent chain: `ab14ac7` → `b7e116a` (doctrine pin, build-os only) →
+    `fe5f6b4` (active-packet confirmation) → `89e7106` (P-032d close).**
     The base for MERGE decisions is still `e79426a` = PR #16 (nothing since P-025
     has been merged).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
@@ -109,26 +117,114 @@
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-01, P-032d):** suite **451 passed** (0 failed /
-  skipped); regression **68/68** (0 critical / 0 warnings) — UNCHANGED (P-032d
-  default path is byte-identical; rhythmic_surprise weight-0 for halee_ramone).
-  Commit-1 (`8a81516`) green in isolation = 451 (HEAD IS Commit-1 — single-commit
-  packet — so the tip is the isolation point; the 433 base was ALSO independently
-  verified at `8c03f14` in a throwaway worktree). (Prior baseline was 433 at
-  P-032b; P-032d added +18 — `tests/test_rhythmic_surprise.py`: byte-identical
-  INDEPENDENT capture (33/33 pre-existing values × 3 fixtures unchanged;
-  overalls 73.8 / 70.7 / 74.3; 68/68 unchanged) + value-discrimination + the
-  FOUR distinctness guards (high-mean/zero-variance bed → 20.0;
-  mean-invisibility; negative_space-opposite; dynamic_mix-distinct) +
-  liveness/drop-axis sabotage + no-aliasing + honest-scope; 3 pre-existing pins
-  updated (`test_producer_profile.py` scorers-set,
+- **Green baseline (verified 2026-07-01, P-032c):** suite **473 passed** (0 failed /
+  skipped); regression **68/68** (0 critical / 0 warnings) — UNCHANGED (P-032c
+  default path is byte-identical; low_end_motion weight-0 for halee_ramone).
+  Commit-1 (`ab14ac7`) green in isolation = 473 (HEAD IS Commit-1 — single-commit
+  packet — so the tip is the isolation point; the 451 base was ALSO independently
+  verified at `fe5f6b4`). (Prior baseline was 451 at P-032d; P-032c added +22 —
+  `tests/test_low_end_motion.py`: byte-identical INDEPENDENT capture (36/36
+  pre-existing values repr-identical × 3 fixtures; overalls 73.8 / 70.7 / 74.3;
+  68/68 unchanged) + the user's acceptance-invariant suite (mud-loses,
+  blob-loophole-closed, presence-leakage-fenced, static_mix-distinctness) +
+  liveness/sabotage BOTH directions (DROP → 2 liveness FAIL / anchors PASS;
+  HARDCODE → 4 discrimination FAIL / anchors PASS) + no-aliasing +
+  honest-scope; pins updated (`test_producer_profile.py` scorers-set,
   `test_doctrine_profile_sourced.py` `_WEIGHTS` value-pin,
-  `test_groove_coherence.py` groove_coherence now index 9). Earlier: 413 → 433
-  at P-032b; 396 → 413 at P-032a; 384 → 396 at P-032e; 370 → 384 at P-029;
-  351 → 370 at P-028; 331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at
-  P-025.)
+  `test_rhythmic_surprise.py` index shift). Earlier: 433 → 451 at P-032d;
+  413 → 433 at P-032b; 396 → 413 at P-032a; 384 → 396 at P-032e; 370 → 384
+  at P-029; 351 → 370 at P-028; 331 → 351 at P-027; 319 → 331 at P-026;
+  293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★ P-032c LANDS THE FIFTH NEW PRODUCER-AGNOSTIC DOCTRINE AXIS —
+  `low_end_motion` (the low-end POCKET: kick/sub relationship + room around
+  the bass) — BYTE-IDENTICALLY FOR halee_ramone; DUAL-GREEN AGAINST THE
+  USER'S EXPLICIT ACCEPTANCE INVARIANT, closed with the reviewer's AST +
+  20,000-configuration adversarial proof (the strongest close of the arc).**
+  A producer-profile PRIMITIVE under the pinned architecture doctrine (axes =
+  shared measurable substrate; taste = weighting layer; safety invariant):
+  different profiles will interpret the pocket differently (Timbaland:
+  pocket/impact/negative-space/sub-kick; Halee/Ramone: balance/natural
+  foundation; modern pop: translation/controlled sub density; trap: sub
+  identity/808 envelope/space around transient) — this table is in the scorer
+  docstring. **The doctrine engine now carries 12 component axes**, all five
+  new axes weight-0 for halee_ramone (output BYTE-IDENTICAL). **Last-closed =
+  P-032c.**
+  - **★ THE USER'S ACCEPTANCE INVARIANT (ALL PROVEN): a clean low-end
+    relationship BEATS high low-end quantity.** (1) mud loses despite MORE
+    bass: total low 4.40 vs 1.22, 6 carriers, 2 criticals → **0.0** vs clean
+    pocket **80.0**; (2) blob loophole CLOSED (fewer-carriers direction): a
+    single smeared blob (1 carrier, per-stem low 0.95) → **28.0**, colliding
+    → **14.0**, both < the SAME solo carrier clean+defined → **60.0** — the
+    reservation is QUALIFIED by pocket behavior (crest ≥ 10 dB AND no
+    critical collision), never carrier count; (3) presence leakage FENCED:
+    boosted-low variants EXACT-equal (80.0 == 80.0, 60.0 == 60.0); (4)
+    static_mix distinctness: 4-pad pile-up with no conflicts → static 80.0
+    (healthy hygiene) vs lem 16.0; (5) byte-identity 73.8 / 70.7 / 74.3
+    untouched.
+  - **★ REVIEWER PASS — ADVERSARIAL PROOF:** AST — the low-band level appears
+    in ZERO arithmetic nodes, only 2 threshold comparisons (level structurally
+    CANNOT leak into the score); 20,000-configuration adversarial search —
+    max score with ANY critical collision = 38.0 (below the 40.0 baseline);
+    maxed-out mud = 0.0 vs 80.0; structural bound: only the QUALIFIED reserve
+    can push past 64, so no quantity-beats-relationship path exists. Three own
+    sabotages (hardcode / drop / weight-flip) ALL caught. **Codex NOT
+    available — single-model review.**
+  - **Constants (`doctrine.scorers.low_end_motion`):**
+    `low_floor`/`stack_floor` 0.2, `baseline` 40, `reserved_bonus` 20
+    (`reserved_max` 2), `defined_crest_db` 10.0, `blob_penalty` 12,
+    `stack_penalty` 12, critical/moderate conflict penalties 14/6,
+    `complement_coeff` 2.0 (cap 12 dB), `no_low_end` 25, `neutral` 40. Score
+    landscape: clean pocket 80 > defined solo 60 > pile-with-spread 52 >
+    neutral 40 > any-critical ≤ 38 > blob 28 > no_low_end 25 > worst mud 0.
+    **Design note: the theoretical ceiling is 84 (40+20+24), never 100** —
+    fine, but relevant when authoring `timbaland.json` weights (P-032h).
+  - **★ qa GREEN:** suite 451 → **473 passed** (+22; base independently
+    verified at `fe5f6b4`); regression **68/68, 0 warnings**; byte-identical
+    INDEPENDENT capture: 36/36 pre-existing values repr-identical × 3
+    fixtures; new `low_end_motion_score` = 60.0 / 21.1 / 25.0 at weight 0;
+    DROP sabotage → 2 liveness FAIL / anchors PASS; HARDCODE → 4
+    discrimination FAIL / anchors PASS; safety grep NONE FOUND; honest-scope
+    verified (`identity_family` = tie-break only, `instrument_identity` never
+    read; `sections_analysis` accepted per the signature, 0 reads,
+    documented).
+  - **★ HONEST DEFERRALS (docstring, NOT faked):** kick/sub temporal
+    interlock (bass excluded from RHYTHM_IDENTITIES — no bass onsets);
+    low-end motif detection; per-section true-sub movement (sections expose
+    low_mid only).
+  - **Single commit `ab14ac7`** on parent `b7e116a` (build-os-only doctrine
+    pin; the code base is effectively the set-active `fe5f6b4`) — HEAD IS
+    Commit-1 → green in isolation (473). 8 files, 837 insertions / 4
+    deletions. qa **GREEN**; reviewer **PASS**. **P-032c local-only, NOT
+    merged** (merge base still `e79426a` = PR #16). **Trailer note:** the
+    commit carries `Co-Authored-By: Claude Fable 5` — the harness-sanctioned
+    attribution for the current session model (the mandate changed
+    mid-session); accepted by the orchestrator; parallel to the earlier
+    Opus-4.8 reconciliation. Future packets use the current harness trailer;
+    do NOT re-flag.
+  - **★ NEW RESIDUE (carried to residue.md):** the
+    liveness-docstring-overclaim family now spans FIVE test files (add
+    `tests/test_low_end_motion.py:518-526`); lem's 84-point theoretical
+    ceiling + the defensive `r.get("metrics",{})` None edge — ride-alongs
+    for a future doctrine-touching packet.
+  - **★★ MILESTONE — 12 component axes; 5 of the 7 Timbaland "weight up"
+    axes landed** (beat_identity, negative_space, groove_coherence,
+    rhythmic_surprise, low_end_motion), all
+    append-last/weight-0/profile-sourced, ZERO plumbing debt.
+  - **★ TIMBALAND SUB-ARC (P-032.x) — RESEQUENCED remaining order:** **P-032e
+    ✓ → P-032a ✓ → P-032b ✓ → P-032d ✓ → P-032c ✓ → P-032g (loop
+    static-vs-iconic — THE HINGE, NEXT: USER-MANDATED dual byte-identity
+    surface — doctrine overall AND creative variant scores +
+    `loop_deconstruct` promotion firing behavior byte-identical under
+    Halee/Ramone defaults; engine language OBSERVATIONAL; the profile flag
+    defaults to CURRENT behavior) → P-032f (vocal-role — HIGH risk, LAST, ★
+    USER-GATED)** → **[fold P-031 confidence here]** → P-032h (author
+    `timbaland.json`, first non-byte-identical output) → P-032i
+    (Timbaland-vs-Halee/Ramone differential proof). P-030 (rename dims)
+    orthogonal/last. Receipt:
+    `build-os/receipts/P-032c-low-end-motion.md`.
 
 - **★★ P-032d LANDS THE FOURTH NEW PRODUCER-AGNOSTIC DOCTRINE AXIS —
   `rhythmic_surprise` (weak, section-aggregate form) — BYTE-IDENTICALLY FOR
