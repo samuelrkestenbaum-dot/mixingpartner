@@ -83,6 +83,13 @@ def score_doctrine(
     # pre-existing 9-term summation order is preserved and ``overall`` stays
     # bit-identical for halee_ramone (its groove_coherence weight is 0).
     gc, gc_ev = _groove_coherence(groove, doctrine)
+    # P-032d: the fourth producer-agnostic axis — rhythmic surprise in its WEAK,
+    # section-aggregate form (cross-section transient-density variation). ONE
+    # input (``sections_analysis``), zero new plumbing. Appended LAST (after
+    # groove_coherence) so the pre-existing 10-term summation order is preserved
+    # and ``overall`` stays bit-identical for halee_ramone (its
+    # rhythmic_surprise weight is 0).
+    rs, rs_ev = _rhythmic_surprise(sections_analysis, doctrine)
 
     component_scores = {
         "halee_score": halee,
@@ -95,6 +102,7 @@ def score_doctrine(
         "beat_identity_score": beat,
         "negative_space_score": ns,
         "groove_coherence_score": gc,
+        "rhythmic_surprise_score": rs,
     }
     weights = doctrine["weights"]
     present = {k: v for k, v in component_scores.items() if v is not None}
@@ -118,6 +126,7 @@ def score_doctrine(
             "beat_identity": beat_ev,
             "negative_space": ns_ev,
             "groove_coherence": gc_ev,
+            "rhythmic_surprise": rs_ev,
         },
         "warnings": warnings,
     }
@@ -550,4 +559,77 @@ def _groove_coherence(groove: Optional[Dict], doctrine: Dict = _DOCTRINE):
             f"coherence (not 'tighter is good')."
         )
 
+    return _clamp(score), ev
+
+
+def _rhythmic_surprise(sections: List[Dict], doctrine: Dict = _DOCTRINE):
+    """Producer-AGNOSTIC scorer for rhythmic surprise/variation — WEAK FORM ONLY.
+
+    This is the FOURTH new agnostic axis (P-032d): the smallest lift of the
+    P-032.x sub-arc — ONE input (section ``transient_density``), pure additive,
+    zero new plumbing. It rewards the arrangement CHANGING its rhythmic
+    intensity across sections: "the beat drops out / the fill hits", measured in
+    aggregate form.
+
+    HONEST SCOPE — this is the WEAK, SECTION-AGGREGATE form and says so in its
+    evidence. It measures exactly two things over per-section
+    ``metrics.transient_density``:
+      * Spread — ``statistics.pstdev`` of the per-section values, scaled by
+        ``spread_coeff`` (the ``_dynamic_mix`` idiom applied to the one signal
+        that scorer never reads).
+      * Largest swing — the max ``|Δ transient_density|`` between ADJACENT
+        sections, scaled by ``swing_coeff`` — a beat dropping out (or slamming
+        in) between neighbouring sections, at the section grain.
+
+    DEFERRED, NOT FAKED — the STRONG form of rhythmic surprise needs onset
+    timing/sequence, which is groove territory and NOT visible here:
+      1. Fill detection (a burst of extra hits before a boundary).
+      2. Unexpected-hit detection (a hit off the established grid).
+      3. Per-onset IOI deviation (moment-to-moment surprise within a section).
+    None of these are claimed or approximated. And this scorer must NOT read
+    the groove signal (``overall_regularity``) — that is ``_groove_coherence``'s
+    input; re-reading it here would duplicate that axis.
+
+    DISTINCTNESS — this is the ONLY axis keyed on the *VARIATION* of section
+    transient_density: ``_negative_space`` reads its MEAN (central tendency —
+    the opposite statistic); ``_dynamic_mix`` reads pstdev of
+    rms/width/brightness (never transient_density); ``_beat_identity`` reads
+    per-STEM transient dominance; ``_section_contrast`` counts lift-fail
+    warnings. A high-mean but ZERO-VARIANCE transient bed scores LOW here even
+    though the mean-reading and stem-reading axes may score it high.
+
+    Fewer than two sections with the metric → the documented
+    ``insufficient_sections_score`` fallback (mirrors ``_dynamic_mix``'s
+    idiom). Always returns a clamped float, never None.
+    """
+    c = doctrine["scorers"]["rhythmic_surprise"]
+    ev: List[str] = []
+
+    transients = [
+        float(v)
+        for v in (s.get("metrics", {}).get("transient_density") for s in sections)
+        if v is not None
+    ]
+
+    if len(transients) < 2:
+        ev.append(
+            "Fewer than two sections with transient data; rhythmic surprise "
+            "(weak, section-aggregate form) cannot be assessed."
+        )
+        return _clamp(c["insufficient_sections_score"]), ev
+
+    spread = statistics.pstdev(transients)
+    swing = max(abs(b - a) for a, b in zip(transients, transients[1:]))
+    score = c["baseline"] + spread * c["spread_coeff"] + swing * c["swing_coeff"]
+
+    ev.append(
+        f"Cross-section transient-density spread {spread:.3f}, largest adjacent-"
+        f"section swing {swing:.3f} — the weak, section-aggregate form of "
+        f"rhythmic surprise (fill/unexpected-hit/per-onset detection deferred)."
+    )
+    if spread == 0.0:
+        ev.append(
+            "Transient density is constant across sections — no rhythmic "
+            "surprise at the section grain."
+        )
     return _clamp(score), ev

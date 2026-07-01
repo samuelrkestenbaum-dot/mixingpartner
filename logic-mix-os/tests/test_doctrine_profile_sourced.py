@@ -85,6 +85,10 @@ def test_weights_value_pins():
         # P-032b — the producer-agnostic groove_coherence axis (first live-wired),
         # weight 0 for the reference producer (the byte-identical anchor).
         "groove_coherence_score": 0,
+        # P-032d — the producer-agnostic rhythmic_surprise axis (weak,
+        # section-aggregate form), weight 0 for the reference producer (the
+        # byte-identical anchor).
+        "rhythmic_surprise_score": 0,
     }
 
 

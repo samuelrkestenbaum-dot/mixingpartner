@@ -566,10 +566,12 @@ def test_doctrine_subfields_present():
     # P-032e added the sixth: the producer-agnostic ``beat_identity`` axis.
     # P-032a added the seventh: the producer-agnostic ``negative_space`` axis.
     # P-032b added the eighth: the producer-agnostic ``groove_coherence`` axis.
+    # P-032d added the ninth: the producer-agnostic ``rhythmic_surprise`` axis
+    # (weak, section-aggregate form).
     assert set(d["scorers"]) == {
         "vocal_centrality", "depth_hierarchy", "section_contrast",
         "static_mix", "dynamic_mix", "beat_identity", "negative_space",
-        "groove_coherence",
+        "groove_coherence", "rhythmic_surprise",
     }
 
 

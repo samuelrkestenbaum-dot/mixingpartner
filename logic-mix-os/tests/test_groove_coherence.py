@@ -160,13 +160,16 @@ def test_groove_coherence_weight_is_zero_for_halee_ramone():
 
 
 def test_groove_coherence_appended_last_preserves_summation_order(analyzed):
-    """The new term is LAST in ``component_scores`` and every PRE-EXISTING key
-    (the 9 anchors) keeps its exact value + position."""
+    """The new term keeps its position and every PRE-EXISTING key (the 9
+    anchors) keeps its exact value + position. P-032d then appends
+    rhythmic_surprise_score after groove_coherence, so groove_coherence is no
+    longer the FINAL key — but its position (index 9, right after the 9
+    anchors) is unchanged, which is what preserves the summation order."""
     for name in FIXTURE_NAMES:
         ds = analyzed[name].doctrine_score
         keys = [k for k in ds if k.endswith("_score") and k != "overall_mix_readiness_score"]
         assert keys[:9] == EXISTING_COMPONENT_KEYS
-        assert keys[-1] == "groove_coherence_score"
+        assert keys[9] == "groove_coherence_score"
 
 
 def test_every_preexisting_component_score_is_byte_identical(analyzed):
