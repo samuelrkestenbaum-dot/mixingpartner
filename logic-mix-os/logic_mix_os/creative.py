@@ -140,6 +140,76 @@ def _apply_nudges(kind: str, result) -> List[tuple]:
     return fired
 
 
+# --- P-016: creative-scoring evidence-PROMOTION layer (the FIRST reward nudge) --
+# P-012/P-015 held a penalty-only line (a nudge could only LOWER a score). P-016
+# crosses it deliberately, on the user's delegation: a bounded, evidence-gated
+# PROMOTION that can RAISE a variant's score, layered on the SAME untouched
+# ``_KIND_SCORES`` base and mirroring the penalty machinery exactly — pure,
+# deterministic (fixed table order), transparent (each fired promotion emits a
+# verbatim evidence line into ``score_nudges``), and bounded. The summed
+# promotion overall-delta is clamped to ``+CREATIVE_PROMOTION_CAP`` on the same
+# overall axis governance ranks on, EXACTLY as the penalty path clamps to
+# ``-CREATIVE_NUDGE_CAP``. Promotion and penalty are INDEPENDENT and both bounded;
+# the penalty cap and table above are untouched.
+#
+# Doctrine anchor (the system's OWN principle, not taste): ``governance``'s
+# anti_template warns when the same move-kind wins >=3 problems. When a loop is
+# GENUINELY foregrounded, promoting the loop-specific ``loop_deconstruct`` so it
+# wins the ``loop`` problem honors ``loops_not_foregrounded`` and "never let a
+# stock loop dominate the song identity."
+CREATIVE_PROMOTION_CAP = 4.0  # max summed overall-score PROMOTION, in overall points
+
+# Each row: kinds it applies to, the evidence predicate key, the dim it moves,
+# the (positive) delta, and the verbatim evidence line. The delta is +35 on the
+# (low) excitement dim: +35/7 = +5.0 raw overall, which the cap clamps down to
+# exactly +CREATIVE_PROMOTION_CAP (+4.0) — so the cap genuinely BINDS, mirroring
+# the way the -14 penalty binds the -2.0 penalty cap.
+_PROMOTION_TABLE = [
+    {
+        "kinds": {"loop_deconstruct"},
+        "evidence": "foregrounded_loop",
+        "dim": "excitement",
+        "delta": 35,
+        "reason": ("loop_promotion +4.0: a foregrounded/dominating loop — "
+                   "deconstruct it (source material respected), don't just accent it"),
+    },
+]
+
+
+def _foregrounded_loop(result) -> bool:
+    """Pure predicate over the REAL evidence wire (mirrors ``_lead_masked`` /
+    ``_width_crowded``): fire only when the source auditors have flagged a
+    ``"foregrounded loop"`` red_flag (source_auditors.py) AND the provenance
+    analyzer corroborates it with ``high_risk`` (provenance.py). Both must hold —
+    the auditors read the record's foregrounding, provenance reads recognizable +
+    foregrounded, so requiring both keeps the promotion evidence-gated."""
+    source_audits = getattr(result, "source_audits", None) or {}
+    provenance = getattr(result, "provenance", None) or {}
+    flagged = any(
+        "foregrounded loop" in a.get("red_flags", [])
+        for a in source_audits.get("audits", [])
+    )
+    high_risk = provenance.get("summary", {}).get("high_risk", 0)
+    return flagged and bool(high_risk)
+
+
+_PROMOTION_EVIDENCE = {"foregrounded_loop": _foregrounded_loop}
+
+
+def _apply_promotions(kind: str, result) -> List[tuple]:
+    """Pure: the ordered ``(dim, delta, reason)`` for each FIRED promotion.
+
+    A row fires when ``kind`` is in its ``kinds`` set AND its evidence predicate
+    is true on ``result``. Rows are evaluated in table order, so the emitted
+    evidence lines are deterministic. Mirrors ``_apply_nudges`` exactly.
+    """
+    fired: List[tuple] = []
+    for row in _PROMOTION_TABLE:
+        if kind in row["kinds"] and _PROMOTION_EVIDENCE[row["evidence"]](result):
+            fired.append((row["dim"], row["delta"], row["reason"]))
+    return fired
+
+
 # --------------------------------------------------------------------------- #
 def static_baseline(result) -> Dict:
     return {
@@ -342,6 +412,24 @@ def score_variant(variant: Dict, result) -> Dict:
         overall_delta = -CREATIVE_NUDGE_CAP
     elif overall_delta > CREATIVE_NUDGE_CAP:
         overall_delta = CREATIVE_NUDGE_CAP
+
+    # --- P-016: evidence-PROMOTION layer (reward-only, bounded, transparent) --
+    # Independent of the penalty path: each fired promotion raises a curated dim
+    # and emits an evidence line. The SUMMED promotion overall-delta is clamped to
+    # +CREATIVE_PROMOTION_CAP, exactly as the penalty path clamps to
+    # -CREATIVE_NUDGE_CAP. Measured from the SAME curated base_overall so the two
+    # bounded effects are additive and each independently bounded.
+    promoted = _apply_promotions(variant["kind"], result)
+    for dim, delta, reason in promoted:
+        base[dim] += delta
+        nudges.append(reason)
+    if promoted:
+        promoted_overall = sum(base[k] for k in numeric) / len(numeric) - _RISK_PENALTY[base["translation"]]
+        promotion_delta = (promoted_overall - base_overall) - overall_delta
+        if promotion_delta > CREATIVE_PROMOTION_CAP:
+            promotion_delta = CREATIVE_PROMOTION_CAP
+        overall_delta += promotion_delta
+
     overall = base_overall + overall_delta
     overall = round(max(0.0, min(100.0, overall)), 1)
 
