@@ -44,23 +44,29 @@
 
 - **★★ THE TIMBALAND SUB-ARC (P-032.x) IS UNDERWAY — P-032e ✓ (beat_identity —
   the front-loaded CRUX) + P-032a ✓ (negative_space) + P-032b ✓
-  (groove_coherence LIVE-WIRE — the RISKIEST packet so far, triple-verified: qa
-  GREEN + reviewer PASS + a 3-skeptic adversarial pass, all claims HELD)
-  LANDED.** All three add a new producer-agnostic doctrine axis weight-0 for
-  halee_ramone → byte-identical, proving the P-029 architecture is EXTENSIBLE.
-  **The engine now carries 10 component axes** (7 original + beat_identity +
-  negative_space + groove_coherence), and the onset/IOI signal is now LIVE at
-  doctrine time (`analyze_groove` relocated BEFORE `score_doctrine`, computed
-  exactly ONCE, same object reused in `expanded["groove"]`). Receipts:
+  (groove_coherence LIVE-WIRE — the RISKIEST packet so far, triple-verified) +
+  P-032d ✓ (rhythmic_surprise, weak form — first of the RESEQUENCED remaining
+  order) LANDED.** All four add a new producer-agnostic doctrine axis weight-0
+  for halee_ramone → byte-identical, proving the P-029 architecture is
+  EXTENSIBLE. **The engine now carries 11 component axes** (7 original +
+  beat_identity + negative_space + groove_coherence + rhythmic_surprise) — 4 of
+  the 7 Timbaland "weight up" axes landed, all
+  append-last/weight-0/profile-sourced, zero plumbing debt; the onset/IOI
+  signal is LIVE at doctrine time (`analyze_groove` relocated BEFORE
+  `score_doctrine`, computed exactly ONCE, same object reused in
+  `expanded["groove"]`). Receipts:
   `build-os/receipts/P-032e-beat-identity.md`,
   `build-os/receipts/P-032a-negative-space.md`,
-  `build-os/receipts/P-032b-groove-coherence-livewire.md`. **Carry-forwards:**
+  `build-os/receipts/P-032b-groove-coherence-livewire.md`,
+  `build-os/receipts/P-032d-rhythmic-surprise.md`. **Carry-forwards:**
   - **★ RESEQUENCED REMAINING ORDER (from the read-only scoping workflow,
     evidence-backed — recorded so the next orchestrator needn't re-derive):**
-    **P-032d (rhythmic_surprise — NEXT, smallest/safest: one input, section
-    transient_density variance, pure additive) → P-032c (low_end_motion — pure
-    additive, 5 in-arg inputs; distinctness-vs-static_mix needs care: POSITIVE
-    relationship vs hygiene penalty) → P-032g (loop static-vs-iconic — medium:
+    **P-032d ✓ (rhythmic_surprise — DONE; smallest/safest confirmed in
+    practice: one input, zero new plumbing, pure additive) → P-032c
+    (low_end_motion — NEXT: pure additive, 5 in-arg inputs;
+    distinctness-vs-static_mix needs care: POSITIVE relationship vs hygiene
+    penalty; presence is a GATE only — "more bass" must not win) → P-032g
+    (loop static-vs-iconic — medium:
     scorer + creative.py promotion gate behind a profile flag; SECOND
     byte-identity surface = creative variant/promotion scores) → P-032f
     (vocal-role — HIGH risk, LAST; ★ USER-GATED: needs explicit go on the
@@ -70,8 +76,12 @@
     output) → P-032i (Timbaland-vs-Halee/Ramone differential proof). P-030
     (rename dims) orthogonal/last.
   - **★ SCOPING-WORKFLOW FINDINGS for the remaining axes (evidence-backed):**
-    P-032d and P-032c need ZERO new plumbing (`score_doctrine` already receives
-    everything they read); P-032g's `creative.py` gate must default to current
+    P-032c needs ZERO new plumbing (`score_doctrine` already receives
+    everything it reads — P-032d ✓ confirmed the same claim in practice, and
+    also confirmed the further P-032c cautions: kick/sub temporal interlock +
+    low-end motif + per-section true-sub movement are DEFERRED honest
+    boundaries, and physics stays primary with identity labels only a
+    corroborating tie-break); P-032g's `creative.py` gate must default to current
     behavior (the halee_ramone promotion fires exactly as today) and needs the
     creative-scores byte-identity surface; P-032f must NOT edit
     `role_classifier.py` in place (new `vocal_type_classifier.py` + an additive
@@ -83,15 +93,25 @@
     (deepcopy-proven), but a FUTURE doctrine change mutating its `groove` arg
     would silently corrupt the expanded artifact. Consider a defensive copy or
     a read-only test pin in a future doctrine-touching packet.
-  - **★ LIVENESS-DOCSTRING OVERCLAIM (non-blocking, from P-032a — reviewer):**
-    the two `liveness` test docstrings in `tests/test_negative_space.py` (~lines
-    536-540, 553-557) OVERCLAIM — a general hardcoded-constant sabotage is actually
-    caught by the *discrimination* tests, not the liveness tests themselves (the
-    direction test reads the score from the SAME reference dict a constant poisons).
-    The SAME imprecision exists in the already-closed `tests/test_beat_identity.py`
-    — and CHECK `tests/test_groove_coherence.py` for the same pattern when folding
-    the fix. **Cosmetic only** (the guard SET as a whole is sound) — fold a
-    one-line docstring fix into a future doctrine-touching packet.
+  - **★ NEW (P-032d reviewer — cosmetic): non-adjacent swing under a missing
+    middle metric.** In `_rhythmic_surprise`, None-filtering happens BEFORE the
+    adjacency zip, so a missing middle `transient_density` would make the
+    "largest adjacent swing" compute across NON-adjacent sections.
+    Defensive-only — the pipeline always emits the metric — same
+    future-doctrine-packet ride-along as the docstring sweep below.
+  - **★ LIVENESS-DOCSTRING OVERCLAIM (non-blocking — reviewer; NOW A FOUR-FILE
+    FAMILY, fold ONE sweep):** the `liveness` test docstrings OVERCLAIM — a
+    general hardcoded-constant sabotage is actually caught by the
+    *discrimination* tests, not the liveness tests themselves (the direction
+    test reads the score from the SAME reference dict a constant poisons; a
+    hardcoded constant still moves the mean directionally). Known instances:
+    `tests/test_negative_space.py` (~lines 536-540, 553-557, from P-032a);
+    `tests/test_beat_identity.py` (same imprecision); **NEW from P-032d:**
+    `tests/test_rhythmic_surprise.py::test_liveness_direction_tracks_the_rhythmic_surprise_score`
+    — and CHECK `tests/test_groove_coherence.py` for the same pattern when
+    folding the fix. **Cosmetic only** (the guard SET as a whole is sound) —
+    fold ONE docstring sweep across ALL FOUR files into a future
+    doctrine-touching packet.
   - **★ DOCSTRING DRIFT (non-blocking, from P-032e):** `_beat_identity`'s docstring
     says candidacy is "optionally corroborated by crest/spectral_flatness" but the
     body reads only `crest_factor_db`, never `spectral_flatness`. The spec made
@@ -514,6 +534,57 @@
 - Net-new **event-logging** producers remain behind the product decision.
 
 ## Done (resolved)
+
+- **★★ P-032d DONE — the FOURTH new producer-agnostic doctrine axis
+  `rhythmic_surprise` (weak, section-aggregate form: cross-section
+  transient-density variation — pstdev spread + largest adjacent swing) lands
+  byte-identically for halee_ramone; first of the RESEQUENCED remaining order
+  (d → c → g → f), the smallest/safest lift confirmed in practice (one input,
+  zero new plumbing)** (`build-os/receipts/P-032d-rhythmic-surprise.md`). New
+  agnostic scorer `_rhythmic_surprise(sections_analysis, doctrine)` in
+  `doctrine_engine.py` — the 11th doctrine component, appended LAST to
+  `component_scores` (after `groove_coherence_score`; 10-term summation order
+  preserved) with `weights["rhythmic_surprise_score"] = 0` in
+  `halee_ramone.json` + a `doctrine.scorers.rhythmic_surprise` constants block;
+  `producer_profile._validate` now requires `rhythmic_surprise`;
+  `doctrine_score.schema.json` documents the optional `rhythmic_surprise_score`.
+  Constants: `insufficient_sections_score 40.0 / baseline 20.0 / spread_coeff
+  160 / swing_coeff 60`; live fixture scores (weight-0, informational) 51.1
+  (simple — some sectional variation) / 20.0 (dense — the real-world
+  high-mean/ZERO-variance constant bed) / 27.8 (splice). **Byte-identical
+  INDEPENDENT capture:** 33/33 pre-existing values × 3 fixtures unchanged
+  (overalls 73.8 / 70.7 / 74.3); regression 68/68, 0 warnings — UNCHANGED.
+  **All 4 distinctness guards pass AND independently recomputed by qa**
+  (high-mean/zero-var bed → 20.0; mean-invisibility 20.0 == 20.0;
+  negative_space-opposite ns 78.0 vs rs 20.0; dynamic_mix-distinct dyn 100.0
+  vs rs 20.0). **Liveness load-bearing:** drop-axis monkeypatch sabotage →
+  liveness 2 FAILED / byte-identical 5 passed. **Honest scope verified**
+  (AST/grep: sections + doctrine only; evidence says "weak, section-aggregate
+  form"; fill detection / unexpected-hit detection / per-onset IOI deviation
+  deferred in the docstring; does NOT read `overall_regularity` — that is
+  `_groove_coherence`'s input — ENFORCED). Single commit `8a81516` (HEAD IS
+  Commit-1 → green in isolation by construction = 451; base independently
+  verified at set-active `8c03f14` = 433 in a throwaway worktree); suite
+  433 → 451 (+18); safety grep NONE FOUND (535 insertions / 6 deletions, 8
+  in-packet files); 3 pre-existing pins updated (`test_producer_profile.py`
+  scorers-set, `test_doctrine_profile_sourced.py` `_WEIGHTS` value-pin,
+  `test_groove_coherence.py` groove_coherence now index 9). qa **GREEN**;
+  reviewer **PASS (no must-fix)** — ran THREE own sabotages, ALL caught
+  (hardcode the scorer → 7 discrimination/fallback/evidence tests fail; drop
+  from `component_scores` → 3 fail incl. BOTH liveness; flip the halee weight
+  0→2 → 8 fail across three guard files); constants sanity: smooth mid-range
+  discrimination (swing 0.1 → 34, 0.3 → 62, 0.5 → 90), clamps at 100 for
+  swings ≳0.57 — sibling-idiom-consistent, not degenerate. **Codex NOT
+  available — single-model review.** **★★ MILESTONE — 11 component axes; 4 of
+  the 7 Timbaland "weight up" axes landed** (beat_identity, negative_space,
+  groove_coherence, rhythmic_surprise), all
+  append-last/weight-0/profile-sourced, zero plumbing debt. **P-032d
+  local-only** (`8a81516` atop set-active `8c03f14` on the dev branch), not
+  pushed/merged (merge base still `e79426a` = PR #16). NEW cosmetic residue
+  carried to Deferred: the rhythmic_surprise liveness-docstring overclaim
+  (fold ONE sweep across all four axis test files) + the None-filtering /
+  non-adjacent-swing note. Next per the resequenced order: **P-032c
+  (low_end_motion)**.
 
 - **★★ P-032b DONE — the THIRD new producer-agnostic doctrine axis
   `groove_coherence` + the `analyze_groove` LIVE-WIRE relocation land
@@ -1333,6 +1404,15 @@
 
 ## Open boundaries (awaiting explicit go)
 
+- **P-032d's product commit `8a81516` is local-only as of this close** (this
+  archivist close did not push; the orchestrator owns the build-os close commit
+  + the standing dev-branch push — NO merge). It sits on the dev branch
+  `claude/logic-mix-os-hardening-12-7hbeh1` atop the set-active `8c03f14`, with
+  the whole producer-agnostic epic (P-025 → P-029 → P-032e/a/b/d) still
+  un-landed on default — merge base `e79426a` (PR #16). Any PR / merge into the
+  protected default needs the user's explicit go. No merge / deploy / secret
+  action taken in this close.
+
 - **P-029's product commits `42d6ebd`, `ea1aaa9` are local-only as of this close**
   (this archivist close did not push). They sit on the dev branch
   `claude/logic-mix-os-hardening-12-7hbeh1` on top of the `e79426a` (PR #16) merge
@@ -1415,4 +1495,4 @@
   No push / merge / deploy / secret action taken in this close.
 
 ---
-_Append-only working notes. Last advanced on P-025 close (2026-07-01) — the FOUNDATION step of the producer-agnostic epic._
+_Append-only working notes. Last advanced on P-032d close (2026-07-01) — the FOURTH producer-agnostic doctrine axis (`rhythmic_surprise`, weak form) lands byte-identically; 11 component axes; next P-032c (low_end_motion)._

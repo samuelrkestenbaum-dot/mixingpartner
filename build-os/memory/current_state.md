@@ -66,7 +66,14 @@
     `groove_coherence` PLUS the `analyze_groove` LIVE-WIRE relocation to before
     `score_doctrine`, weight-0 for halee_ramone so byte-identical), local-only,
     atop the set-active `bd98777`. P-032b's parent chain: `e9f793f` → `bd98777`
-    (active-packet confirmation) → `3e991a5` (P-032a close) → `3edcd9c`.**
+    (active-packet confirmation) → `3e991a5` (P-032a close) → `3edcd9c`.
+    ★ ON TOP of P-032b, the dev branch now ALSO carries P-032d (`8a81516`,
+    single product commit — the FOURTH new producer-agnostic doctrine axis
+    `rhythmic_surprise` in its weak, section-aggregate form — cross-section
+    transient-density variation (pstdev spread + largest adjacent swing),
+    weight-0 for halee_ramone so byte-identical), local-only, atop the
+    set-active `8c03f14`. P-032d's parent chain: `8a81516` → `8c03f14`
+    (active-packet confirmation) → `2fdf77d` (P-032b close) → `e9f793f`.**
     The base for MERGE decisions is still `e79426a` = PR #16 (nothing since P-025
     has been merged).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
@@ -75,25 +82,109 @@
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-01, P-032b):** suite **433 passed** (0 failed /
-  skipped); regression **68/68** (0 critical / 0 warnings) — UNCHANGED (P-032b
-  default path is byte-identical; groove_coherence weight-0 for halee_ramone).
-  Commit-1 (`e9f793f`) green in isolation = 433 (HEAD IS Commit-1 — single-commit
-  packet — so the tip is the isolation point; the 413 base was ALSO independently
-  verified at `bd98777` in a throwaway worktree). (Prior baseline was 413 at
-  P-032a; P-032b added +20 — `test_groove_coherence.py`: byte-identical
-  INDEPENDENT capture (all 9 pre-existing component scores + overall +
-  `expanded["groove"]`, all 3 fixtures → diff EMPTY; 68/68 unchanged) + the P-016
-  no-re-run guard (`analyze_groove` called exactly ONCE, spy-counted) +
-  real-groove-threading proof + value-discrimination + liveness/sabotage +
-  no-aliasing + honest-naming; 3 pre-existing pins updated
-  (`test_producer_profile.py` scorers-set, `test_doctrine_profile_sourced.py`
-  `_WEIGHTS` value-pin, `test_negative_space.py` negative_space now index 8 with
-  the `keys[:8]` anchor intact). Earlier: 396 → 413 at P-032a; 384 → 396 at
-  P-032e; 370 → 384 at P-029; 351 → 370 at P-028; 331 → 351 at P-027; 319 → 331
-  at P-026; 293 → 319 at P-025.)
+- **Green baseline (verified 2026-07-01, P-032d):** suite **451 passed** (0 failed /
+  skipped); regression **68/68** (0 critical / 0 warnings) — UNCHANGED (P-032d
+  default path is byte-identical; rhythmic_surprise weight-0 for halee_ramone).
+  Commit-1 (`8a81516`) green in isolation = 451 (HEAD IS Commit-1 — single-commit
+  packet — so the tip is the isolation point; the 433 base was ALSO independently
+  verified at `8c03f14` in a throwaway worktree). (Prior baseline was 433 at
+  P-032b; P-032d added +18 — `tests/test_rhythmic_surprise.py`: byte-identical
+  INDEPENDENT capture (33/33 pre-existing values × 3 fixtures unchanged;
+  overalls 73.8 / 70.7 / 74.3; 68/68 unchanged) + value-discrimination + the
+  FOUR distinctness guards (high-mean/zero-variance bed → 20.0;
+  mean-invisibility; negative_space-opposite; dynamic_mix-distinct) +
+  liveness/drop-axis sabotage + no-aliasing + honest-scope; 3 pre-existing pins
+  updated (`test_producer_profile.py` scorers-set,
+  `test_doctrine_profile_sourced.py` `_WEIGHTS` value-pin,
+  `test_groove_coherence.py` groove_coherence now index 9). Earlier: 413 → 433
+  at P-032b; 396 → 413 at P-032a; 384 → 396 at P-032e; 370 → 384 at P-029;
+  351 → 370 at P-028; 331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at
+  P-025.)
 
 ## Where we are
+
+- **★★ P-032d LANDS THE FOURTH NEW PRODUCER-AGNOSTIC DOCTRINE AXIS —
+  `rhythmic_surprise` (weak, section-aggregate form) — BYTE-IDENTICALLY FOR
+  halee_ramone; the FIRST packet of the RESEQUENCED remaining order
+  (d → c → g → f), the smallest/safest lift (one input, ZERO new plumbing —
+  confirmed in practice).** **The doctrine engine now carries 11 component
+  axes** (7 original + beat_identity + negative_space + groove_coherence +
+  rhythmic_surprise), all four new axes weight-0 for halee_ramone (so output is
+  BYTE-IDENTICAL). **Last-closed = P-032d.**
+  - **What P-032d shipped:** a new agnostic scorer
+    `_rhythmic_surprise(sections_analysis, doctrine)` in `doctrine_engine.py`
+    measuring cross-section transient-density variation — pstdev SPREAD of
+    section `transient_density` (the `_dynamic_mix` idiom applied to the ONE
+    signal it never reads) + the LARGEST adjacent section-to-section SWING
+    ("the beat drops out / the fill hits" in aggregate form). Always returns a
+    clamped float; <2 sections → documented fallback. Constants (in
+    `doctrine.scorers.rhythmic_surprise`): `insufficient_sections_score 40.0`,
+    `baseline 20.0`, `spread_coeff 160`, `swing_coeff 60`. Live fixture scores
+    (weight-0, informational): **51.1** (simple — some sectional variation) /
+    **20.0** (dense — the real-world high-mean/ZERO-variance constant bed) /
+    **27.8** (splice).
+  - **★ BYTE-IDENTICAL (INDEPENDENT — qa's own capture):** 33/33 pre-existing
+    values × 3 fixtures unchanged (overalls 73.8 / 70.7 / 74.3); regression
+    **68/68, 0 warnings — UNCHANGED**. `rhythmic_surprise_score` appended LAST
+    to `component_scores` (after `groove_coherence_score`; the 10-term
+    summation order preserved) with `weights["rhythmic_surprise_score"] = 0`.
+  - **★ DISTINCTNESS — ALL 4 GUARDS PASS AND INDEPENDENTLY RECOMPUTED (qa):**
+    high-mean/zero-variance constant transient bed → **20.0** (LOW — the
+    design crux); mean-invisibility (a mean shift alone leaves rs
+    20.0 == 20.0); negative_space-OPPOSITE (ns 78.0 vs rs 20.0 — mean vs
+    variance statistics); dynamic_mix-DISTINCT (dyn 100.0 vs rs 20.0 —
+    rms/width/brightness vs transient_density). The ONLY axis keyed on the
+    VARIATION of section transient_density.
+  - **★ LIVENESS LOAD-BEARING (the P-016/P-029 lesson):** drop-axis
+    monkeypatch sabotage → liveness 2 FAILED / byte-identical 5 passed — the
+    axis is genuinely wired; byte-identical alone would not catch an
+    accepted-but-ignored axis.
+  - **★ HONEST SCOPE (weak form, test-guarded, deliberately NOT faked):**
+    evidence strings say "weak, section-aggregate form"; AST/grep-verified the
+    scorer reads sections + doctrine ONLY. Deferred in the docstring: fill
+    detection, unexpected-hit detection, per-onset IOI deviation (all need
+    onset timing/sequence — groove territory). Must NOT read
+    `overall_regularity` (that is `_groove_coherence`'s input) — ENFORCED.
+  - **★ REVIEWER PASS (no must-fix) — ran THREE own sabotages, ALL caught:**
+    (A) hardcode the scorer to a constant → 7 discrimination/fallback/evidence
+    tests fail; (B) drop the axis from `component_scores` → 3 fail incl. BOTH
+    liveness tests; (C) flip the halee weight 0→2 → 8 fail across three guard
+    files. Constants sanity: smooth mid-range discrimination (swing 0.1 → 34,
+    0.3 → 62, 0.5 → 90), clamps at 100 for swings ≳0.57 — consistent with the
+    sibling idiom, not degenerate. **Codex NOT available — single-model
+    review.**
+  - **Single commit `8a81516`** (atop set-active `8c03f14`, branch
+    `claude/logic-mix-os-hardening-12-7hbeh1` — HEAD IS Commit-1, green in
+    isolation by construction). Suite **433 → 451 passed** (+18; 0 failed /
+    skipped; base independently verified at `8c03f14` in a throwaway worktree
+    = 433); regression **68/68, 0 warnings — UNCHANGED**. Safety grep NONE
+    FOUND (535 insertions / 6 deletions, 8 in-packet files). qa **GREEN**;
+    reviewer **PASS (no must-fix)**. **P-032d local-only**, not pushed/merged
+    (merge base still `e79426a` = PR #16).
+  - **★ NEW COSMETIC RESIDUE (reviewer, carried to residue):** (1)
+    `test_liveness_direction_tracks_the_rhythmic_surprise_score`'s docstring
+    OVERCLAIMS (a hardcoded constant still moves the mean directionally; the
+    discrimination tests are what catch hardcoding) — SAME family as the
+    standing liveness-docstring-overclaim note; fold ONE docstring sweep across
+    ALL FOUR axis test files into a future doctrine-touching packet. (2) in
+    `_rhythmic_surprise`, None-filtering BEFORE the adjacency zip means a
+    missing middle `transient_density` would compute a swing across
+    NON-adjacent sections — defensive-only (the pipeline always emits the
+    metric); same future-packet ride-along.
+  - **★★ MILESTONE — the engine now carries 11 component axes; 4 of the 7
+    Timbaland "weight up" axes have now landed** (beat_identity,
+    negative_space, groove_coherence, rhythmic_surprise), all
+    append-last/weight-0/profile-sourced, ZERO plumbing debt.
+  - **★ TIMBALAND SUB-ARC (P-032.x) — RESEQUENCED remaining order:** **P-032e
+    ✓ → P-032a ✓ → P-032b ✓ → P-032d ✓ → P-032c (low_end_motion — NEXT: pure
+    additive, 5 in-arg inputs; distinctness-vs-static_mix needs care —
+    POSITIVE relationship vs hygiene penalty; presence is a GATE only — "more
+    bass" must not win) → P-032g (loop static-vs-iconic) → P-032f (vocal-role
+    — HIGH risk, LAST, ★ USER-GATED)** → **[fold P-031 confidence here]** →
+    P-032h (author `timbaland.json`, first non-byte-identical output) →
+    P-032i (Timbaland-vs-Halee/Ramone differential proof). P-030 (rename dims)
+    orthogonal/last. Receipt:
+    `build-os/receipts/P-032d-rhythmic-surprise.md`.
 
 - **★★ P-032b LANDS THE THIRD NEW PRODUCER-AGNOSTIC DOCTRINE AXIS —
   `groove_coherence` — AND THE `analyze_groove` LIVE-WIRE, BYTE-IDENTICALLY FOR
@@ -1269,4 +1360,4 @@
   propagated until P-031.
 
 ---
-_Updated by the archivist on close. Last advanced on P-032e close (2026-07-01) — the FIRST new producer-agnostic doctrine axis `beat_identity` (strength-form) lands byte-identically for halee_ramone; the Timbaland sub-arc (P-032.x) is underway with the crux front-loaded; the producer-agnostic architecture (P-029) is proven EXTENSIBLE. Next: P-032a (negative_space)._
+_Updated by the archivist on close. Last advanced on P-032d close (2026-07-01) — the FOURTH new producer-agnostic doctrine axis `rhythmic_surprise` (weak, section-aggregate form) lands byte-identically for halee_ramone; the engine now carries 11 component axes; 4 of the 7 Timbaland "weight up" axes landed, zero plumbing debt. Next: P-032c (low_end_motion)._
