@@ -65,7 +65,7 @@ class ProjectMemory:
 
     # -- mix pass history ---------------------------------------------------
     def record_pass(self, name: str, result, changes: Optional[List[str]] = None,
-                    input_bounce: Optional[str] = None) -> Dict:
+                    input_bounce: Optional[str] = None, reverted: bool = False) -> Dict:
         history = self._load(self.passes_path, [])
         scores = _scores_from_result(result)
         prev = history[-1]["scores"] if history else None
@@ -92,6 +92,13 @@ class ProjectMemory:
             "revert_candidates": worse,
             "next_recommended": [i["title"] for i in result.mix_plan.get("next_pass", [])][:3],
         }
+        # P-018 — CONFIRMED operator outcome (opt-in). ``reverted`` is a ground-truth
+        # signal: the operator actually reverted this pass. Recorded ONLY when True
+        # so the stored history is byte-identical to pre-P-018 when the flag is
+        # unused. The next-pass planner treats it as an OVERRIDE of the
+        # score-inferred ``got_worse`` / ``revert_candidates`` guess.
+        if reverted:
+            record["reverted"] = True
         history.append(record)
         self._save(self.passes_path, history)
         return record
