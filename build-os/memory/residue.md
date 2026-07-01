@@ -26,11 +26,19 @@
 
 ## Deferred (follow-up packets)
 
-- **Reward nudges (orchestrator rows 3+4) — NEW, user-gated:**
-  `depth_cleanup +6 halee` / `subtractive_drop +4 taste` when `crowded_sections`
-  is non-empty — a possible later ADDITIVE packet IF the user wants reward
-  (promotion) nudges. **Deferred** — P-012 is penalty-only by the user's
-  recommended reading. Do NOT open without the user asking for reward nudges.
+- **Reward-nudges family — OPENED by P-016 (the penalty-only line is CROSSED).**
+  P-016 shipped the FIRST reward/promotion nudge (the `loop` branch:
+  `loop_deconstruct` promoted +4.0 past `subtractive_drop` when a loop is
+  genuinely foregrounded), evidence-gated and LIVE in production. Precedent is
+  set. Future reward rows on OTHER branches — e.g. `density → depth_cleanup`,
+  `chorus_lift → drum_room_bloom` (and the old orchestrator rows 3+4:
+  `depth_cleanup +6 halee` / `subtractive_drop +4 taste` on non-empty
+  `crowded_sections`) — are now **in-doctrine follow-ups**, NOT out-of-doctrine.
+  BUT each is **user-gated per-row** and must clear the SAME bar as P-016: its own
+  evidence gate + a non-vacuity mutation check + a collateral-safety proof + a
+  **live-wire check** (evidence computed BEFORE `run_creative_engine`; asserted on
+  the real `result.creative`/`result.governance` with NO re-run). Do NOT batch;
+  do NOT open a given row without the user asking for it.
 - **Near-tie-creative-FLIP fixture — RESOLVED-as-UNREACHABLE (P-014 verified
   negative finding).** This was the reachable-deferred complement to P-013's
   no-flip case; **P-014 proved a flip is structurally UNREACHABLE test-only**
@@ -63,6 +71,26 @@
   golden-unguarded variant-scoring path is covered by these unit/flip tests. Carry
   this awareness into any future `creative.py` / `_NUDGE_TABLE` / `_KIND_SCORES`
   touch.
+- **Reviewer watch-item (from P-016 — non-blocking, standing) — REWARD-CREEP:**
+  P-016 crossed the penalty-only line with the FIRST reward nudge. Any FUTURE
+  reward row must clear the same bar P-016 did: its own evidence gate + a
+  non-vacuity mutation check + a collateral-safety proof + a **live-wire check**.
+  Watch the trajectory — reward nudges are additive pressure on the default
+  recommendation; keep each one bounded (a separate `CREATIVE_PROMOTION_CAP`),
+  evidence-gated, and user-gated per-row.
+- **★ STANDING LESSON (from P-016 — the P-009-style catch):** an evidence-gated
+  creative nudge is only LIVE if its evidence is computed BEFORE
+  `run_creative_engine`. In P-016, Commit-1's promotion was INERT in production —
+  `run_creative_engine` ran before `provenance`/`source_audits` were populated, so
+  the predicate always read empty evidence; the tests passed only because they
+  RE-RAN the engine on the finished result (masking the inertness). Commit-2's
+  live-wire (relocate `analyze_provenance` + `audit_all` just before
+  `run_creative_engine`, a pure relocation) fixed it, guarded by two
+  production-liveness tests that assert on the real `analyze()`
+  `result.creative`/`result.governance` with NO re-run (FAIL pre-reorder, PASS
+  after). Masking is pre-creative so P-015 was always live; provenance/source_audits
+  were post-creative until P-016. **Rule:** for any future creative nudge, add a
+  no-re-run liveness assertion — a green re-run test can mask production inertness.
 - **Taste-flip through `analyze()` — STRUCTURALLY UNREACHABLE test-only
   (P-013 finding); a flip is USER-GATED to a product change.** P-013 tried to build
   a taste-driven governed-winner flip fixture and could NOT: the builder brute-forced
@@ -118,8 +146,13 @@
 > and the creative-scoring aesthetic decision is RESOLVED via option B (P-012,
 > penalty-only — awaiting PR #13 sign-off). For orchestrator re-survey:
 
-- **Reward nudges (orchestrator rows 3+4)** — the natural ADDITIVE follow-on to
-  P-012's penalty-only layer, but **user-gated** (the user chose penalty-only).
+- **Reward nudges — NOW OPENED (first shipped by P-016).** The penalty-only line
+  is crossed: P-016's `loop`-branch promotion is the first reward nudge, live in
+  production. Further reward rows on other branches are the natural ADDITIVE
+  follow-on and now IN-DOCTRINE, but **user-gated per-row** + each must clear the
+  P-016 bar (evidence gate + non-vacuity + collateral safety + live-wire check).
+  The deeper `_KIND_SCORES` re-curation remains the bigger lever, untouched by
+  P-012/P-015/P-016 by design.
 - **Option-B-visibility / decisiveness** — the CREATIVE half is fully closed:
   **P-013** proved the nudge fires on real data through `analyze()` (option-(a)
   no-flip on a clear ranking), **P-014** proved a near-tie FLIP was unreachable
@@ -132,6 +165,57 @@
 - Net-new **event-logging** producers remain behind the product decision.
 
 ## Done (resolved)
+
+- **Evidence-gated loop-deconstruct PROMOTION — the FIRST reward nudge — DONE via
+  P-016** (`build-os/receipts/P-016-evidence-gated-loop-promotion.md`).
+  **User-delegated PRODUCT-code change** (direction A "open the base-scoring
+  decision space" + fork (i) "evidence-gated" + "keep skating"; the
+  build-orchestrator routed). **This crosses the penalty-only line P-012/P-015
+  held — the FIRST reward/promotion nudge.** **Two commits (≤2):**
+  `b15b957` Commit-1 — `creative.py` (+88): `CREATIVE_PROMOTION_CAP = 4.0` (a
+  SEPARATE constant from the ±2.0 penalty `CREATIVE_NUDGE_CAP`), a
+  `_PROMOTION_TABLE` row (kind `loop_deconstruct`, evidence `foregrounded_loop`,
+  `+35` excitement `= +5.0` raw clamped to exactly `+4.0`, verbatim reason), a
+  `_foregrounded_loop` predicate reading the REAL wire (a `"foregrounded loop"`
+  red_flag from `source_auditors` corroborated by `provenance` `high_risk`;
+  getattr-defensive), and promotion application in `score_variant` (summed
+  promotion overall-delta clamped to `+4.0`; `loop_promotion` reason appended to
+  `score_nudges` on fire) + `tests/test_loop_promotion.py` (NEW, +233).
+  **Green in isolation: 226 passed.** `a9f4e26` Commit-2 — the LIVE-WIRE:
+  `pipeline.py` (+17/−3) relocates `analyze_provenance` + `audit_all` to just
+  BEFORE `run_creative_engine` (a pure relocation — inputs already populated
+  ~90 lines earlier) + two production-liveness tests (+70). **★ The P-009-style
+  catch:** Commit-1's mechanism was INERT in production —
+  `run_creative_engine` ran BEFORE `provenance`/`source_audits`, so the predicate
+  always read empty evidence and the promotion NEVER fired in the real
+  `analyze()` output; Commit-1's tests passed only because they RE-RAN the engine
+  on the finished result. The orchestrator-in-chief caught it (the builder had
+  mislabeled the ordering "by design"); Commit-2's live-wire fixed it, guarded by
+  the two liveness tests that assert on the real `analyze()`
+  `result.creative`/`result.governance` with NO re-run (FAIL pre-reorder, PASS
+  after). **`_KIND_SCORES`, `CREATIVE_NUDGE_CAP`, the entire penalty table/path,
+  and both existing predicates are byte-UNTOUCHED; `governance.py` has ZERO
+  `provenance`/`source_audits` refs** → reorder SAFE BY CONSTRUCTION (backed
+  by a 12-artifact byte-identical diff across all 3 seeded fixtures). **Behavior
+  (qa-verified):** loop_deconstruct 81.9 → **85.9** (raw +5.0 clamped to
+  exactly +4.0 = the cap binds, carries the `loop_promotion` line) >
+  subtractive_drop 85.3 → **loop winner flips `loop_B` → `loop_A` by
+  0.6** (governed winner also flips, no veto). **Load-bearing negative control:**
+  no foregrounded-loop evidence → subtractive_drop wins (flip caused by the
+  EVIDENCE). **Collateral:** ONLY the loop branch flips (chorus_lift/density still
+  subtractive_drop — `subtractive_drop` now wins 2 branches, not 3, relieving
+  anti_template; vocal_belief per P-015; depth unchanged); P-012/P-013/P-015 test
+  files NOT edited and pass (58). **Proof:** suite **217 → 228 passed** (+11;
+  0 failed/skipped/warnings, green under `-W error`); regression **68/68, 0
+  critical, 0 warnings** (`loops_not_foregrounded` held); safety grep clean; UI
+  N/A. **Reviewer pass** with a non-vacuity mutation check (emptying the promotion
+  row → 5 promotion-dependent + 2 liveness tests RED, negative control GREEN;
+  reverting ONLY the reorder → the 2 liveness tests RED) + a reward-creep
+  watch-item; the `plan_depth` monkeypatch in the liveness test is a legitimate
+  seam (real audit_all/analyze_provenance/run_creative_engine produce+consume the
+  evidence, nothing faked). **Codex NOT available — single-reviewer
+  verdict.** **P-016 is local-only** (commits `b15b957`, `a9f4e26` on the dev
+  branch on top of `0f4e7e9`), not pushed/merged at close.
 
 - **Make-the-nudge-decisive (masked-vocal near-tie) — DONE via P-015**
   (`build-os/receipts/P-015-decisive-masked-vocal-nudge.md`). **User-signed-off
