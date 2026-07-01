@@ -50,23 +50,100 @@
   P-028 + P-029 product commits are local-only (not pushed / merged). P-029's parent
   chain: `ea1aaa9` → `42d6ebd` → `d05105d` (active-packet confirmation) → `4fdae41`
   (P-028 close). P-028's parent chain: `72e98a7` → `29b9dfe` → `d5260a6`
-  (active-packet confirmation) → `23850f7` (P-027 close).
+  (active-packet confirmation) → `23850f7` (P-027 close). **★ ON TOP of P-029, the
+    dev branch now also carries P-032e (`8239f42` + `9d6764e`, product — the FIRST
+    NEW producer-agnostic doctrine axis `beat_identity`, strength-form, weight-0 for
+    halee_ramone so byte-identical), local-only, base `6d34c30` = the P-029 close.
+    P-032e's parent chain: `9d6764e` → `8239f42` → `2491f42` (active-packet
+    confirmation) → `6d34c30` (P-029 close).** The base for MERGE decisions is still
+    `e79426a` = PR #16 (nothing since P-025 has been merged).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-01, P-029):** suite **384 passed** (0 failed /
+- **Green baseline (verified 2026-07-01, P-032e):** suite **396 passed** (0 failed /
   skipped / warnings; green even under `-W error`); regression **68/68** (0
-  critical / 0 warnings) — UNCHANGED (P-029 default path is byte-identical).
-  Commit-1 green in isolation = 383. (Prior baseline was 370 at P-028; P-029 added
-  +14 — `test_producer_selection.py`: byte-identical default + selection-liveness
-  across doctrine/creative/governance, proven load-bearing both ways, + determinism;
-  existing tests UNEDITED. Earlier: 351 → 370 at P-028; 331 → 351 at P-027;
-  319 → 331 at P-026; 293 → 319 at P-025.)
+  critical / 0 warnings) — UNCHANGED (P-032e default path is byte-identical;
+  beat_identity weight-0 for halee_ramone). Commit-1 (`8239f42`) green in isolation
+  = 396 (verified in a throwaway worktree; the shared HEAD never moved). (Prior
+  baseline was 384 at P-029; P-032e added +12 — `test_beat_identity.py` (12):
+  byte-identical (all 3 fixtures + overall unchanged + 68/68) + value-discrimination
+  + liveness (load-bearing both ways) + no-aliasing; 2 existing guards updated
+  (`test_producer_profile.py` scorer-set, `test_doctrine_profile_sourced.py`
+  `_WEIGHTS` value-pin). Earlier: 370 → 384 at P-029; 351 → 370 at P-028;
+  331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★ P-032e LANDS THE FIRST NEW PRODUCER-AGNOSTIC DOCTRINE AXIS — `beat_identity`
+  — AND PROVES THE ARCHITECTURE (P-029) IS EXTENSIBLE, NOT JUST PARAMETERIZABLE.**
+  The Timbaland sub-arc (P-032.x) is now UNDERWAY, and the user front-loaded the
+  hardest/riskiest axis — beat_identity, the central-rhythmic-fingerprint STRENGTH —
+  to de-risk the whole sub-arc early: prove the signal is *honestly measurable on
+  exported stems* before investing in the easier axes. **The doctrine engine now
+  carries 8 component axes (7 original + beat_identity), with beat_identity weight-0
+  for halee_ramone (so its output is BYTE-IDENTICAL). Last-closed = P-032e.**
+  - **What P-032e shipped:** a new agnostic scorer `_beat_identity(records, events,
+    doctrine)` in `doctrine_engine.py` measuring fingerprint STRENGTH from transient
+    physics alone — agnostic rhythmic-candidate identification by `transient_density`
+    (NOT by instrument label), presence vs a `no_beat` floor, distinctness above the
+    track median, definition via `crest_factor_db`, and a foreground/unmasked bonus
+    (buried/masked → penalty). Constants read (read-only) from
+    `doctrine["scorers"]["beat_identity"]`.
+  - **★ BYTE-IDENTICAL MECHANISM:** `beat_identity_score` is appended **LAST** to
+    `component_scores` (preserves the pre-existing 7-term summation order → overall
+    bit-identical) with `weights["beat_identity_score"] = 0` in `halee_ramone.json`
+    (`beat·0` numerator, `+0` denominator → weighted mean unchanged). Proven **0/24
+    mismatches** vs clean base `6d34c30` (overalls 73.8 / 70.7 / 74.3 unchanged);
+    regression **68/68, 0 critical, 0 warnings — UNCHANGED**.
+  - **★ LIVENESS LOAD-BEARING (the P-016/P-029 lesson honored):** a synthetic profile
+    weighting `beat_identity_score` non-zero MOVES the `analyze()` overall and its
+    direction tracks the beat score; **sabotage (hardcode beat / drop the threading)
+    FAILS the liveness tests while byte-identical stays green** — byte-identical alone
+    would NOT catch an accepted-but-ignored axis. Value-discrimination proven: a
+    punchy/foregrounded/distinct rhythmic stem → HIGH; no rhythmic element → `no_beat`
+    floor. Live fixture scores (weight-0, informational): **89.1 / 52.7 / 46.0** — a
+    sensible discriminating spread.
+  - **★ HONEST BOUNDARIES (documented in-code, deliberately NOT faked — the CRUX):**
+    (1) fingerprint TYPING (mouth-sound/tabla/synth-knock) — not measurable on
+    exported stems; (2) onset REGULARITY / IOI — real but not visible at
+    `score_doctrine` time (lives in the post-doctrine groove analyzer), deferred to
+    **P-032b**'s groove live-wire; (3) "more undeniable after a move" — needs a
+    before/after render, out of scope in plan-only v1. Candidacy is by transient
+    physics ONLY.
+  - **★ AGNOSTIC-FIRST:** physics/measurement stays hardcoded & agnostic; only the
+    *weight* lives in the profile. `producer_profile._validate` required-scorers now
+    includes `beat_identity` (structurally bound). `doctrine_score.schema.json` gained
+    the optional `beat_identity_score` property (documentation; no
+    `additionalProperties: false`). No-aliasing: the scorer only reads `doctrine[...]`,
+    never mutates the profile (two no-aliasing tests).
+  - **Two commits `8239f42` (scorer + constants + weight-0 + `_validate` + 12-test
+    `test_beat_identity.py` + 2 guard updates — green in isolation = 396) + `9d6764e`
+    (schema doc).** Suite **384 → 396 passed** (+12; 0 failed/skipped/warnings, green
+    under `-W error`); regression **68/68, 0 critical, 0 warnings — UNCHANGED**. Safety
+    grep clean; honest-scope confirmed; UI N/A. qa **GREEN**; reviewer **PASS** (all 7
+    scrutiny points; byte-identical proven numerically over 100k trials; liveness
+    verified load-bearing by an in-memory sabotage; guard updates are legitimate
+    tightening; Product Trajectory Check pass; no must-fix). **Codex NOT available —
+    single-model review.** **P-032e local-only** (`8239f42`, `9d6764e` on the dev
+    branch on top of the `6d34c30` P-029-close base), not pushed/merged.
+  - **★★ MILESTONE — THE FIRST NEW PRODUCER-AGNOSTIC MEASUREMENT AXIS beyond the
+    original Halee/Ramone set.** The engine can now *hear* a Timbaland-relevant
+    dimension, added byte-identically for the reference producer. **The
+    producer-agnostic architecture (P-029) is proven EXTENSIBLE, not just
+    parameterizable.**
+  - **★ TIMBALAND SUB-ARC (P-032.x) — the CRUX landed FIRST:** **P-032e ✓
+    (beat_identity — front-loaded crux)** → P-032a (negative_space — RECOMMENDED NEXT,
+    lowest-risk, all inputs already visible to doctrine) → P-032b (groove_coherence
+    live-wire — where onset-regularity/IOI gets plumbed in) → P-032c
+    (low_end_motion/pocket) → P-032d (rhythmic_surprise, weak-form) → P-032f
+    (vocal-role refinement) → P-032g (loop static-vs-iconic context) → **[fold P-031
+    confidence here]** → P-032h (author `timbaland.json`, first non-byte-identical
+    output) → P-032i (Timbaland-vs-Halee/Ramone differential proof). P-030 (rename
+    dims) orthogonal/last. Receipt:
+    `build-os/receipts/P-032e-beat-identity.md`.
 
 - **★★ P-029 IS THE PIVOT — THE PRODUCER PROFILE IS NOW A LIVE, SELECTABLE LEVER
   END-TO-END: `analyze(producer=…)` SELECTS WHICH PROFILE DRIVES THE JUDGMENT.**
@@ -999,4 +1076,4 @@
   propagated until P-031.
 
 ---
-_Updated by the archivist on close. Last advanced on P-029 close (2026-07-01) — THE PIVOT of the producer-agnostic epic: `analyze(producer=…)` selects the profile; the profile is now a LIVE, SELECTABLE LEVER end-to-end (byte-identical default, selection proven live + load-bearing across all 3 layers); architecture complete & validated._
+_Updated by the archivist on close. Last advanced on P-032e close (2026-07-01) — the FIRST new producer-agnostic doctrine axis `beat_identity` (strength-form) lands byte-identically for halee_ramone; the Timbaland sub-arc (P-032.x) is underway with the crux front-loaded; the producer-agnostic architecture (P-029) is proven EXTENSIBLE. Next: P-032a (negative_space)._
