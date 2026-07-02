@@ -71,7 +71,7 @@ from test_protect_iconic_loops import (
     _with_iconic_loop,
     _with_masked_lead,
 )
-from test_vocal_type import BASE_COMPONENT_SCORES, JUDGMENT_WORDS
+from test_vocal_type import BASE_COMPONENT_SCORES, judgment_word_hits
 
 _ROOT = pathlib.Path(__file__).resolve().parent.parent
 _TIMBALAND_PATH = _ROOT / "logic_mix_os" / "doctrine" / "producers" / "timbaland.json"
@@ -572,8 +572,8 @@ def test_whole_profile_language_is_observational():
     philosophy, reasons, biases, switches, map. The profile reports and
     decides; it never rules on other producers or styles."""
     blob = _TIMBALAND_PATH.read_text(encoding="utf-8").lower()
-    for word in JUDGMENT_WORDS:
-        assert word not in blob, f"judgment word {word!r} in timbaland.json"
+    hits = judgment_word_hits(blob)
+    assert not hits, f"judgment word(s) {hits} in timbaland.json"
 
 
 # --------------------------------------------------------------------------- #

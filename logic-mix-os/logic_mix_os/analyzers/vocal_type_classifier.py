@@ -64,7 +64,8 @@ and are never claimed:
 
 from __future__ import annotations
 
-from typing import Dict, Optional
+import math
+from typing import Dict, Iterable, Optional, Set
 
 from ..constants import LOOP_SAMPLE_KINDS
 
@@ -104,6 +105,21 @@ def is_vocal_record(record: Dict) -> bool:
         record.get("identity_family") == "vocal"
         or record.get("instrument_identity") in _VOCAL_IDENTITIES
     )
+
+
+def lead_vocal_names(records: Iterable[Dict]) -> Set[str]:
+    """IDENTITY-derived lead-vocal track names — the ONE shared lead-matching
+    basis (P-034 fixed ``creative._lead_masked``; P-037 consolidated
+    ``doctrine_engine._vocal_role_fit`` and the logic action generator onto
+    the same helper). A stem is the lead iff the identity detector called it
+    ``lead_vocal``: never derived from stem NAMES (a substring match misfires
+    on lead-free vocal-NAMED elements) and never from the classifier's
+    ``vocal_type`` field (identity wins — a hand-mangled type field can
+    neither strip nor grant lead status). Pure and read-only."""
+    return {
+        r["name"] for r in records
+        if r.get("instrument_identity") == "lead_vocal"
+    }
 
 
 def classify_vocal_type(record: Dict) -> Optional[Dict]:
@@ -210,7 +226,13 @@ def accepted_blend_under_policy(record: Dict, policy: Optional[Dict]) -> bool:
          still refused — the type is categorical);
        * never BELOW THRESHOLD: ``vocal_type_confidence`` must be a real
          number at or above the profile's explicit ``confidence_floor``; a
-         missing confidence or a malformed floor fails closed.
+         missing confidence or a malformed floor fails closed. P-037: the
+         floor itself is self-guarded before the comparison — a real,
+         FINITE number in [0, 1]. The loader validates authored profiles,
+         but this gate also serves raw dicts, and an unguarded NaN floor
+         let every confidence through (``confidence < nan`` is False)
+         while a negative/-inf floor waved blend in below any authored
+         threshold. Out of contract → refuse blend.
     3. Only then does blend apply.
 
     THE MASKED-LEAD PATHWAY is excluded at the CALLER, structurally: the
@@ -238,6 +260,8 @@ def accepted_blend_under_policy(record: Dict, policy: Optional[Dict]) -> bool:
     floor = policy.get("confidence_floor")
     if isinstance(floor, bool) or not isinstance(floor, (int, float)):
         return False  # a policy without a real floor -> full protection
+    if not math.isfinite(floor) or not 0.0 <= floor <= 1.0:
+        return False  # P-037: out-of-contract floor (NaN/±inf/outside [0,1])
     if confidence < floor:
         return False  # never below the profile's explicit threshold
     # 3. Blend applies.
@@ -250,4 +274,5 @@ __all__ = [
     "accepted_blend_under_policy",
     "classify_vocal_type",
     "is_vocal_record",
+    "lead_vocal_names",
 ]

@@ -12,6 +12,7 @@ from __future__ import annotations
 
 from typing import Dict, List, Optional
 
+from .analyzers.vocal_type_classifier import lead_vocal_names
 from .constants import LOOP_SAMPLE_KINDS
 from .doctrine.doctrine_engine import read_loop_context
 from .doctrine.producer_profile import ProducerProfile, load_profile
@@ -104,11 +105,10 @@ def _lead_masked(result) -> bool:
     the match is identity-derived, so a non-lead vocal event can never
     falsely trigger the masked-lead gate. On the lead-inclusive
     ``bad_masking`` events the analyzer actually emits, the two predicates
-    agree: byte-identical on every fixture."""
-    lead_names = {
-        r["name"] for r in result.records
-        if r.get("instrument_identity") == "lead_vocal"
-    }
+    agree: byte-identical on every fixture. (P-037 consolidated the
+    derivation onto the shared ``lead_vocal_names`` basis — the identical
+    set comprehension, one home.)"""
+    lead_names = lead_vocal_names(result.records)
     if not lead_names:
         return False
     return any(

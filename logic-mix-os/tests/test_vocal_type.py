@@ -47,6 +47,7 @@ from __future__ import annotations
 import copy
 import dataclasses
 import json
+import re
 
 import pytest
 
@@ -139,6 +140,24 @@ BASE_COMPONENT_SCORES = {
 
 # The user's banned judgment vocabulary — the engine reads, it never rules.
 JUDGMENT_WORDS = ("bad", "problem", "should", "fix", "better", "worse", "wrong")
+
+
+def judgment_word_hits(text: str) -> list:
+    """WHOLE-WORD matches of the banned judgment vocabulary — the shared guard
+    (P-037; every language-guard site uses this, never raw substring search).
+
+    The guard used to substring-match, so a merely CONTAINING word tripped it
+    ('fixture' on 'fix') and honest vocabulary was unusable in profile prose.
+    A banned word now matches only at word boundaries, PLURALS INCLUDED
+    (``problem`` catches ``problems``, ``fix`` catches ``fixes``): the
+    conscious P-037 call is that a plural carries exactly the same judgment
+    as its singular, while a containing word ('fixture', 'prefix', 'badge')
+    carries none. Other inflections ('fixed', 'fixing', 'badly') are
+    consciously OUTSIDE the closed vocabulary — extend JUDGMENT_WORDS
+    explicitly if a form needs banning; the guard never guesses stems."""
+    text = text.lower()
+    return [w for w in JUDGMENT_WORDS
+            if re.search(rf"\b{re.escape(w)}(?:e?s)?\b", text)]
 
 
 # --------------------------------------------------------------------------- #
@@ -564,6 +583,32 @@ def test_masked_lead_pathway_is_counted_once_through_the_lead_reading():
     assert not any("clarity protection" in e.lower() for e in ev)
 
 
+def test_lead_names_are_identity_derived_a_mangled_type_cannot_reroute_lead_events():
+    """P-037 (the P-032f reviewer note, resolved): ``lead_names`` in
+    ``_vocal_role_fit`` derives from ``instrument_identity == "lead_vocal"``,
+    never from the classifier's ``vocal_type`` field. On all pipeline data
+    the two are equivalent (identity wins: a ``lead_vocal`` stem is ALWAYS
+    ``vocal_lead``), but the type field was the one HAND-MANGLE-ABLE link:
+    under the old derivation, forcing a lead record's ``vocal_type`` to
+    ``vocal_percussive`` emptied ``lead_names``, so a hand-built vocal-band
+    event carrying the lead's name was re-read through the NON-lead pathway
+    (two clarity-protection penalties). Identity-derived, the lead's events
+    stay excluded from the non-lead pathway whatever the type field says —
+    the sturdier behavior, pinned here as the conscious P-037 flip."""
+    c = _constants()
+    mangled_lead = dict(_lead(), vocal_type="vocal_percussive",
+                        vocal_type_confidence=0.95)
+    chop = _chop()
+    events = [_vband(chop["name"], mangled_lead["name"])]
+    score, ev = _vrf([mangled_lead, chop], events=events)
+    # The lead-name-inclusive event is excluded from BOTH stems' own-event
+    # reads (identity outranks the mangled type): no penalty fires. The
+    # mangled type does forfeit the lead-branch forward bonus — identity
+    # derivation hardens the exclusion set, it does not re-type the stem.
+    assert score == doctrine_engine._clamp(c["baseline"])
+    assert not any("clarity protection" in e.lower() for e in ev)
+
+
 def test_live_fixture_axis_reading(analyzed):
     """The informational live reading (weight 0, inert for halee_ramone):
     every fixture's lead is forward and clear → baseline + bonus, with
@@ -617,16 +662,38 @@ def test_engine_language_is_observational_zero_judgment_words():
     better/worse/wrong) — across every reading the axis can emit."""
     for ev in _all_status_evidence():
         blob = " ".join(ev).lower()
-        for word in JUDGMENT_WORDS:
-            assert word not in blob, f"judgment word {word!r} in evidence: {blob}"
+        hits = judgment_word_hits(blob)
+        assert not hits, f"judgment word(s) {hits} in evidence: {blob}"
 
 
 def test_live_fixture_evidence_is_observational(analyzed):
     for name in FIXTURE_NAMES:
         ev = analyzed[name].doctrine_score["evidence"]["vocal_role_fit"]
         blob = " ".join(ev).lower()
-        for word in JUDGMENT_WORDS:
-            assert word not in blob, f"judgment word {word!r} in {name}: {blob}"
+        hits = judgment_word_hits(blob)
+        assert not hits, f"judgment word(s) {hits} in {name}: {blob}"
+
+
+def test_judgment_word_guard_matches_whole_words_not_substrings():
+    """P-037, both directions pinned. FREED: containing words no longer trip
+    the guard ('fixture' was unusable in profile prose because it contains
+    'fix'). STILL CAUGHT: the banned words themselves AND their plurals (the
+    conscious call: 'problems' judges exactly as 'problem' does). CONSCIOUSLY
+    OUTSIDE: other inflections — the vocabulary is closed, never stemmed."""
+    # Freed — containing words carry no judgment.
+    assert judgment_word_hits("the fixture ran on real exported-stem data") == []
+    assert judgment_word_hits("a prefix and a badge and the wrongest") == []
+    # Still caught — the words themselves...
+    assert judgment_word_hits("fix the chorus") == ["fix"]
+    assert judgment_word_hits("this reads as a problem") == ["problem"]
+    assert judgment_word_hits("Bad masking here") == ["bad"]
+    # ...and their plurals (the P-037 plural decision, both words proven).
+    assert judgment_word_hits("there are problems in the bridge") == ["problem"]
+    assert judgment_word_hits("apply the fixes") == ["fix"]
+    # Consciously outside the closed vocabulary (no stem-guessing).
+    assert judgment_word_hits("a fixed groove, firmly fixed") == []
+    # Case-insensitive, like the substring guard it replaces.
+    assert judgment_word_hits("SHOULD") == ["should"]
 
 
 def test_honest_deferrals_stated_in_docstrings_never_claimed_in_evidence():

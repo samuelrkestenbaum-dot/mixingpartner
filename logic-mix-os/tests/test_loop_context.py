@@ -56,6 +56,7 @@ import pytest
 
 from logic_mix_os.doctrine import doctrine_engine
 from logic_mix_os.doctrine.producer_profile import load_profile
+from test_vocal_type import judgment_word_hits
 
 
 # The twelve pre-existing component score keys (the byte-identical anchor set):
@@ -135,8 +136,9 @@ BASE_COMPONENT_SCORES = {
     },
 }
 
-# The user's banned judgment vocabulary — the engine reads, it never rules.
-JUDGMENT_WORDS = ("bad", "problem", "should", "fix", "better", "worse", "wrong")
+# The user's banned judgment vocabulary lives in ``test_vocal_type`` —
+# P-037 consolidated this file's duplicate tuple onto that single shared
+# guard (``judgment_word_hits``: whole-word + plural matching).
 
 
 # --------------------------------------------------------------------------- #
@@ -516,8 +518,8 @@ def test_engine_language_is_observational_zero_judgment_words():
     full banned list across every status the axis can emit."""
     for ev in _all_status_evidence():
         blob = " ".join(ev).lower()
-        for word in JUDGMENT_WORDS:
-            assert word not in blob, f"judgment word {word!r} in evidence: {blob}"
+        hits = judgment_word_hits(blob)
+        assert not hits, f"judgment word(s) {hits} in evidence: {blob}"
 
 
 def test_live_fixture_evidence_is_observational(analyzed):
@@ -526,8 +528,8 @@ def test_live_fixture_evidence_is_observational(analyzed):
     for name in FIXTURE_NAMES:
         ev = analyzed[name].doctrine_score["evidence"]["loop_context"]
         blob = " ".join(ev).lower()
-        for word in JUDGMENT_WORDS:
-            assert word not in blob, f"judgment word {word!r} in {name}: {blob}"
+        hits = judgment_word_hits(blob)
+        assert not hits, f"judgment word(s) {hits} in {name}: {blob}"
 
 
 # --------------------------------------------------------------------------- #

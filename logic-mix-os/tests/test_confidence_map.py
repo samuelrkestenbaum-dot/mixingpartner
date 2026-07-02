@@ -72,7 +72,7 @@ from logic_mix_os.pipeline import analyze, write_artifacts
 from logic_mix_os.project import load_manifest
 from logic_mix_os.renderers import markdown_renderer
 from test_protect_iconic_loops import BASE_CREATIVE_SURFACE
-from test_vocal_type import BASE_COMPONENT_SCORES, FIXTURE_NAMES, JUDGMENT_WORDS
+from test_vocal_type import BASE_COMPONENT_SCORES, FIXTURE_NAMES, judgment_word_hits
 
 _ROOT = pathlib.Path(__file__).resolve().parent.parent
 _PROFILE_PATH = _ROOT / "logic_mix_os" / "doctrine" / "producers" / "halee_ramone.json"
@@ -193,6 +193,35 @@ def test_structure_is_validated():
     _validate(_raw_with([ok]), "halee_ramone")
 
 
+def test_duplicate_areas_are_rejected():
+    """P-037 (the P-031 reviewer judgment note, now conscious): two entries
+    labeling the SAME area is ambiguous honesty — which level does the
+    reader trust? — so duplicate ``area`` strings are structurally
+    rejected."""
+    a = {"area": "same area", "level": "high", "reason": "r1"}
+    b = {"area": "same area", "level": "deferred", "reason": "r2"}
+    other = {"area": "another area", "level": "limited", "reason": "r3"}
+    with pytest.raises(ValueError, match="confidence_map"):
+        _validate(_raw_with([a, b]), "halee_ramone")
+    with pytest.raises(ValueError, match="confidence_map"):
+        _validate(_raw_with([a, other, dict(a)]), "halee_ramone")
+    # Distinct areas still pass — uniqueness is the only new constraint here.
+    _validate(_raw_with([a, other]), "halee_ramone")
+
+
+def test_entry_keys_are_exactly_area_level_reason():
+    """P-037 (the P-031 reviewer judgment note, now conscious): an entry's
+    key set is EXACTLY {area, level, reason} — an unknown extra key (a typo,
+    a smuggled weight, a stray annotation) is rejected, never silently
+    carried onto the report surface."""
+    ok = {"area": "a", "level": "high", "reason": "r"}
+    for extra in ("weight", "score", "Area", "note"):
+        broken = dict(ok, **{extra: "x"})
+        with pytest.raises(ValueError, match="confidence_map"):
+            _validate(_raw_with([broken]), "halee_ramone")
+    _validate(_raw_with([ok]), "halee_ramone")
+
+
 def test_every_authored_level_is_from_the_closed_vocabulary():
     for entry in load_profile("halee_ramone").confidence_map:
         assert entry["level"] in CONFIDENCE_LEVELS
@@ -286,8 +315,8 @@ def test_map_language_is_observational_zero_judgment_words():
     'bad', 'problem', 'should', 'fix' (nor better/worse/wrong)."""
     blob = json.dumps(load_profile("halee_ramone").confidence_map,
                       sort_keys=True).lower()
-    for word in JUDGMENT_WORDS:
-        assert word not in blob, f"judgment word {word!r} in confidence_map"
+    hits = judgment_word_hits(blob)
+    assert not hits, f"judgment word(s) {hits} in confidence_map"
 
 
 # --------------------------------------------------------------------------- #

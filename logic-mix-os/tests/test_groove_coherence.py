@@ -6,8 +6,12 @@ scorers over signals already visible to doctrine — ``groove_coherence`` reads 
 signal (``analyze_groove`` → ``overall_regularity`` = per-track ``1 − CoV(IOIs)``)
 that used to be computed AFTER ``score_doctrine`` in the pipeline. To feed it to
 doctrine the pipeline now computes ``groove`` ONCE, BEFORE doctrine, threads it in
-via a new ``score_doctrine(..., groove=…)`` keyword, and REUSES the exact same
-object in ``result.expanded["groove"]`` — a behavior-preserving relocation.
+via a new ``score_doctrine(..., groove=…)`` keyword, and REUSES the computed
+value in ``result.expanded["groove"]`` — a behavior-preserving relocation.
+(P-037 consciously amended the original "exact same object" contract: the
+expanded value is now a DEFENSIVE COPY — byte-equal, never an alias — so a
+future doctrine mutation of its ``groove`` arg cannot corrupt the artifact;
+``analyze_groove`` still runs exactly once.)
 
 HONEST NAMING: ``overall_regularity`` measures rhythmic tightness/CONSISTENCY, not
 "identity coherence" in the full sense. This axis scores groove
@@ -233,11 +237,12 @@ def _analyze_dense_with_groove_spy(monkeypatch):
 
     root = Path(__file__).resolve().parent.parent
     real = pipeline.analyze_groove
-    counter = {"n": 0}
+    counter = {"n": 0, "obj": None}
 
     def _spy(rhythm_tracks):
         counter["n"] += 1
-        return real(rhythm_tracks)
+        counter["obj"] = real(rhythm_tracks)
+        return counter["obj"]
 
     monkeypatch.setattr(pipeline, "analyze_groove", _spy)
     manifest = load_manifest(root / "fixtures" / "dense_chorus_with_loops" / "project_manifest.json")
@@ -251,6 +256,24 @@ def test_analyze_groove_called_exactly_once(monkeypatch):
     ``expanded``) is the live-wire being wrong — this catches it."""
     _res, counter = _analyze_dense_with_groove_spy(monkeypatch)
     assert counter["n"] == 1
+
+
+def test_expanded_groove_is_a_defensive_copy_not_an_alias(monkeypatch):
+    """P-037 (the P-032b adversarial skeptic's shared-mutable-groove note,
+    resolved): ``result.expanded["groove"]`` is EQUAL to the groove dict
+    handed to ``score_doctrine`` but is NOT the same object — a defensive
+    copy, so a future doctrine change mutating its ``groove`` arg can never
+    silently corrupt the expanded artifact.
+
+    THE CONSCIOUS FLIP: P-032b's original contract was "the exact same
+    object is REUSED" (identity). P-037 keeps every value byte-identical and
+    keeps compute-once intact (``analyze_groove`` still runs exactly once —
+    asserted here too), but deliberately breaks the aliasing: equal, never
+    identical."""
+    res, counter = _analyze_dense_with_groove_spy(monkeypatch)
+    assert counter["n"] == 1                              # compute-once holds
+    assert res.expanded["groove"] == counter["obj"]       # byte-equal value
+    assert res.expanded["groove"] is not counter["obj"]   # never an alias
 
 
 def test_score_doctrine_receives_the_real_groove(monkeypatch):

@@ -613,6 +613,76 @@ def test_load_profile_validates_and_rejects_unknown():
         load_profile("no_such_producer")
 
 
+# --------------------------------------------------------------------------- #
+# P-037 validation tightening — the P-033 reviewer's two gaps, now closed.
+# --------------------------------------------------------------------------- #
+def _raw_reference() -> dict:
+    import json
+    import pathlib
+
+    path = (pathlib.Path(__file__).resolve().parent.parent / "logic_mix_os"
+            / "doctrine" / "producers" / "halee_ramone.json")
+    with open(path, encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+def test_search_modes_must_be_a_non_empty_object():
+    """P-037: a profile with ZERO search modes would leave
+    ``creative._profile_default_mode`` with no authored mode to fall back to
+    (the first-authored-mode branch StopIterations on an empty table) —
+    rejected at load, never at judgment time."""
+    import pytest
+
+    from logic_mix_os.doctrine.producer_profile import _validate
+
+    for broken in ({}, [], "conservative", None):
+        raw = _raw_reference()
+        raw["search_modes"] = broken
+        with pytest.raises(ValueError, match="search_modes"):
+            _validate(raw, "halee_ramone")
+
+
+def test_default_creative_mode_structure_is_validated():
+    """P-037: the three keys ``pipeline._default_creative_mode`` hard-
+    dereferences — ``intimate_truth_words`` (a list of strings) /
+    ``intimate_mode`` (a str) / ``default_mode`` (a str) — are structurally
+    required, so a malformed table is rejected at load, never as a KeyError
+    mid-analyze."""
+    import pytest
+
+    from logic_mix_os.doctrine.producer_profile import _validate
+
+    ok = {"intimate_truth_words": ["quiet"], "intimate_mode": "conservative",
+          "default_mode": "dramatic_contrast"}
+    raw = _raw_reference()
+    raw["default_creative_mode"] = ok
+    _validate(raw, "halee_ramone")  # the control: a minimal sane table loads
+
+    for broken in (
+        "dramatic_contrast",                                    # not an object
+        ["dramatic_contrast"],                                  # not an object
+        {k: v for k, v in ok.items() if k != "intimate_truth_words"},
+        {k: v for k, v in ok.items() if k != "intimate_mode"},
+        {k: v for k, v in ok.items() if k != "default_mode"},
+        dict(ok, intimate_truth_words="quiet"),                 # not a list
+        dict(ok, intimate_truth_words=["quiet", 3]),            # non-str member
+        dict(ok, intimate_mode=3),                              # non-str mode
+        dict(ok, default_mode=None),                            # non-str mode
+    ):
+        raw = _raw_reference()
+        raw["default_creative_mode"] = broken
+        with pytest.raises(ValueError, match="default_creative_mode"):
+            _validate(raw, "halee_ramone")
+
+
+def test_both_shipped_profiles_load_under_the_tightened_validation():
+    """The P-037 tightening rejects malformed shapes, not the shipped
+    profiles: both authored JSONs still load."""
+    for name in ("halee_ramone", "timbaland"):
+        p = load_profile(name)
+        assert p.metadata["name"] == name
+
+
 def test_profile_is_frozen():
     """The returned profile is an immutable view — mutation is rejected."""
     import dataclasses

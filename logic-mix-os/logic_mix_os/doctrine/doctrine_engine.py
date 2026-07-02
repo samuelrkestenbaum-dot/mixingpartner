@@ -16,7 +16,10 @@ from __future__ import annotations
 import statistics
 from typing import Dict, List, Optional
 
-from ..analyzers.vocal_type_classifier import accepted_blend_under_policy
+from ..analyzers.vocal_type_classifier import (
+    accepted_blend_under_policy,
+    lead_vocal_names,
+)
 from ..constants import LOOP_SAMPLE_KINDS
 from .producer_profile import ProducerProfile, load_profile
 
@@ -1260,7 +1263,14 @@ def _vocal_role_fit(records: List[Dict], events: List[Dict],
     )
     ev.append(f"Vocal roles read: {census}.")
 
-    lead_names = {r["name"] for r in vocal_stems if r["vocal_type"] == "vocal_lead"}
+    # P-037 (the P-032f reviewer note): the lead exclusion set is IDENTITY-
+    # derived (the shared ``lead_vocal_names`` basis), never read off the
+    # classifier's ``vocal_type`` field. Identical on all pipeline data —
+    # identity wins guarantees ``lead_vocal`` ⟺ ``vocal_lead`` — but the type
+    # field was hand-mangle-able: forcing a lead's type off ``vocal_lead``
+    # emptied the old set and re-routed the lead's events through the
+    # non-lead pathway. Identity outranks any (mis)typed read.
+    lead_names = lead_vocal_names(records)
 
     def _lead_band_masking(name: str) -> List[Dict]:
         """The masked-LEAD pathway: the analyzer's lead-inclusive

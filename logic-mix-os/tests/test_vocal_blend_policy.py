@@ -75,7 +75,6 @@ from logic_mix_os.doctrine.producer_profile import (
 )
 from test_vocal_type import (
     FIXTURE_NAMES,
-    JUDGMENT_WORDS,
     _chop,
     _constants,
     _hook,
@@ -85,6 +84,7 @@ from test_vocal_type import (
     _rec,
     _stack,
     _vband,
+    judgment_word_hits,
 )
 
 _ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -175,6 +175,26 @@ def test_policy_structure_is_validated():
     ):
         with pytest.raises(ValueError, match="vocal_blend_policy"):
             _validate(raw_with(broken), "halee_ramone")
+
+
+def test_non_finite_confidence_floor_is_rejected_explicitly():
+    """P-037: NaN/±inf floors are rejected EXPLICITLY (``math.isfinite`` —
+    the belt to the range check, which already caught them only as a side
+    effect of NaN/inf comparison semantics). The error names finiteness, so
+    an authored NaN is diagnosed as what it is."""
+    def raw_with(policy):
+        raw = json.load(open(
+            _ROOT / "logic_mix_os" / "doctrine" / "producers" / "halee_ramone.json",
+            encoding="utf-8",
+        ))
+        raw["vocal_blend_policy"] = policy
+        return raw
+
+    for bad in (float("nan"), float("inf"), float("-inf")):
+        with pytest.raises(ValueError, match="finite"):
+            _validate(raw_with(
+                {"acceptable_blend": False, "confidence_floor": bad}),
+                "halee_ramone")
 
 
 # --------------------------------------------------------------------------- #
@@ -415,6 +435,23 @@ def test_gate_fails_closed_on_missing_or_malformed_policy():
         assert accepted_blend_under_policy(chop, policy) is False
 
 
+def test_gate_fails_closed_on_out_of_contract_floor():
+    """P-037 (qa's P-032f NaN-floor note, resolved): the RAW gate self-guards
+    the floor it is handed — a real, FINITE number in [0, 1] — before the
+    comparison. The loader validates authored profiles, but this gate also
+    serves raw dicts; before this guard a NaN floor let EVERY confidence
+    through (``confidence < nan`` is False) and a negative/-inf floor waved
+    blend in below any authored threshold. Out-of-contract → refuse blend
+    (fail closed toward vocal protection)."""
+    chop = _chop()
+    assert chop["vocal_type"] in BLEND_ELIGIBLE_TYPES  # a qualified stem...
+    assert accepted_blend_under_policy(chop, _policy(True, 0.75)) is True
+    # ...so ONLY the floor decides below (the control above is live).
+    for floor in (float("nan"), float("inf"), float("-inf"),
+                  -0.5, -0.0000001, 1.5, "0.75"):
+        assert accepted_blend_under_policy(chop, _policy(True, floor)) is False, floor
+
+
 def test_gate_fails_closed_on_untyped_or_confidence_free_records():
     assert accepted_blend_under_policy(_piano(), _policy(True)) is False  # None type
     no_conf = dict(_chop(), vocal_type_confidence=None)
@@ -481,5 +518,5 @@ def test_blend_evidence_is_observational_zero_judgment_words():
     for policy in (_policy(True), _policy(False), None):
         _, ev = _vrf(records, events=events, policy=policy)
         blob = " ".join(ev).lower()
-        for word in JUDGMENT_WORDS:
-            assert word not in blob, f"judgment word {word!r} in evidence: {blob}"
+        hits = judgment_word_hits(blob)
+        assert not hits, f"judgment word(s) {hits} in evidence: {blob}"
