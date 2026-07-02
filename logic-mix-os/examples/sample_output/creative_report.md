@@ -4,8 +4,8 @@
 
 ## Static vs. Dynamic
 
-- Static mix: 64.0/100
-- Dynamic mix: 23.4/100
+- Static mix: 80.0/100
+- Dynamic mix: 28.2/100
 - Stop EQ-ing the static mix. Build dynamic movement: pre-chorus narrowing, chorus bloom, final-chorus width release, vocal phrase rides.
 
 ## Variant Branches
@@ -24,18 +24,6 @@
 Keep moves:
 - Mute decorative texture in the final pre-chorus bar
 
-### Arrangement is crowded; hierarchy is unclear.
-
-| Variant | Kind | Overall | Vocal belief | Contrast | Translation | Verdict |
-|---|---|---|---|---|---|---|
-| Depth Cleanup | `depth_cleanup` | 81.1 | 86 | 72 | low | promising |
-| Subtractive Simplify | `subtractive_drop` | 85.3 | 86 | 88 | low | promising |
-
-**Top-scored:** density_B — 'Subtractive Simplify' scored 85.3 (promising); strongest on its intended axis without breaking vocal belief.
-
-Keep moves:
-- Mute/duplicate-then-remove a redundant midrange layer
-
 ### An imported loop behaves like a finished record inside the record.
 
 | Variant | Kind | Overall | Vocal belief | Contrast | Translation | Verdict |
@@ -46,7 +34,7 @@ Keep moves:
 **Top-scored:** loop_B — 'Loop as Accent' scored 85.3 (promising); strongest on its intended axis without breaking vocal belief.
 
 Keep moves:
-- Turn Splice Texture Loop into one-shot accents
+- Turn BGV Chop into one-shot accents
 - Use only at section transitions
 
 ### Too many elements occupy the foreground.

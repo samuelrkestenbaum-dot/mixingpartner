@@ -11,9 +11,9 @@
   "groove_coherence_score": 99.4,
   "rhythmic_surprise_score": 35.6,
   "low_end_motion_score": 60.0,
-  "loop_context_score": 15.0,
-  "vocal_role_fit_score": 65.0,
-  "overall_mix_readiness_score": 76.3,
+  "loop_context_score": 10.0,
+  "vocal_role_fit_score": 85.0,
+  "overall_mix_readiness_score": 60.9,
   "evidence": {
     "physical_space": [
       "67% of elements sit in forward layers; depth is collapsing."
@@ -67,8 +67,8 @@
     "vocal_role_fit": [
       "Vocal roles read: 'Lead Vocal' reads vocal_lead (confidence 0.95), 'BGV Chop' reads vocal_percussive (confidence 0.95), 'Backing Vocals Stack' reads vocal_stack (confidence 0.95).",
       "Lead vocal 'Lead Vocal' sits forward and clear of masking conflicts — the lead owns the presence band.",
-      "'BGV Chop' (vocal_percussive, confidence 0.95) overlaps 1 forward element(s) in the vocal band — read under full clarity protection: reduced role fit.",
-      "'Backing Vocals Stack' (vocal_stack, confidence 0.95) overlaps 1 forward element(s) in the vocal band — read under full clarity protection: reduced role fit."
+      "'BGV Chop' (vocal_percussive, confidence 0.95): 1 masking involvement(s) accepted as blend under profile policy.",
+      "'Backing Vocals Stack' (vocal_stack, confidence 0.95): 1 masking involvement(s) accepted as blend under profile policy."
     ]
   },
   "warnings": [
@@ -81,19 +81,34 @@
   ],
   "confidence": [
     {
-      "area": "vocal centrality / depth hierarchy / section contrast / static-dynamic balance",
+      "area": "groove and beat-identity interpretation (beat identity, groove coherence, rhythmic surprise)",
       "level": "high",
-      "reason": "hand-curated from documented Halee/Ramone technique; these interpretation axes are live and weighted in this profile"
+      "reason": "hand-curated from documented Timbaland technique — syncopated pocket construction and beat-first arrangement; these axes are live and weighted up in this profile"
     },
     {
-      "area": "the seven producer-agnostic axes as measurement (beat identity, negative space, groove coherence, rhythmic surprise, low-end motion, loop context, vocal role fit)",
+      "area": "negative space, section contrast and dynamic-movement interpretation",
       "level": "high",
-      "reason": "measured live on every run; deliberately weight-0 in this profile — the reference judgment predates these axes and does not weight them"
+      "reason": "hand-curated from documented Timbaland technique — syncopated negative space and hard section flips; these axes are live and weighted up in this profile"
+    },
+    {
+      "area": "low-end motion interpretation",
+      "level": "high",
+      "reason": "hand-curated from documented Timbaland technique — the sub-driven pocket and the kick/sub relationship; live and weighted, with the axis ceiling (84, never 100) reflected in a moderated weight"
+    },
+    {
+      "area": "loop context interpretation (static vs iconic)",
+      "level": "high",
+      "reason": "hand-curated from documented Timbaland technique — iconic loop identity is protected as the record's identity (protect_iconic_loops: true) while a static dominant loop reads as contrast pressure; the status-to-score polarity is authored in this profile"
+    },
+    {
+      "area": "lead-vocal centrality, depth hierarchy, arrangement realism and balance hygiene as retained measurement",
+      "level": "high",
+      "reason": "these axes measure lead masking, decorative clutter, depth stacking and level hygiene that stay live in this profile at reduced weight — the groove-first weighting relaxes them, never removes them"
     },
     {
       "area": "vocal blend interpretation",
       "level": "limited",
-      "reason": "the masking analyzer reads the vocal band against non-lead vocals when either side of the pair is forward (the vocal stem itself, or a heard masker standing forward in front of it), and this profile's clarity protection (acceptable_blend: false) is live and measured on real exported-stem data — a masked vocal chop and stack read 65.0 on vocal_role_fit (the chop and the stack each draw the masked penalty once); coverage stays bounded: events arise only from the masker-instrument set, info-tier events are emitted but not consumed, and vocal-band events carry no per-track masking risk"
+      "reason": "the masking analyzer reads the vocal band against non-lead vocals when either side of the pair is forward (the vocal stem itself, or a heard masker standing forward in front of it); the acceptable-blend policy this profile opts into is live and measured on real exported-stem data — a qualified vocal chop under masking reads 85.0 on vocal_role_fit against the reference's 65.0 (the reference draws the masked penalty once for the chop and once for the stack; the accepted blend waives both), worth +0.7 overall at the authored 0.4 weight; coverage stays bounded: events arise only from the masker-instrument set, info-tier events are emitted but not consumed, and vocal-band events carry no per-track masking risk"
     },
     {
       "area": "cultural loop recognizability",
@@ -122,8 +137,8 @@
     }
   ],
   "producer": {
-    "name": "halee_ramone",
-    "display_name": "Roy Halee / Phil Ramone",
+    "name": "timbaland",
+    "display_name": "Timbaland",
     "provenance": "hand-curated-documented",
     "confidence": "high"
   }
