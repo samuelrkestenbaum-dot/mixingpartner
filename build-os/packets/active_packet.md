@@ -4,69 +4,45 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** ACTIVE — P-038 confirmed by the orchestrator-in-chief
-  (2026-07-02; within the user's standing "Go for it" = sweep the residue,
-  two packets). Handed to builder.
+- **Status:** NONE ACTIVE — P-038 closed by the archivist (2026-07-02).
+  **★★★ THE ENTIRE POST-MERGE BACKLOG IS COMPLETE — THE RESIDUE LIST IS
+  ZERO** (everything remaining is an accepted standing note in
+  `build-os/memory/residue.md`). No packet staged.
 
 ## Last-closed / context
 
-- **P-037 ✓ CLOSED** — residue sweep 1 of 2 (code-behavior): six
-  defensive/validation items, byte-identical on every artifact surface
-  (240/240, proven twice). ★ THE REAL FINDING: NaN floors previously FAILED
-  OPEN on raw dicts — now fail CLOSED. 1 + 1 review-fix commits
-  (`cb566b1` + `5f94456`), qa GREEN + reviewer fix-then-pass → PASS.
-  Suite baseline **767** / regression **93/93**. The branch carries
-  **P-036 + P-037** (+ closes) atop merge base `dc921ec` (= PR #18) —
-  pushed, NOT merged. Receipt:
-  `build-os/receipts/P-037-code-behavior-sweep.md`.
+- **P-038 ✓ CLOSED** — residue sweep 2 of 2 (NAMING/PROSE), **THE LAST
+  BACKLOG PACKET**: six items — producer names off engine-emitted VALUES
+  + the honesty/precision tidies; ZERO behavior change AST-verified (only
+  string literals moved). Single product commit `7b9eda7` (**AMENDED
+  TREE-NEUTRALLY** from `e1ddfbf` — message-only, the mandated trailers;
+  tree `b49c4b2d…` identical, parent `6f7fd99`). qa GREEN (767 →
+  **768**; regression **93/93, goldens untouched**; artifact deltas
+  enumerated TO THE LINE — 76 changed lines, all 1-for-1, 0
+  unenumerated, 0 producer leaks) + reviewer **fix-then-pass → PASS**
+  (the one must-fix was commit METADATA — the missing trailers; Codex
+  NOT available, single-model review both rounds). Pushed, NOT merged.
+  Receipt: `build-os/receipts/P-038-naming-prose-sweep.md`.
 
-## Active packet spec (confirmed): P-038 — residue sweep 2 of 2 (naming/prose)
+## ★★ THE open boundary — the batch-merge USER GATE
 
-- **Packet id:** P-038
-- **Title:** residue sweep 2 of 2 — the NAMING/PROSE sweep. **THE LAST
-  BACKLOG PACKET** before the batch merge decision.
+- **The batch merge — P-036 + P-037 + P-038 (+ closes) onto merge base
+  `dc921ec` (= PR #18) — awaits the user's EXPLICIT word. No merge
+  without go.** The dev branch `claude/logic-mix-os-hardening-12-7hbeh1`
+  carries the complete batch, pushed under the orchestrator's standing
+  dev-branch go. Nothing else is pending: no deploy, no publish, no
+  secrets touched.
 
-### Scope (all from residue.md; prose/naming only)
+## Next packet (staged)
 
-1. **The three producer-named-VALUE surfaces** (the P-030 reviewer judgment
-   call) — **SCOPE WITH CARE AGAINST THE GOLDENS:** the warning doctrine
-   tags (`phil_ramone_vocal_centrality`/`phil_ramone_restraint`) may be
-   GOLDEN-PINNED, and the search-mode names
-   (`halee_depth`/`ramone_vocal_truth`) appear in emitted creative.json as
-   VALUES — decide consciously per surface what may move and what the
-   goldens/regression must absorb.
-2. **The liveness-docstring sweep** (~8 files — the overclaiming `liveness`
-   docstrings; ONE sweep across all affected files, see residue.md for the
-   known list).
-3. **`cli.py` `--mode` help text** — hardcodes the reference's mode names
-   (goes stale as profiles diverge).
-4. **The P-035 count-pin parenthetical tidy** — the mechanically-repeated
-   "(P-035 moved the corpus count consciously…)" ~15× across 10 files.
-5. **Fallback-reason wording** — "the profile's own default" even on the
-   first-authored-mode branch (P-033 cosmetic).
-6. **The two P-036 observations:** (A) the `heard`-qualifier shorthand
-   ("…or a heard masker stands forward" — PAIR with the analyzer doc line);
-   (B) the elliptical 65.0 attribution (tidy only if the entry is
-   re-authored).
-
-### The bar (inherit P-037's discipline)
-
-- Suite green from the **767** baseline; regression **93/93**. Any surface
-  the goldens pin moves ONLY as a conscious, documented golden/pin flip —
-  never a silent regeneration.
-- ≤2 commits, Commit-1 green in isolation;
-  `python fixtures/generate_fixtures.py` FIRST; observational language;
-  trailers `Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>` + the
-  Claude-Session link; NO push/merge/remotes.
-- Anything beyond these six items: STOP and report.
-
-### After P-038
-
-- **The batch merge decision (P-036 + P-037 + P-038) on the user's word** —
-  no merge without explicit go. Merge base `dc921ec` (= PR #18).
+- **NONE.** The system is coherent and shippable. Future arcs are
+  USER-INITIATED OPTIONS, not debt: a third producer profile; CLI
+  producer exposure; deeper mode-forking in variant generation; the
+  sample-refresh doc pass (`examples/sample_output/` — accepted
+  standing note).
 
 ---
-_P-037 cleared by the archivist on close (2026-07-02). P-038 staged, NOT
-active until the orchestrator confirms on the user's go. One packet at a
-time. Builder implements exactly this; qa proves; reviewer judges; archivist
-closes with a receipt._
+_P-038 cleared by the archivist on close (2026-07-02). Nothing in
+flight. One packet at a time. The orchestrator stages the next packet
+with the user; builder implements exactly that; qa proves; reviewer
+judges; archivist closes with a receipt._

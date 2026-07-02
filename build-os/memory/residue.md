@@ -4,6 +4,71 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
+## ★★★ RESIDUE: ZERO — accepted standing notes only (P-038 close, 2026-07-02)
+
+- **★★★ THE ENTIRE POST-MERGE BACKLOG IS COMPLETE.** P-038 (residue sweep
+  2 of 2 — naming/prose, THE LAST BACKLOG PACKET) closed 2026-07-02: qa
+  GREEN + reviewer fix-then-pass → PASS. **NO packet-worthy residue
+  remains** — everything below this banner is history (✓ resolved in
+  place), a named lesson retained for posterity, or an opportunistic
+  fold-on-next-touch cosmetic. **THE OPEN USER GATE is the batch merge —
+  P-036 + P-037 + P-038 (+ closes) onto merge base `dc921ec` (= PR #18) —
+  on the user's explicit word.**
+- **ACCEPTED STANDING NOTES (user-level, recorded not fixed):**
+  1. **`examples/sample_output/` ships pre-P-036/P-038 prose**
+     (producer-named action strings, stale verdict text) — not
+     test-pinned, predates P-038; a conscious doc-refresh decision for a
+     future moment, NOT expanded into P-038 (the P-030 precedent
+     regenerated samples for a CONTRACT change; this is prose).
+  2. **The duplicated trailer block in `7b9eda7`'s raw commit message**
+     (cosmetic; dedup'd by tooling when displayed; judged not worth
+     another force-push).
+  3. **The push-state observation:** remote-ref updates on the dev
+     branch are the orchestrator's standing-go session pushes, not
+     agent-initiated pushes.
+- **THE TWO NAMED LESSONS (standing, retained for posterity):** (1)
+  raw-dict NaN comparisons FAIL OPEN (`x < nan` is False) — audit future
+  raw-comparison gates for the same shape; (2) defense claims need
+  MUTATION TESTS, not placement faith — twice a "defensive" change was
+  caught not defending (P-037 items 3 and 5).
+
+## ★★ ✓ RESOLVED by P-038 (2026-07-02) — RESIDUE SWEEP 2 of 2: THE NAMING/PROSE ITEMS (six items; producer names off engine-emitted VALUES; zero behavior change)
+
+- **✓ RESOLVED by P-038 (single product commit — originally `e1ddfbf`,
+  AMENDED TREE-NEUTRALLY to `7b9eda7` for the missing mandated trailers
+  [message-only; tree `b49c4b2d…` identical; parent `6f7fd99`]; atop
+  merge base `dc921ec` = PR #18; PUSHED, NOT merged; qa GREEN + reviewer
+  fix-then-pass → PASS):** the six naming/prose items are CLOSED — each
+  also marked ✓ in place below: (1a) warning doctrine tags renamed off
+  the producer names (`phil_ramone_vocal_centrality`→`vocal_centrality`,
+  `phil_ramone_restraint`→`restraint`) — found UNPINNED and never
+  emitted on any fixture (reviewer-verified live: no fixture reaches
+  those warning branches — why the goldens held); a NEW synthetic pin
+  binds both payloads + asserts no producer substring in any tag; (1b)
+  search-mode names renamed (`halee_depth`→`spatial_depth`,
+  `ramone_vocal_truth`→`vocal_truth`) — the full radius in ONE commit;
+  OLD_HARDCODED_MAP kept VERBATIM as history, the coincidence pin
+  consciously adjusted (`dict(OLD_HARDCODED_MAP,
+  intimate_mode="vocal_truth")` — reviewer-judged honest); (1c) engine
+  action prose de-producer-named ("Vocal belief:", "Naturalistic
+  space:", "physical room lift", the source_auditors room line) —
+  profile JSON prose KEEPS its producer names (profiles are named for
+  producers; the engine is not); (2) the liveness-docstring sweep — 6
+  files corrected to the empirically-true claim (liveness catches
+  drop/threading; discrimination catches hardcoding —
+  reviewer-validated by live sabotage on test_beat_identity), 4 files
+  verified accurate and untouched; (3) cli.py `--mode` help
+  de-hardcoded; (4) the count-pin parenthetical tidy (21 sites → one
+  canonical explanation in conftest.py); (5) the fallback reason now
+  branch-accurate (declared-default vs first-authored); (6) both
+  profiles' blend-confidence reasons — the heard-qualifier appended +
+  the 65.0/85.0 attribution made explicit, verbatim pins STRENGTHENED,
+  the P-036 pinned-OUT assertions retained. Suite 767 → **768** (+1
+  synthetic pin); regression **93/93, goldens untouched**; artifact
+  deltas enumerated TO THE LINE (76 changed lines, all 1-for-1, 0
+  unenumerated, 0 producer leaks); score surfaces byte-equal ×8.
+  Receipt: `build-os/receipts/P-038-naming-prose-sweep.md`.
+
 ## ★★ ✓ RESOLVED by P-037 (2026-07-02) — RESIDUE SWEEP 1 of 2: THE CODE-BEHAVIOR ITEMS (six defensive/validation residue items, byte-identical on every artifact surface)
 
 - **✓ RESOLVED by P-037 (commits `cb566b1` + review-fix `5f94456` on parent
@@ -47,6 +112,9 @@
   wording, the two P-036 observations. Then the batch merge decision
   (P-036 + P-037 + P-038) on the user's word. Other standing notes below
   remain opportunistic fold-on-next-touch items, not backlog packets.
+  **✓ UPDATE (P-038 close, 2026-07-02): ✓ RESOLVED IN FULL — P-038's
+  list is closed and the residue list is now ZERO; see the banner at
+  the head of this file.**
 
 ## ★★ ✓ RESOLVED by P-036 (2026-07-02) — THE STALE CONFIDENCE_MAP ENTRIES (was: NEXT PACKET, NEW at P-035 close; jumped the residue queue per the reviewer's recommendation)
 
@@ -384,9 +452,18 @@
   - **★ NEW (P-033 — cosmetic):** `cli.py:446-447` `--mode` help text
     hardcodes the REFERENCE's mode names (pre-existing; will go stale as
     profiles diverge) — ties to the unstaged CLI-producer-exposure backlog.
+    **✓ RESOLVED by P-038 (2026-07-02): the help text now describes the
+    semantics (a mode from the selected profile's `search_modes`;
+    profile-owned default) instead of hardcoding the reference's mode
+    names. (The CLI-producer-exposure backlog itself remains an
+    unstaged, user-initiated option.)**
   - **★ NEW (P-033 — cosmetic):** the fallback `reason` wording says "the
     profile's own default" even on the first-authored-mode branch — tighten
     on the next touch of that code.
+    **✓ RESOLVED by P-038 (2026-07-02): the reason now states WHICH
+    resolution branch fired (declared default vs first authored mode) —
+    the discriminator pre-existing and exact, AST-verified no new
+    logic.**
   - **★★ NEW (P-033 reviewer CALIBRATION — record for future arc
     language):** the creative-mode lever is real but THIN — `search_mode`
     steers the reported mode/bias surface; `generate_variants` does NOT yet
@@ -403,6 +480,13 @@
     values. Ruled in-scope-as-built (the user's rule bans old-KEY aliases;
     mode names are values; profile vocabulary is protected) — route to the
     residue sweeps.
+    **✓ RESOLVED by P-038 (2026-07-02): all three surfaces
+    de-producer-named — the warning doctrine tags renamed
+    (`vocal_centrality` / `restraint`, + the NEW synthetic pin), the
+    search-mode names renamed (`spatial_depth` / `vocal_truth`, full
+    radius in one commit), the engine action prose neutralized; profile
+    JSON prose consciously KEEPS its producer names (profiles are named
+    for producers; the engine is not).**
   - **★ NEW (P-030 qa — cosmetic, self-healing):** stale gitignored .pyc
     caches observed during the qa run — no action needed; they regenerate.
   - **★ NEW (P-034 — residue-sweep candidate, same family as the
@@ -449,15 +533,25 @@
     moved the corpus count consciously…)" parenthetical appears ~15×
     across 10 files (the count-pin updates) — a future tidy pass; fold
     into a doctrine/test-touching packet.
+    **✓ RESOLVED by P-038 (2026-07-02): 21 sites shortened to a pointer;
+    the ONE canonical explanation lives in `conftest.py`.**
   - **★ NEW (P-036 reviewer — cosmetic, observation A):** the re-authored
     reasons' "either side of the pair is forward" elides the masker-arm's
     `heard` qualifier — repo-canonical shorthand (the analyzer doc's own
     headline); a future tidy could append "…or a heard masker stands
     forward" — PAIR with the analyzer doc line if ever tidied.
+    **✓ RESOLVED by P-038 (2026-07-02): the heard-qualifier appended,
+    PAIRED with the masking_analyzer doc headline exactly as specified;
+    verbatim map pins strengthened in the same commit (the P-036
+    conscious-edit path).**
   - **★ NEW (P-036 reviewer — cosmetic, observation B):** the 65.0
     attribution in the re-authored reasons is elliptical (the chop AND the
     stack are each penalized once) but numerically EXACT — tidy only if the
     entry is ever re-authored again.
+    **✓ RESOLVED by P-038 (2026-07-02): the entry WAS re-authored
+    (observation A), so the tidy fired — the 65.0/85.0 attribution made
+    explicit (the chop and the stack each draw the masked penalty once;
+    the accepted blend waives both).**
   - **★ NEW (P-036 — residue-sweep candidate):** JUDGMENT_WORDS
     substring-matches "fix", so "fixture" is UNUSABLE in profile prose
     ("real exported-stem data" used instead — accurate; the reviewer
@@ -487,6 +581,13 @@
     same pattern when folding the fix. **Cosmetic only** (the guard SET as a whole is sound) —
     fold ONE docstring sweep across ALL affected files (up to eight) into a
     future doctrine-touching packet.
+    **✓ RESOLVED by P-038 (2026-07-02): the ONE sweep landed — 6 files
+    corrected to the empirically-true claim (liveness catches
+    drop/threading sabotage; a hardcoded constant is caught by the
+    value-discrimination guards — reviewer-validated by live sabotage on
+    `test_beat_identity`); the remaining 4 candidate files checked and
+    VERIFIED ACCURATE, untouched. The whole family is now corrected or
+    verified-accurate.**
   - **★ DOCSTRING DRIFT (non-blocking, from P-032e):** `_beat_identity`'s docstring
     says candidacy is "optionally corroborated by crest/spectral_flatness" but the
     body reads only `crest_factor_db`, never `spectral_flatness`. The spec made
@@ -680,6 +781,14 @@
   spec authors:** OMIT the "NO model identifier" constraint line — it conflicts with
   the mandated trailer and keeps tripping the reviewer. The required trailers
   (`Co-Authored-By: Claude Opus 4.8` + `Claude-Session: …`) are correct and expected.
+  **✓ RESOLVED in Fable 5's favor for the batch (P-038 close,
+  2026-07-02): the mandated trailers for this session are
+  `Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>` + the
+  Claude-Session link — P-038's one reviewer must-fix was exactly their
+  ABSENCE, resolved by a tree-neutral amend (`e1ddfbf` → `7b9eda7`);
+  trailer-only re-check clean (`git interpret-trailers`). The standing
+  guidance holds: packet specs must NOT carry a "NO model identifier"
+  line — the mandated trailers are correct and expected.**
 
 - **★ WATCH-ITEM — `emotion_dims` couples the profile to `scores` dict keys (reviewer,
   from P-027; mild).** P-027's widened `taste_triangle.emotion_dims`
@@ -1955,4 +2064,4 @@
   No push / merge / deploy / secret action taken in this close.
 
 ---
-_Append-only working notes. Last advanced on P-037 close (2026-07-02) — residue sweep 1 of 2 (code-behavior) resolves six items (each marked ✓ in place); two NEW named lessons (raw-dict NaN comparisons FAIL OPEN — audit future raw-comparison gates; defense claims need MUTATION TESTS, not placement faith — twice now); remaining packet-worthy residue = exactly P-038's list (naming/prose, the LAST backlog packet), then the batch merge decision (P-036 + P-037 + P-038) on the user's word._
+_Append-only working notes. Last advanced on P-038 close (2026-07-02) — residue sweep 2 of 2 (naming/prose) resolves the six items (each marked ✓ in place; the TRAILER-SPEC note resolved in Fable 5's favor for the batch); ★★★ THE RESIDUE LIST IS ZERO — accepted standing notes only (the `examples/sample_output/` doc-refresh decision; the duplicated trailer block in `7b9eda7`'s raw message; the push-state observation), with the two named lessons retained for posterity (raw-dict NaN comparisons fail open; defense claims need mutation tests). **THE OPEN USER GATE: the batch merge — P-036 + P-037 + P-038 (+ closes) onto merge base `dc921ec` (= PR #18) — on the user's explicit word.**_
