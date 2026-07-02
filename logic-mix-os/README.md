@@ -190,7 +190,7 @@ logic_mix_os/
   schemas/          # JSON Schemas for every output
 fixtures/           # deterministic synthetic test projects (generator + manifests)
 examples/           # example manifest + committed sample output
-tests/              # pytest suite (3 fixtures, acceptance + unit)
+tests/              # pytest suite (4 fixtures, acceptance + unit)
 ```
 
 ## Tests
@@ -201,8 +201,10 @@ pytest
 
 The suite covers audio-metric correctness, identity/source/felt-heard/depth
 classification, doctrine scoring + masking hierarchy, mix-plan integrity, the
-non-destructive guarantee, and schema validation, across three fixtures: a
-simple vocal/piano song, a dense chorus with loops, and a Splice-loop problem.
+non-destructive guarantee, and schema validation, across four fixtures: a
+simple vocal/piano song, a dense chorus with loops, a Splice-loop problem,
+and a vocal-chop groove (lead + chopped/stacked backing vocals + beat — the
+fixture that exercises the vocal-type/blend-policy chain end to end).
 `conftest.py` regenerates the fixtures automatically if missing.
 
 ### Regression & doctrine protection

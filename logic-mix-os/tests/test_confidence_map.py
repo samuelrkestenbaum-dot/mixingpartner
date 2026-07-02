@@ -11,7 +11,7 @@ FIRST-CLASS, machine-readable profile data.
 
 **THIS PACKET IS LABELING, NEVER JUDGMENT.** No scorer reads the map; no
 score, variant, promotion, or recommendation may change. The byte-identity
-guards below (both mandated surfaces, all 3 fixtures, regression 68/68) are
+guards below (both mandated surfaces, all 3 fixtures, regression 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture)) are
 the health metric.
 
 Guard groups, mirroring the packet:
@@ -30,7 +30,7 @@ Guard groups, mirroring the packet:
    ``high`` claims are checked against machine facts (live axes weighted;
    agnostic axes weight-0 as stated).
 3. **Byte-identity, BOTH surfaces** — doctrine pins (73.8 / 70.7 / 74.3 + all
-   14 components) + the full creative base capture + regression 68/68.
+   14 components) + the full creative base capture + regression 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture).
 4. **No-aliasing** — every load parses fresh; mutating a loaded map can never
    reach a reload or the module default.
 5. **Observational language** — zero judgment words across every authored
@@ -313,14 +313,14 @@ def test_creative_surface_byte_identical_to_base_capture(analyzed):
                 assert v["scores"].get("score_nudges") == nudges, (name, vid)
 
 
-def test_regression_still_sixty_eight_of_sixty_eight():
+def test_regression_still_green_full_corpus():
     """The golden corpus regression — categorical fingerprint + the original
-    score keys — still passes 68/68 with the map authored."""
+    score keys — still passes 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture) with the map authored."""
     from logic_mix_os.regression import run_regression_suite
 
     report = run_regression_suite(_ROOT / "fixtures")
-    assert report["tests_run"] == 68
-    assert report["passed"] == 68
+    assert report["tests_run"] == 93
+    assert report["passed"] == 93
     assert report["failed"] == 0
 
 

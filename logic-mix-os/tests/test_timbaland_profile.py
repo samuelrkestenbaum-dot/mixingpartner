@@ -12,7 +12,7 @@ honesty-labeled / safety-invariant**, and these are the guards for each word:
    honesty stamp (hand-curated-documented -> HIGH).
 2. **Byte-identity of the DEFAULT** — authoring a second JSON must not touch
    the reference path: the pinned doctrine surface (73.8 / 70.7 / 74.3 + all
-   14 components), the full creative base capture, and regression 68/68 all
+   14 components), the full creative base capture, and regression 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture) all
    hold on the DEFAULT producer.
 3. **THE DIFFERENTIAL IS ALIVE** — ``analyze(producer="timbaland")`` produces
    a DIFFERENT ``overall_mix_readiness_score`` on every fixture; on the loop
@@ -338,14 +338,14 @@ def test_default_creative_surface_unchanged(analyzed):
                 assert v["scores"].get("score_nudges") == nudges, (name, vid)
 
 
-def test_regression_still_sixty_eight_of_sixty_eight():
+def test_regression_still_green_full_corpus():
     """The golden corpus regression (which runs the DEFAULT producer) still
-    passes 68/68 with the second profile authored."""
+    passes 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture) with the second profile authored."""
     from logic_mix_os.regression import run_regression_suite
 
     report = run_regression_suite(_ROOT / "fixtures")
-    assert report["tests_run"] == 68
-    assert report["passed"] == 68
+    assert report["tests_run"] == 93
+    assert report["passed"] == 93
     assert report["failed"] == 0
 
 

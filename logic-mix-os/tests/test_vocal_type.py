@@ -32,7 +32,7 @@ Guard groups, mirroring the packet:
 2. **Additive record fields** — every record carries ``vocal_type`` +
    ``vocal_type_confidence``; non-vocal stems carry EXPLICIT None.
 3. **Byte-identity, BOTH surfaces** — doctrine pins + the full creative base
-   capture + regression 68/68.
+   capture + regression 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture).
 4. **Axis value-discrimination** (unit) — lead forward/clear high; lead
    masked low; non-lead vocal masking read observationally; the masked-lead
    pathway counted ONCE (through the lead reading, never re-read through the
@@ -441,17 +441,17 @@ def test_overall_is_byte_identical_to_thirteen_term_weighted_mean(analyzed):
         assert ds["overall_mix_readiness_score"] == expected
 
 
-def test_regression_still_sixty_eight_of_sixty_eight():
+def test_regression_still_green_full_corpus():
     """The golden corpus regression — which pins ``doctrine_score`` — still
-    passes 68/68 with the new axis wired in at weight 0."""
+    passes 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture) with the new axis wired in at weight 0."""
     from pathlib import Path
 
     from logic_mix_os.regression import run_regression_suite
 
     base = Path(__file__).resolve().parent.parent / "fixtures"
     report = run_regression_suite(base)
-    assert report["tests_run"] == 68
-    assert report["passed"] == 68
+    assert report["tests_run"] == 93
+    assert report["passed"] == 93
     assert report["failed"] == 0
 
 

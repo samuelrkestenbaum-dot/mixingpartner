@@ -1,0 +1,92 @@
+{
+  "tracks": [
+    {
+      "name": "BGV Chop",
+      "source_kind": "one_shot_sample",
+      "instrument_identity": "backing_vocal",
+      "identity_family": "vocal",
+      "confidence": 0.7,
+      "perceptual_role": "heard",
+      "sacredness": "decorative",
+      "default_depth": "midground"
+    },
+    {
+      "name": "Backing Vocals Stack",
+      "source_kind": "comped_audio_track",
+      "instrument_identity": "backing_vocal",
+      "identity_family": "vocal",
+      "confidence": 0.7,
+      "perceptual_role": "heard",
+      "sacredness": "important",
+      "default_depth": "midground"
+    },
+    {
+      "name": "Electric Guitar",
+      "source_kind": "live_audio_recording",
+      "instrument_identity": "electric_guitar",
+      "identity_family": "guitars",
+      "confidence": 0.7,
+      "perceptual_role": "heard",
+      "sacredness": "important",
+      "default_depth": "foreground"
+    },
+    {
+      "name": "Kick",
+      "source_kind": "live_audio_recording",
+      "instrument_identity": "kick",
+      "identity_family": "drums",
+      "confidence": 0.7,
+      "perceptual_role": "structural",
+      "sacredness": "important",
+      "default_depth": "foreground"
+    },
+    {
+      "name": "Lead Vocal",
+      "source_kind": "comped_audio_track",
+      "instrument_identity": "lead_vocal",
+      "identity_family": "vocal",
+      "confidence": 0.7,
+      "perceptual_role": "heard",
+      "sacredness": "sacred",
+      "default_depth": "intimate"
+    },
+    {
+      "name": "Snare",
+      "source_kind": "live_audio_recording",
+      "instrument_identity": "snare",
+      "identity_family": "drums",
+      "confidence": 0.7,
+      "perceptual_role": "structural",
+      "sacredness": "important",
+      "default_depth": "foreground"
+    }
+  ],
+  "masking_classifications": {
+    "vocal_band_masking": 4
+  },
+  "sections": [
+    {
+      "section_id": "verse_1",
+      "lift_warning": false
+    },
+    {
+      "section_id": "chorus_1",
+      "lift_warning": true
+    }
+  ],
+  "scores": {
+    "physical_space_score": 81.3,
+    "emotional_hierarchy_score": 86.0,
+    "vocal_centrality_score": 90.0,
+    "depth_hierarchy_score": 72.0,
+    "section_contrast_score": 82,
+    "static_mix_score": 80.0,
+    "dynamic_mix_score": 28.2,
+    "overall_mix_readiness_score": 76.3
+  },
+  "next_pass_titles": [
+    "Vocal belief",
+    "Section contrast",
+    "Depth cleanup"
+  ]
+}

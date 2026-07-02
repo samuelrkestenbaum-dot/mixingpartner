@@ -36,7 +36,7 @@ Four guards, mirroring the packet:
 1. **Byte-identical** — for all 3 fixtures, ``analyze()`` (default
    halee_ramone) leaves every PRE-EXISTING component score (now 11, incl.
    ``rhythmic_surprise_score``) AND ``overall_mix_readiness_score`` unchanged
-   vs the pinned base, and the golden regression still reports 68/68.
+   vs the pinned base, and the golden regression still reports 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture).
 2. **Value-discrimination (unit)** — a clean pocket (one reserved kick/bass
    pair, punchy kick + sustained bass, no conflicts) → HIGH; a bass-heavy mud
    mix (more total low energy, but piled-up and conflicted) → LOW (the "more
@@ -256,17 +256,17 @@ def test_overall_is_byte_identical_to_eleven_term_weighted_mean(analyzed):
         assert ds["overall_mix_readiness_score"] == expected
 
 
-def test_regression_still_sixty_eight_of_sixty_eight():
+def test_regression_still_green_full_corpus():
     """The golden corpus regression — which pins ``doctrine_score`` — still
-    passes 68/68 with the new axis wired in at weight 0."""
+    passes 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture) with the new axis wired in at weight 0."""
     from pathlib import Path
 
     from logic_mix_os.regression import run_regression_suite
 
     base = Path(__file__).resolve().parent.parent / "fixtures"
     report = run_regression_suite(base)
-    assert report["tests_run"] == 68
-    assert report["passed"] == 68
+    assert report["tests_run"] == 93
+    assert report["passed"] == 93
     assert report["failed"] == 0
 
 

@@ -27,11 +27,14 @@ place:
     present and within bounds on every recommendation in both plans; no
     destructive pattern anywhere; the masked-lead override reaches the plan
     surface under BOTH profiles.
-(d) **The pre-registered expectations:** NO vocal-blend delta (the
-    inert-blend corollary, still binding and pinned); and the intimate-mode
-    pin, FLIPPED by P-033 exactly as pre-registered — the pipeline now reads
-    the profile's own ``default_creative_mode`` table, so timbaland's
-    authored ``intimate_mode`` ("conservative") is reachable end to end.
+(d) **The pre-registered expectations, both now FLIPPED exactly as
+    pre-registered:** the vocal-blend delta, dormant through P-034 and made
+    REAL by P-035's ``vocal_chop_groove`` fixture — no delta on the original
+    three fixtures (still no non-lead vocal stems), a pinned 65.0-vs-85.0
+    delta on the 4th; and the intimate-mode pin, FLIPPED by P-033 — the
+    pipeline reads the profile's own ``default_creative_mode`` table, so
+    timbaland's authored ``intimate_mode`` ("conservative") is reachable end
+    to end.
 (e) **Per-profile confidence rendering at the differential level** — each
     producer's artifacts carry ITS OWN map (8 entries vs 11), the maps differ
     where authored, and neither voice leaks into the other's artifacts.
@@ -165,6 +168,11 @@ def differential_snapshot(ref_result, tim_result) -> dict:
 # needs an iconic-reading loop — proven in its own test below); the VALUES
 # around them — overall, the lowest components, the search mode on the
 # intimate fixture — carry the authored divergence.
+# PIN-TO-3, a conscious P-035 decision: this suite stays keyed to the
+# ORIGINAL three fixtures (conftest.FIXTURE_NAMES — the byte-identity
+# corpus). The 4th fixture's own side-by-side snapshot, component picture
+# and divergence audit are pinned in tests/test_vocal_chop_groove.py; only
+# the blend-corollary pin below reads it (the flip that packet owns).
 EXPECTED_SNAPSHOT = {
     "simple_vocal_piano_song": {
         "halee_ramone": {
@@ -641,32 +649,43 @@ def test_masked_lead_override_reaches_the_plan_surface_under_both(analyzed):
 
 
 # =========================================================================== #
-# (d) THE PRE-REGISTERED EXPECTATIONS — one still-binding negative (the inert
-# blend), and the intimate-mode pin FLIPPED by P-033 as pre-registered.
+# (d) THE PRE-REGISTERED EXPECTATIONS — the blend corollary FLIPPED LIVE by
+# P-035, and the intimate-mode pin FLIPPED by P-033, each as pre-registered.
 # =========================================================================== #
-def test_no_vocal_blend_delta_the_inert_blend_corollary(analyzed, tim_analyzed):
-    """PRE-REGISTERED NEGATIVE EXPECTATION 1 — NO vocal-blend delta.
+def test_vocal_blend_delta_the_corollary_flipped_live(
+    analyzed, tim_analyzed, chop_groove_analyzed
+):
+    """FORMERLY PRE-REGISTERED NEGATIVE EXPECTATION 1 (the inert-blend
+    corollary), CONSCIOUSLY FLIPPED BY P-035 — exactly the packet the old
+    pin named as its legitimate breaker ("a future analyzer-extension packet
+    that emits non-lead vocal-band masking events... a delta would then be
+    expected"). P-034 delivered the capacity (fixture-inert); P-035's
+    ``vocal_chop_groove`` fixture — the first with non-lead vocal stems —
+    plus its Commit-1 buried-vocal decision made the events real, so the
+    two authored policies finally, measurably differ. Both halves pinned:
 
-    ``vocal_role_fit_score`` is IDENTICAL across the two producers on all
-    three fixtures (85.0 everywhere), even though timbaland OPTS IN to
-    acceptable blend and the reference opts out.
-
-    WHY (the P-032f inert-blend corollary, both profiles' own ``limited``
-    confidence entries state it): the masking analyzer emits vocal-band
-    events only against the LEAD on real exported-stem data, so the
-    blend-eligible path (qualified vocal_percussive / vocal_stack events)
-    never receives an event to reinterpret — the policy is mechanically live
-    but dormant. A FUTURE ANALYZER-EXTENSION PACKET that emits non-lead
-    vocal-band masking events is the change that would legitimately break
-    this pin; when it lands, this test must be revisited as a conscious
-    decision (the two profiles' policies genuinely differ, so a delta would
-    then be expected)."""
+    * THE ORIGINAL THREE FIXTURES — still NO delta: they have no non-lead
+      vocal stems, so ``vocal_role_fit_score`` stays 85.0 under both
+      producers (the byte-identity half, unmoved);
+    * THE 4TH FIXTURE — the delta EXISTS: the reference reads the chop and
+      stack's masking involvements under full clarity protection (65.0);
+      timbaland's authored opt-in (confidence floor 0.75; both stems read
+      at 0.95) accepts the same involvements as blend (85.0). The full
+      real-data proof — events, evidence, attributability, the +0.7 overall
+      worth of the gate under timbaland's 0.4 weight — lives in
+      tests/test_vocal_chop_groove.py."""
     assert load_profile("timbaland").vocal_blend_policy["acceptable_blend"] is True
     assert load_profile("halee_ramone").vocal_blend_policy["acceptable_blend"] is False
     for name in FIXTURE_NAMES:
         ref_v = analyzed[name].doctrine_score["vocal_role_fit_score"]
         tim_v = tim_analyzed[name].doctrine_score["vocal_role_fit_score"]
         assert ref_v == tim_v == 85.0, (name, ref_v, tim_v)
+
+    ref_v = chop_groove_analyzed["halee_ramone"].doctrine_score["vocal_role_fit_score"]
+    tim_v = chop_groove_analyzed["timbaland"].doctrine_score["vocal_role_fit_score"]
+    assert ref_v == 65.0
+    assert tim_v == 85.0
+    assert ref_v != tim_v
 
 
 def test_intimate_mode_selection_the_authored_mode_is_reachable(
