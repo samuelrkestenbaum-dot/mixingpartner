@@ -4,9 +4,8 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** NONE ACTIVE — P-032h closed by the archivist (2026-07-02). The
-  packet below is STAGED, not active; the orchestrator confirms it before the
-  builder touches it.
+- **Status:** ACTIVE — P-032i confirmed by the orchestrator-in-chief
+  (2026-07-02), handed to builder. The sub-arc's formal close.
 
 ## Last-closed
 
@@ -29,7 +28,7 @@
   `default_creative_mode` is pipeline-INERT (see residue — BINDING on
   P-032i). Receipt: `build-os/receipts/P-032h-author-timbaland-json.md`.
 
-## Staged next (NOT active until the orchestrator confirms)
+## Active packet spec (confirmed)
 
 ### P-032i — the Timbaland-vs-Halee/Ramone DIFFERENTIAL PROOF (the sub-arc's formal close)
 
@@ -61,7 +60,7 @@ orchestrator pushes).
 ## Epic arc
 
 **e ✓ → a ✓ → b ✓ → d ✓ → c ✓ → g ✓ → f ✓ → P-031 ✓ → h ✓ (timbaland.json —
-THE PAYOFF PACKET) → P-032i (differential proof — NEXT, the formal close).**
+THE PAYOFF PACKET) → P-032i (differential proof — ACTIVE, the formal close).**
 P-030 (rename dims — now touches TWO producer JSONs) orthogonal/last.
 
 ---
