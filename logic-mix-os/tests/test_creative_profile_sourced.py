@@ -185,6 +185,9 @@ def test_apply_nudges_still_gets_sets_and_fires():
     behavior on a crafted result."""
 
     class _R:
+        # P-034: ``_lead_masked`` matches the identity-derived lead name, so
+        # the crafted result carries the one record field it reads.
+        records = [{"name": "Lead Vocal", "instrument_identity": "lead_vocal"}]
         masking_report = {
             "events": [
                 {"classification": "bad_masking", "elements": ["Lead Vocal"]},

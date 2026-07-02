@@ -92,10 +92,27 @@ _NUDGE_TABLE = _DEFAULT_PROFILE.nudge_table
 
 
 def _lead_masked(result) -> bool:
-    """Verbatim predicate from the original context adjustment (creative.py:252-255):
-    any masking event classified ``bad_masking`` whose elements include the vocal."""
+    """The masked-LEAD evidence predicate (P-012 row-0 / the P-032g Ramone
+    gate): any masking event classified ``bad_masking`` whose elements include
+    the LEAD VOCAL — matched by the IDENTITY-derived lead name(s)
+    (``instrument_identity == "lead_vocal"`` on ``result.records``).
+
+    P-034 fix: the original predicate matched any element containing the
+    SUBSTRING "vocal". With the analyzer now emitting non-lead vocal-band
+    events (their own ``vocal_band_masking`` classification, lead never
+    present) — and lead-free vocal-NAMED elements possible in principle —
+    the match is identity-derived, so a non-lead vocal event can never
+    falsely trigger the masked-lead gate. On the lead-inclusive
+    ``bad_masking`` events the analyzer actually emits, the two predicates
+    agree: byte-identical on every fixture."""
+    lead_names = {
+        r["name"] for r in result.records
+        if r.get("instrument_identity") == "lead_vocal"
+    }
+    if not lead_names:
+        return False
     return any(
-        e["classification"] == "bad_masking" and any("vocal" in el.lower() for el in e["elements"])
+        e["classification"] == "bad_masking" and any(el in lead_names for el in e["elements"])
         for e in result.masking_report.get("events", [])
     )
 

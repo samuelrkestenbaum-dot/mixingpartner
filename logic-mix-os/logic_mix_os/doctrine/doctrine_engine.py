@@ -1189,15 +1189,19 @@ def _vocal_role_fit(records: List[Dict], events: List[Dict],
         reported as evidence colour.
       * **The lead** (``vocal_lead``): forward and clear of vocal-band
         masking conflicts → ``lead_forward_bonus`` (high fit — the lead owns
-        the presence band). Challenged by forward elements (vocal-band
-        masking events that include the lead) → ``masked_penalty`` per event
+        the presence band). Challenged by forward elements (``bad_masking``
+        events that include the lead — the analyzer's lead-inclusive
+        classification, untouched by P-034) → ``masked_penalty`` per event
         (low fit). Not forward → reported, no bonus.
       * **Non-lead vocal stems** (hook_candidate / percussive / stack /
-        uncertain): their OWN vocal-band masking involvements — events that
-        do NOT include a lead stem — read as reduced role fit
-        (``masked_penalty`` per event): the default philosophy protects
-        every vocal's clarity at lead grade, uncertain included
-        (misclassification fails CLOSED toward vocal protection).
+        uncertain): their OWN vocal-band masking involvements — P-034: the
+        analyzer's NON-LEAD classification, ``vocal_band_masking`` (the lead
+        is never in those events by construction; the lead-free check is
+        kept as structural defense), at conflict severity (the ``info`` tier
+        is the controlled-overlap reading, not a masking involvement) — read
+        as reduced role fit (``masked_penalty`` per event): the default
+        philosophy protects every vocal's clarity at lead grade, uncertain
+        included (misclassification fails CLOSED toward vocal protection).
 
     THE PROFILE-AUTHORED BLEND RULE (P-032f Commit-2) — the user's approved
     rule table, verbatim and binding::
@@ -1258,17 +1262,34 @@ def _vocal_role_fit(records: List[Dict], events: List[Dict],
 
     lead_names = {r["name"] for r in vocal_stems if r["vocal_type"] == "vocal_lead"}
 
-    def _vocal_masking(name: str) -> List[Dict]:
+    def _lead_band_masking(name: str) -> List[Dict]:
+        """The masked-LEAD pathway: the analyzer's lead-inclusive
+        ``bad_masking`` classification, untouched by P-034."""
         return [
             e for e in events
             if name in e.get("elements", []) and e.get("classification") == "bad_masking"
         ]
 
+    def _own_band_masking(name: str) -> List[Dict]:
+        """P-034: a non-lead stem's OWN masking involvements — the analyzer's
+        non-lead ``vocal_band_masking`` classification at conflict severity.
+        The ``info`` tier (the other element not forward/heard — controlled
+        overlap) is not a masking involvement; the lead-free check is kept
+        as structural defense even though the analyzer never emits the lead
+        in these events."""
+        return [
+            e for e in events
+            if name in e.get("elements", [])
+            and e.get("classification") == "vocal_band_masking"
+            and e.get("severity") != "info"
+            and not (set(e.get("elements", [])) & lead_names)
+        ]
+
     score = c["baseline"]
     for r in vocal_stems:
         name = r["name"]
-        involved = _vocal_masking(name)
         if r["vocal_type"] == "vocal_lead":
+            involved = _lead_band_masking(name)
             if involved:
                 score -= c["masked_penalty"] * len(involved)
                 ev.append(
@@ -1287,12 +1308,11 @@ def _vocal_role_fit(records: List[Dict], events: List[Dict],
                     f"clear of masking conflicts."
                 )
         else:
-            # The masked-LEAD pathway (events including a lead stem) belongs
-            # to the lead reading above — never re-read through this stem.
-            own = [
-                e for e in involved
-                if not (set(e.get("elements", [])) & lead_names)
-            ]
+            # The masked-LEAD pathway (bad_masking, events including a lead
+            # stem) belongs to the lead reading above — never re-read through
+            # this stem. P-034: the non-lead reading keys on the analyzer's
+            # own non-lead classification.
+            own = _own_band_masking(name)
             if own:
                 # P-032f Commit-2: the ONE profile-authored decision point.
                 # Only the stem's OWN (lead-free) events ever reach the gate.

@@ -54,18 +54,23 @@ ROW2_REASON = "vocal_belief -6: stereo image is already width-crowded"
 
 # --------------------------------------------------------------------------- #
 # Fake-result builders: only the masking_report["events"] shape score_variant
-# reads. An "event" needs classification + elements.
+# reads. An "event" needs classification + elements. (P-034: ``_lead_masked``
+# now derives the lead's NAME from record identity instead of a "vocal"
+# substring match, so the stub carries the one record field it reads.)
 # --------------------------------------------------------------------------- #
 def _event(classification, elements):
     return {"classification": classification, "elements": list(elements)}
 
 
 def _result(*events):
-    return SimpleNamespace(masking_report={"events": list(events)})
+    return SimpleNamespace(
+        records=[{"name": "Lead Vocal", "instrument_identity": "lead_vocal"}],
+        masking_report={"events": list(events)},
+    )
 
 
 def _lead_masked_event():
-    # bad_masking with an element containing "vocal" -> fires row 1.
+    # bad_masking including the lead record's identity-derived name -> fires row 1.
     return _event("bad_masking", ["Lead Vocal", "Rhythm Guitar"])
 
 

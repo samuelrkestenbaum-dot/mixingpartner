@@ -218,6 +218,24 @@ def _mask(a: str, b: str) -> dict:
     }
 
 
+def _vband(a: str, b: str, severity: str = "moderate") -> dict:
+    """A synthetic NON-LEAD vocal-band masking event shaped exactly like the
+    P-034 analyzer emission: classification ``vocal_band_masking``, severity
+    capped at moderate, the lead never present. The P-032f synthetic tests
+    construct these (conscious edit, P-034): the non-lead ``vocal_role_fit``
+    pathway now keys on the honest classification the analyzer actually
+    emits for non-lead vocal stems, never on a hand-built lead-free
+    ``bad_masking`` shape production code cannot produce."""
+    return {
+        "elements": [a, b],
+        "frequency_range": "1.5kHz-4kHz",
+        "section": "chorus_1",
+        "classification": "vocal_band_masking",
+        "severity": severity,
+        "overlap": 0.2,
+    }
+
+
 def _vrf(records, events=None, doctrine=None):
     doctrine = doctrine or load_profile("halee_ramone").doctrine
     return doctrine_engine._vocal_role_fit(records, events or [], doctrine)
@@ -506,11 +524,13 @@ def test_lead_not_forward_reported_without_bonus():
 def test_masked_non_lead_vocal_reads_reduced_fit_observationally():
     """The DEFAULT philosophy (no profile policy in Commit-1): a chop/stack/
     hook/uncertain vocal masked AWAY from the lead reads as reduced role fit
-    — full clarity protection, reported observationally."""
+    — full clarity protection, reported observationally. (P-034 conscious
+    edit: the synthetic events carry the honest ``vocal_band_masking``
+    classification the analyzer now emits for non-lead vocal stems.)"""
     c = _constants()
     for stem in (_chop(), _stack(), _hook()):
         clear, _ = _vrf([_lead(), stem])
-        masked, ev = _vrf([_lead(), stem], events=[_mask(stem["name"], "Synth Lead")])
+        masked, ev = _vrf([_lead(), stem], events=[_vband(stem["name"], "Synth Lead")])
         assert masked == doctrine_engine._clamp(
             c["baseline"] + c["lead_forward_bonus"] - c["masked_penalty"])
         assert masked < clear
@@ -524,7 +544,7 @@ def test_uncertain_vocal_gets_the_same_clarity_protection():
     uncertain = _rec("Ad Lib", td=0.45, width=0.2, role="felt", presence=0.1)
     assert uncertain["vocal_type"] == "vocal_uncertain"
     masked, ev = _vrf([_lead(), uncertain],
-                      events=[_mask(uncertain["name"], "Synth Lead")])
+                      events=[_vband(uncertain["name"], "Synth Lead")])
     assert masked == doctrine_engine._clamp(
         c["baseline"] + c["lead_forward_bonus"] - c["masked_penalty"])
     assert any("clarity protection" in e.lower() for e in ev)
@@ -564,8 +584,8 @@ def test_score_is_bounded_0_100():
         ([_piano()], None),
         ([_lead()], None),
         ([_lead(), _chop(), _stack(), _hook()],
-         [_mask("Vox Chops", "Synth Lead"), _mask("BV Stack", "Synth Lead"),
-          _mask("Hook Vox", "Synth Lead"), _mask("Lead Vocal", "Piano")]),
+         [_vband("Vox Chops", "Synth Lead"), _vband("BV Stack", "Synth Lead"),
+          _vband("Hook Vox", "Synth Lead"), _mask("Lead Vocal", "Piano")]),
     ]
     for records, events in cases:
         score, _ = _vrf(records, events=events)
@@ -585,7 +605,7 @@ def _all_status_evidence():
     for stem in (_chop(), _stack(), _hook(),
                  _rec("Ad Lib", td=0.45, width=0.2, role="felt", presence=0.1)):
         out.append(_vrf([_lead(), stem],
-                        events=[_mask(stem["name"], "Synth Lead")])[1])
+                        events=[_vband(stem["name"], "Synth Lead")])[1])
     out.append(_vrf([_lead(), _stack()],
                     events=[_mask("Lead Vocal", "BV Stack")])[1])     # lead pathway
     return out
@@ -706,7 +726,7 @@ def test_vocal_role_fit_does_not_mutate_profile_records_or_events():
     doctrine_before = copy.deepcopy(doctrine)
     records = [_lead(), _chop(), _stack()]
     records_before = copy.deepcopy(records)
-    events = [_mask("Vox Chops", "Synth Lead"), _mask("Lead Vocal", "BV Stack")]
+    events = [_vband("Vox Chops", "Synth Lead"), _mask("Lead Vocal", "BV Stack")]
     events_before = copy.deepcopy(events)
     doctrine_engine._vocal_role_fit(records, events, doctrine)
     assert doctrine == doctrine_before
