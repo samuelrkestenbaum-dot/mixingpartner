@@ -28,6 +28,13 @@ from typing import Any, Dict, List
 _DIR = Path(__file__).parent
 _PRODUCERS_DIR = _DIR / "producers"
 
+# P-031: the closed per-area honesty vocabulary. Exactly three levels — a
+# profile labels each interpretation AREA of its judgment ``high`` (live,
+# weighted, curated), ``limited`` (mechanically live but constrained on
+# today's data — the constraint stated in the reason), or ``deferred`` (not
+# measurable at doctrine time — the boundary stated in the reason).
+CONFIDENCE_LEVELS = ("high", "limited", "deferred")
+
 # The producer-specific structures a profile must carry (extraction-completeness
 # is asserted against this in the tests). Metadata is validated separately.
 _REQUIRED_DATA_FIELDS = (
@@ -49,6 +56,7 @@ _REQUIRED_DATA_FIELDS = (
     "default_creative_mode",
     "protect_iconic_loops",
     "vocal_blend_policy",
+    "confidence_map",
 )
 
 _REQUIRED_METADATA_FIELDS = (
@@ -127,6 +135,20 @@ class ProducerProfile:
     # fail-closed gates live in ``accepted_blend_under_policy``).
     vocal_blend_policy: Dict[str, Any]
 
+    # P-031: the per-interpretation-AREA honesty map — a REQUIRED top-level
+    # field (the P-032g/P-032f required-field discipline: every producer's
+    # honesty labeling is explicit in its JSON, never defaulted). Shape: an
+    # ordered, non-empty list of ``{"area": str, "level": one of
+    # CONFIDENCE_LEVELS, "reason": str}`` entries; authoring order is
+    # preserved and IS the rendering order. This is LABELING, never judgment:
+    # no scorer reads it — the pipeline copies it verbatim onto the report
+    # surface so a human or Cowork reads which parts of the judgment to
+    # trust, at what strength, and WHY. It complements (never replaces) the
+    # profile-level ``metadata`` stamp from P-025: metadata carries the
+    # GLOBAL provenance/confidence/risk_class; this map carries per-area
+    # trust.
+    confidence_map: List[Dict[str, Any]]
+
 
 def _normalize_kinds_sets(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """JSON has no set type: the nudge/promotion rows store ``kinds`` as a list.
@@ -181,6 +203,32 @@ def _validate(raw: Dict[str, Any], name: str) -> None:
         raise ValueError(
             f"profile {name!r}: vocal_blend_policy.confidence_floor must be a number in [0, 1]"
         )
+    # P-031: the per-area honesty map must be structurally sound — a NON-EMPTY
+    # list of {area, level, reason} entries, level from the closed vocabulary,
+    # area/reason non-empty strings. No silent defaults (the P-032f attack-4
+    # discipline), and an EMPTY map is rejected too: an honesty layer with
+    # zero entries is not honest.
+    cmap = raw["confidence_map"]
+    if not isinstance(cmap, list):
+        raise ValueError(f"profile {name!r}: confidence_map must be a list")
+    if not cmap:
+        raise ValueError(f"profile {name!r}: confidence_map must not be empty")
+    for i, entry in enumerate(cmap):
+        if not isinstance(entry, dict):
+            raise ValueError(f"profile {name!r}: confidence_map[{i}] must be an object")
+        for key in ("area", "level", "reason"):
+            if key not in entry:
+                raise ValueError(f"profile {name!r}: confidence_map[{i}] missing {key!r}")
+        for key in ("area", "reason"):
+            if not isinstance(entry[key], str) or not entry[key].strip():
+                raise ValueError(
+                    f"profile {name!r}: confidence_map[{i}].{key} must be a non-empty string"
+                )
+        if entry["level"] not in CONFIDENCE_LEVELS:
+            raise ValueError(
+                f"profile {name!r}: confidence_map[{i}].level must be one of "
+                f"{CONFIDENCE_LEVELS}, got {entry['level']!r}"
+            )
 
 
 def load_profile(name: str = "halee_ramone") -> ProducerProfile:
@@ -216,7 +264,8 @@ def load_profile(name: str = "halee_ramone") -> ProducerProfile:
         default_creative_mode=raw["default_creative_mode"],
         protect_iconic_loops=raw["protect_iconic_loops"],
         vocal_blend_policy=raw["vocal_blend_policy"],
+        confidence_map=raw["confidence_map"],
     )
 
 
-__all__ = ["ProducerProfile", "load_profile"]
+__all__ = ["CONFIDENCE_LEVELS", "ProducerProfile", "load_profile"]

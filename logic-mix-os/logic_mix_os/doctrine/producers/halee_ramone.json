@@ -245,5 +245,43 @@
   "vocal_blend_policy": {
     "acceptable_blend": false,
     "confidence_floor": 0.75
-  }
+  },
+
+  "confidence_map": [
+    {
+      "area": "vocal centrality / depth hierarchy / section contrast / static-dynamic balance",
+      "level": "high",
+      "reason": "hand-curated from documented Halee/Ramone technique; these interpretation axes are live and weighted in this profile"
+    },
+    {
+      "area": "the seven producer-agnostic axes as measurement (beat identity, negative space, groove coherence, rhythmic surprise, low-end motion, loop context, vocal role fit)",
+      "level": "high",
+      "reason": "measured live on every run; deliberately weight-0 in this profile — the reference judgment predates these axes and does not weight them"
+    },
+    {
+      "area": "vocal blend interpretation",
+      "level": "limited",
+      "reason": "the masking analyzer emits vocal-band events only against the lead today; the blend policy is mechanically live but dormant on real exported-stem data"
+    },
+    {
+      "area": "cultural loop recognizability",
+      "level": "deferred",
+      "reason": "iconic-ness as cultural recognition needs provenance/manifest signals not measurable on exported stems at doctrine time; the acoustic loop-context proxy is what ships"
+    },
+    {
+      "area": "true hook recurrence",
+      "level": "deferred",
+      "reason": "a proven hook needs a recurrence signal that does not exist at doctrine time; the strongest claim ships as vocal_hook_candidate"
+    },
+    {
+      "area": "motif provenance",
+      "level": "deferred",
+      "reason": "motif lineage across sources is not measurable on exported stems at doctrine time"
+    },
+    {
+      "area": "onset-timing strong forms (fingerprint typing, fills/unexpected-hit detection, kick/sub temporal interlock, per-section true-sub movement)",
+      "level": "deferred",
+      "reason": "these need per-onset timing and typing signals not measurable on exported stems at doctrine time; the section-aggregate weak forms are what ship"
+    }
+  ]
 }
