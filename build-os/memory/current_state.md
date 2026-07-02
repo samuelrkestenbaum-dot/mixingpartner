@@ -28,7 +28,12 @@
   rhythmic_surprise = movement/interruption; low_end_motion = kick/sub/room
   relationship (✓ landed, P-032c); loop_context = static-vs-iconic hinge
   (✓ landed, P-032g — THE HINGE: detection in the engine, the status→score map
-  + the `protect_iconic_loops` gate decision in profile JSON).
+  + the `protect_iconic_loops` gate decision in profile JSON);
+  vocal_role_fit = vocal function vs treatment (✓ landed, P-032f — the engine
+  CLASSIFIES vocal type agnostically and FAIL-CLOSED; the profile decides the
+  masking philosophy via the REQUIRED `vocal_blend_policy` field). **ALL SEVEN
+  Timbaland weight-up axes are now landed — the MEASUREMENT PHASE of the
+  sub-arc is COMPLETE (14 doctrine components).**
 - This is not a Timbaland profile being built — it is a producer-profile
   FRAMEWORK emerging under the Timbaland work.
 
@@ -118,7 +123,18 @@
     profile field; halee_ramone=false = current behavior), DUAL byte-identical
     for halee_ramone — doctrine AND creative), local-only, atop the set-active
     `6af00fa`. P-032g's parent chain: `e9e804d` → `835e907` → `6af00fa`
-    (active-packet confirmation) → `211e04c` (P-032c close).**
+    (active-packet confirmation) → `211e04c` (P-032c close).
+    ★ ON TOP of P-032g, the dev branch now ALSO carries P-032f (`3561845` +
+    `37f25ac`, two product commits — the SEVENTH and LAST new
+    producer-agnostic doctrine axis `vocal_role_fit` (14th component) + the
+    NEW agnostic `analyzers/vocal_type_classifier.py` (pure / deterministic /
+    fail-closed) + the SECOND profile-decided gate `vocal_blend_policy`
+    (REQUIRED top-level profile field; halee_ramone = {acceptable_blend:
+    false, confidence_floor: 0.75} = current behavior), DUAL byte-identical
+    for halee_ramone — doctrine AND creative), **local AND PUSHED to the dev
+    branch (NOT merged)**, atop the set-active `89e792e`. P-032f's parent
+    chain: `37f25ac` → `3561845` → `89e792e` (active-packet confirmation) →
+    `001f36d` (P-032g close).**
     The base for MERGE decisions is still `e79426a` = PR #16 (nothing since P-025
     has been merged).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
@@ -127,29 +143,101 @@
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-01, P-032g):** suite **512 passed** (0 failed /
-  skipped); regression **68/68** (0 critical / 0 warnings) — UNCHANGED (P-032g
-  default path is DUAL byte-identical — doctrine AND creative; loop_context
-  weight-0 + protect_iconic_loops=false for halee_ramone). Commit-1 (`835e907`)
-  green in isolation = **499 passed + 68/68** in a real worktree check. (Prior
-  baseline was 473 at P-032c; P-032g added +39 = 26 (`tests/test_loop_context.py`)
-  + 13 (`tests/test_protect_iconic_loops.py`): DUAL byte-identity, independent —
-  (a) doctrine 0 mismatches × 3 fixtures (overalls 73.8 / 70.7 / 74.3;
-  `loop_context_score` 50.0 / 15.0 / 15.0 at weight 0) AND (b) creative full
-  `result.creative` sorted-key JSON base vs HEAD → EMPTY diff / `cmp`
-  byte-identical; flag liveness LIVE (A/B 85.9/loop_A(False) ↔
-  81.9/loop_B(True); STATIC+protect → still fires; masked-lead+iconic+protect
-  → still fires — Ramone gate FIRST); shared basis identity-asserted
-  (`creative.read_loop_context is doctrine_engine.read_loop_context`); cautions
-  untouched (`loop_foregrounded`=6, promotion table verbatim,
-  `test_packet_cautions_untouched`); observational language (zero judgment
-  words across all 7 reachable statuses) + honest-scope. Earlier: 451 → 473
+- **Green baseline (verified 2026-07-02, P-032f):** suite **572 passed** (0 failed /
+  skipped); regression **68/68** (0 critical / 0 warnings) — UNCHANGED (P-032f
+  default path is DUAL byte-identical — doctrine AND creative; vocal_role_fit
+  weight-0 + vocal_blend_policy = {acceptable_blend: false, confidence_floor:
+  0.75} for halee_ramone). Commit-1 (`3561845`) green in isolation =
+  **550 passed + 68/68**, verified in REAL WORKTREES by builder, qa, AND
+  reviewer independently. (Prior baseline was 512 at P-032g; P-032f added
+  +60 = 38 (`tests/test_vocal_type.py`) + 22
+  (`tests/test_vocal_blend_policy.py`): DUAL byte-identity, independent —
+  doctrine overalls 73.8 / 70.7 / 74.3 untouched with the new
+  `vocal_role_fit` axis 85.0 × 3 at weight 0; creative EMPTY diff, zero
+  vocabulary leakage; ALL SIX user-mandated adversarial attacks defeated by
+  BOTH gates independently. Earlier: 473 → 512 at P-032g; 451 → 473
   at P-032c; 433 → 451 at P-032d;
   413 → 433 at P-032b; 396 → 413 at P-032a; 384 → 396 at P-032e; 370 → 384
   at P-029; 351 → 370 at P-028; 331 → 351 at P-027; 319 → 331 at P-026;
   293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★ P-032f CLOSES THE MEASUREMENT PHASE OF THE TIMBALAND SUB-ARC —
+  `vocal_role_fit` (the SEVENTH and LAST weight-up axis, the 14th doctrine
+  component) + the NEW agnostic `vocal_type_classifier.py` + the SECOND
+  profile-decided gate `vocal_blend_policy` — DUAL byte-identical for
+  halee_ramone; qa GREEN + reviewer PASS (no must-fix); ALL SIX user-mandated
+  adversarial attacks defeated by BOTH gates independently. THE USER-GATED
+  PACKET, cleared: Decision 1 = B (acceptable blend, profile-gated via a
+  REQUIRED field) + Decision 2 = conservative default + explicit confidence
+  threshold. The user's rule table implemented VERBATIM: lead or uncertain →
+  protect clarity; hook_candidate → protect unless profile-authored LATER;
+  chop/stack + opt-in + confidence ≥ floor → blend may apply.
+  Misclassification fails CLOSED. Last-closed = P-032f.**
+  - **Two commits (local AND PUSHED to the dev branch; NOT merged):**
+    `3561845` (Commit-1 — NEW `analyzers/vocal_type_classifier.py`
+    [pure/deterministic/agnostic; lead identity wins 0.95; fail-closed at
+    MIN_STRENGTH 0.6 + top-two tie; hook capped at `vocal_hook_candidate`;
+    confidence capped 0.95; non-vocal → None contract] + additive record
+    fields + the `_vocal_role_fit` weight-0 axis + 38 tests; GREEN IN
+    ISOLATION: 550 + 68/68 — verified in REAL WORKTREES by builder, qa, AND
+    reviewer) + `37f25ac` (Commit-2 — `vocal_blend_policy` =
+    {acceptable_blend: false, confidence_floor: 0.75} for halee_ramone, a
+    REQUIRED top-level field with structural validation; the gate
+    `accepted_blend_under_policy`: flag FIRST → lead-by-IDENTITY →
+    categorical type membership (frozenset BLEND_ELIGIBLE_TYPES) →
+    confidence ≥ floor; + 22 tests incl. the six attack defenses). Parent
+    `89e792e` (set-active), atop `001f36d` (P-032g close).
+  - **★ qa GREEN:** suite 512 → **572** (+60); regression **68/68**; DUAL
+    byte-identity, independent — doctrine 73.8 / 70.7 / 74.3 untouched, the
+    new axis 85.0 × 3 at weight 0; creative EMPTY diff, zero vocabulary
+    leakage. ALL SIX ATTACKS independently defeated (incl. devious extras: a
+    hand-corrupted lead `vocal_type` is STILL protected by IDENTITY; 8
+    malformed-profile variants all ValueError; a 288-record sweep — the
+    confidence cap holds). Flag-lever delta exactly `masked_penalty` with
+    `_ramone` / `_vocal_centrality` byte-identical across A/B. Safety grep
+    NONE.
+  - **★ reviewer PASS (no must-fix):** 26 independent attack checks, 0
+    successes (boundary ≥ pinned both ways at the floor; lead+chop hybrid
+    events never offered to the gate; novel type strings refused; the
+    profile=None path clean); SIX own sabotages each caught by named tests;
+    the honest-location finding VERIFIED (the masking analyzer emits
+    vocal-band bad_masking ONLY via `_vocal_conflict` with elements always
+    [lead, other] — the new axis is the ONLY surface where non-lead vocal
+    masking manifests, and the gate bites exactly there);
+    module-constants-for-detection ENDORSED (detection = shared substrate,
+    engine-fixed; profile authors only flag + floor — profile-JSON
+    thresholds would let profiles fork the physics); regression-safety
+    explained structurally (build_snapshot is categorical + the 7 original
+    keys; the new record fields cannot reach the golden). **Codex NOT
+    available — single-model review.**
+  - **★★ REVIEWER COROLLARY (BINDING on P-032h/P-032i expectations — an
+    HONEST BOUNDARY, not a defect):** because today's analyzer emits
+    vocal-band faults only against the LEAD, the blend gate is INERT on real
+    pipeline data — exercised only via synthetic events. **Flipping
+    Timbaland's acceptable_blend will produce ZERO real-data delta through
+    this axis on current fixtures.** P-032i's differential proof must NOT
+    expect a vocal-blend delta; the Timbaland delta will come from the other
+    axes until the analyzer emits non-lead vocal-band events (a future
+    analyzer-extension packet).
+  - **★★ MILESTONE — ALL SEVEN TIMBALAND WEIGHT-UP AXES NOW LANDED**
+    (beat_identity, negative_space, groove_coherence, rhythmic_surprise,
+    low_end_motion, loop_context, vocal_role_fit) — **14 doctrine
+    components, every one byte-identical for halee_ramone. The MEASUREMENT
+    PHASE of the sub-arc is COMPLETE.** `timbaland.json` must declare BOTH
+    `protect_iconic_loops` AND `vocal_blend_policy` in writing (REQUIRED
+    fields).
+  - **★ TIMBALAND SUB-ARC (P-032.x) — remaining order:** P-032e ✓ → P-032a ✓
+    → P-032b ✓ → P-032d ✓ → P-032c ✓ → P-032g ✓ → **P-032f ✓ → P-031
+    (confidence framework fold-in — NEXT) → P-032h (author `timbaland.json`
+    — must declare protect_iconic_loops AND vocal_blend_policy; mind the
+    axis ceilings 84/85 and the inert-blend corollary) → P-032i
+    (differential proof — expect deltas from
+    groove/space/low-end/loop/surprise axes, NOT vocal-blend).** P-030
+    (rename dims) orthogonal/last. **P-032f local AND pushed, NOT merged**
+    (merge base still `e79426a` = PR #16). Receipt:
+    `build-os/receipts/P-032f-vocal-role-blend-policy.md`.
 
 - **★★ P-032g LANDS THE HINGE — `loop_context` (static-vs-iconic), the SIXTH
   new producer-agnostic doctrine axis (the 13th component), PLUS

@@ -51,35 +51,47 @@
   (loop_context + protect_iconic_loops — THE HINGE: sixth axis + the FIRST
   profile-decided creative gate, DUAL byte-identical — doctrine AND creative,
   the USER-MANDATED surface; the status→score map lives in the profile JSON —
-  even the axis's polarity is profile-authored) LANDED.** All six add a
+  even the axis's polarity is profile-authored) + P-032f ✓ (vocal_role_fit +
+  the NEW agnostic `vocal_type_classifier.py` + `vocal_blend_policy` — the
+  LAST of the seven weight-up axes, 14th component, + the SECOND
+  profile-decided gate; the USER-GATED packet, cleared: Decision 1 = B +
+  Decision 2 = conservative default + explicit confidence floor;
+  misclassification fails CLOSED; DUAL byte-identical — doctrine AND
+  creative; ALL SIX user-mandated adversarial attacks defeated by BOTH gates
+  independently) LANDED — THE MEASUREMENT PHASE OF THE SUB-ARC IS
+  COMPLETE.** All seven add a
   new producer-agnostic doctrine axis weight-0 for halee_ramone →
   byte-identical, proving the P-029 architecture is EXTENSIBLE. **The engine
-  now carries 13 component axes** (7 original + beat_identity + negative_space
-  + groove_coherence + rhythmic_surprise + low_end_motion + loop_context) —
-  6 of the 7 Timbaland "weight up" axes landed, all
+  now carries 14 component axes** (7 original + beat_identity + negative_space
+  + groove_coherence + rhythmic_surprise + low_end_motion + loop_context +
+  vocal_role_fit) —
+  ALL 7 of the 7 Timbaland "weight up" axes landed, all
   append-last/weight-0/profile-sourced, zero plumbing debt; the onset/IOI
   signal is LIVE at doctrine time (`analyze_groove` relocated BEFORE
   `score_doctrine`, computed exactly ONCE, same object reused in
   `expanded["groove"]`); the reusable profile-decided-creative-gate pattern is
-  established (P-032f/P-032h will reuse it). Receipts:
+  established AND now REUSED (P-032g → P-032f; P-032h authors BOTH flags —
+  `protect_iconic_loops` AND `vocal_blend_policy`, REQUIRED). Receipts:
   `build-os/receipts/P-032e-beat-identity.md`,
   `build-os/receipts/P-032a-negative-space.md`,
   `build-os/receipts/P-032b-groove-coherence-livewire.md`,
   `build-os/receipts/P-032d-rhythmic-surprise.md`,
   `build-os/receipts/P-032c-low-end-motion.md`,
-  `build-os/receipts/P-032g-loop-context-hinge.md`. **Carry-forwards:**
-  - **★ RESEQUENCED REMAINING ORDER (from the read-only scoping workflow,
-    evidence-backed — recorded so the next orchestrator needn't re-derive):**
-    **P-032d ✓ → P-032c ✓ → P-032g ✓ (loop_context + protect_iconic_loops —
-    THE HINGE, DONE; dual byte-identity proven — doctrine AND creative; the
-    reusable profile-decided-gate pattern established) → P-032f
-    (vocal-role — HIGH risk, NEXT AND LAST; ★ USER-GATED: needs explicit go
-    on the "masked chop/stack = acceptable-blend" aesthetic rule + the
-    conservative default protect-as-lead-when-uncertain — see the P-032f
-    staging notes below; do NOT open without the user's explicit go)** →
-    **[fold P-031 confidence here]** → P-032h (author `timbaland.json`, the
-    first non-byte-identical output) → P-032i (Timbaland-vs-Halee/Ramone
-    differential proof). P-030 (rename dims) orthogonal/last.
+  `build-os/receipts/P-032g-loop-context-hinge.md`,
+  `build-os/receipts/P-032f-vocal-role-blend-policy.md`. **Carry-forwards:**
+  - **★ REMAINING ORDER (updated at P-032f close):**
+    **P-032d ✓ → P-032c ✓ → P-032g ✓ → P-032f ✓ (vocal-role +
+    vocal_blend_policy — DONE; the user gate was CLEARED — Decision 1 = B +
+    Decision 2 = conservative default + explicit confidence floor — and every
+    user-mandated attack was defeated; the measurement phase is COMPLETE)** →
+    **P-031 (confidence framework fold-in — NEXT)** → P-032h (author
+    `timbaland.json`, the first non-byte-identical output — must declare BOTH
+    `protect_iconic_loops` AND `vocal_blend_policy` in writing (REQUIRED
+    fields); mind the axis ceilings — lem 84 / vocal_role_fit 85, never 100 —
+    and the inert-blend corollary below) → P-032i (Timbaland-vs-Halee/Ramone
+    differential proof — expect deltas from the
+    groove/space/low-end/loop/surprise axes, NOT vocal-blend; see the
+    corollary below). P-030 (rename dims) orthogonal/last.
   - **★ P-032g STAGING NOTES — ✓ DISCHARGED IN FULL (P-032g close):** the
     USER-MANDATED dual byte-identity surface was PROVEN — (a) doctrine 0
     mismatches × 3 fixtures AND (b) creative full `result.creative` sorted-key
@@ -89,19 +101,20 @@
     = current behavior; the `_halee` loop_foregrounded coefficient UNTOUCHED
     (=6, promotion table verbatim, `test_packet_cautions_untouched`); iconic
     structurally cannot override a masked lead (the Ramone gate fires FIRST).
-  - **★ P-032f STAGING NOTES (USER-GATED — do NOT open without explicit user
-    go; recorded at P-032g close):** the orchestrator must PRESENT to the USER
-    for explicit go BEFORE any building: **(a) the aesthetic rule** — masking
-    of a chopped/stuttered/adlib vocal or background stack is ACCEPTABLE-BLEND
-    (context-dependent), flipping masking from fault to accepted for a whole
-    vocal class; **(b) the conservative default** — when vocal_type is
-    UNCERTAIN, protect-as-lead (never "percussion, masking ok"); **(c) the
-    blast radius** — new `vocal_type_classifier.py` (NOT in-place edits to
-    `role_classifier.py`), additive record field, interacts with 3 live
-    scorers (`_ramone` / `_vocal_centrality` / `_static_mix`), caps at
-    `hook_candidate` (no recurrence signal at doctrine time). The reusable
-    P-032g gate pattern (a profile-decided creative gate on a shared detection
-    basis) applies.
+  - **★ P-032f STAGING NOTES — ✓ DISCHARGED IN FULL (P-032f close):** the
+    user gate was presented and CLEARED (Decision 1 = B — acceptable blend,
+    profile-gated only, via the REQUIRED `vocal_blend_policy` field;
+    Decision 2 = conservative default + explicit confidence threshold). The
+    rule table landed VERBATIM (lead or uncertain → protect clarity;
+    hook_candidate → protect unless profile-authored LATER; chop/stack +
+    opt-in + confidence ≥ floor → blend may apply); misclassification fails
+    CLOSED (MIN_STRENGTH 0.6 + top-two tie → uncertain → protect-as-lead).
+    NEW `vocal_type_classifier.py` (`role_classifier.py` untouched in place);
+    additive record fields; hook capped at `vocal_hook_candidate`; the 3
+    interacting live scorers (`_ramone` / `_vocal_centrality` /
+    `_static_mix`) proven byte-identical for halee_ramone (flag-lever delta =
+    exactly `masked_penalty`). The reusable P-032g gate pattern was REUSED as
+    designed.
   - **★ SCOPING-WORKFLOW FINDINGS for the remaining axes (evidence-backed):**
     P-032c ✓ CONFIRMED in practice (ZERO new plumbing; kick/sub temporal
     interlock + low-end motif + per-section true-sub movement landed as
@@ -113,10 +126,12 @@
     byte-identity surface was proven EMPTY-diff/`cmp`-identical;
     cultural/recognizability iconic-ness + per-loop bar-level variation +
     onset-sequence needs landed as DEFERRED honest boundaries, test-guarded
-    out of evidence); P-032f must NOT edit
-    `role_classifier.py` in place (new `vocal_type_classifier.py` + an additive
-    record field), must cap at `hook_candidate` (no recurrence signal at
-    doctrine time), and defaults to protect-as-lead when uncertain.
+    out of evidence); P-032f ✓ CONFIRMED in practice (NEW
+    `vocal_type_classifier.py`, `role_classifier.py` untouched in place;
+    additive record fields; capped at `hook_candidate`; protect-as-lead when
+    uncertain — fail-closed at MIN_STRENGTH 0.6 + top-two tie; the blend gate
+    unreachable under halee_ramone defaults; the inert-on-real-data corollary
+    recorded below).
   - **★ NEW (P-032b adversarial skeptic — cosmetic): shared mutable groove
     dict.** `result.expanded["groove"]` IS the same dict passed to
     `score_doctrine` (shared mutable state); nothing mutates it today
@@ -142,6 +157,29 @@
     per-section); (3) `read_loop_context` shares the defensive None-value edge
     family. All defensive/cosmetic — same future-doctrine-packet ride-along
     bucket.
+  - **★★ NEW (P-032f reviewer COROLLARY — an HONEST BOUNDARY, not a defect;
+    BINDING on P-032h/P-032i expectations):** the blend gate is INERT on real
+    pipeline data — today's masking analyzer emits vocal-band `bad_masking`
+    ONLY via `_vocal_conflict`, whose elements are always [lead, other], so
+    the new axis is the ONLY surface where non-lead vocal masking manifests
+    and the gate is exercised only via SYNTHETIC events. **Flipping
+    Timbaland's `acceptable_blend` will produce ZERO real-data delta through
+    this axis on current fixtures — P-032i's differential proof must NOT
+    expect a vocal-blend delta** (the Timbaland delta comes from the other
+    axes). A future ANALYZER-EXTENSION packet could emit non-lead vocal-band
+    events to make the gate live on real data — when that packet opens, note
+    that `creative.py:98`'s name-based "vocal" match is a LATENT MISFIRE
+    RISK there.
+  - **★ NEW (P-032f — cosmetic ride-alongs):** (1) NaN-floor self-guard — add
+    `0.0 <= floor <= 1.0` (qa suggested `math.isfinite`) in the raw
+    `accepted_blend_under_policy` gate (the loader validates; the raw gate
+    trusts its caller); (2) `lead_names` in `_vocal_role_fit` derives from
+    `vocal_type` rather than `instrument_identity` — identity-derived would
+    be sturdier; (3) `_validate` accepts EXTRA keys inside
+    `vocal_blend_policy` (only the two required keys are checked); (4) the
+    `_vocal_role_fit` score ceiling is **85**, never 100 — joins lem's 84 as
+    a `timbaland.json` weight-authoring consideration (P-032h). All
+    defensive/cosmetic — same future-doctrine-packet ride-along bucket.
   - **★ LIVENESS-DOCSTRING OVERCLAIM (non-blocking — reviewer; NOW A
     SIX-FILE FAMILY, fold ONE sweep):** the `liveness` test docstrings OVERCLAIM — a
     general hardcoded-constant sabotage is actually caught by the
@@ -153,8 +191,9 @@
     `tests/test_rhythmic_surprise.py::test_liveness_direction_tracks_the_rhythmic_surprise_score`;
     **NEW from P-032c:** `tests/test_low_end_motion.py:518-526`; **NEW from
     P-032g:** `tests/test_loop_context.py:566-570` — and CHECK
-    `tests/test_groove_coherence.py` for the same pattern when
-    folding the fix. **Cosmetic only** (the guard SET as a whole is sound) —
+    `tests/test_groove_coherence.py` PLUS the two NEW P-032f files
+    (`tests/test_vocal_type.py`, `tests/test_vocal_blend_policy.py`) for the
+    same pattern when folding the fix. **Cosmetic only** (the guard SET as a whole is sound) —
     fold ONE docstring sweep across ALL SIX files into a future
     doctrine-touching packet.
   - **★ DOCSTRING DRIFT (non-blocking, from P-032e):** `_beat_identity`'s docstring
