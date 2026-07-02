@@ -197,6 +197,15 @@ def analyze(
         if ident["instrument_identity"] in RHYTHM_IDENTITIES and ident["track_id"] in loaded_by_id
     ]
     groove = analyze_groove(rhythm_tracks)
+    # P-037 (review-fixed placement): the pristine snapshot is taken HERE —
+    # after ``analyze_groove`` returns and BEFORE ``score_doctrine`` consumes
+    # the live dict — so a future doctrine change mutating its ``groove`` arg
+    # DURING scoring cannot reach the expanded artifact (a copy taken after
+    # doctrine would inherit the corruption). Doctrine keeps the live dict;
+    # ``expanded["groove"]`` below gets this snapshot. Equal values today
+    # (byte-identical); the dict is small, so a deepcopy is the measured
+    # choice.
+    groove_snapshot = copy.deepcopy(groove)
 
     # Doctrine scoring.
     result.doctrine_score = score_doctrine(
@@ -224,12 +233,12 @@ def analyze(
         # P-032b: REUSE the ``groove`` computed above (before doctrine) — never
         # re-run ``analyze_groove`` here. This keeps the value byte-identical
         # and honours the compute-once discipline (the no-re-run guard).
-        # P-037 (the P-032b skeptic's shared-mutable-groove note, resolved):
-        # a DEFENSIVE deepcopy, so the expanded artifact can never alias
-        # doctrine's input — a future doctrine change mutating its ``groove``
-        # arg cannot silently corrupt this value. Equal, never the same
-        # object; the dict is small, so a deepcopy is the measured choice.
-        "groove": copy.deepcopy(groove),
+        # P-037 (the P-032b skeptic's shared-mutable-groove note, resolved;
+        # review-fixed placement): the DEFENSIVE snapshot taken above, BEFORE
+        # doctrine consumed the live dict — the artifact never aliases
+        # doctrine's input, and a doctrine mutation during scoring can never
+        # reach it.
+        "groove": groove_snapshot,
         "harmonic": analyze_harmony(mixdown, project.key),
         "vocal_performance": analyze_vocal(lead_vocal_loaded, lead_record["metrics"] if lead_record else None),
         "lyrics": analyze_lyrics(manifest, result.section_analysis, lead_present),

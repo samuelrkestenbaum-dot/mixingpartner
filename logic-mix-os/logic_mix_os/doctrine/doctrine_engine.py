@@ -553,8 +553,9 @@ def _groove_coherence(groove: Optional[Dict], doctrine: Dict = _DOCTRINE):
     it reads a signal — ``analyze_groove``'s ``overall_regularity`` (mean per-track
     ``1 − CoV(IOIs)``, i.e. rhythmic tightness) — that used to be computed AFTER
     ``score_doctrine`` in the pipeline. To feed it to doctrine the pipeline now
-    computes ``groove`` ONCE, BEFORE this call, and threads it in here; the same
-    object is reused for ``result.expanded["groove"]`` (behavior-preserving).
+    computes ``groove`` ONCE, BEFORE this call, and threads it in here; a
+    pre-doctrine defensive SNAPSHOT of it — byte-equal, never the same object
+    since P-037 — becomes ``result.expanded["groove"]`` (behavior-preserving).
 
     HONEST NAMING — this does NOT overclaim. ``overall_regularity`` measures
     rhythmic tightness/consistency, NOT "identity coherence" in the full sense. We
