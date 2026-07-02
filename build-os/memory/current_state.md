@@ -148,6 +148,16 @@
     close); NOT merged**. P-031's parent chain: `b869ebd` → `4af24e2` →
     `51a107c` → `4d4b57d` (active-packet confirmation) → `4c6285b` (P-032f
     close).
+    ★ ON TOP of P-031, the dev branch now ALSO carries P-032h (`70a0b69`,
+    single product commit — THE PAYOFF PACKET: `timbaland.json`, the SECOND
+    live producer profile, the FIRST non-byte-identical output of the epic —
+    exactly 2 NEW files (`logic_mix_os/doctrine/producers/timbaland.json`
+    310 lines + `tests/test_timbaland_profile.py` 734 lines / 39 tests),
+    1044+/0−, ZERO engine code touched; default path byte-identical;
+    timbaland path 68.4 / 52.6 / 49.7 vs 73.8 / 70.7 / 74.3), **PUSHED to
+    the dev branch (NOT merged)**, atop the set-active `b7b4a0e`. P-032h's
+    parent chain: `70a0b69` → `b7b4a0e` (active-packet confirmation) →
+    `bedb680` (P-031 close).
     The base for MERGE decisions is still `e79426a` = PR #16 (nothing since P-025
     has been merged).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
@@ -156,21 +166,110 @@
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-02, P-031):** suite **600 passed** (0 failed /
-  skipped); regression **68/68** (0 critical / 0 warnings) — UNCHANGED (P-031 is
-  LABELING, never judgment: 14 doctrine components + overalls 73.8 / 70.7 /
-  74.3 untouched, creative EMPTY diff; the ONLY output deltas are the additive
-  `doctrine_score.json` `confidence` key + the verdict "## Confidence" section
-  — whole artifact-tree diff EXACTLY that, × 3 fixtures). Commit-1 (`51a107c`)
-  green in isolation = **591 passed + 68/68**, verified in REAL WORKTREES by
-  builder, qa, AND reviewer independently. (Prior baseline was 572 at P-032f;
-  P-031 added +28 = 19 Commit-1 + 9 Commit-2, all in
-  `tests/test_confidence_map.py`. Earlier: 512 → 572 at P-032f; 473 → 512 at
-  P-032g; 451 → 473 at P-032c; 433 → 451 at P-032d; 413 → 433 at P-032b;
-  396 → 413 at P-032a; 384 → 396 at P-032e; 370 → 384 at P-029; 351 → 370 at
-  P-028; 331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
+- **Green baseline (verified 2026-07-02, P-032h):** suite **639 passed** (0
+  failed / skipped); regression **68/68** (0 critical / 0 warnings) —
+  UNCHANGED on the default path (P-032h touches ZERO engine code: qa dumped
+  the FULL default analyze() surface + artifact trees at base and HEAD →
+  byte-identical — 73.8 / 70.7 / 74.3, creative EMPTY; the timbaland path is
+  the FIRST intentionally non-byte-identical output: 68.4 / 52.6 / 49.7).
+  Single commit `70a0b69` — HEAD IS Commit-1, green in isolation. (Prior
+  baseline was 600 at P-031; P-032h added +39, all in
+  `tests/test_timbaland_profile.py`. Earlier: 572 → 600 at P-031; 512 → 572
+  at P-032f; 473 → 512 at P-032g; 451 → 473 at P-032c; 433 → 451 at P-032d;
+  413 → 433 at P-032b; 396 → 413 at P-032a; 384 → 396 at P-032e; 370 → 384
+  at P-029; 351 → 370 at P-028; 331 → 351 at P-027; 319 → 331 at P-026;
+  293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-032h AUTHORS `timbaland.json` — THE PAYOFF PACKET IS DUAL-GREEN.
+  THE EPIC'S PAYOFF IS REAL: two live producer profiles;
+  `analyze(producer="timbaland")` produces genuinely different,
+  fully-attributable, safety-invariant judgment — same stems, two judgments:
+  simple 73.8 → 68.4; dense 70.7 → 52.6; splice 74.3 → 49.7. The second
+  producer ships exactly as the user mandated: different / profile-authored /
+  confidence-stamped / honesty-labeled / safety-invariant. qa GREEN +
+  reviewer PASS (no must-fix). Last-closed = P-032h.**
+  - **Single commit `70a0b69`** on parent `b7b4a0e` (active-packet
+    confirmation), atop `bedb680` (P-031 close) — exactly 2 NEW files
+    (`logic_mix_os/doctrine/producers/timbaland.json` 310 lines +
+    `tests/test_timbaland_profile.py` 734 lines, 39 tests), 1044+/0−, ZERO
+    engine code touched. HEAD IS Commit-1 → green in isolation. **Pushed to
+    the dev branch, NOT merged** (merge base still `e79426a` = PR #16).
+  - **★ THE DIFFERENTIAL IS ALIVE (independently verified by qa to the
+    decimal):** qa recomputed timbaland's weighted mean by hand (Σw 12.1):
+    68.35454… / 52.60826… / 49.66528… → clamp/round = exact. **Fully
+    attributable:** zero component divergence on simple; EXACTLY
+    `loop_context_score` 15.0→10.0 (the authored polarity) on the loop
+    fixtures; the rest is pure reweighting of shared measurements. The
+    static-loop fixtures feel Timbaland's groove-identity pressure — the
+    intended reading.
+  - **The authored value system (the user's design realized):** beat_identity
+    1.3 (first-class) / negative_space 1.2 / section_contrast 1.2 /
+    groove_coherence 1.1 / rhythmic_surprise 1.0 / dynamic_mix 1.0 /
+    static_mix 0.9 / low_end_motion 0.9 (ceiling-moderated: max drag 1.19
+    pts, reasoning stated IN the confidence map) / loop_context 0.8 / ramone
+    0.7 / vocal_centrality 0.6 / halee 0.5 / depth_hierarchy 0.5 /
+    vocal_role_fit 0.4 (85-ceiling + inert-corollary). **Relax ≠ remove: all
+    > 0, machine-checked.** Loop polarity authored: iconic 96 / static 10
+    (vs ref 90/15) with ALL SEVEN detection floors identical (shared basis).
+  - **The three required declarations:** protect_iconic_loops **true**;
+    vocal_blend_policy **{acceptable_blend: true, confidence_floor: 0.75}**;
+    an 11-entry confidence_map (5 high — all machine-checked TRUE vs weights
+    / 1 limited — the inert-blend corollary voiced by the profile that OPTS
+    IN / 5 deferred — the engine boundaries verbatim-shared with the
+    reference), TIM_AUTHORED_MAP verbatim-pinned. Metadata:
+    hand-curated-documented → confidence HIGH (reviewer ENDORSED the
+    provenance stamp under the standing policy).
+  - **ZERO RELAXATION (adversarially verified by the reviewer's own
+    structural diff):** baselines / penalty_coeffs / all scorer groups
+    identical except loop_context static/iconic; risk_penalty / caps /
+    taste_max_delta / taste_kind_bias / all veto_thresholds byte-identical;
+    the reference's only align-veto (intimate width_bloom 45) preserved
+    exactly; the only permissive-direction moves are the two USER-SANCTIONED
+    profile decisions. Truth-alignment cells mostly raised; big width_bloom
+    86→78 (stricter); none crosses a veto line.
+  - **Gates flip live (qa direct):** iconic → timbaland WITHHOLDS the
+    loop_deconstruct promotion (loop_A 80.7, no nudges) while the reference
+    fires (85.9/loop_A); static under timbaland STILL fires; masked-lead
+    override fires under BOTH. Safety: per-call KILL_SWITCHES = 5 hardcoded
+    SAFETY first (verbatim, in order) + timbaland's 7 aesthetic (a STRICT
+    SUPERSET of the reference's 4; vocal-intelligibility retained verbatim).
+  - **★ qa GREEN:** suite 600 → **639** (+39); regression **68/68**
+    UNCHANGED; default path moved ZERO bytes (FULL default analyze() surface
+    + artifact trees at base and HEAD → byte-identical: 73.8 / 70.7 / 74.3;
+    creative EMPTY); the differential recomputed by hand to the decimal;
+    safety grep NONE (2 new files, zero engine code).
+  - **★ reviewer PASS (no must-fix):** authored taste judged coherent /
+    defensible / honest / attributable; three sabotages (flip protect flag →
+    2 fail; neutralize polarity → 3 fail; un-relax vocal_centrality → 6+
+    fail) ALL caught; creative/governance values coherent (anti_template on
+    dense fires identically under BOTH producers — pre-existing advisory,
+    not a symptom); observational language clean (whole-JSON sweep, 0 hits).
+    **Codex NOT available — single-model review.**
+  - **★ REVIEWER TRAJECTORY FINDING (P-016-family, non-blocking — recorded
+    prominently):** `default_creative_mode` is **pipeline-INERT** —
+    `pipeline._default_creative_mode` (pipeline.py:285-290) hardcodes the
+    reference's mode names, so timbaland's authored `intimate_mode:
+    "conservative"` is unreachable; intimate material under timbaland falls
+    back to `dramatic_contrast` (creative.py:516). Invisible until the
+    second producer existed. Right fix: a FUTURE ENGINE PACKET wires
+    `_default_creative_mode` to the profile (byte-identical for the
+    reference) — NOT an in-JSON change. Ride-along: the hardcoded
+    `"dramatic_contrast"` fallback would KeyError for a future profile
+    lacking that mode name. **P-032i must NOT claim intimate-mode selection
+    as a live profile lever.**
+  - **★ TIMBALAND SUB-ARC (P-032.x) — remaining order:** P-032e ✓ → P-032a ✓
+    → P-032b ✓ → P-032d ✓ → P-032c ✓ → P-032g ✓ → P-032f ✓ → P-031 ✓ →
+    **P-032h ✓ → P-032i (the differential proof — NEXT, the formal close of
+    the sub-arc):** binding expectations — deltas from
+    groove/space/low-end/loop/surprise; NO vocal-blend delta (the inert
+    corollary); NO intimate-mode-selection claim (the new inertness
+    finding); prove recognizably-different-but-COHERENT plans (not just
+    different scores — the mix_plan/checklist/verdict surfaces) + safety
+    invariance across both profiles on the same stems. P-030 (rename dims —
+    now touches TWO producer JSONs, still orthogonal) last. Receipt:
+    `build-os/receipts/P-032h-author-timbaland-json.md`.
 
 - **★★ P-031 LANDS THE HONESTY LAYER — the confidence framework:
   per-interpretation-AREA honesty labeling (`confidence_map`: area / level ∈

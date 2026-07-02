@@ -4,83 +4,66 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** ACTIVE — P-032h confirmed by the orchestrator-in-chief
-  (2026-07-02), handed to builder. THE PAYOFF PACKET.
+- **Status:** NONE ACTIVE — P-032h closed by the archivist (2026-07-02). The
+  packet below is STAGED, not active; the orchestrator confirms it before the
+  builder touches it.
 
 ## Last-closed
 
-- **P-031 ✓ CLOSED (2026-07-02)** — the confidence framework: the REQUIRED
-  per-area `confidence_map` (area / level ∈ {high, limited, deferred} /
-  reason) is validated (no silent defaults), authored for halee_ramone
-  (8 entries: 2 high / 1 limited / 5 deferred; machine-checked against the
-  weights; verbatim-pinned), and rendered per-call (additive `confidence`
-  key + verdict "## Confidence" section). qa GREEN (572 → 600; 68/68;
-  Commit-1 iso 591; byte-identity modulo EXACTLY the additive key/section);
-  reviewer PASS (one fix-then-pass round, fully resolved — `b869ebd`
-  corrected the per-section true-sub deferral reason to band resolution).
-  **THE HONESTY LAYER IS IN PLACE.** Commits `51a107c` + `4af24e2` (pushed)
-  + `b869ebd` (local at close; orchestrator pushes). NOT merged (merge base
-  `e79426a` = PR #16). Receipt:
-  `build-os/receipts/P-031-confidence-framework.md`.
+- **P-032h ✓ CLOSED (2026-07-02) — THE PAYOFF PACKET:** `timbaland.json`, the
+  second live producer profile — the FIRST non-byte-identical output of the
+  producer-agnostic epic; ships exactly as the user mandated: different /
+  profile-authored / confidence-stamped / honesty-labeled / safety-invariant.
+  Same stems, two judgments: simple 73.8 → **68.4**; dense 70.7 → **52.6**;
+  splice 74.3 → **49.7** — fully attributable (the authored loop_context
+  polarity + pure reweighting of shared measurements; qa recomputed the
+  weighted mean by hand to the decimal). Both gates declared
+  (protect_iconic_loops = true; vocal_blend_policy = {acceptable_blend: true,
+  confidence_floor: 0.75}); the 11-entry confidence_map verbatim-pinned
+  (5 high / 1 limited / 5 deferred; hand-curated-documented → HIGH,
+  reviewer-ENDORSED); ZERO RELAXATION adversarially verified; default path
+  moved ZERO bytes; suite 600 → **639** (+39); regression 68/68 UNCHANGED.
+  qa GREEN; reviewer PASS (no must-fix; Codex NOT available — single-model
+  review). Single commit `70a0b69` (2 NEW files, zero engine code) — pushed,
+  NOT merged (merge base `e79426a` = PR #16). NEW trajectory finding:
+  `default_creative_mode` is pipeline-INERT (see residue — BINDING on
+  P-032i). Receipt: `build-os/receipts/P-032h-author-timbaland-json.md`.
 
-## Active packet spec (confirmed) — P-032h: AUTHOR `timbaland.json` (THE PAYOFF PACKET)
+## Staged next (NOT active until the orchestrator confirms)
 
-The first non-byte-identical output of the producer-agnostic epic: the second
-live producer profile. Everything the seven measurement packets + P-031 built
-converges here — the second producer ships **different / profile-authored /
-confidence-stamped / honesty-labeled / safety-invariant.**
+### P-032i — the Timbaland-vs-Halee/Ramone DIFFERENTIAL PROOF (the sub-arc's formal close)
 
-### The three REQUIRED declarations (in writing, in the JSON)
+Same stems, both profiles. Prove:
 
-1. **`protect_iconic_loops`** — Timbaland's loop philosophy, declared
-   explicitly (the P-032g hinge: the engine detects static-vs-iconic; the
-   profile decides).
-2. **`vocal_blend_policy`** — `acceptable_blend` + `confidence_floor`,
-   declared explicitly (the P-032f gate).
-3. **Its OWN `confidence_map`** (P-031, REQUIRED — no silent defaults):
-   high = groove / space / low-end / loop interpretation; limited =
-   vocal blend per the inert-blend corollary (the analyzer emits no non-lead
-   vocal masking events on real data); deferred = cultural recognizability /
-   true hook recurrence / motif provenance. **Verbatim-pin the map like
-   halee_ramone's** (the reviewer judgment note: validation accepts duplicate
-   areas + extra entry keys — the pin is the guard).
+- **(a) Recognizably-different-but-COHERENT judgment AND plan surfaces** —
+  doctrine + creative + the mix_plan / checklist / verdict artifacts (not
+  just different scores).
+- **(b) Full attributability** — component-level: every delta traces to an
+  authored weight / polarity / gate decision.
+- **(c) Safety invariance** — kill-switches (the 5 hardcoded SAFETY switches
+  first, verbatim, in order), risk classes, non-destructive guarantees, the
+  masked-lead override — across BOTH profiles on the same stems.
+- **(d) The binding expectations:** deltas from the
+  groove / space / low-end / loop / surprise axes; **NO vocal-blend delta**
+  (the P-032f inert-blend corollary — the analyzer emits no non-lead
+  vocal-band events on real data); **NO intimate-mode-selection claim** (the
+  P-032h finding: `default_creative_mode` is pipeline-inert; timbaland's
+  authored `intimate_mode` is unreachable until a future engine packet wires
+  it).
+- **(e) The confidence maps render correctly per-profile.**
 
-### Binding constraints
-
-- **Weights = the user's APPROVED Timbaland value system:** protect
-  `groove_identity` / `negative_space` / `low_end_motion` /
-  `section_contrast`; relax `vocal_centrality` / `lush_depth` /
-  `loop_deconstruct` bias — **relax ≠ remove.**
-- **Mind the axis ceilings:** `low_end_motion` tops out at **84**,
-  `vocal_role_fit` at **85** — never 100; weight-authoring must account for
-  this.
-- **`_DEFAULT_PROFILE` no-aliasing carry-forward** — this is the SECOND live
-  profile loaded per call: copy-before-mutate; never mutate a loaded
-  profile's structures in place.
-- **Provenance:** hand-curated-documented → confidence HIGH per the standing
-  honesty policy (hand-curated → high; derived → low, labeled; LLM →
-  draft-only, never high).
-- Safety invariant: the 5 SAFETY kill-switches stay hardcoded; a profile can
-  never drop a safety guarantee.
-- Rigor bar as established: `python fixtures/generate_fixtures.py` first;
-  ≤2 commits, Commit-1 green in isolation; full suite green from the **600**
-  baseline; regression 68/68; observational language; NO push/merge/remotes
-  (orchestrator pushes).
-
-### Differential expectations (binding on P-032i, which follows immediately)
-
-P-032i proves Timbaland-vs-Halee/Ramone differentially: expect deltas from
-the **groove / space / low-end / loop / surprise** axes — **NO vocal-blend
-delta** on current fixtures (the P-032f reviewer corollary: the blend gate is
-inert on real pipeline data until an analyzer-extension packet emits non-lead
-vocal-band events).
+Byte-identical discipline for the reference throughout. Rigor bar as
+established: `python fixtures/generate_fixtures.py` first; ≤2 commits,
+Commit-1 green in isolation; full suite green from the **639** baseline;
+regression 68/68; observational language; NO push/merge/remotes (the
+orchestrator pushes).
 
 ## Epic arc
 
-**e ✓ → a ✓ → b ✓ → d ✓ → c ✓ → g ✓ → f ✓ → P-031 ✓ (confidence — the
-honesty layer) → P-032h (author `timbaland.json` — ACTIVE) → P-032i
-(differential proof).** P-030 (rename dims) orthogonal/last.
+**e ✓ → a ✓ → b ✓ → d ✓ → c ✓ → g ✓ → f ✓ → P-031 ✓ → h ✓ (timbaland.json —
+THE PAYOFF PACKET) → P-032i (differential proof — NEXT, the formal close).**
+P-030 (rename dims — now touches TWO producer JSONs) orthogonal/last.
 
 ---
-_Cleared by the archivist on P-031 close (2026-07-02). One packet at a time.
+_Cleared by the archivist on P-032h close (2026-07-02). One packet at a time.
 The orchestrator confirms the staged packet before the builder touches it._

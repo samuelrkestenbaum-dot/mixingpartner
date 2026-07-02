@@ -79,28 +79,31 @@
   `build-os/receipts/P-032c-low-end-motion.md`,
   `build-os/receipts/P-032g-loop-context-hinge.md`,
   `build-os/receipts/P-032f-vocal-role-blend-policy.md`. **Carry-forwards:**
-  - **★ REMAINING ORDER (updated at P-031 close):**
-    **P-032d ✓ → P-032c ✓ → P-032g ✓ → P-032f ✓ → P-031 ✓ (confidence
-    framework — DONE; THE HONESTY LAYER IS IN PLACE: every profile MUST carry
-    a validated per-area `confidence_map` [REQUIRED field, no silent
-    defaults]; halee_ramone's 8-entry map authored + machine-checked against
-    its weights + verbatim-pinned; rendered per-call — receipt
-    `build-os/receipts/P-031-confidence-framework.md`)** →
-    **P-032h (AUTHOR `timbaland.json` — THE PAYOFF PACKET, NEXT)**: the first
-    non-byte-identical output — must declare BOTH `protect_iconic_loops` AND
-    `vocal_blend_policy` in writing (REQUIRED fields) PLUS its OWN
-    `confidence_map` (high groove/space/low-end/loop; limited vocal-blend per
-    the inert corollary; deferred cultural/hook/motif; verbatim-pin it like
-    halee_ramone's); mind the axis ceilings — lem 84 / vocal_role_fit 85,
-    never 100 — and the inert-blend corollary below; weights = the user's
-    approved Timbaland value system (protect groove_identity / negative_space
-    / low_end_motion / section_contrast; relax vocal_centrality / lush_depth
-    / loop_deconstruct bias — relax ≠ remove); provenance
-    hand-curated-documented → confidence HIGH per the honesty policy; the
-    second-live-profile no-aliasing discipline (copy-before-mutate) →
-    P-032i (Timbaland-vs-Halee/Ramone differential proof — expect deltas
-    from the groove/space/low-end/loop/surprise axes, NOT vocal-blend; see
-    the corollary below). P-030 (rename dims) orthogonal/last.
+  - **★ REMAINING ORDER (updated at P-032h close):**
+    **P-032d ✓ → P-032c ✓ → P-032g ✓ → P-032f ✓ → P-031 ✓ → P-032h ✓ (AUTHOR
+    `timbaland.json` — THE PAYOFF PACKET, DONE: the second live producer
+    profile, the FIRST non-byte-identical output of the epic — same stems,
+    two judgments: 68.4 / 52.6 / 49.7 vs 73.8 / 70.7 / 74.3, fully
+    attributable [zero component divergence on simple; exactly
+    `loop_context_score` 15.0→10.0 on the loop fixtures; the rest pure
+    reweighting]; BOTH gates + the 11-entry confidence_map declared in
+    writing, TIM_AUTHORED_MAP verbatim-pinned; ZERO RELAXATION adversarially
+    verified; default path moved ZERO bytes; single commit `70a0b69`, 2 NEW
+    files, zero engine code, pushed NOT merged — receipt
+    `build-os/receipts/P-032h-author-timbaland-json.md`)** →
+    **P-032i (the Timbaland-vs-Halee/Ramone DIFFERENTIAL PROOF — NEXT, the
+    formal close of the sub-arc):** same stems, both profiles — prove (a)
+    recognizably-different-but-COHERENT judgment AND plan surfaces (doctrine
+    + creative + the mix_plan/checklist/verdict artifacts, not just scores),
+    (b) full component-level attributability, (c) safety invariance
+    (kill-switches, risk classes, non-destructive, masked-lead) across both,
+    (d) the binding expectations — deltas from
+    groove/space/low-end/loop/surprise; NO vocal-blend delta (the inert
+    corollary below); NO intimate-mode-selection claim (the NEW
+    `default_creative_mode` inertness finding below), (e) the confidence
+    maps render correctly per-profile; byte-identical discipline for the
+    reference throughout. P-030 (rename dims — now touches TWO producer
+    JSONs, still orthogonal, slightly wider) last.
   - **★ P-032g STAGING NOTES — ✓ DISCHARGED IN FULL (P-032g close):** the
     USER-MANDATED dual byte-identity surface was PROVEN — (a) doctrine 0
     mismatches × 3 fixtures AND (b) creative full `result.creative` sorted-key
@@ -203,8 +206,23 @@
     identical; the pins came out STRONGER — five deferred entries
     verbatim-pinned vs four). Record this as the STANDARD route for
     pin-guarded content changes.
+  - **★★ NEW (P-032h reviewer TRAJECTORY FINDING, P-016-family —
+    non-blocking, recorded prominently): `default_creative_mode` is
+    pipeline-INERT.** `pipeline._default_creative_mode` (pipeline.py:285-290)
+    hardcodes the REFERENCE's mode names, so timbaland's authored
+    `intimate_mode: "conservative"` is UNREACHABLE — intimate material under
+    timbaland falls back to `dramatic_contrast` (creative.py:516). Invisible
+    until the second producer existed. **Right fix: a FUTURE ENGINE PACKET
+    wires `_default_creative_mode` to the profile (byte-identical for the
+    reference) — NOT an in-JSON change.** Ride-along: the hardcoded
+    `"dramatic_contrast"` fallback would KeyError for a future profile
+    lacking that mode name. **BINDING on P-032i: must NOT claim
+    intimate-mode selection as a live profile lever.**
+  - **★ NEW (P-032h — scope note):** P-030 (rename the halee/ramone dims off
+    the producer names) now touches TWO producer JSONs (`halee_ramone.json`
+    + `timbaland.json`) — still orthogonal, slightly wider.
   - **★ LIVENESS-DOCSTRING OVERCLAIM (non-blocking — reviewer; NOW
-    POTENTIALLY A SEVEN-FILE FAMILY, fold ONE sweep):** the `liveness` test docstrings OVERCLAIM — a
+    POTENTIALLY AN EIGHT-FILE FAMILY, fold ONE sweep):** the `liveness` test docstrings OVERCLAIM — a
     general hardcoded-constant sabotage is actually caught by the
     *discrimination* tests, not the liveness tests themselves (the direction
     test reads the score from the SAME reference dict a constant poisons; a
@@ -216,9 +234,10 @@
     P-032g:** `tests/test_loop_context.py:566-570` — and CHECK
     `tests/test_groove_coherence.py` PLUS the two NEW P-032f files
     (`tests/test_vocal_type.py`, `tests/test_vocal_blend_policy.py`) AND the
-    NEW P-031 file (`tests/test_confidence_map.py`) for the
+    NEW P-031 file (`tests/test_confidence_map.py`) AND the NEW P-032h file
+    (`tests/test_timbaland_profile.py`) for the
     same pattern when folding the fix. **Cosmetic only** (the guard SET as a whole is sound) —
-    fold ONE docstring sweep across ALL affected files (up to seven) into a
+    fold ONE docstring sweep across ALL affected files (up to eight) into a
     future doctrine-touching packet.
   - **★ DOCSTRING DRIFT (non-blocking, from P-032e):** `_beat_identity`'s docstring
     says candidacy is "optionally corroborated by crest/spectral_flatness" but the
@@ -328,8 +347,13 @@
     doctrine_score + the verdict "## Confidence" section). The P-025 metadata
     stamp stays as the global complement. Receipt:
     `build-os/receipts/P-031-confidence-framework.md`.
-  - **P-032 — second producer** (a real non-Halee/Ramone profile — the first test
-    of true producer-agnosticism; governed by the honesty policy).
+  - **P-032 — second producer: ✓ PROFILE LANDED (P-032h, 2026-07-02).**
+    `timbaland.json` is live — the first test of true producer-agnosticism
+    PASSED at the profile level (different / fully attributable /
+    safety-invariant; honesty policy obeyed: hand-curated-documented →
+    HIGH, reviewer-ENDORSED). The REMAINING step is P-032i (the formal
+    differential proof). Receipt:
+    `build-os/receipts/P-032h-author-timbaland-json.md`.
   - **P-033 — expose producer selection** (the user-facing selection surface).
 
 - **★ FINDING A — SECONDARY PRODUCER-AESTHETIC CONSTANTS (reviewer, from P-025;
@@ -376,7 +400,11 @@
   `groove[...]` and never mutate the profile, each guarded by a no-aliasing
   test — so the per-module copy-before-mutate discipline still holds. When a SECOND
   live profile is loaded per call (P-032h authors `timbaland.json`), do NOT mutate a
-  loaded profile's structures in place.
+  loaded profile's structures in place. **★ UPDATE (P-032h close): the SECOND live
+  profile IS now real (`timbaland.json`) and the discipline HELD — the
+  packet touched ZERO engine code and mutates nothing; the structural
+  `_DEFAULT_PROFILE` singleton removal is STILL outstanding — carry
+  forward.**
 
 - **★ TRAILER-SPEC STANDING NOTE — DROP the "NO model identifier" line from FUTURE
   packet specs (from P-027; reconciled).** The reviewer repeatedly re-flags the
@@ -658,6 +686,22 @@
 - Net-new **event-logging** producers remain behind the product decision.
 
 ## Done (resolved)
+
+- **★★★ P-032h DONE — THE PAYOFF PACKET: `timbaland.json`, the second live
+  producer profile, the FIRST non-byte-identical output of the epic
+  (`build-os/receipts/P-032h-author-timbaland-json.md`).** Same stems, two
+  judgments — 68.4 / 52.6 / 49.7 (timbaland) vs 73.8 / 70.7 / 74.3
+  (reference), fully attributable (zero component divergence on simple;
+  exactly `loop_context_score` 15.0→10.0 on the loop fixtures; the rest pure
+  reweighting of shared measurements); default path moved ZERO bytes; gates
+  flip live (protect_iconic_loops=true WITHHOLDS loop_deconstruct on iconic
+  while the reference fires; static still fires; masked-lead fires under
+  BOTH); ZERO RELAXATION adversarially verified; the 11-entry confidence_map
+  verbatim-pinned (5 high / 1 limited / 5 deferred), provenance
+  hand-curated-documented → HIGH (reviewer-ENDORSED). Single commit
+  `70a0b69` (2 NEW files, 1044+/0−, zero engine code; pushed, NOT merged).
+  Suite 600 → **639** (+39); regression 68/68 UNCHANGED. qa GREEN; reviewer
+  PASS (no must-fix); Codex NOT available — single-model review.
 
 - **★★ P-032d DONE — the FOURTH new producer-agnostic doctrine axis
   `rhythmic_surprise` (weak, section-aggregate form: cross-section
