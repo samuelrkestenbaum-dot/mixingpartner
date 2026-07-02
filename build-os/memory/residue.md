@@ -239,13 +239,14 @@
     authored intimate mode is now REACHABLE: `conservative` on
     `simple_vocal_piano_song`.** Receipt:
     `build-os/receipts/P-033-default-creative-mode-wiring.md`.
-  - **★ NEW (P-032h — scope note):** P-030 (rename the halee/ramone dims off
-    the producer names) now touches TWO producer JSONs (`halee_ramone.json`
-    + `timbaland.json`) — still orthogonal, slightly wider.
-  - **★ NEW (P-032i reviewer — scope note):** P-030's expected-touch list
-    now ALSO includes `tests/test_differential_proof.py` (the differential
-    pins reference the halee/ramone dimension names) — THREE files: two
-    producer JSONs + the differential-proof test file.
+  - **✓ DISCHARGED by P-030 (2026-07-02) — (was: ★ NEW P-032h — scope
+    note):** P-030 (rename the halee/ramone dims off the producer names)
+    touches TWO producer JSONs (`halee_ramone.json` + `timbaland.json`) —
+    it DID (both JSONs migrated in Commit-1 `21c0ab0`).
+  - **✓ DISCHARGED by P-030 (2026-07-02) — (was: ★ NEW P-032i reviewer —
+    scope note):** P-030's expected-touch list also includes
+    `tests/test_differential_proof.py` — it DID (migrated in Commit-2
+    `0c7885e`, among the 26 updated test files).
   - **★ NEW (P-032i — cosmetic):** two truthiness asserts in
     `tests/test_differential_proof.py` (`v["risk"] and v["validation"]`;
     `0 <= len(nxt)`) — tighten opportunistically on the next touch of that
@@ -278,6 +279,18 @@
     fork on it. P-033 makes the authored mode REACHABLE and VISIBLE; a
     future packet would make modes reshape variant generation/scoring. Do
     NOT over-claim behavioral steering.
+  - **★★ NEW (P-030 reviewer JUDGMENT CALL — residue-sweep candidates,
+    explicitly NOT contract keys):** three producer-named-VALUE surfaces
+    survive the migration — (1) the search-mode NAMES
+    (`halee_depth`/`ramone_vocal_truth`), profile-internal vocabulary that
+    appears in emitted creative.json as VALUES; (2) the engine action prose
+    ("Halee naturalism…"/"Ramone-style…"); (3) the warning doctrine tags
+    (`phil_ramone_vocal_centrality`/`phil_ramone_restraint`) emitted as
+    values. Ruled in-scope-as-built (the user's rule bans old-KEY aliases;
+    mode names are values; profile vocabulary is protected) — route to the
+    residue sweeps.
+  - **★ NEW (P-030 qa — cosmetic, self-healing):** stale gitignored .pyc
+    caches observed during the qa run — no action needed; they regenerate.
   - **★ LIVENESS-DOCSTRING OVERCLAIM (non-blocking — reviewer; NOW
     POTENTIALLY AN EIGHT-FILE FAMILY, fold ONE sweep):** the `liveness` test docstrings OVERCLAIM — a
     general hardcoded-constant sabotage is actually caught by the
@@ -393,8 +406,18 @@
     modules, so the per-module aliasing discipline still carries on the default path
     (carry-forward for P-032). Receipt:
     `build-os/receipts/P-029-parameterize-pipeline-by-per-call-producer-profile.md`.
-  - **P-030 — rename** the `halee` / `ramone` dimension names off the producer
-    names (they were kept verbatim in P-025 per the byte-identical-first decision).
+  - **P-030 — rename the `halee` / `ramone` dimension names off the producer
+    names: ✓ RESOLVED (2026-07-02 — the artifact-contract migration).** The
+    long-standing "rename dims before a second producer" caution (kept
+    verbatim since P-025 per the byte-identical-first decision) is PAID —
+    done AFTER, not before, per that strategy, and the migration proved
+    clean: `halee_score` → `physical_space_score`, `ramone_score` →
+    `emotional_hierarchy_score`, internal/evidence/profile keys renamed,
+    `halee_ramone_mix_verdict.md` → `mix_verdict.md`; clean break, NO
+    emitted aliases, memory.py read-only dual-read the only carve-out; all
+    90 numeric values identical under both producers; suite 705 / 68/68 vs
+    the regenerated goldens. Receipt:
+    `build-os/receipts/P-030-artifact-contract-migration.md`.
   - **P-031 — confidence framework: ✓ DONE (2026-07-02; scope USER-UPGRADED
     to PER-AREA at P-032f close):** the REQUIRED `confidence_map` (area /
     level ∈ {high, limited, deferred} / reason) is structurally validated (no
@@ -486,7 +509,12 @@
   profile to the exact key names in the runtime `scores` dict. Byte-identical and
   correct today, but **watch this coupling when P-028 generalizes scoring and when
   P-029 threads the profile per-call** — any rename/restructure of the score keys must
-  stay in lockstep with `emotion_dims`.
+  stay in lockstep with `emotion_dims`. **★ UPDATE (P-030 close): the
+  coupling HELD through the contract migration** — the reference
+  taste-triangle dim was renamed IN PLACE, in lockstep with the score-key
+  rename (`ramone_score` → `emotional_hierarchy_score`), with untouched
+  blend arithmetic (reviewer-verified). The coupling itself still exists —
+  keep watching on any future score-key change.
 
 - **★ CONFIRMED HONESTY / SOURCING POLICY — a STANDING product decision governing
   P-031 / P-032 (confirmed by the user).** hand-curated → high-confidence;

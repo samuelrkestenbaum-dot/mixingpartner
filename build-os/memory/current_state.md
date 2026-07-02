@@ -178,24 +178,107 @@
     intimate mode now REACHABLE), PUSHED to the dev branch (NOT merged)**,
     atop the set-active `cb5fc8b`. P-033's parent chain: `b6c840c` →
     `cb5fc8b` (active-packet confirmation) → `58d21dd` (PR #17 merge).
+    ★ ON TOP of P-033, the dev branch now ALSO carries **P-030 (`21c0ab0`
+    + `0c7885e`, two product commits — THE ARTIFACT-CONTRACT MIGRATION:
+    `halee_score` → `physical_space_score`, `ramone_score` →
+    `emotional_hierarchy_score`, the internal/evidence/profile keys renamed,
+    `halee_ramone_mix_verdict.md` → `mix_verdict.md`; CLEAN BREAK — no
+    emitted aliases, the ONLY carve-out is memory.py's read-only dual-read
+    of persisted local history; all 90 numeric values IDENTICAL under both
+    producers), PUSHED to the dev branch (NOT merged)**, atop the
+    set-active `8f14d4d`. P-030's parent chain: `0c7885e` → `21c0ab0` →
+    `8f14d4d` (active-packet confirmation) → `8f1cbe4` (P-033 close).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-02, P-033):** suite **678 passed** (0
-  failed / skipped); regression **68/68** (0 critical / 0 warnings). Single
-  commit `b6c840c` — HEAD IS Commit-1, green in isolation. (Prior baseline
-  was 660 at P-032i; P-033 added +18, all in the NEW
-  `tests/test_creative_mode_wiring.py`. Earlier: 639 → 660 at P-032i;
-  600 → 639 at P-032h; 572 → 600 at P-031; 512 → 572
+- **Green baseline (verified 2026-07-02, P-030):** suite **705 passed** (0
+  failed / skipped); regression **68/68 vs the REGENERATED goldens** (0
+  critical / 0 warnings). Two commits `21c0ab0` + `0c7885e` — the Commit-1
+  boundary is the HONEST contract-migration boundary pre-declared in the
+  packet spec (136 failed / 542 passed at `21c0ab0`, every failure in the 6
+  old-key-pin signature classes, ZERO behavioral). (Prior baseline was 678
+  at P-033; P-030 added +27 migration instances — the new 17-test
+  `tests/test_contract_migration.py`. Earlier: 660 → 678 at P-033;
+  639 → 660 at P-032i; 600 → 639 at P-032h; 572 → 600 at P-031; 512 → 572
   at P-032f; 473 → 512 at P-032g; 451 → 473 at P-032c; 433 → 451 at P-032d;
   413 → 433 at P-032b; 396 → 413 at P-032a; 384 → 396 at P-032e; 370 → 384
   at P-029; 351 → 370 at P-028; 331 → 351 at P-027; 319 → 331 at P-026;
   293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-030 PAYS THE CONTRACT DEBT — the artifact-contract migration
+  (THE USER'S DECISION: Option A + memory.py dual-read + verdict filename
+  fold-in): `halee_score` → `physical_space_score`, `ramone_score` →
+  `emotional_hierarchy_score`, the internal/evidence/profile keys renamed
+  (`baselines.physical_space`, `penalty_coeffs.emotional_hierarchy`, the
+  evidence keys, the reference taste-triangle dim), and
+  `halee_ramone_mix_verdict.md` → `mix_verdict.md` (neutral). CLEAN BREAK
+  for public artifacts — NO emitted aliases; the ONLY compatibility
+  carve-out is memory.py's read-only dual-read of persisted local history.
+  The long-standing pre-second-producer debt (kept verbatim since P-025 by
+  the byte-identical-first decision) is PAID: a producer-agnostic engine
+  emits a producer-agnostic contract. qa GREEN + reviewer PASS (no
+  must-fix). Last-closed = P-030.**
+  - **Two commits (the user-specified split) on parent `8f14d4d`
+    (active-packet confirmation), atop `8f1cbe4` (P-033 close):** `21c0ab0`
+    (Commit-1 — product surfaces, 18 files: engine, both producer JSONs,
+    creative, mix_planner, memory.py dual-read, regression invariant read,
+    cli, all 3 renderers, both schemas, pipeline filename, validator,
+    README) + `0c7885e` (Commit-2 — 36 files: SCORE_KEYS, 3 consciously
+    regenerated goldens, 5 samples + the verdict-sample rename, 26 updated
+    test files, the NEW 17-test `tests/test_contract_migration.py`).
+    **PUSHED to the dev branch, NOT merged** (merge base `58d21dd` =
+    PR #17).
+  - **★ THE HEALTH BAR HELD (qa's core proof):** all 90 numeric values
+    across the 6 producer×fixture runs IDENTICAL under the old→new key map
+    (ref 73.8 / 70.7 / 74.3; tim 68.4 / 52.6 / 49.7; every component);
+    golden diff = EXACTLY the two key-rename lines per fixture, values
+    byte-identical; same differential behavior.
+  - **★ qa GREEN:** suite 678 → **705** (678 + 27 migration instances);
+    regression **68/68 vs the REGENERATED goldens**; the 17 required
+    migration tests pass with 4 live spot-checks; memory dual-read all 4
+    behaviors (reads new; reads seeded OLD-key history with the file NOT
+    rewritten; prefers new on conflicting values; never writes old);
+    Commit-1 boundary honest: 136 failed / 542 passed at `21c0ab0`, every
+    failure classified into the 6 old-key-pin signature classes, ZERO
+    behavioral; grep proof clean (old keys ONLY in memory.py:27,32-33 + the
+    migration test); renderer labels producer-agnostic live; safety grep
+    none.
+  - **★ reviewer PASS (no must-fix):** the strongest no-judgment-change
+    proof — a MECHANICAL canonical-rename comparison over the entire diff
+    (apply old→new to every removed line, diff vs the added lines): zero
+    numeric constants changed, zero reordering; component_scores insertion
+    order preserved (positions 1-2); the reference emotion_dims renamed IN
+    PLACE with untouched blend arithmetic; value identity independently
+    verified; sabotage (re-emit `halee_score`) caught by 10 failing
+    instances across 4 migration tests; pins updated-never-weakened (the
+    dashboard pin STRENGTHENED: new-present AND old-absent);
+    COWORK_CONTRACT.md names no score keys (no doc miss); schemas validated
+    live. **Codex NOT available — single-model review.**
+  - **★ REVIEWER JUDGMENT CALL (recorded):** producer-named search-mode
+    NAMES (`halee_depth`/`ramone_vocal_truth`) survive as profile-internal
+    vocabulary and appear in emitted creative.json as VALUES — ruled
+    in-scope-as-built (the user's rule bans old-KEY aliases; mode names are
+    values; profile vocabulary is protected) — routed to the residue sweep
+    with two siblings: the engine action prose (“Halee naturalism…” /
+    “Ramone-style…”) and the warning doctrine tags
+    (`phil_ramone_vocal_centrality`/`phil_ramone_restraint`) emitted as
+    values.
+  - **★ NEXT (the remaining post-merge backlog):** **the analyzer
+    extension** (non-lead vocal-band events → makes the vocal-blend policy
+    live on real data + the creative.py:98 name-match fix) → **the residue
+    sweeps** (now including the three producer-named-VALUE surfaces from
+    the reviewer's judgment call, plus the standing items:
+    liveness-docstring sweep ~8 files; validation tightening incl.
+    search_modes non-empty + default_creative_mode structural checks + the
+    NaN-floor guard; lead_names derivation; the shared groove dict;
+    loop_deconstruct literal-kind; cli.py --mode help text; fallback-reason
+    wording; duplicate-areas/extra-keys). Staged-not-active. Receipt:
+    `build-os/receipts/P-030-artifact-contract-migration.md`.
 
 - **★★★ P-033 WIRES `_default_creative_mode` TO THE PRODUCER PROFILE — the
   FIRST post-merge packet; the authored creative-mode table is now a REAL
