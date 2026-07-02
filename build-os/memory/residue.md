@@ -108,8 +108,10 @@
     (kill-switches, risk classes, non-destructive, masked-lead) across both,
     (d) the binding expectations — deltas from
     groove/space/low-end/loop/surprise; NO vocal-blend delta (the inert
-    corollary below); NO intimate-mode-selection claim (the NEW
-    `default_creative_mode` inertness finding below), (e) the confidence
+    corollary below); NO intimate-mode-selection claim (the
+    `default_creative_mode` inertness finding — ✓ since RESOLVED by P-033,
+    the pin flipped via its designed conscious-edit path), (e) the
+    confidence
     maps render correctly per-profile; byte-identical discipline for the
     reference throughout — ALL PROVEN AND LANDED as the permanent 21-test
     `tests/test_differential_proof.py` (single commit `010734d`, 772+/0−,
@@ -222,18 +224,21 @@
     identical; the pins came out STRONGER — five deferred entries
     verbatim-pinned vs four). Record this as the STANDARD route for
     pin-guarded content changes.
-  - **★★ NEW (P-032h reviewer TRAJECTORY FINDING, P-016-family —
-    non-blocking, recorded prominently): `default_creative_mode` is
-    pipeline-INERT.** `pipeline._default_creative_mode` (pipeline.py:285-290)
-    hardcodes the REFERENCE's mode names, so timbaland's authored
-    `intimate_mode: "conservative"` is UNREACHABLE — intimate material under
-    timbaland falls back to `dramatic_contrast` (creative.py:516). Invisible
-    until the second producer existed. **Right fix: a FUTURE ENGINE PACKET
-    wires `_default_creative_mode` to the profile (byte-identical for the
-    reference) — NOT an in-JSON change.** Ride-along: the hardcoded
-    `"dramatic_contrast"` fallback would KeyError for a future profile
-    lacking that mode name. **BINDING on P-032i: must NOT claim
-    intimate-mode selection as a live profile lever.**
+  - **✓ RESOLVED by P-033 (2026-07-02) — (was: ★★ P-032h reviewer
+    TRAJECTORY FINDING, P-016-family): `default_creative_mode` was
+    pipeline-INERT.** `pipeline._default_creative_mode` hardcoded the
+    REFERENCE's mode names, so timbaland's authored `intimate_mode:
+    "conservative"` was UNREACHABLE (intimate material under timbaland
+    silently fell back to `dramatic_contrast`), and the hardcoded fallback
+    risked a KeyError for a profile lacking that mode name. **P-033 wired
+    the table to the PASSED profile (byte-identical for the reference),
+    made the fallback profile-owned (declared default_mode if present in
+    search_modes, else the first authored mode) with a conditional
+    `search_mode_fallback` evidence key, and flipped the P-032i negative
+    pin through its designed conscious-edit path (STRENGTHENED). Timbaland's
+    authored intimate mode is now REACHABLE: `conservative` on
+    `simple_vocal_piano_song`.** Receipt:
+    `build-os/receipts/P-033-default-creative-mode-wiring.md`.
   - **★ NEW (P-032h — scope note):** P-030 (rename the halee/ramone dims off
     the producer names) now touches TWO producer JSONs (`halee_ramone.json`
     + `timbaland.json`) — still orthogonal, slightly wider.
@@ -253,6 +258,26 @@
     per the mandated stop-and-report behavior):** the verdict filename is
     producer-independent — the legitimizing change is a future
     verdict-filename cosmetic packet.
+  - **★ NEW (P-033 reviewer — validation gaps, → the future
+    validation-sweep packet):** `_validate` lacks (a) a NON-EMPTY check on
+    `search_modes` — a zero-mode profile would StopIteration in the
+    first-authored-mode fallback (NARROWED vs pre-P-033, where ANY profile
+    lacking `dramatic_contrast` crashed with KeyError; not a regression) —
+    and (b) structural checks on `default_creative_mode`'s three keys
+    (intimate/dense/default), which the pipeline now hard-dereferences.
+    Both to the future validation-sweep packet.
+  - **★ NEW (P-033 — cosmetic):** `cli.py:446-447` `--mode` help text
+    hardcodes the REFERENCE's mode names (pre-existing; will go stale as
+    profiles diverge) — ties to the unstaged CLI-producer-exposure backlog.
+  - **★ NEW (P-033 — cosmetic):** the fallback `reason` wording says "the
+    profile's own default" even on the first-authored-mode branch — tighten
+    on the next touch of that code.
+  - **★★ NEW (P-033 reviewer CALIBRATION — record for future arc
+    language):** the creative-mode lever is real but THIN — `search_mode`
+    steers the reported mode/bias surface; `generate_variants` does NOT yet
+    fork on it. P-033 makes the authored mode REACHABLE and VISIBLE; a
+    future packet would make modes reshape variant generation/scoring. Do
+    NOT over-claim behavioral steering.
   - **★ LIVENESS-DOCSTRING OVERCLAIM (non-blocking — reviewer; NOW
     POTENTIALLY AN EIGHT-FILE FAMILY, fold ONE sweep):** the `liveness` test docstrings OVERCLAIM — a
     general hardcoded-constant sabotage is actually caught by the
@@ -387,6 +412,12 @@
     differential proof). Receipt:
     `build-os/receipts/P-032h-author-timbaland-json.md`.
   - **P-033 — expose producer selection** (the user-facing selection surface).
+    **[NUMBERING SUPERSEDED (2026-07-02): the id P-033 was RE-USED for the
+    confirmed-and-now-✓-CLOSED `_default_creative_mode` wiring packet
+    (receipt: `build-os/receipts/P-033-default-creative-mode-wiring.md`).
+    Selection is already LIVE via `analyze(producer=…)`; any CLI exposure
+    remains UNSTAGED backlog (ties to the cli.py `--mode` help-text
+    residue above).]**
 
 - **★ FINDING A — SECONDARY PRODUCER-AESTHETIC CONSTANTS (reviewer, from P-025;
   deferred by design, NOT drift). ✓ NOW FULLY RESOLVED (governance ✓ P-027; doctrine

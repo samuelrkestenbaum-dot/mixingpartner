@@ -47,8 +47,9 @@
 - **Primary branch / base:** default branch `claude/dreamy-turing-z0oxll`;
   active dev branch `claude/logic-mix-os-hardening-12-7hbeh1`. **The accumulated
   cowork arc (P-017 guard + P-018 → P-023) is now MERGED to default via PR #16 —
-  merge commit `e79426a`, which is the CURRENT default-branch tip and the base for
-  P-025** (confirmed: `git merge-base HEAD e79426a` = `e79426a`; the P-025
+  merge commit `e79426a`, which WAS the then-current default-branch tip and the
+  base for P-025 (the default tip is NOW `58d21dd` = the PR #17 merge — see
+  below)** (confirmed: `git merge-base HEAD e79426a` = `e79426a`; the P-025
   active-packet confirmation `4e9eaa2` sits directly on top of it). (Earlier
   bases: **PR #15** merge `6c40e2b` was the P-017 base; **PR #13** merge `0f4e7e9`
   landed P-001…P-012 + the canonical-alignment audit; the older shared ancestor is
@@ -166,30 +167,105 @@
     `b884a59`. P-032i's parent chain: `010734d` → `b884a59` (active-packet
     confirmation) → `40eb94d` (P-032h close). **★★★ THE TIMBALAND SUB-ARC
     IS COMPLETE (ten packets, P-032e → … → P-032i).**
-    The base for MERGE decisions is still `e79426a` = PR #16 (nothing since P-025
-    has been merged) — **THE STANDING DECISION NOW OPEN: the merge of the
-    ENTIRE EPIC (P-025 → P-032i + P-031) to default awaits the USER'S
-    explicit GO.**
+    ★★ THE EPIC IS MERGED — **PR #17 (the ENTIRE producer-agnostic epic,
+    P-025 → P-032i + P-031, everything since `e79426a` = PR #16) is MERGED
+    to default on the user's go — merge commit `58d21dd`, the CURRENT
+    default-branch tip. The base for MERGE/landing decisions is now
+    `58d21dd`.** The dev branch RESTARTED from `58d21dd` and now carries
+    **P-033 (`b6c840c`, single product commit — `_default_creative_mode`
+    wired to the PASSED producer profile + the profile-owned search-mode
+    fallback; byte-identical for the reference; timbaland's authored
+    intimate mode now REACHABLE), PUSHED to the dev branch (NOT merged)**,
+    atop the set-active `cb5fc8b`. P-033's parent chain: `b6c840c` →
+    `cb5fc8b` (active-packet confirmation) → `58d21dd` (PR #17 merge).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-02, P-032i):** suite **660 passed** (0
-  failed / skipped); regression **68/68** (0 critical / 0 warnings) —
-  UNCHANGED (P-032i touches ZERO product code: 1 NEW test file only —
-  `tests/test_differential_proof.py`, 21 tests; obligations (a)–(e)
-  re-derived independently LIVE by qa: 60/60 checks passed). Single commit
-  `010734d` — HEAD IS Commit-1, green in isolation. (Prior baseline was 639
-  at P-032h; P-032i added +21, all in `tests/test_differential_proof.py`.
-  Earlier: 600 → 639 at P-032h; 572 → 600 at P-031; 512 → 572
+- **Green baseline (verified 2026-07-02, P-033):** suite **678 passed** (0
+  failed / skipped); regression **68/68** (0 critical / 0 warnings). Single
+  commit `b6c840c` — HEAD IS Commit-1, green in isolation. (Prior baseline
+  was 660 at P-032i; P-033 added +18, all in the NEW
+  `tests/test_creative_mode_wiring.py`. Earlier: 639 → 660 at P-032i;
+  600 → 639 at P-032h; 572 → 600 at P-031; 512 → 572
   at P-032f; 473 → 512 at P-032g; 451 → 473 at P-032c; 433 → 451 at P-032d;
   413 → 433 at P-032b; 396 → 413 at P-032a; 384 → 396 at P-032e; 370 → 384
   at P-029; 351 → 370 at P-028; 331 → 351 at P-027; 319 → 331 at P-026;
   293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-033 WIRES `_default_creative_mode` TO THE PRODUCER PROFILE — the
+  FIRST post-merge packet; the authored creative-mode table is now a REAL
+  product lever. The P-032h reviewer's trajectory finding is FIXED exactly
+  as pre-registered: the P-032i negative pin flipped through its designed
+  conscious-edit path (`test_no_intimate_mode_selection_..._unreachable` →
+  `test_intimate_mode_selection_..._reachable`, STRENGTHENED — adds the
+  direct resolver assertion + observed==authored + no-fallback-key). ★ THE
+  PRODUCER LEVER IS NOW COMPLETE END-TO-END: doctrine weights + polarity +
+  creative judgment values + creative MODE + both gates + confidence
+  rendering — all profile-authored and live. qa GREEN + reviewer PASS (no
+  must-fix). Last-closed = P-033.**
+  - **Single commit `b6c840c`** on parent `cb5fc8b` (active-packet
+    confirmation), atop the merged default `58d21dd` (PR #17). 6 files,
+    +476/−48 (3 product: `pipeline.py`, `creative.py`,
+    `creative_renderer.py`; 3 test: the NEW 18-test
+    `tests/test_creative_mode_wiring.py` + the two pin files). HEAD IS
+    Commit-1 → green in isolation. **PUSHED to the dev branch (restarted
+    from `58d21dd` = the PR #17 merge — the NEW merge base for landing
+    decisions is `58d21dd`), NOT merged.**
+  - **The wiring:** `_default_creative_mode(intent, profile=None)` reads the
+    PASSED profile's `default_creative_mode` table (module `_DEFAULT_PROFILE`
+    when None — the P-029 consumer pattern; the only product call site
+    threads the loaded profile at pipeline.py:279).
+    `run_creative_engine(result, mode=None, profile=None)`: mode=None → the
+    profile's declared default; a requested mode absent from `search_modes`
+    → `_profile_default_mode` (the declared default_mode if present in
+    search_modes, else the FIRST authored mode — deterministic,
+    profile-owned) + a conditional `search_mode_fallback` evidence key
+    (present ONLY when fired; renderer zero-bytes-when-absent). The dead
+    `"dramatic_contrast"` default on `generate_variants` removed. **No
+    functional hardcoded mode name remains in product Python.**
+  - **★ THE PAYOFF (qa verified LIVE, before/after):** timbaland on
+    `simple_vocal_piano_song`: base `dramatic_contrast` (the silent
+    fallback) → HEAD **`conservative`** (the authored intimate mode, bias
+    "preserve groove identity, subtle moves, protect the pocket").
+    Timbaland's artifact deltas = EXACTLY simple's creative.json (mode+bias
+    lines) + creative_report.md. dense/splice → `dramatic_contrast` both
+    sides (its authored default_mode).
+  - **★ qa GREEN:** suite 660 → **678** (+18); regression **68/68**;
+    reference byte-identity with neutral inputs → ZERO deltas
+    (73.8 / 70.7 / 74.3; resolved modes identical; base hardcoded map ==
+    reference authored table == OLD_HARDCODED_MAP string-for-string,
+    checked against the ACTUAL base code); fallback safety incl. qa's own
+    adversarial no-dramatic_contrast profile → no KeyError; sabotage
+    (re-hardcoded map) → 6 guards FAIL / reference byte-identity green; the
+    still-binding vocal-blend pin MD5-identical; safety grep clean.
+  - **★ reviewer PASS (no must-fix):** wiring/threading correct per-call
+    (sabotage-verified BOTH directions); resolution order proven; json.load
+    dict-order determinism confirmed (py3.11); the `generate_variants`
+    default genuinely dead (the function body never reads it); the KeyError
+    closed on all three paths — P-033 NARROWED the crash surface (pre-P-033
+    ANY profile lacking `dramatic_contrast` crashed; now only a zero-mode
+    profile would). **Codex NOT available — single-model review.**
+  - **★ REVIEWER CALIBRATION NOTE (record for future arc language):** the
+    mode lever is real but THIN — `search_mode` steers the reported
+    mode/bias surface; `generate_variants` does NOT yet fork on it. P-033
+    makes the authored mode REACHABLE and VISIBLE; a future packet would
+    make modes reshape variant generation/scoring. Do NOT over-claim
+    behavioral steering.
+  - **★ NEXT (the USER'S CONFIRMED post-merge order):** **P-030 (rename the
+    halee/ramone dims off the producer names)** — touches 2 producer JSONs
+    + `tests/test_differential_proof.py` + the
+    goldens/memory/renderers/schemas that pin `halee_score`/`ramone_score`
+    (the long-standing compat-shim caution: output keys are pinned by
+    golden snapshots + regression SCORE_KEYS + renderers — needs a
+    DELIBERATE compat/migration strategy, presented as a PLAN before
+    building) → the analyzer extension → the verdict-filename cosmetic →
+    the residue sweeps. Staged-not-active. Receipt:
+    `build-os/receipts/P-033-default-creative-mode-wiring.md`.
 
 - **★★★ P-032i CLOSES THE TIMBALAND SUB-ARC — the permanent, binding
   differential proof is IN THE SUITE. THE SUB-ARC IS COMPLETE: P-032e ✓ →
@@ -211,10 +287,11 @@
     (`tests/test_differential_proof.py`, 21 tests), 772+/0−, ZERO product
     code. HEAD IS Commit-1 → green in isolation. **Pushed to the dev
     branch, NOT merged.**
-  - **★★ THE STANDING DECISION NOW OPEN — the next USER-GATED boundary:
-    the ENTIRE EPIC (P-025 → P-032i + P-031, everything since `e79426a`
-    = PR #16) sits on the dev branch, pushed, awaiting the USER'S MERGE
-    GO.** Nothing merges/deploys without it.
+  - **★★ ✓ RESOLVED (2026-07-02, before P-033): the USER GAVE THE MERGE
+    GO — the ENTIRE EPIC (P-025 → P-032i + P-031, everything since
+    `e79426a` = PR #16) MERGED to default via PR #17, merge commit
+    `58d21dd` (the NEW merge base).** (Was: the standing USER-GATED
+    boundary — the epic sat on the dev branch awaiting the merge go.)
   - **The proof's headline facts (permanent):**
     - **THE PLAN REVERSAL (iconic scenario):** reference winner `loop_A`
       85.9 (chop / high-pass / narrow / push = DECONSTRUCT) vs timbaland
