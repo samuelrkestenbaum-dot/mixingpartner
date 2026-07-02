@@ -248,22 +248,42 @@
     BRANCH NOW CARRIES THE COMPLETE BATCH — P-036 + P-037 + P-038
     (+ closes) atop merge base `dc921ec` (= PR #18). THE ENTIRE
     POST-MERGE BACKLOG IS COMPLETE; THE BATCH MERGE IS THE OPEN USER
-    GATE — it awaits the user's explicit word.**
+    GATE — it awaits the user's explicit word.** **✓ RESOLVED
+    (2026-07-02, before P-039): the batch MERGED git-natively on the
+    user's word — merge commit `2c09428`, the CURRENT default-branch
+    tip. The base for MERGE/landing decisions is now `2c09428`.** The
+    dev branch RESTARTED from `2c09428` and now carries **P-039
+    (`b111a18` + review-fix `a56cb96` [TEST-ONLY], product — THE FIRST
+    POST-SUBSTRATE PRODUCT PACKET: `--producer` on exactly 13
+    analyze-family commands via the shared add_producer mechanism [11
+    add_common + album + cowork], `_resolve_producer` with the friendly
+    no-traceback error naming the available profiles [exit 2, nothing
+    written], the ADDITIVE producer identity surface
+    [doctrine_score.json `producer` key / verdict line / dashboard div /
+    status header], the 2-line cowork rider [contract untouched,
+    API_VERSION 1.0 / 35 commands]; timbaland reachable from the CLI
+    with ZERO code changes — 76.3 vs 60.9 on vocal_chop_groove), PUSHED
+    after close (orchestrator standing go), NOT merged**, atop the
+    set-active `73a134e`. P-039's parent chain: `a56cb96` → `b111a18` →
+    `73a134e` (active-packet confirmation) → `2c09428` (the batch
+    merge).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-02, P-038 — THE BACKLOG-COMPLETE
-  baseline):** suite **768 passed** (0 failed / skipped); regression
-  **93/93, 0 warnings, goldens untouched** — the corpus is **4
-  fixtures** (the 68/68 era ended CONSCIOUSLY at P-035: +16 golden +9
-  invariants for `vocal_chop_groove`, the 1 inapplicable invariant
-  correctly reasoned). Single product commit `7b9eda7` (P-038 —
-  AMENDED TREE-NEUTRALLY from `e1ddfbf`, message-only for the mandated
-  trailers; tree `b49c4b2d…` identical, parent `6f7fd99`) — HEAD IS
-  Commit-1 → green in isolation. (History: 767 → 768 at P-038 — +1
+- **Green baseline (verified 2026-07-02, P-039 — the FIRST
+  POST-SUBSTRATE PRODUCT baseline):** suite **801 passed** (0 failed /
+  skipped); regression **93/93, goldens untouched** (zero goldens in
+  the diff) — the corpus is **4 fixtures** (the 68/68 era ended
+  CONSCIOUSLY at P-035). Commits `b111a18` (the feature) + review-fix
+  `a56cb96` (TEST-ONLY) on parent `73a134e` (active-packet
+  confirmation), atop merge base `2c09428` (the post-backlog batch
+  merge) — `b111a18` IS Commit-1 → green in isolation. (History:
+  768 → 788 at P-039 qa on `b111a18` — +20 the producer-CLI tests —
+  then 788 → **801** at the review-fix `a56cb96` — +13 parametrized
+  per-carrier threading-guard instances; 767 → 768 at P-038 — +1
   synthetic warning-tag pin; 754 → 766 → 767 at P-037 — +12 the
   code-behavior sweep, then +1 the review-fix mutation test; P-036
   HELD 754 — labeling only. Prior baseline was 741 at P-034; P-035
@@ -276,6 +296,80 @@
   331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-039 PUTS THE PRODUCER LEVER ON THE PRODUCT SURFACE — the FIRST
+  post-substrate PRODUCT packet (the user's sequence; the P-029 lever
+  reaches the operator surface): `--producer` on exactly 13
+  analyze-family CLI commands (11 add_common + album + cowork, via the
+  shared add_producer mechanism), `_resolve_producer` with the friendly
+  no-traceback error naming the available profiles (exit 2, nothing
+  written), and the ADDITIVE producer identity surface —
+  doctrine_score.json `producer` {name, display_name, provenance,
+  confidence — deliberately never risk_class}, the verdict line, the
+  dashboard div, the status header. `--producer timbaland` now works
+  from the CLI with ZERO code changes — demo-safe, self-describing
+  artifacts. The cowork rider landed (2-line radius; contract untouched;
+  API_VERSION 1.0 / 35 commands). Schema additive;
+  DIVERGENT_DOCTRINE_KEYS consciously widened +producer in BOTH pin
+  files. qa GREEN + reviewer fix-then-pass → PASS (one fix round, fully
+  resolved). Last-closed = P-039.**
+  - **1 + 1 review-fix commits** on parent `73a134e` (active-packet
+    confirmation), atop merge base `2c09428` (the post-backlog batch
+    merge): `b111a18` (the feature — 10 files, 608+/20−, incl. the NEW
+    20-test `tests/test_producer_cli.py`) + `a56cb96` (the review-fix,
+    TEST-ONLY — the per-carrier threading guard: 13 parametrized
+    instances spying the producer kwarg at cli.analyze / cowork.analyze
+    through the REAL cli.main; album asserts BOTH passes; a dropped
+    threading arrives as None and the isinstance-ProducerProfile check
+    pins the RESOLVED profile on every path). `b111a18` IS Commit-1 →
+    green in isolation. **PUSHED after close (orchestrator standing
+    go), NOT merged** (merge base `2c09428`).
+  - **★ THE ACCEPTANCE BAR (user-stated, verbatim) — every clause proven
+    at the SUBPROCESS boundary (qa):** same stems ✓ (both runs exit 0;
+    validate-output 13/13 each); explicit producer arg ✓; clear selected
+    producer in artifacts ✓ (exact producer blocks + verdict line 3 +
+    dashboard + status-outside-SCORES, BOTH producers); Halee/Ramone
+    remains default ✓ (the bare CLI tree BYTE-IDENTICAL file-for-file to
+    a no-arg LIBRARY run — qa's own diff); Timbaland reachable without
+    code changes ✓ (76.3 vs 60.9 on vocal_chop_groove from the clean
+    tree); safety/governance unchanged ✓ (the 5 safety kill-switches
+    lead governance.json VERBATIM in-order in BOTH trees; a base-code
+    timbaland governance.json byte-identical to HEAD's; 143 safety-pin
+    tests green); regression clean ✓ (93/93, zero goldens in the diff).
+  - **★ qa GREEN (`b111a18`):** suite 768 → **788** (+20); artifact
+    delta EXACTLY 3 of 30 files (+producer key / +2 verdict lines / +1
+    dashboard div) + the status header line — 27 artifacts
+    byte-identical, EVERY score surface byte-identical; the SAME 3-file
+    delta shape holds for the timbaland tree; the friendly error
+    verbatim-captured; the 13-command set verified via subprocess --help
+    across ALL 22 subcommands; the exclusions verified in code
+    (compare-reference never analyzes; regression is
+    reference-by-definition).
+  - **★ reviewer fix-then-pass → PASS:** the ONE must-fix was found by
+    LIVE SABOTAGE — dropping the threading at one analyze site left the
+    FULL suite green (10 of 13 carriers were flag-PRESENCE-pinned only);
+    the fix makes the silent-ignore gap structurally impossible at all
+    13 carriers (the reviewer re-ran its exact governance cut + the
+    album pass-2 cut against the new guard: both FAIL; at HEAD all 13
+    pass). Final counts verified: **801 passed / 93/93**; the fix
+    TEST-ONLY. **Codex NOT available — single-model review, both
+    rounds.** ★ THE LESSON (the THIRD instance of the pattern, →
+    residue, named): flag PRESENCE is not flag THREADING — levers need
+    REACHES-THE-DESTINATION guards, joining "defense claims need
+    mutation tests".
+  - **★ Residue (accepted, no action):** the success-path subprocess run
+    (the ERROR path is subprocess-proven; the success path runs the same
+    cli.main in-process); the `_PRODUCERS_DIR` private-name import in
+    cli.py (a public accessor is a possible follow-up API nicety).
+  - **★ NEXT per the USER'S SEQUENCE = the SAMPLE REFRESH (STAGED, not
+    active):** regenerate `examples/sample_output/` to show the SAME
+    stems under BOTH producers (two trees or one tree + a differential
+    README section — the orchestrator scopes with the user) — which also
+    CLEARS the accepted P-038 standing note about stale sample prose
+    (the P-039 identity surface gives the samples self-describing
+    trees); conscious test-9 (OLD_KEYS) interaction check. Then the
+    THIRD producer, then deeper mode-forking. Receipt:
+    `build-os/receipts/P-039-producer-cli-exposure.md`.
 
 - **★★★ P-038 SWEEPS THE NAMING/PROSE RESIDUE — residue sweep 2 of 2,
   THE LAST BACKLOG PACKET: six items — producer names off
@@ -295,7 +389,9 @@
     +201/−88. HEAD IS Commit-1 → green in isolation. **PUSHED to the
     dev branch, NOT merged** (merge base `dc921ec` = PR #18). **★★ THE
     OPEN USER GATE: the batch merge — P-036 + P-037 + P-038 (+ closes)
-    onto `dc921ec` — awaits the user's explicit word.**
+    onto `dc921ec` — awaits the user's explicit word.** **(✓ RESOLVED at
+    P-039 close: merged git-natively as `2c09428` on the user's
+    word.)**
   - **★ The six items:** (1a) warning doctrine tags renamed
     (`phil_ramone_vocal_centrality`→`vocal_centrality`,
     `phil_ramone_restraint`→`restraint`) — found UNPINNED and never
@@ -361,7 +457,12 @@
     explicit word.** Future arcs (a third producer, CLI producer
     exposure, deeper mode-forking in variant generation, the
     sample-refresh doc pass) are USER-INITIATED options, not debt.
-    Receipt: `build-os/receipts/P-038-naming-prose-sweep.md`.
+    Receipt: `build-os/receipts/P-038-naming-prose-sweep.md`. **(✓ UPDATE
+    P-039 close, 2026-07-02: the batch merge RESOLVED — merged
+    git-natively as `2c09428` on the user's word; the user SEQUENCED
+    the product arc — CLI producer exposure ✓ CLOSED as P-039; NEXT =
+    the sample refresh, then the third producer, then deeper
+    mode-forking.)**
 
 - **★★★ P-037 SWEEPS THE CODE-BEHAVIOR RESIDUE — residue sweep 1 of 2:
   six defensive/validation items from residue.md, byte-identical on

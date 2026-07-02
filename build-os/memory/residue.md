@@ -4,6 +4,50 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
+## ★★★ STATUS (P-039 close, 2026-07-02): residue = accepted standing notes only — the PRODUCT ARC is running
+
+- **P-039 (Producer Selection CLI Exposure + Demo-Safe Invocation — THE
+  FIRST POST-SUBSTRATE PRODUCT PACKET) closed 2026-07-02:** qa GREEN +
+  reviewer fix-then-pass → PASS (one fix round, fully resolved). Commits
+  `b111a18` (the feature) + review-fix `a56cb96` (TEST-ONLY) on parent
+  `73a134e`, atop merge base `2c09428` (the post-backlog batch merge —
+  the P-038-era open user gate ✓ RESOLVED on the user's word); PUSHED
+  after close (orchestrator standing go), NOT merged. Suite **801** /
+  regression **93/93**. Receipt:
+  `build-os/receipts/P-039-producer-cli-exposure.md`.
+- **★★ NEW (P-039 — NAMED LESSON, standing; the THIRD of the family):
+  flag PRESENCE is not flag THREADING — levers need
+  REACHES-THE-DESTINATION guards.** The reviewer's live sabotage dropped
+  the threading at ONE analyze site and the FULL suite stayed green (10
+  of 13 carriers were flag-presence-pinned only); the fix (`a56cb96`)
+  spies the producer kwarg at cli.analyze / cowork.analyze through the
+  REAL cli.main at all 13 carriers — a dropped threading arrives as None
+  and fails the isinstance-ProducerProfile pin on every path. Joins the
+  two P-037 lessons — the same family: prove the lever REACHES its
+  destination, never just that the flag exists.
+- **NEW accepted notes (P-039, recorded not fixed):**
+  1. **The success-path subprocess nuance:** the ERROR path is
+     subprocess-proven; the success path runs the same `cli.main`
+     in-process — a success-path subprocess run is a possible future
+     hardening, not debt.
+  2. **The `_PRODUCERS_DIR` private-name import in `cli.py`** — a public
+     accessor is a possible follow-up API nicety; fold on next touch.
+- **All P-038 standing notes RETAINED** (the banner below), with ONE
+  trajectory update: standing note 1 (`examples/sample_output/` ships
+  stale pre-P-036/P-038 prose) is set to be CLEARED by the STAGED sample
+  refresh — the next packet per the USER'S SEQUENCE (sample refresh →
+  third producer → deeper mode-forking); see
+  `build-os/packets/active_packet.md` (conscious test-9 OLD_KEYS
+  interaction check noted there). NOT active until confirmed.
+- **Open boundary:** P-039's commits pushed to the dev branch AFTER
+  close under the orchestrator's standing go; the MERGE remains a user
+  gate.
+- **THE THREE NAMED LESSONS (standing, retained for posterity):** (1)
+  raw-dict NaN comparisons FAIL OPEN (`x < nan` is False) — audit future
+  raw-comparison gates for the same shape; (2) defense claims need
+  MUTATION TESTS, not placement faith; (3) flag PRESENCE is not flag
+  THREADING — levers need reaches-the-destination guards.
+
 ## ★★★ RESIDUE: ZERO — accepted standing notes only (P-038 close, 2026-07-02)
 
 - **★★★ THE ENTIRE POST-MERGE BACKLOG IS COMPLETE.** P-038 (residue sweep
@@ -13,7 +57,9 @@
   place), a named lesson retained for posterity, or an opportunistic
   fold-on-next-touch cosmetic. **THE OPEN USER GATE is the batch merge —
   P-036 + P-037 + P-038 (+ closes) onto merge base `dc921ec` (= PR #18) —
-  on the user's explicit word.**
+  on the user's explicit word.** **(✓ RESOLVED before P-039, 2026-07-02:
+  merged git-natively as `2c09428` on the user's word — the current
+  merge base.)**
 - **ACCEPTED STANDING NOTES (user-level, recorded not fixed):**
   1. **`examples/sample_output/` ships pre-P-036/P-038 prose**
      (producer-named action strings, stale verdict text) — not
