@@ -35,7 +35,7 @@ def _variant(variant_id: str, kind: str, name: str, *, taste: int,
         "name": name,
         "changes": changes if changes is not None else [],
         "scores": {
-            "ramone_score": 80,
+            "emotional_hierarchy_score": 80,
             "listener_excitement_score": 80,
             "vocal_belief_score": 80,
             "technical_score": 80,

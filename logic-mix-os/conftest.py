@@ -28,11 +28,21 @@ def fixtures_dir() -> Path:
     return ROOT / "fixtures"
 
 
+# The ORIGINAL three fixtures — the shared parametrization for the pinned
+# byte-identity corpus. The 4th fixture (vocal_chop_groove, P-035) lives
+# DELIBERATELY outside this list: every suite keyed on these three stays
+# pin-to-3 by construction, and the 4th fixture's own pins live in
+# tests/test_vocal_chop_groove.py (with the conscious P-032i flip in
+# tests/test_differential_proof.py reading ``chop_groove_analyzed`` below).
 FIXTURE_NAMES = [
     "simple_vocal_piano_song",
     "dense_chorus_with_loops",
     "splice_loop_problem",
 ]
+
+# The P-035 fixture: the first project with non-lead vocal stems — the one
+# that makes the vocal_band_masking capacity and the blend policy LIVE.
+VOCAL_CHOP_FIXTURE = "vocal_chop_groove"
 
 
 @pytest.fixture(scope="session")
@@ -46,3 +56,20 @@ def analyzed(_ensure_fixtures):
         manifest = load_manifest(ROOT / "fixtures" / name / "project_manifest.json")
         results[name] = analyze(str(ROOT / "fixtures" / name / "stems"), manifest)
     return results
+
+
+@pytest.fixture(scope="session")
+def chop_groove_analyzed(_ensure_fixtures):
+    """The P-035 fixture under BOTH producers, once per session — the live
+    half of the P-032f blend corollary: ``{producer: ProjectAnalysis}``."""
+    from logic_mix_os.pipeline import analyze
+    from logic_mix_os.project import load_manifest
+
+    manifest = load_manifest(
+        ROOT / "fixtures" / VOCAL_CHOP_FIXTURE / "project_manifest.json"
+    )
+    stems = str(ROOT / "fixtures" / VOCAL_CHOP_FIXTURE / "stems")
+    return {
+        "halee_ramone": analyze(stems, manifest),
+        "timbaland": analyze(stems, manifest, producer="timbaland"),
+    }

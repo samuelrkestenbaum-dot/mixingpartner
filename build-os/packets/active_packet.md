@@ -4,70 +4,57 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** NONE ACTIVE — P-032i closed (2026-07-02). **★★★ THE TIMBALAND
-  SUB-ARC IS COMPLETE.** No packet is in flight; the orchestrator confirms the
-  next packet (from the staged candidates below) before the builder touches
-  anything.
-
-## ★★★ SUB-ARC COMPLETE (P-032.x + P-031)
-
-- **P-032e ✓ → P-032a ✓ → P-032b ✓ → P-032d ✓ → P-032c ✓ → P-032g ✓ →
-  P-032f ✓ → P-031 ✓ → P-032h ✓ → P-032i ✓ — TEN PACKETS.** What was built:
-  seven new producer-agnostic measurement axes (14 doctrine components), two
-  profile-decided gates (loop protection, vocal blend) with engine-fixed
-  safety rails, the per-area honesty/confidence layer, the second live
-  producer profile (`timbaland.json`), and the permanent differential proof.
-  The reference profile stayed byte-identical throughout (73.8 / 70.7 / 74.3
-  on every surface, every packet). The user's architecture doctrine held
-  end-to-end: **axes are shared measurable substrate; taste is the weighting
-  layer; safety/governance is invariant.** The next producer profile is now:
-  a JSON file + three required declarations + its own confidence map + a
-  differential test.
+- **Status:** NONE ACTIVE — P-035 closed by the archivist (2026-07-02).
+  The next packet below is STAGED, not active, until the orchestrator
+  confirms on the user's go.
 
 ## Last-closed
 
-- **P-032i ✓ CLOSED (2026-07-02) — the Timbaland-vs-Halee/Ramone DIFFERENTIAL
-  PROOF, the sub-arc's formal close:** the permanent, binding 21-test suite
-  `tests/test_differential_proof.py` formalizing the five obligations
-  (a)–(e). Headline: THE PLAN REVERSAL (reference promotes `loop_A` 85.9 =
-  deconstruct; timbaland promotes `loop_B` 86.7 = keep the loop, punctuate
-  around it — exact keep/reject mirrors, both plans coherent, schema-valid,
-  non-destructive); attributability divergence == exactly {overall,
-  confidence} (+loop_context on the loop fixtures); the 5 SAFETY switches
-  verbatim-pinned FILE-LOCALLY, first-in-order under both; negative pins with
-  NAMED legitimizing packets (no vocal-blend delta; no intimate-mode claim;
-  next-pass identical). qa GREEN (suite 639 → **660**, +21; regression 68/68;
-  obligations (a)–(e) re-derived independently LIVE, 60/60 checks;
-  proof-liveness sabotage bites; safety grep none); reviewer PASS (no
-  must-fix; Codex NOT available — single-model review). Single commit
-  `010734d` on parent `b884a59` (1 NEW test file, 772+/0−, ZERO product code;
-  HEAD IS Commit-1 → green in isolation) — pushed, NOT merged. Receipt:
-  `build-os/receipts/P-032i-differential-proof.md`.
+- **P-035 ✓ CLOSED (2026-07-02)** — the 4th fixture (`vocal_chop_groove`) +
+  the real-data vocal-blend differential (packet 2 of 2 of the user-approved
+  analyzer-extension plan). **★★★ THE ANALYZER-EXTENSION ARC (P-034 + P-035)
+  IS COMPLETE — and with it the P-032f corollary's FULL resolution: policy
+  (P-032f, dormant) → capacity (P-034, inert) → LIVE, MEASURED, ATTRIBUTABLE
+  (P-035).** Same stems, two philosophies: vocal_role_fit 65.0 vs 85.0,
+  overalls **76.3 vs 60.9**, every point attributable (the blend gate worth
+  exactly +0.7 at timbaland's authored 0.4 weight). qa GREEN (suite 741 →
+  **754**; regression **68/68 → 93/93** — the corpus is now 4 fixtures, the
+  68/68 era ended consciously; the original 3 fixtures byte-untouched) +
+  reviewer PASS (no must-fix; Codex not available — single-model review).
+  Two commits `0b940c7` (Commit-1 — the buried-vocal either-side-forward
+  decision, green in isolation) + `e5a12dc` (Commit-2 — the fixture) on
+  parent `916e577`, **PUSHED to the dev branch, NOT merged** (merge base
+  `58d21dd` = PR #17). Receipt:
+  `build-os/receipts/P-035-vocal-chop-groove-differential.md`.
 
-## ★★ THE OPEN USER GATE (explicit — the next user-gated boundary)
+## ★ OPEN USER GATE — THE MERGE DECISION
 
-- **Merge-to-default of the ENTIRE EPIC awaits the user's explicit go.**
-  Everything since `e79426a` (= PR #16, the merge base for landing
-  decisions) — P-025 → P-032i + P-031 — sits on the dev branch
-  `claude/logic-mix-os-hardening-12-7hbeh1`, pushed, NOT merged. No
-  merge/push/deploy without the user's explicit go.
+- **The dev branch now carries FIVE unmerged packets — P-033, P-030, P-034,
+  P-035 + their build-os closes — atop merge base `58d21dd` (PR #17).**
+  Surface the merge/landing decision to the user at the next opportunity.
+  No merge without explicit go.
 
-## Staged candidates (orthogonal backlog — NONE confirmed, no order dependency)
+## Staged next (NOT active until confirmed)
 
-- **P-030** — rename the halee/ramone dims off the producer names; now
-  touches TWO producer JSONs + `tests/test_differential_proof.py` (the
-  P-032i reviewer note).
-- **The `_default_creative_mode` wiring packet** (P-016-family) — wire the
-  pipeline default to the profile; byte-identical for the reference; must
-  fix the dramatic_contrast-fallback KeyError risk (creative.py:532).
-- **The analyzer-extension packet** — emit non-lead vocal-band events →
-  makes vocal blend live on real data; also fix the creative.py:98
-  name-matching latent misfire.
-- **The verdict-filename cosmetic packet** (the P-032i builder observation).
-- **Standing residue sweeps** — liveness-docstrings across ~8 files;
-  validation tightening (duplicate areas / extra keys); NaN-floor guard;
-  etc.
+- **The STALE-CONFIDENCE-MAP FIX packet — jumps the residue queue per the
+  P-035 reviewer's recommendation.** Both profiles' "limited" vocal-blend
+  `confidence_map` entries claim a dormancy that is now FALSE on both halves
+  (P-034 delivered the capacity; P-035 made it live on real data). Contained
+  — no scorer consumes the map — but reputationally first for a product
+  whose brand is honest labeling. **Shape (small packet):** rewrite the two
+  entries' reasons to live status + re-judge levels; consciously flip the
+  verbatim map pins (TIM_AUTHORED_MAP + halee_ramone's) for exactly those
+  entries; byte-identical everywhere else.
+
+## Backlog after
+
+- The residue sweeps (the three producer-named-VALUE surfaces,
+  `logic_action_generator.py:38`, validation tightening, liveness
+  docstrings, `cli.py` `--mode` text, the P-035 count-pin parenthetical
+  tidy, etc. — see `build-os/memory/residue.md`).
 
 ---
-_Cleared by the archivist on P-032i close (2026-07-02). One packet at a time.
-The orchestrator confirms the staged packet before the builder touches it._
+_Cleared by the archivist at P-035 close (2026-07-02). One packet at a time.
+The orchestrator confirms the staged packet active on the user's go; builder
+implements exactly that; qa proves; reviewer judges; archivist closes with a
+receipt._

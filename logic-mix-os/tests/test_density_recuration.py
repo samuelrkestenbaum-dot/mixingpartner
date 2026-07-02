@@ -46,7 +46,7 @@ from logic_mix_os.creative import (
 )
 
 _ROOT = Path(__file__).resolve().parent.parent
-_NUMERIC = ["technical", "halee", "ramone", "contrast", "vocal_belief", "excitement", "taste"]
+_NUMERIC = ["technical", "physical_space", "emotional_hierarchy", "contrast", "vocal_belief", "excitement", "taste"]
 
 # The fixture that exercises ALL FIVE creative branches on the real path.
 _FIVE_BRANCH_FIXTURE = "dense_chorus_with_loops"
@@ -168,7 +168,7 @@ def test_depth_cleanup_base_is_untouched():
     72 — no dim was re-judged into the codebase, because none could flip the
     branch honestly)."""
     assert _KIND_SCORES["depth_cleanup"] == dict(
-        technical=84, halee=90, ramone=85, contrast=72,
+        technical=84, physical_space=90, emotional_hierarchy=85, contrast=72,
         vocal_belief=86, excitement=66, taste=85,
         translation="low", mono="low",
     )
@@ -177,7 +177,7 @@ def test_depth_cleanup_base_is_untouched():
 def test_subtractive_drop_base_is_untouched():
     """The competing move is likewise untouched — the finding changes nothing."""
     assert _KIND_SCORES["subtractive_drop"] == dict(
-        technical=85, halee=88, ramone=86, contrast=88,
+        technical=85, physical_space=88, emotional_hierarchy=86, contrast=88,
         vocal_belief=86, excitement=78, taste=86,
         translation="low", mono="low",
     )

@@ -1,6 +1,6 @@
 """Deterministic synthetic fixtures for Logic Mix OS.
 
-Generates three small test projects (stems + manifest) so the test-suite and the
+Generates four small test projects (stems + manifest) so the test-suite and the
 README examples work without shipping large binary audio. Everything is seeded,
 so the output is byte-stable across runs.
 
@@ -107,6 +107,43 @@ def _snare(dur, bpm=92, rng=None, gain=0.7) -> np.ndarray:
         end = min(i + tt.size, sig.size)
         sig[i:end] += (noise + tone)[: end - i]
     return _norm(sig, gain)
+
+
+def _vocal_chop(dur, base, rng, bpm=96, gain=0.6) -> np.ndarray:
+    """Chopped vocal one-shots on a syncopated 16th grid (P-035): a vocal-ish
+    partial ladder reaching the presence band, gated by short percussive
+    envelopes — transient-dense with defined, non-smeared hits."""
+    t = _t(dur)
+    vib = 1 + 0.01 * np.sin(2 * np.pi * 5.2 * t)
+    sig = np.zeros(t.size)
+    for h, a in [(1, 1.0), (2, 0.7), (4, 0.55), (6, 0.5), (8, 0.4), (10, 0.3)]:
+        sig += a * np.sin(2 * np.pi * base * h * t * vib)
+    step = 60.0 / bpm / 4.0
+    env = np.zeros(t.size)
+    n_env = int(0.09 * SR)
+    shape = np.exp(-np.arange(n_env) / (0.02 * SR))
+    k = -1
+    for start in np.arange(0.0, dur, step):
+        k += 1
+        if k % 4 == 3:  # drop every 4th 16th -> syncopation
+            continue
+        i = int(start * SR)
+        end = min(i + n_env, t.size)
+        env[i:end] = np.maximum(env[i:end], shape[: end - i])
+    return _norm(sig * env, gain)
+
+
+def _vocal_stack(dur, freqs, rng, gain=0.6) -> np.ndarray:
+    """Wide, sustained backing-vocal stack (P-035): one decaying multi-voice
+    chord (no onset grid — stacks sing, they do not punch) whose upper
+    partials reach the vocal presence band, stereoized wide."""
+    t = _t(dur)
+    sig = np.zeros(t.size)
+    for f in freqs:
+        for h, a in [(1, 1.0), (2, 0.6), (4, 0.4), (6, 0.38), (8, 0.3)]:
+            sig += a * np.sin(2 * np.pi * f * h * t)
+    sig = (sig / len(freqs)) * np.exp(-2.0 * t)
+    return _stereoize(_norm(sig, gain), rng, 0.9)
 
 
 def _texture_loop(dur, rng, gain=0.8) -> np.ndarray:
@@ -251,6 +288,53 @@ def build_splice_loop_problem(rng: np.random.Generator) -> Dict:
     return {"name": "splice_loop_problem", "stems": stems, "manifest": manifest}
 
 
+def build_vocal_chop_groove(rng: np.random.Generator) -> Dict:
+    """The 4th fixture (P-035): the vocal chain end to end on real audio.
+
+    A groove built from voices — a lead, a chopped vocal one-shot print
+    (``BGV Chop``: backing-vocal identity by name, ``one_shot_sample`` by
+    manifest hint, transient-dense/high-crest by synthesis → the classifier's
+    ``vocal_percussive`` at 0.95), a wide sustained stack
+    (``vocal_stack`` at 0.95), a kick/snare beat, and the P-034 reviewer
+    advisory's mandatory masker-set instrument: a bright electric guitar
+    whose chord partials sit in the vocal presence band (1.5-4 kHz) with
+    overlap >= 0.1 against both non-lead vocal stems. The guitar sits
+    forward/heard in the verse (where the depth planner tucks the chop and
+    stack behind it) — the placement that makes the ``vocal_band_masking``
+    moderate tier, and the profile blend differential behind it, live on
+    real pipeline data."""
+    g_part = [(1, 1.0), (2, 0.8), (3, 0.7), (4, 0.6), (5, 0.5), (6, 0.4)]
+    stems = {
+        "Lead Vocal": _concat([_vocal(DUR, 220, rng, 0.55), _vocal(DUR, 330, rng, 0.7)]),
+        "BGV Chop": _concat([_vocal_chop(DUR, 392, rng, 96, 0.6), _vocal_chop(DUR, 392, rng, 96, 0.68)]),
+        "Backing Vocals Stack": _concat([
+            _vocal_stack(DUR, [262, 330, 392], rng, 0.5),
+            _vocal_stack(DUR, [294, 370, 440], rng, 0.62),
+        ]),
+        "Electric Guitar": _stereoize(_chord([330, 415, 494], 2 * DUR, g_part, 1.2, 0.6), rng, 0.5),
+        "Kick": _kick(2 * DUR, 96, 0.85),
+        "Snare": _snare(2 * DUR, 96, rng, 0.7),
+    }
+    manifest = {
+        "project": {"song_title": "Vocal Chop Groove", "tempo": 96, "key": "A minor", "sample_rate": SR, "bit_depth": 16},
+        "intent": {
+            "singular_emotional_truth": "A groove built from voices: the lead sings while chopped and stacked vocals lock into the beat.",
+            "references": [],
+            "negative_constraints": ["Do not bury the lead vocal.", "Do not let the chopped vocals lose their rhythmic identity."],
+        },
+        "sections": _two_sections(),
+        "tracks": [
+            {"file": "Lead Vocal.wav", "name": "Lead Vocal", "source_kind": "comped_audio_track"},
+            {"file": "BGV Chop.wav", "name": "BGV Chop", "source_kind": "one_shot_sample"},
+            {"file": "Backing Vocals Stack.wav", "name": "Backing Vocals Stack", "source_kind": "comped_audio_track"},
+            {"file": "Electric Guitar.wav", "name": "Electric Guitar"},
+            {"file": "Kick.wav", "name": "Kick"},
+            {"file": "Snare.wav", "name": "Snare"},
+        ],
+    }
+    return {"name": "vocal_chop_groove", "stems": stems, "manifest": manifest}
+
+
 def _write_fixture(base: Path, fixture: Dict) -> None:
     fx_dir = base / fixture["name"]
     stems_dir = fx_dir / "stems"
@@ -263,7 +347,10 @@ def _write_fixture(base: Path, fixture: Dict) -> None:
 
 
 def generate_all(base: Path = HERE) -> List[str]:
-    builders = [build_simple_vocal_piano, build_dense_chorus_with_loops, build_splice_loop_problem]
+    # Seeds are per-builder (1000 + index), so APPENDING a builder can never
+    # shift the earlier fixtures' bytes (P-035 byte-identity discipline).
+    builders = [build_simple_vocal_piano, build_dense_chorus_with_loops,
+                build_splice_loop_problem, build_vocal_chop_groove]
     written = []
     for i, builder in enumerate(builders):
         rng = np.random.default_rng(1000 + i)
@@ -279,6 +366,9 @@ def ensure_fixtures(base: Path = HERE) -> None:
         "simple_vocal_piano_song": ["Lead Vocal.wav", "Piano.wav", "Bass.wav"],
         "dense_chorus_with_loops": ["Lead Vocal.wav", "Splice Texture Loop.wav"],
         "splice_loop_problem": ["Lead Vocal.wav", "Splice Loop.wav"],
+        "vocal_chop_groove": ["Lead Vocal.wav", "BGV Chop.wav",
+                              "Backing Vocals Stack.wav", "Electric Guitar.wav",
+                              "Kick.wav", "Snare.wav"],
     }
     missing = False
     for name, files in builders.items():

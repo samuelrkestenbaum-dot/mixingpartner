@@ -68,7 +68,7 @@ def render_dashboard(result) -> str:
 
     # --- scores ---
     score_rows = [
-        ("Roy Halee (space)", "halee_score"), ("Phil Ramone (vocal)", "ramone_score"),
+        ("Physical space", "physical_space_score"), ("Emotional hierarchy", "emotional_hierarchy_score"),
         ("Vocal centrality", "vocal_centrality_score"), ("Depth hierarchy", "depth_hierarchy_score"),
         ("Section contrast", "section_contrast_score"), ("Static mix", "static_mix_score"),
         ("Dynamic mix", "dynamic_mix_score"), ("Translation", None), ("Mono", None),

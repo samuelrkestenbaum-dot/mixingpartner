@@ -10,7 +10,7 @@ Four guards, mirroring the packet:
 
 1. **Byte-identical** — for all 3 fixtures, ``analyze()`` (default halee_ramone)
    leaves every pre-existing component score AND ``overall_mix_readiness_score``
-   unchanged, and the golden regression still reports 68/68. The mechanism: the
+   unchanged, and the golden regression still reports 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture). The mechanism: the
    new term is appended LAST to ``component_scores`` (summation order preserved)
    and its weight is 0 (``beat*0`` numerator, ``+0`` denominator).
 2. **Value-discrimination (unit)** — a punchy, foregrounded, distinct rhythmic
@@ -36,8 +36,8 @@ from logic_mix_os.doctrine.producer_profile import load_profile
 
 # The seven pre-existing component score keys (the byte-identical anchor set).
 EXISTING_COMPONENT_KEYS = [
-    "halee_score",
-    "ramone_score",
+    "physical_space_score",
+    "emotional_hierarchy_score",
     "vocal_centrality_score",
     "depth_hierarchy_score",
     "section_contrast_score",
@@ -134,17 +134,17 @@ def test_overall_is_byte_identical_to_seven_term_weighted_mean(analyzed):
         assert ds["overall_mix_readiness_score"] == expected
 
 
-def test_regression_still_sixty_eight_of_sixty_eight():
+def test_regression_still_green_full_corpus():
     """The golden corpus regression — which pins ``doctrine_score`` — still passes
-    68/68 with the new axis wired in at weight 0."""
+    93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture) with the new axis wired in at weight 0."""
     from pathlib import Path
 
     from logic_mix_os.regression import run_regression_suite
 
     base = Path(__file__).resolve().parent.parent / "fixtures"
     report = run_regression_suite(base)
-    assert report["tests_run"] == 68
-    assert report["passed"] == 68
+    assert report["tests_run"] == 93
+    assert report["passed"] == 93
     assert report["failed"] == 0
 
 

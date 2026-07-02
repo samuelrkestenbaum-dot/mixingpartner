@@ -1,0 +1,62 @@
+{
+  "project": {
+    "song_title": "Vocal Chop Groove",
+    "tempo": 96,
+    "key": "A minor",
+    "sample_rate": 32000,
+    "bit_depth": 16
+  },
+  "intent": {
+    "singular_emotional_truth": "A groove built from voices: the lead sings while chopped and stacked vocals lock into the beat.",
+    "references": [],
+    "negative_constraints": [
+      "Do not bury the lead vocal.",
+      "Do not let the chopped vocals lose their rhythmic identity."
+    ]
+  },
+  "sections": [
+    {
+      "section_id": "verse_1",
+      "name": "Verse 1",
+      "start_time": "0:00",
+      "end_time": "0:03",
+      "emotional_goal": "intimacy"
+    },
+    {
+      "section_id": "chorus_1",
+      "name": "Chorus 1",
+      "start_time": "0:03",
+      "end_time": "0:06",
+      "emotional_goal": "release"
+    }
+  ],
+  "tracks": [
+    {
+      "file": "Lead Vocal.wav",
+      "name": "Lead Vocal",
+      "source_kind": "comped_audio_track"
+    },
+    {
+      "file": "BGV Chop.wav",
+      "name": "BGV Chop",
+      "source_kind": "one_shot_sample"
+    },
+    {
+      "file": "Backing Vocals Stack.wav",
+      "name": "Backing Vocals Stack",
+      "source_kind": "comped_audio_track"
+    },
+    {
+      "file": "Electric Guitar.wav",
+      "name": "Electric Guitar"
+    },
+    {
+      "file": "Kick.wav",
+      "name": "Kick"
+    },
+    {
+      "file": "Snare.wav",
+      "name": "Snare"
+    }
+  ]
+}

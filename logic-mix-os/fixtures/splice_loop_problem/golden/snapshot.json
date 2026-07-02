@@ -43,8 +43,8 @@
     }
   ],
   "scores": {
-    "halee_score": 81.3,
-    "ramone_score": 86.0,
+    "physical_space_score": 81.3,
+    "emotional_hierarchy_score": 86.0,
     "vocal_centrality_score": 90.0,
     "depth_hierarchy_score": 72.0,
     "section_contrast_score": 82,

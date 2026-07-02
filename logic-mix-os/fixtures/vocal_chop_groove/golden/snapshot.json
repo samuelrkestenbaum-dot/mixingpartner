@@ -1,37 +1,27 @@
 {
   "tracks": [
     {
-      "name": "Acoustic Guitar",
-      "source_kind": "live_audio_recording",
-      "instrument_identity": "acoustic_guitar",
-      "identity_family": "guitars",
+      "name": "BGV Chop",
+      "source_kind": "one_shot_sample",
+      "instrument_identity": "backing_vocal",
+      "identity_family": "vocal",
+      "confidence": 0.7,
+      "perceptual_role": "heard",
+      "sacredness": "decorative",
+      "default_depth": "midground"
+    },
+    {
+      "name": "Backing Vocals Stack",
+      "source_kind": "comped_audio_track",
+      "instrument_identity": "backing_vocal",
+      "identity_family": "vocal",
       "confidence": 0.7,
       "perceptual_role": "heard",
       "sacredness": "important",
-      "default_depth": "foreground"
+      "default_depth": "midground"
     },
     {
-      "name": "Bass",
-      "source_kind": "live_audio_recording",
-      "instrument_identity": "bass_guitar",
-      "identity_family": "bass",
-      "confidence": 0.7,
-      "perceptual_role": "structural",
-      "sacredness": "important",
-      "default_depth": "foreground"
-    },
-    {
-      "name": "Electric Guitar 1",
-      "source_kind": "live_audio_recording",
-      "instrument_identity": "electric_guitar",
-      "identity_family": "guitars",
-      "confidence": 0.7,
-      "perceptual_role": "heard",
-      "sacredness": "important",
-      "default_depth": "foreground"
-    },
-    {
-      "name": "Electric Guitar 2",
+      "name": "Electric Guitar",
       "source_kind": "live_audio_recording",
       "instrument_identity": "electric_guitar",
       "identity_family": "guitars",
@@ -69,31 +59,10 @@
       "perceptual_role": "structural",
       "sacredness": "important",
       "default_depth": "foreground"
-    },
-    {
-      "name": "Splice Texture Loop",
-      "source_kind": "splice_sample",
-      "instrument_identity": "texture",
-      "identity_family": "texture",
-      "confidence": 0.7,
-      "perceptual_role": "felt",
-      "sacredness": "decorative",
-      "default_depth": "background"
-    },
-    {
-      "name": "Synth Pad",
-      "source_kind": "synth_bounce",
-      "instrument_identity": "pad",
-      "identity_family": "synth",
-      "confidence": 0.7,
-      "perceptual_role": "felt",
-      "sacredness": "decorative",
-      "default_depth": "background"
     }
   ],
   "masking_classifications": {
-    "low_end_conflict": 2,
-    "width_crowding": 1
+    "vocal_band_masking": 4
   },
   "sections": [
     {
@@ -106,20 +75,18 @@
     }
   ],
   "scores": {
-    "physical_space_score": 67.6,
+    "physical_space_score": 81.3,
     "emotional_hierarchy_score": 86.0,
     "vocal_centrality_score": 90.0,
-    "depth_hierarchy_score": 65.3,
+    "depth_hierarchy_score": 72.0,
     "section_contrast_score": 82,
-    "static_mix_score": 64.0,
-    "dynamic_mix_score": 23.4,
-    "overall_mix_readiness_score": 70.7
+    "static_mix_score": 80.0,
+    "dynamic_mix_score": 28.2,
+    "overall_mix_readiness_score": 76.3
   },
   "next_pass_titles": [
     "Vocal belief",
     "Section contrast",
-    "Stereo loop / width control",
-    "Depth cleanup",
-    "Low-end definition"
+    "Depth cleanup"
   ]
 }

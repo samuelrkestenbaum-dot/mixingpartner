@@ -1,4 +1,4 @@
-# Halee / Ramone Mix Verdict
+# Mix Verdict
 
 > **Emotional truth:** A big chorus that must not bury the vocal.
 
@@ -11,16 +11,16 @@ Overall mix readiness 70.7/100. Static balance 64.0/100; dynamic movement 23.4/1
 | Dimension | Score | |
 |---|---|---|
 | Overall mix readiness | 70.7/100 | `██████████████░░░░░░` |
-| Roy Halee (physical space) | 67.6/100 | `██████████████░░░░░░` |
-| Phil Ramone (vocal centrality) | 86.0/100 | `█████████████████░░░` |
+| Physical space / depth | 67.6/100 | `██████████████░░░░░░` |
+| Emotional hierarchy / vocal belief | 86.0/100 | `█████████████████░░░` |
 | Vocal centrality | 90.0/100 | `██████████████████░░` |
 | Depth hierarchy | 65.3/100 | `█████████████░░░░░░░` |
 | Section contrast | 82/100 | `████████████████░░░░` |
 | Static mix | 64.0/100 | `█████████████░░░░░░░` |
 | Dynamic mix | 23.4/100 | `█████░░░░░░░░░░░░░░░` |
 
-**The Halee test:** Can the listener visualize musicians in a real physical space?  
-**The Ramone test:** Do I believe every word the singer is saying?
+**The physical-space test:** Can the listener visualize musicians in a real physical space?  
+**The emotional-hierarchy test:** Do I believe every word the singer is saying?
 
 ## Biggest Risks
 

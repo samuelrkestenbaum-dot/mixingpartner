@@ -123,8 +123,8 @@ _TRUTH_ALIGNMENT = _DEFAULT_PROFILE.truth_alignment
 
 # Secondary governance constants (P-027 Part B / Finding A), sourced from the
 # reference profile. ``taste_triangle`` = the intimate-width identity penalty
-# (30) and the emotion-blend dims (mean of ramone/listener_excitement/vocal_belief
-# scores). ``veto_thresholds`` = the keep/reject line (45), the align veto line
+# (30) and the emotion-blend dims (mean of emotional_hierarchy/listener_excitement/
+# vocal_belief scores). ``veto_thresholds`` = the keep/reject line (45), the align veto line
 # (50), and the align fallback for an unknown kind (75). Read-only in the
 # consumers; the JSON is now their single source of truth.
 _TASTE_TRIANGLE = _DEFAULT_PROFILE.taste_triangle

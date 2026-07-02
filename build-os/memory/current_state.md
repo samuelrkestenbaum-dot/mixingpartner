@@ -47,8 +47,9 @@
 - **Primary branch / base:** default branch `claude/dreamy-turing-z0oxll`;
   active dev branch `claude/logic-mix-os-hardening-12-7hbeh1`. **The accumulated
   cowork arc (P-017 guard + P-018 → P-023) is now MERGED to default via PR #16 —
-  merge commit `e79426a`, which is the CURRENT default-branch tip and the base for
-  P-025** (confirmed: `git merge-base HEAD e79426a` = `e79426a`; the P-025
+  merge commit `e79426a`, which WAS the then-current default-branch tip and the
+  base for P-025 (the default tip is NOW `58d21dd` = the PR #17 merge — see
+  below)** (confirmed: `git merge-base HEAD e79426a` = `e79426a`; the P-025
   active-packet confirmation `4e9eaa2` sits directly on top of it). (Earlier
   bases: **PR #15** merge `6c40e2b` was the P-017 base; **PR #13** merge `0f4e7e9`
   landed P-001…P-012 + the canonical-alignment audit; the older shared ancestor is
@@ -166,30 +167,363 @@
     `b884a59`. P-032i's parent chain: `010734d` → `b884a59` (active-packet
     confirmation) → `40eb94d` (P-032h close). **★★★ THE TIMBALAND SUB-ARC
     IS COMPLETE (ten packets, P-032e → … → P-032i).**
-    The base for MERGE decisions is still `e79426a` = PR #16 (nothing since P-025
-    has been merged) — **THE STANDING DECISION NOW OPEN: the merge of the
-    ENTIRE EPIC (P-025 → P-032i + P-031) to default awaits the USER'S
-    explicit GO.**
+    ★★ THE EPIC IS MERGED — **PR #17 (the ENTIRE producer-agnostic epic,
+    P-025 → P-032i + P-031, everything since `e79426a` = PR #16) is MERGED
+    to default on the user's go — merge commit `58d21dd`, the CURRENT
+    default-branch tip. The base for MERGE/landing decisions is now
+    `58d21dd`.** The dev branch RESTARTED from `58d21dd` and now carries
+    **P-033 (`b6c840c`, single product commit — `_default_creative_mode`
+    wired to the PASSED producer profile + the profile-owned search-mode
+    fallback; byte-identical for the reference; timbaland's authored
+    intimate mode now REACHABLE), PUSHED to the dev branch (NOT merged)**,
+    atop the set-active `cb5fc8b`. P-033's parent chain: `b6c840c` →
+    `cb5fc8b` (active-packet confirmation) → `58d21dd` (PR #17 merge).
+    ★ ON TOP of P-033, the dev branch now ALSO carries **P-030 (`21c0ab0`
+    + `0c7885e`, two product commits — THE ARTIFACT-CONTRACT MIGRATION:
+    `halee_score` → `physical_space_score`, `ramone_score` →
+    `emotional_hierarchy_score`, the internal/evidence/profile keys renamed,
+    `halee_ramone_mix_verdict.md` → `mix_verdict.md`; CLEAN BREAK — no
+    emitted aliases, the ONLY carve-out is memory.py's read-only dual-read
+    of persisted local history; all 90 numeric values IDENTICAL under both
+    producers), PUSHED to the dev branch (NOT merged)**, atop the
+    set-active `8f14d4d`. P-030's parent chain: `0c7885e` → `21c0ab0` →
+    `8f14d4d` (active-packet confirmation) → `8f1cbe4` (P-033 close).
+    ★ ON TOP of P-030, the dev branch now ALSO carries **P-034
+    (`e52bc1a`, single product commit — ANALYZER CAPACITY, packet 1 of
+    the user-approved two-packet analyzer-extension plan: the masking
+    analyzer emits NON-LEAD vocal-band masking events under the NEW
+    classification `vocal_band_masking`, consumed ONLY by the vocal-role
+    surface, + the `creative.py` `_lead_masked` identity-derived fix;
+    fixture-inert by construction; byte-identical everywhere), PUSHED to
+    the dev branch (NOT merged)**, atop the set-active `b53d51c`. P-034's
+    parent chain: `e52bc1a` → `b53d51c` (active-packet confirmation)
+    → `db13d08` (P-030 close).
+    ★ ON TOP of P-034, the dev branch now ALSO carries **P-035
+    (`0b940c7` + `e5a12dc`, two product commits — THE ARC'S PAYOFF,
+    packet 2 of the analyzer-extension plan: Commit-1 reads the
+    vocal-band pair when EITHER side is forward — the buried-vocal
+    decision; P-034's moderate tier was structurally unreachable on any
+    real fixture under the stem-forward-only gate — and Commit-2 lands
+    the 4th fixture `vocal_chop_groove` (6 stems, seed 1003) that makes
+    the vocal-blend differential LIVE on real data: vocal_role_fit 65.0
+    vs 85.0, overalls 76.3 vs 60.9, fully attributable; the original 3
+    fixtures byte-untouched), PUSHED to the dev branch (NOT merged)**,
+    atop the set-active `916e577`. P-035's parent chain: `e5a12dc` →
+    `0b940c7` → `916e577` (active-packet confirmation) → `4ea1717`
+    (P-034 close). **★★★ THE ANALYZER-EXTENSION ARC (P-034 + P-035) IS
+    COMPLETE. The dev branch now carries FIVE unmerged packets — P-033,
+    P-030, P-034, P-035 + closes — the MERGE decision is an OPEN USER
+    GATE.**
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-02, P-032i):** suite **660 passed** (0
-  failed / skipped); regression **68/68** (0 critical / 0 warnings) —
-  UNCHANGED (P-032i touches ZERO product code: 1 NEW test file only —
-  `tests/test_differential_proof.py`, 21 tests; obligations (a)–(e)
-  re-derived independently LIVE by qa: 60/60 checks passed). Single commit
-  `010734d` — HEAD IS Commit-1, green in isolation. (Prior baseline was 639
-  at P-032h; P-032i added +21, all in `tests/test_differential_proof.py`.
-  Earlier: 600 → 639 at P-032h; 572 → 600 at P-031; 512 → 572
-  at P-032f; 473 → 512 at P-032g; 451 → 473 at P-032c; 433 → 451 at P-032d;
-  413 → 433 at P-032b; 396 → 413 at P-032a; 384 → 396 at P-032e; 370 → 384
-  at P-029; 351 → 370 at P-028; 331 → 351 at P-027; 319 → 331 at P-026;
-  293 → 319 at P-025.)
+- **Green baseline (verified 2026-07-02, P-035):** suite **754 passed** (0
+  failed / skipped); regression **93/93** — the corpus is now **4
+  fixtures** (the 68/68 era ended CONSCIOUSLY at P-035: +16 golden +9
+  invariants for `vocal_chop_groove`, the 1 inapplicable invariant
+  correctly reasoned; the original 3 fixtures' goldens/manifests/stems
+  byte-untouched, git diff EMPTY). Two commits `0b940c7` + `e5a12dc` —
+  Commit-1 green in isolation (real worktree check: 741 + 68/68,
+  fixture-inert at that tree). (Prior baseline was 741 at P-034; P-035
+  added +13 — the new 13-test `tests/test_vocal_chop_groove.py`.
+  Earlier: 705 → 741 at P-034; 678 → 705 at P-030; 660 → 678 at P-033;
+  639 → 660 at P-032i; 600 → 639 at P-032h; 572 → 600 at P-031;
+  512 → 572 at P-032f; 473 → 512 at P-032g; 451 → 473 at P-032c;
+  433 → 451 at P-032d; 413 → 433 at P-032b; 396 → 413 at P-032a;
+  384 → 396 at P-032e; 370 → 384 at P-029; 351 → 370 at P-028;
+  331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-035 LANDS THE 4TH FIXTURE + THE REAL-DATA VOCAL-BLEND
+  DIFFERENTIAL — packet 2 of 2; ★ THE ANALYZER-EXTENSION ARC (P-034 +
+  P-035) IS COMPLETE, and with it the P-032f corollary's FULL
+  resolution: policy (P-032f, dormant) → capacity (P-034, inert) →
+  LIVE, MEASURED, ATTRIBUTABLE (P-035). The last promise of the original
+  Timbaland design conversation is now a measured product claim:
+  "Timbaland can treat vocal chops/stacks rhythmically without the
+  engine becoming anti-vocal — same stems, two philosophies, 76.3 vs
+  60.9, every point attributable." qa GREEN + reviewer PASS (no
+  must-fix). Last-closed = P-035.**
+  - **Two commits on parent `916e577`** (active-packet confirmation),
+    atop `4ea1717` (P-034 close): `0b940c7` (Commit-1 — the buried-vocal
+    analyzer decision: read the vocal-band pair when EITHER side is
+    forward; green in isolation 741 + 68/68, fixture-inert at that tree)
+    + `e5a12dc` (Commit-2 — the fixture: 6 stems seed 1003, generator
+    builders `_vocal_chop`/`_vocal_stack`, manifest, targeted-script
+    golden, the 13-test `tests/test_vocal_chop_groove.py`, the conscious
+    pin flips, README). **PUSHED to the dev branch, NOT merged** (merge
+    base `58d21dd` = PR #17). **★ The dev branch now carries FIVE
+    unmerged packets — P-033, P-030, P-034, P-035 + closes — SURFACE
+    THE MERGE DECISION AS THE OPEN USER GATE.**
+  - **★ THE CENTRAL FINDING (Commit-1):** the moderate event was
+    STRUCTURALLY UNREACHABLE on any real fixture under P-034's
+    stem-forward-only gate — a non-lead vocal is necessarily
+    backing_vocal, which goes forward ONLY at high energy, exactly where
+    the depth planner steps every masker-set instrument to midground
+    (disjoint by construction; the reviewer traced it independently and
+    confirmed "literally correct"). This was the P-034 buried-vocal
+    deferral resolved in the packet that owned it: either-side-forward,
+    both-sides-buried stays silent (depth-separated fabric), strictly
+    additive (every P-034 emission preserved string-identical).
+  - **★ THE MEASURED PAYOFF:** the chop classifies `vocal_percussive`
+    0.95 (td 0.805, crest 19.25 — 3-of-3 real physics; the manifest hint
+    alone = 1-of-3 = fail-closed 0.33); the stack `vocal_stack` 0.95
+    (width 0.795); 4 lead-free `vocal_band_masking` events (2 moderate
+    verse: overlaps 0.2191/0.1655; 2 info chorus, unconsumed).
+    **vocal_role_fit 65.0 (reference protects clarity) vs 85.0
+    (timbaland accepts blend); overalls 76.3 vs 60.9; the blend gate
+    worth exactly +0.7 at tim's authored 0.4 weight; tim's overall
+    reconstructs from the reference's measurements + exactly TWO
+    authored substitutions.** Groove axes read genuinely
+    (groove_coherence 99.4, beat_identity 63.6).
+  - **★ qa GREEN:** suite 741 → **754**; regression **68/68 → 93/93**
+    (+16 golden +9 invariants; the 1 inapplicable invariant correctly
+    reasoned); determinism 21 stems sha256-identical across double
+    generation; original 3 fixtures: git diff EMPTY + all pins
+    live-verified both producers; Commit-1 iso real worktree check; the
+    either-side-forward gate probed with raw synthetics across 6 depth
+    combinations; safety grep none.
+  - **★ reviewer PASS (no must-fix):** deferral pre-authorization
+    honored; synthesis honest (the audio delivers the physics; the hint
+    is legitimate provenance idiom); differential arithmetic verified
+    independently (60.9 exact; +0.7 counterfactual; ref immovable at
+    weight 0); ALL pin flips honor their pre-registrations (the P-032i
+    flip RETAINS the no-delta guard on the original 3); pin-to-3 the
+    right call (scope-explosion avoidance; nothing load-bearing runs
+    only via shared parametrization); golden accounting verified (+25 =
+    16+9); both sabotages caught (gate-revert → 7 failures; floor-raise
+    → 6 failures). **Codex NOT available — single-model review.**
+  - **★ Deferral decisions (the three P-034 deferrals, decided against
+    real data):** (a) risk-exclusion KEPT (4 real events, all risks
+    0.0); (b) info-filter KEPT (the chorus infos are the lead-acceptable
+    controlled-overlap shape; consuming them would protect non-lead
+    vocals stricter than the lead — consumption-invariance pinned); (c)
+    buried-vocal FLIPPED (Commit-1, the packet that owned it).
+  - **★ NEXT = the STALE-CONFIDENCE-MAP FIX packet, JUMPING THE RESIDUE
+    QUEUE per the reviewer's recommendation, STAGED not active:** both
+    profiles' "limited" vocal-blend entries claim a dormancy that is now
+    FALSE on both halves — contained (no scorer consumes the map) but
+    reputationally first for a product whose brand is honest labeling.
+    Shape: rewrite the two entries' reasons to live status + re-judge
+    levels; consciously flip the verbatim map pins for exactly those
+    entries; byte-identical everywhere else. Then the residue sweeps.
+    Receipt: `build-os/receipts/P-035-vocal-chop-groove-differential.md`.
+
+- **★★★ P-034 LANDS THE ANALYZER CAPACITY — packet 1 of the
+  user-approved two-packet analyzer-extension plan: the masking analyzer now
+  emits NON-LEAD vocal-band masking events under the NEW classification
+  `vocal_band_masking`, consumed ONLY by the vocal-role surface
+  (`_vocal_role_fit` re-keyed + the profile blend gate), plus the
+  `creative.py` `_lead_masked` identity-derived fix. FIXTURE-INERT BY
+  CONSTRUCTION — all 3 fixtures have no non-lead vocal stems, so zero new
+  events fire on real data: byte-identical everywhere, 68/68 with goldens
+  untouched, and the P-032i no-vocal-blend-delta pin STANDS (its conscious
+  flip belongs to P-035). qa GREEN + reviewer PASS (no must-fix).
+  Last-closed = P-034.**
+  - **Single commit `e52bc1a`** on parent `b53d51c` (active-packet
+    confirmation), atop `db13d08` (P-030 close) — 8 files, 920+/48−
+    (masking_analyzer, doctrine_engine `_vocal_role_fit` re-keying, the
+    creative.py fix, the NEW 36-test `tests/test_vocal_band_masking.py`,
+    conscious P-032f edits in test_vocal_type/test_vocal_blend_policy, 2
+    stub updates). HEAD IS Commit-1 → green in isolation (real worktree:
+    741 + 68/68). **PUSHED to the dev branch, NOT merged** (merge base
+    `58d21dd` = PR #17).
+  - **★ qa GREEN:** suite 705 → **741** (+36); regression **68/68,
+    goldens untouched** (zero golden paths in the diff); byte-identity
+    independent — full artifact trees, BOTH producers × 3 fixtures,
+    base vs HEAD → `diff -r` EMPTY (12 dirs × 29 artifacts; overalls
+    73.8 / 70.7 / 74.3 and 68.4 / 52.6 / 49.7; zero `vocal_band_masking`
+    traces; fixture summaries keep the exact pre-P-034 key set); 52
+    QA-authored live checks (17 emission, 11 consumption, 7 creative-fix
+    incl. "The Voice" and the adversarial lead-named event, 17
+    immovability); the P-032i pin passes with source byte-identical;
+    conscious-edit audit — only `_mask`→`_vband` on non-lead events,
+    every assertion line verbatim; safety grep + observational language
+    clean.
+  - **★ reviewer PASS (no must-fix):** the emission mirror honest
+    (floors/gates/rounding identical; the hoisted `VOCAL_MASKER_IDENTITIES`
+    string-for-string; the lead pathway unchanged); the four design calls
+    endorsed (vocal-vs-vocal exclusion with the deliberate asymmetry —
+    backing vocals still mask the LEAD; lead-never-a-masker; severity capped
+    at moderate with the info tier; the conditional summary key);
+    fixture-inertness verified STRUCTURAL (every non-lead record:
+    vocal_type None, identity non-backing_vocal); the re-keying single-basis
+    with the old lead-free-bad_masking shape DEAD and pinned both sides; the
+    creative fix plural-safe (set-based lead names, consistent with
+    doctrine_engine's) and identity-consistent with the classifier; every
+    immovable filter read; TWO sabotages caught (lead-as-subject → 5
+    failures; widened _emotional_hierarchy filter → both immovability
+    pins fail). **Codex NOT available — single-model review.**
+  - **★ Design calls recorded (each pinned as a named
+    conscious-extension point):** forward-only emission (the buried-vocal
+    reading deferred to P-035); no `per_track_masking_risk` contribution
+    (P-035 revisits); the `severity != "info"` consumption filter (P-035
+    re-examines against real data).
+  - **★★ REVIEWER ADVISORY — BINDING ON THE P-035 FIXTURE
+    DESIGN:** the staged fixture as literally described ("lead + chopped
+    vocal + backing stack + beat") would emit **ZERO** `vocal_band_masking`
+    events — vocal-vs-vocal pairs are excluded and beat identities are
+    not in the masker set. **The 4th fixture MUST include at least one
+    forward/heard masker-set member (synth/keys/guitar) with vocal-presence
+    overlap ≥ 0.1 against the chop/stack**, or the blend differential
+    stays dormant. A fixture-design requirement created by a sound design
+    call.
+  - **Out-of-scope reported:** `logic_action_generator.py:38` substring
+    match (gated behind bad_masking, unreachable by the new classification
+    — → the residue sweep); the P-032i pin's now-capacity-stale
+    docstring line (left verbatim; the revisit belongs to P-035).
+  - **★ NEXT = P-035 (the 4th fixture + the real-data vocal-blend
+    differential — the arc's payoff), STAGED not active:** carries the
+    binding fixture-design requirement above + the P-034 deferrals to
+    revisit (per-track risk, the info-tier filter, the buried-vocal
+    reading) + the conscious flips it owns (the P-032i no-vocal-blend-delta
+    pin + its docstring; the regression count moves off 68/68 consciously;
+    the new golden; the new fixture pins). Then the residue sweeps.
+    Receipt: `build-os/receipts/P-034-vocal-band-masking-capacity.md`.
+
+- **★★★ P-030 PAYS THE CONTRACT DEBT — the artifact-contract migration
+  (THE USER'S DECISION: Option A + memory.py dual-read + verdict filename
+  fold-in): `halee_score` → `physical_space_score`, `ramone_score` →
+  `emotional_hierarchy_score`, the internal/evidence/profile keys renamed
+  (`baselines.physical_space`, `penalty_coeffs.emotional_hierarchy`, the
+  evidence keys, the reference taste-triangle dim), and
+  `halee_ramone_mix_verdict.md` → `mix_verdict.md` (neutral). CLEAN BREAK
+  for public artifacts — NO emitted aliases; the ONLY compatibility
+  carve-out is memory.py's read-only dual-read of persisted local history.
+  The long-standing pre-second-producer debt (kept verbatim since P-025 by
+  the byte-identical-first decision) is PAID: a producer-agnostic engine
+  emits a producer-agnostic contract. qa GREEN + reviewer PASS (no
+  must-fix). Last-closed = P-030.**
+  - **Two commits (the user-specified split) on parent `8f14d4d`
+    (active-packet confirmation), atop `8f1cbe4` (P-033 close):** `21c0ab0`
+    (Commit-1 — product surfaces, 18 files: engine, both producer JSONs,
+    creative, mix_planner, memory.py dual-read, regression invariant read,
+    cli, all 3 renderers, both schemas, pipeline filename, validator,
+    README) + `0c7885e` (Commit-2 — 36 files: SCORE_KEYS, 3 consciously
+    regenerated goldens, 5 samples + the verdict-sample rename, 26 updated
+    test files, the NEW 17-test `tests/test_contract_migration.py`).
+    **PUSHED to the dev branch, NOT merged** (merge base `58d21dd` =
+    PR #17).
+  - **★ THE HEALTH BAR HELD (qa's core proof):** all 90 numeric values
+    across the 6 producer×fixture runs IDENTICAL under the old→new key map
+    (ref 73.8 / 70.7 / 74.3; tim 68.4 / 52.6 / 49.7; every component);
+    golden diff = EXACTLY the two key-rename lines per fixture, values
+    byte-identical; same differential behavior.
+  - **★ qa GREEN:** suite 678 → **705** (678 + 27 migration instances);
+    regression **68/68 vs the REGENERATED goldens**; the 17 required
+    migration tests pass with 4 live spot-checks; memory dual-read all 4
+    behaviors (reads new; reads seeded OLD-key history with the file NOT
+    rewritten; prefers new on conflicting values; never writes old);
+    Commit-1 boundary honest: 136 failed / 542 passed at `21c0ab0`, every
+    failure classified into the 6 old-key-pin signature classes, ZERO
+    behavioral; grep proof clean (old keys ONLY in memory.py:27,32-33 + the
+    migration test); renderer labels producer-agnostic live; safety grep
+    none.
+  - **★ reviewer PASS (no must-fix):** the strongest no-judgment-change
+    proof — a MECHANICAL canonical-rename comparison over the entire diff
+    (apply old→new to every removed line, diff vs the added lines): zero
+    numeric constants changed, zero reordering; component_scores insertion
+    order preserved (positions 1-2); the reference emotion_dims renamed IN
+    PLACE with untouched blend arithmetic; value identity independently
+    verified; sabotage (re-emit `halee_score`) caught by 10 failing
+    instances across 4 migration tests; pins updated-never-weakened (the
+    dashboard pin STRENGTHENED: new-present AND old-absent);
+    COWORK_CONTRACT.md names no score keys (no doc miss); schemas validated
+    live. **Codex NOT available — single-model review.**
+  - **★ REVIEWER JUDGMENT CALL (recorded):** producer-named search-mode
+    NAMES (`halee_depth`/`ramone_vocal_truth`) survive as profile-internal
+    vocabulary and appear in emitted creative.json as VALUES — ruled
+    in-scope-as-built (the user's rule bans old-KEY aliases; mode names are
+    values; profile vocabulary is protected) — routed to the residue sweep
+    with two siblings: the engine action prose (“Halee naturalism…” /
+    “Ramone-style…”) and the warning doctrine tags
+    (`phil_ramone_vocal_centrality`/`phil_ramone_restraint`) emitted as
+    values.
+  - **★ NEXT (the remaining post-merge backlog):** **the analyzer
+    extension** (non-lead vocal-band events → makes the vocal-blend policy
+    live on real data + the creative.py:98 name-match fix) → **the residue
+    sweeps** (now including the three producer-named-VALUE surfaces from
+    the reviewer's judgment call, plus the standing items:
+    liveness-docstring sweep ~8 files; validation tightening incl.
+    search_modes non-empty + default_creative_mode structural checks + the
+    NaN-floor guard; lead_names derivation; the shared groove dict;
+    loop_deconstruct literal-kind; cli.py --mode help text; fallback-reason
+    wording; duplicate-areas/extra-keys). Staged-not-active. Receipt:
+    `build-os/receipts/P-030-artifact-contract-migration.md`.
+
+- **★★★ P-033 WIRES `_default_creative_mode` TO THE PRODUCER PROFILE — the
+  FIRST post-merge packet; the authored creative-mode table is now a REAL
+  product lever. The P-032h reviewer's trajectory finding is FIXED exactly
+  as pre-registered: the P-032i negative pin flipped through its designed
+  conscious-edit path (`test_no_intimate_mode_selection_..._unreachable` →
+  `test_intimate_mode_selection_..._reachable`, STRENGTHENED — adds the
+  direct resolver assertion + observed==authored + no-fallback-key). ★ THE
+  PRODUCER LEVER IS NOW COMPLETE END-TO-END: doctrine weights + polarity +
+  creative judgment values + creative MODE + both gates + confidence
+  rendering — all profile-authored and live. qa GREEN + reviewer PASS (no
+  must-fix). Last-closed = P-033.**
+  - **Single commit `b6c840c`** on parent `cb5fc8b` (active-packet
+    confirmation), atop the merged default `58d21dd` (PR #17). 6 files,
+    +476/−48 (3 product: `pipeline.py`, `creative.py`,
+    `creative_renderer.py`; 3 test: the NEW 18-test
+    `tests/test_creative_mode_wiring.py` + the two pin files). HEAD IS
+    Commit-1 → green in isolation. **PUSHED to the dev branch (restarted
+    from `58d21dd` = the PR #17 merge — the NEW merge base for landing
+    decisions is `58d21dd`), NOT merged.**
+  - **The wiring:** `_default_creative_mode(intent, profile=None)` reads the
+    PASSED profile's `default_creative_mode` table (module `_DEFAULT_PROFILE`
+    when None — the P-029 consumer pattern; the only product call site
+    threads the loaded profile at pipeline.py:279).
+    `run_creative_engine(result, mode=None, profile=None)`: mode=None → the
+    profile's declared default; a requested mode absent from `search_modes`
+    → `_profile_default_mode` (the declared default_mode if present in
+    search_modes, else the FIRST authored mode — deterministic,
+    profile-owned) + a conditional `search_mode_fallback` evidence key
+    (present ONLY when fired; renderer zero-bytes-when-absent). The dead
+    `"dramatic_contrast"` default on `generate_variants` removed. **No
+    functional hardcoded mode name remains in product Python.**
+  - **★ THE PAYOFF (qa verified LIVE, before/after):** timbaland on
+    `simple_vocal_piano_song`: base `dramatic_contrast` (the silent
+    fallback) → HEAD **`conservative`** (the authored intimate mode, bias
+    "preserve groove identity, subtle moves, protect the pocket").
+    Timbaland's artifact deltas = EXACTLY simple's creative.json (mode+bias
+    lines) + creative_report.md. dense/splice → `dramatic_contrast` both
+    sides (its authored default_mode).
+  - **★ qa GREEN:** suite 660 → **678** (+18); regression **68/68**;
+    reference byte-identity with neutral inputs → ZERO deltas
+    (73.8 / 70.7 / 74.3; resolved modes identical; base hardcoded map ==
+    reference authored table == OLD_HARDCODED_MAP string-for-string,
+    checked against the ACTUAL base code); fallback safety incl. qa's own
+    adversarial no-dramatic_contrast profile → no KeyError; sabotage
+    (re-hardcoded map) → 6 guards FAIL / reference byte-identity green; the
+    still-binding vocal-blend pin MD5-identical; safety grep clean.
+  - **★ reviewer PASS (no must-fix):** wiring/threading correct per-call
+    (sabotage-verified BOTH directions); resolution order proven; json.load
+    dict-order determinism confirmed (py3.11); the `generate_variants`
+    default genuinely dead (the function body never reads it); the KeyError
+    closed on all three paths — P-033 NARROWED the crash surface (pre-P-033
+    ANY profile lacking `dramatic_contrast` crashed; now only a zero-mode
+    profile would). **Codex NOT available — single-model review.**
+  - **★ REVIEWER CALIBRATION NOTE (record for future arc language):** the
+    mode lever is real but THIN — `search_mode` steers the reported
+    mode/bias surface; `generate_variants` does NOT yet fork on it. P-033
+    makes the authored mode REACHABLE and VISIBLE; a future packet would
+    make modes reshape variant generation/scoring. Do NOT over-claim
+    behavioral steering.
+  - **★ NEXT (the USER'S CONFIRMED post-merge order):** **P-030 (rename the
+    halee/ramone dims off the producer names)** — touches 2 producer JSONs
+    + `tests/test_differential_proof.py` + the
+    goldens/memory/renderers/schemas that pin `halee_score`/`ramone_score`
+    (the long-standing compat-shim caution: output keys are pinned by
+    golden snapshots + regression SCORE_KEYS + renderers — needs a
+    DELIBERATE compat/migration strategy, presented as a PLAN before
+    building) → the analyzer extension → the verdict-filename cosmetic →
+    the residue sweeps. Staged-not-active. Receipt:
+    `build-os/receipts/P-033-default-creative-mode-wiring.md`.
 
 - **★★★ P-032i CLOSES THE TIMBALAND SUB-ARC — the permanent, binding
   differential proof is IN THE SUITE. THE SUB-ARC IS COMPLETE: P-032e ✓ →
@@ -211,10 +545,11 @@
     (`tests/test_differential_proof.py`, 21 tests), 772+/0−, ZERO product
     code. HEAD IS Commit-1 → green in isolation. **Pushed to the dev
     branch, NOT merged.**
-  - **★★ THE STANDING DECISION NOW OPEN — the next USER-GATED boundary:
-    the ENTIRE EPIC (P-025 → P-032i + P-031, everything since `e79426a`
-    = PR #16) sits on the dev branch, pushed, awaiting the USER'S MERGE
-    GO.** Nothing merges/deploys without it.
+  - **★★ ✓ RESOLVED (2026-07-02, before P-033): the USER GAVE THE MERGE
+    GO — the ENTIRE EPIC (P-025 → P-032i + P-031, everything since
+    `e79426a` = PR #16) MERGED to default via PR #17, merge commit
+    `58d21dd` (the NEW merge base).** (Was: the standing USER-GATED
+    boundary — the epic sat on the dev branch awaiting the merge go.)
   - **The proof's headline facts (permanent):**
     - **THE PLAN REVERSAL (iconic scenario):** reference winner `loop_A`
       85.9 (chop / high-pass / narrow / push = DECONSTRUCT) vs timbaland

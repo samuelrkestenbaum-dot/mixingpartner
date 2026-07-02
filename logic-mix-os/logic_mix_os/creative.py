@@ -92,10 +92,27 @@ _NUDGE_TABLE = _DEFAULT_PROFILE.nudge_table
 
 
 def _lead_masked(result) -> bool:
-    """Verbatim predicate from the original context adjustment (creative.py:252-255):
-    any masking event classified ``bad_masking`` whose elements include the vocal."""
+    """The masked-LEAD evidence predicate (P-012 row-0 / the P-032g Ramone
+    gate): any masking event classified ``bad_masking`` whose elements include
+    the LEAD VOCAL — matched by the IDENTITY-derived lead name(s)
+    (``instrument_identity == "lead_vocal"`` on ``result.records``).
+
+    P-034 fix: the original predicate matched any element containing the
+    SUBSTRING "vocal". With the analyzer now emitting non-lead vocal-band
+    events (their own ``vocal_band_masking`` classification, lead never
+    present) — and lead-free vocal-NAMED elements possible in principle —
+    the match is identity-derived, so a non-lead vocal event can never
+    falsely trigger the masked-lead gate. On the lead-inclusive
+    ``bad_masking`` events the analyzer actually emits, the two predicates
+    agree: byte-identical on every fixture."""
+    lead_names = {
+        r["name"] for r in result.records
+        if r.get("instrument_identity") == "lead_vocal"
+    }
+    if not lead_names:
+        return False
     return any(
-        e["classification"] == "bad_masking" and any("vocal" in el.lower() for el in e["elements"])
+        e["classification"] == "bad_masking" and any(el in lead_names for el in e["elements"])
         for e in result.masking_report.get("events", [])
     )
 
@@ -334,7 +351,10 @@ def _variant(vid, problem, kind, name, hypothesis, changes, tracks, risk, valida
     }
 
 
-def generate_variants(problem: Dict, result, mode: str = "dramatic_contrast") -> List[Dict]:
+# P-033: the ``mode`` parameter is carried for the engine's call shape but is
+# not read by the variant builders below; its old ``"dramatic_contrast"``
+# default was the last hardcoded reference-mode name in product code.
+def generate_variants(problem: Dict, result, mode: Optional[str] = None) -> List[Dict]:
     records = result.records
     supporting = _supporting_elements(records)
     loops = [r["name"] for r in records if r["source_kind"] in LOOP_SAMPLE_KINDS]
@@ -423,7 +443,7 @@ def score_variant(variant: Dict, result, profile: Optional[ProducerProfile] = No
     promotion_cap = prof.creative_promotion_cap
 
     base = dict(kind_scores.get(variant["kind"], kind_scores["depth_cleanup"]))
-    numeric = ["technical", "halee", "ramone", "contrast", "vocal_belief", "excitement", "taste"]
+    numeric = ["technical", "physical_space", "emotional_hierarchy", "contrast", "vocal_belief", "excitement", "taste"]
 
     # Base overall on the curated dims, before any context nudge — this is the
     # axis governance ranks on, and the axis the cap binds.
@@ -474,8 +494,8 @@ def score_variant(variant: Dict, result, profile: Optional[ProducerProfile] = No
 
     scores = {
         "technical_score": base["technical"],
-        "halee_score": base["halee"],
-        "ramone_score": base["ramone"],
+        "physical_space_score": base["physical_space"],
+        "emotional_hierarchy_score": base["emotional_hierarchy"],
         "section_contrast_score": base["contrast"],
         "vocal_belief_score": base["vocal_belief"],
         "listener_excitement_score": base["excitement"],
@@ -505,7 +525,26 @@ def winning_variant(scored_variants: List[Dict]) -> Optional[Dict]:
     }
 
 
-def run_creative_engine(result, mode: str = "dramatic_contrast",
+def _profile_default_mode(prof: ProducerProfile) -> str:
+    """The profile's own deterministic default search mode (P-033).
+
+    Resolution, in order — every candidate comes from the profile's OWN
+    authored tables, so no reference mode name is hardcoded here:
+
+    1. the profile's declared ``default_creative_mode["default_mode"]``, when
+       that name exists in its ``search_modes`` — the mode the profile itself
+       authors as its non-intimate default;
+    2. otherwise the FIRST mode in the profile's ``search_modes`` (JSON
+       authoring order, preserved by the loader) — a mode the profile is
+       guaranteed to actually carry.
+    """
+    declared = prof.default_creative_mode.get("default_mode")
+    if declared in prof.search_modes:
+        return declared
+    return next(iter(prof.search_modes))
+
+
+def run_creative_engine(result, mode: Optional[str] = None,
                         profile: Optional[ProducerProfile] = None) -> Dict:
     # P-029: per-call producer selection. Search modes, the per-variant scoring
     # profile, and the philosophy line are read from the PASSED ``profile``
@@ -513,8 +552,18 @@ def run_creative_engine(result, mode: str = "dramatic_contrast",
     # engine. Passing ``profile is None`` reproduces the reference byte-for-byte.
     prof = profile or _DEFAULT_PROFILE
     search_modes = prof.search_modes
-    if mode not in search_modes:
-        mode = "dramatic_contrast"
+    # P-033: mode resolution is profile-owned. ``mode=None`` resolves to the
+    # profile's own default (for the reference that is ``dramatic_contrast`` —
+    # the same name this signature used to default to, so no-mode callers are
+    # byte-identical). A REQUESTED mode absent from the profile's
+    # ``search_modes`` resolves to the same profile-owned default and the
+    # substitution is surfaced in ``search_mode_fallback`` below (present ONLY
+    # when it happened — the ``score_nudges`` evidence-key discipline). The
+    # old hardcoded ``"dramatic_contrast"`` substitute dereferenced a mode a
+    # profile may not carry (a KeyError for any profile without that name).
+    requested = mode
+    if mode is None or mode not in search_modes:
+        mode = _profile_default_mode(prof)
     problems = detect_creative_problems(result)
     branches: List[Dict] = []
     for problem in problems:
@@ -527,7 +576,7 @@ def run_creative_engine(result, mode: str = "dramatic_contrast",
             "variants": variants,
             "winning": winning_variant(variants),
         })
-    return {
+    out = {
         "search_mode": mode,
         "search_mode_bias": search_modes[mode]["bias"],
         "static_baseline": static_baseline(result),
@@ -543,3 +592,16 @@ def run_creative_engine(result, mode: str = "dramatic_contrast",
         ],
         "philosophy": prof.philosophy,
     }
+    # P-033: observational fallback evidence — present ONLY when a requested
+    # mode was substituted (never on the ``mode=None`` default resolution, and
+    # never when the requested mode exists in the profile's table).
+    if requested is not None and requested != mode:
+        out["search_mode_fallback"] = {
+            "requested_mode": requested,
+            "resolved_mode": mode,
+            "reason": (
+                f"requested mode {requested!r} is not one of this profile's "
+                f"search_modes; resolved to the profile's own default {mode!r}"
+            ),
+        }
+    return out

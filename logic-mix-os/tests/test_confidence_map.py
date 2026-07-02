@@ -11,7 +11,7 @@ FIRST-CLASS, machine-readable profile data.
 
 **THIS PACKET IS LABELING, NEVER JUDGMENT.** No scorer reads the map; no
 score, variant, promotion, or recommendation may change. The byte-identity
-guards below (both mandated surfaces, all 3 fixtures, regression 68/68) are
+guards below (both mandated surfaces, all 3 fixtures, regression 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture)) are
 the health metric.
 
 Guard groups, mirroring the packet:
@@ -30,7 +30,7 @@ Guard groups, mirroring the packet:
    ``high`` claims are checked against machine facts (live axes weighted;
    agnostic axes weight-0 as stated).
 3. **Byte-identity, BOTH surfaces** — doctrine pins (73.8 / 70.7 / 74.3 + all
-   14 components) + the full creative base capture + regression 68/68.
+   14 components) + the full creative base capture + regression 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture).
 4. **No-aliasing** — every load parses fresh; mutating a loaded map can never
    reach a reload or the module default.
 5. **Observational language** — zero judgment words across every authored
@@ -249,7 +249,7 @@ def test_high_claims_are_consistent_with_the_machine_facts():
     p = load_profile("halee_ramone")
     w = p.doctrine["weights"]
 
-    for live in ("halee_score", "ramone_score", "vocal_centrality_score",
+    for live in ("physical_space_score", "emotional_hierarchy_score", "vocal_centrality_score",
                  "depth_hierarchy_score", "section_contrast_score",
                  "static_mix_score", "dynamic_mix_score"):
         assert w[live] > 0, f"{live} claimed live/weighted but weight is 0"
@@ -313,14 +313,14 @@ def test_creative_surface_byte_identical_to_base_capture(analyzed):
                 assert v["scores"].get("score_nudges") == nudges, (name, vid)
 
 
-def test_regression_still_sixty_eight_of_sixty_eight():
+def test_regression_still_green_full_corpus():
     """The golden corpus regression — categorical fingerprint + the original
-    score keys — still passes 68/68 with the map authored."""
+    score keys — still passes 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture) with the map authored."""
     from logic_mix_os.regression import run_regression_suite
 
     report = run_regression_suite(_ROOT / "fixtures")
-    assert report["tests_run"] == 68
-    assert report["passed"] == 68
+    assert report["tests_run"] == 93
+    assert report["passed"] == 93
     assert report["failed"] == 0
 
 
@@ -408,7 +408,7 @@ def test_verdict_markdown_renders_the_authored_entries(analyzed):
     order (high before limited before deferred)."""
     for name in FIXTURE_NAMES:
         res = analyzed[name]
-        md = markdown_renderer.render_halee_ramone_verdict(res.mix_plan, res.doctrine_score)
+        md = markdown_renderer.render_mix_verdict(res.mix_plan, res.doctrine_score)
         assert "## Confidence" in md
         for entry in AUTHORED_MAP:
             assert entry["area"] in md, (name, entry["area"])
@@ -449,7 +449,7 @@ def test_rendering_liveness_a_passed_profiles_map_renders_not_the_defaults(tmp_p
     dsj = json.loads((tmp_path / "doctrine_score.json").read_text(encoding="utf-8"))
     assert dsj["confidence"] == synthetic_map
 
-    md = (tmp_path / "halee_ramone_mix_verdict.md").read_text(encoding="utf-8")
+    md = (tmp_path / "mix_verdict.md").read_text(encoding="utf-8")
     assert "synthetic groove interpretation" in md
     assert "authored for the liveness proof" in md
     assert "synthetic hook reading" in md
@@ -462,9 +462,9 @@ def test_rendering_liveness_a_passed_profiles_map_renders_not_the_defaults(tmp_p
 def test_verdict_section_is_data_driven_absent_key_absent_section():
     """A doctrine_score WITHOUT the key (a pre-P-031 artifact) renders no
     Confidence section — the section is data-driven, never hardcoded."""
-    md = markdown_renderer.render_halee_ramone_verdict({}, {})
+    md = markdown_renderer.render_mix_verdict({}, {})
     assert "## Confidence" not in md
-    md_empty = markdown_renderer.render_halee_ramone_verdict({}, {"confidence": []})
+    md_empty = markdown_renderer.render_mix_verdict({}, {"confidence": []})
     assert "## Confidence" not in md_empty
 
 
@@ -472,7 +472,7 @@ def test_renderer_reads_never_mutates(analyzed):
     res = analyzed["dense_chorus_with_loops"]
     ds_before = copy.deepcopy(res.doctrine_score)
     mp_before = copy.deepcopy(res.mix_plan)
-    markdown_renderer.render_halee_ramone_verdict(res.mix_plan, res.doctrine_score)
+    markdown_renderer.render_mix_verdict(res.mix_plan, res.doctrine_score)
     assert res.doctrine_score == ds_before
     assert res.mix_plan == mp_before
 
@@ -484,7 +484,7 @@ def test_rendered_level_order_is_the_closed_vocabulary_single_source():
     ds = {"confidence": [
         {"area": "only-deferred area", "level": "deferred", "reason": "stated"},
     ]}
-    md = markdown_renderer.render_halee_ramone_verdict({}, ds)
+    md = markdown_renderer.render_mix_verdict({}, ds)
     assert "**Deferred**" in md
     assert "**High**" not in md
     assert "**Limited**" not in md

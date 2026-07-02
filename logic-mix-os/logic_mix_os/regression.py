@@ -27,8 +27,8 @@ from .pipeline import ProjectAnalysis, analyze
 from .project import load_manifest
 
 SCORE_KEYS = [
-    "halee_score",
-    "ramone_score",
+    "physical_space_score",
+    "emotional_hierarchy_score",
     "vocal_centrality_score",
     "depth_hierarchy_score",
     "section_contrast_score",
@@ -223,7 +223,7 @@ def doctrine_invariants(result: ProjectAnalysis) -> List[Dict]:
     #     Only meaningful for genuinely dense arrangements (high fraction AND a
     #     real number of forward elements) — a 3-track song is not "crowded".
     crowded = fg_frac > 0.6 and forward_count >= 5
-    ok10 = (not crowded) or (result.doctrine_score.get("halee_score", 100) < 80) \
+    ok10 = (not crowded) or (result.doctrine_score.get("physical_space_score", 100) < 80) \
         or any(e["classification"] == "width_crowding" for e in events)
     add("hierarchy_flagged_when_crowded", crowded, ok10, True, "crowded arrangement not penalised")
 

@@ -8,13 +8,13 @@
   },
 
   "kind_scores": {
-    "width_bloom":      {"technical": 82, "halee": 78, "ramone": 79, "contrast": 91, "vocal_belief": 74, "excitement": 88, "taste": 80, "translation": "medium", "mono": "medium"},
-    "subtractive_drop": {"technical": 85, "halee": 88, "ramone": 86, "contrast": 88, "vocal_belief": 86, "excitement": 78, "taste": 86, "translation": "low", "mono": "low"},
-    "vocal_ride":       {"technical": 84, "halee": 84, "ramone": 92, "contrast": 70, "vocal_belief": 92, "excitement": 70, "taste": 88, "translation": "low", "mono": "low"},
-    "drum_room_bloom":  {"technical": 80, "halee": 89, "ramone": 78, "contrast": 82, "vocal_belief": 76, "excitement": 83, "taste": 82, "translation": "low", "mono": "low"},
-    "loop_deconstruct": {"technical": 83, "halee": 87, "ramone": 84, "contrast": 78, "vocal_belief": 85, "excitement": 72, "taste": 84, "translation": "low", "mono": "low"},
-    "depth_cleanup":    {"technical": 84, "halee": 90, "ramone": 85, "contrast": 72, "vocal_belief": 86, "excitement": 66, "taste": 85, "translation": "low", "mono": "low"},
-    "intimacy_pass":    {"technical": 82, "halee": 85, "ramone": 88, "contrast": 72, "vocal_belief": 90, "excitement": 64, "taste": 87, "translation": "low", "mono": "low"}
+    "width_bloom":      {"technical": 82, "physical_space": 78, "emotional_hierarchy": 79, "contrast": 91, "vocal_belief": 74, "excitement": 88, "taste": 80, "translation": "medium", "mono": "medium"},
+    "subtractive_drop": {"technical": 85, "physical_space": 88, "emotional_hierarchy": 86, "contrast": 88, "vocal_belief": 86, "excitement": 78, "taste": 86, "translation": "low", "mono": "low"},
+    "vocal_ride":       {"technical": 84, "physical_space": 84, "emotional_hierarchy": 92, "contrast": 70, "vocal_belief": 92, "excitement": 70, "taste": 88, "translation": "low", "mono": "low"},
+    "drum_room_bloom":  {"technical": 80, "physical_space": 89, "emotional_hierarchy": 78, "contrast": 82, "vocal_belief": 76, "excitement": 83, "taste": 82, "translation": "low", "mono": "low"},
+    "loop_deconstruct": {"technical": 83, "physical_space": 87, "emotional_hierarchy": 84, "contrast": 78, "vocal_belief": 85, "excitement": 72, "taste": 84, "translation": "low", "mono": "low"},
+    "depth_cleanup":    {"technical": 84, "physical_space": 90, "emotional_hierarchy": 85, "contrast": 72, "vocal_belief": 86, "excitement": 66, "taste": 85, "translation": "low", "mono": "low"},
+    "intimacy_pass":    {"technical": 82, "physical_space": 85, "emotional_hierarchy": 88, "contrast": 72, "vocal_belief": 90, "excitement": 64, "taste": 87, "translation": "low", "mono": "low"}
   },
 
   "risk_penalty": {"low": 0, "medium": 6, "high": 14},
@@ -82,7 +82,7 @@
 
   "taste_triangle": {
     "intimate_width_penalty": 30,
-    "emotion_dims": ["ramone_score", "listener_excitement_score", "vocal_belief_score"]
+    "emotion_dims": ["emotional_hierarchy_score", "listener_excitement_score", "vocal_belief_score"]
   },
 
   "veto_thresholds": {
@@ -93,8 +93,8 @@
 
   "doctrine": {
     "weights": {
-      "halee_score": 1.0,
-      "ramone_score": 1.2,
+      "physical_space_score": 1.0,
+      "emotional_hierarchy_score": 1.2,
       "vocal_centrality_score": 1.2,
       "depth_hierarchy_score": 1.0,
       "section_contrast_score": 1.0,
@@ -109,18 +109,18 @@
       "vocal_role_fit_score": 0
     },
     "baselines": {
-      "halee": 86.0,
-      "ramone": 86.0
+      "physical_space": 86.0,
+      "emotional_hierarchy": 86.0
     },
     "penalty_coeffs": {
-      "halee": {
+      "physical_space": {
         "forward_threshold": 0.6,
         "forward_occupancy": 70,
         "felt_forward": 4,
         "width_crowding": 6,
         "loop_foregrounded": 6
       },
-      "ramone": {
+      "emotional_hierarchy": {
         "no_lead": 35,
         "vocal_masked": 6,
         "decorative_threshold": 0.4,

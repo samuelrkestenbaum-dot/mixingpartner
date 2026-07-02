@@ -27,11 +27,14 @@ place:
     present and within bounds on every recommendation in both plans; no
     destructive pattern anywhere; the masked-lead override reaches the plan
     surface under BOTH profiles.
-(d) **The two binding negative expectations, pre-registered:** NO vocal-blend
-    delta (the inert-blend corollary, pinned); NO intimate-mode-selection
-    claim (timbaland's authored ``intimate_mode`` is unreachable today — the
-    pipeline hardcodes the reference's mode names; pinned honestly, not
-    patched here).
+(d) **The pre-registered expectations, both now FLIPPED exactly as
+    pre-registered:** the vocal-blend delta, dormant through P-034 and made
+    REAL by P-035's ``vocal_chop_groove`` fixture — no delta on the original
+    three fixtures (still no non-lead vocal stems), a pinned 65.0-vs-85.0
+    delta on the 4th; and the intimate-mode pin, FLIPPED by P-033 — the
+    pipeline reads the profile's own ``default_creative_mode`` table, so
+    timbaland's authored ``intimate_mode`` ("conservative") is reachable end
+    to end.
 (e) **Per-profile confidence rendering at the differential level** — each
     producer's artifacts carry ITS OWN map (8 entries vs 11), the maps differ
     where authored, and neither voice leaks into the other's artifacts.
@@ -78,7 +81,7 @@ LOOP_FIXTURES = ("dense_chorus_with_loops", "splice_loop_problem")
 # The 14 component axes (shared measurement substrate; each profile weights
 # them its own way).
 COMPONENT_KEYS = [
-    "halee_score", "ramone_score", "vocal_centrality_score",
+    "physical_space_score", "emotional_hierarchy_score", "vocal_centrality_score",
     "depth_hierarchy_score", "section_contrast_score", "static_mix_score",
     "dynamic_mix_score", "beat_identity_score", "negative_space_score",
     "groove_coherence_score", "rhythmic_surprise_score",
@@ -165,6 +168,11 @@ def differential_snapshot(ref_result, tim_result) -> dict:
 # needs an iconic-reading loop — proven in its own test below); the VALUES
 # around them — overall, the lowest components, the search mode on the
 # intimate fixture — carry the authored divergence.
+# PIN-TO-3, a conscious P-035 decision: this suite stays keyed to the
+# ORIGINAL three fixtures (conftest.FIXTURE_NAMES — the byte-identity
+# corpus). The 4th fixture's own side-by-side snapshot, component picture
+# and divergence audit are pinned in tests/test_vocal_chop_groove.py; only
+# the blend-corollary pin below reads it (the flip that packet owns).
 EXPECTED_SNAPSHOT = {
     "simple_vocal_piano_song": {
         "halee_ramone": {
@@ -185,7 +193,7 @@ EXPECTED_SNAPSHOT = {
                 ("loop_context_score", 50.0),
             ],
             "winning_variants": {"vocal_belief": "vocal_A"},
-            "search_mode": "dramatic_contrast",
+            "search_mode": "conservative",
         },
     },
     "dense_chorus_with_loops": {
@@ -278,7 +286,7 @@ def rendered(analyzed, tim_analyzed, tmp_path_factory):
 
 
 def _verdict(rendered, producer, name) -> str:
-    return (rendered[(producer, name)] / "halee_ramone_mix_verdict.md").read_text(
+    return (rendered[(producer, name)] / "mix_verdict.md").read_text(
         encoding="utf-8"
     )
 
@@ -296,7 +304,7 @@ def test_verdict_markdown_differs_meaningfully(name, rendered):
     documents: each carries ITS OWN overall + diagnosis + confidence voice —
     while the shared measurement rows stay identical (one substrate, two
     judgments). The rendered verdict filename/title is producer-independent
-    today (``halee_ramone_mix_verdict.md`` — the renderer's fixed name), so
+    today (``mix_verdict.md`` — the renderer's fixed name), so
     the difference is IN the document, where the judgment lives."""
     ref_md = _verdict(rendered, "halee_ramone", name)
     tim_md = _verdict(rendered, "timbaland", name)
@@ -309,9 +317,10 @@ def test_verdict_markdown_differs_meaningfully(name, rendered):
     assert f"Overall mix readiness {tim_overall}/100." not in ref_md
     assert f"Overall mix readiness {ref_overall}/100." not in tim_md
 
-    # The shared-measurement row renders identically under both: ramone_score
-    # is 86.0 on every fixture and is a COMPONENT (measurement), not judgment.
-    shared_row = "| Phil Ramone (vocal centrality) | 86.0/100 |"
+    # The shared-measurement row renders identically under both:
+    # emotional_hierarchy_score is 86.0 on every fixture and is a COMPONENT
+    # (measurement), not judgment.
+    shared_row = "| Emotional hierarchy / vocal belief | 86.0/100 |"
     assert shared_row in ref_md and shared_row in tim_md
 
     # Each verdict speaks its own confidence voice (the full per-entry check
@@ -330,9 +339,10 @@ def test_verdict_markdown_differs_meaningfully(name, rendered):
 def test_plan_surfaces_differ_where_the_value_systems_diverge(analyzed, tim_analyzed):
     """The SPECIFIC known plan-surface differences, pinned:
 
-    * intimate fixture — different SEARCH MODES (ramone_vocal_truth vs the
-      dramatic_contrast fallback; the honest mechanics of the fallback are
-      obligation (d)'s intimate-mode pin below);
+    * intimate fixture — different SEARCH MODES, each profile's OWN authored
+      ``intimate_mode`` (ramone_vocal_truth vs conservative — P-033 wired the
+      ``default_creative_mode`` table per call; obligation (d)'s pin below
+      carries the reachability proof);
     * loop fixtures — the loop branch scores from each profile's own curated
       tables (loop_B 85.3 vs 86.7; loop_A 81.9 vs 80.7);
     * dense chorus_lift_A (width_bloom, width-crowded evidence) — each profile
@@ -341,7 +351,7 @@ def test_plan_surfaces_differ_where_the_value_systems_diverge(analyzed, tim_anal
       score UP vs the reference (82.1 > 81.4): the physical drum-room lift
       matters more to a groove-first value system."""
     assert analyzed["simple_vocal_piano_song"].creative["search_mode"] == "ramone_vocal_truth"
-    assert tim_analyzed["simple_vocal_piano_song"].creative["search_mode"] == "dramatic_contrast"
+    assert tim_analyzed["simple_vocal_piano_song"].creative["search_mode"] == "conservative"
 
     for name in LOOP_FIXTURES:
         ref_loop = _loop_branch(analyzed[name].creative)
@@ -639,25 +649,31 @@ def test_masked_lead_override_reaches_the_plan_surface_under_both(analyzed):
 
 
 # =========================================================================== #
-# (d) THE BINDING NEGATIVE EXPECTATIONS — pre-registered, asserted honestly.
+# (d) THE PRE-REGISTERED EXPECTATIONS — the blend corollary FLIPPED LIVE by
+# P-035, and the intimate-mode pin FLIPPED by P-033, each as pre-registered.
 # =========================================================================== #
-def test_no_vocal_blend_delta_the_inert_blend_corollary(analyzed, tim_analyzed):
-    """PRE-REGISTERED NEGATIVE EXPECTATION 1 — NO vocal-blend delta.
+def test_vocal_blend_delta_the_corollary_flipped_live(
+    analyzed, tim_analyzed, chop_groove_analyzed
+):
+    """FORMERLY PRE-REGISTERED NEGATIVE EXPECTATION 1 (the inert-blend
+    corollary), CONSCIOUSLY FLIPPED BY P-035 — exactly the packet the old
+    pin named as its legitimate breaker ("a future analyzer-extension packet
+    that emits non-lead vocal-band masking events... a delta would then be
+    expected"). P-034 delivered the capacity (fixture-inert); P-035's
+    ``vocal_chop_groove`` fixture — the first with non-lead vocal stems —
+    plus its Commit-1 buried-vocal decision made the events real, so the
+    two authored policies finally, measurably differ. Both halves pinned:
 
-    ``vocal_role_fit_score`` is IDENTICAL across the two producers on all
-    three fixtures (85.0 everywhere), even though timbaland OPTS IN to
-    acceptable blend and the reference opts out.
-
-    WHY (the P-032f inert-blend corollary, both profiles' own ``limited``
-    confidence entries state it): the masking analyzer emits vocal-band
-    events only against the LEAD on real exported-stem data, so the
-    blend-eligible path (qualified vocal_percussive / vocal_stack events)
-    never receives an event to reinterpret — the policy is mechanically live
-    but dormant. A FUTURE ANALYZER-EXTENSION PACKET that emits non-lead
-    vocal-band masking events is the change that would legitimately break
-    this pin; when it lands, this test must be revisited as a conscious
-    decision (the two profiles' policies genuinely differ, so a delta would
-    then be expected)."""
+    * THE ORIGINAL THREE FIXTURES — still NO delta: they have no non-lead
+      vocal stems, so ``vocal_role_fit_score`` stays 85.0 under both
+      producers (the byte-identity half, unmoved);
+    * THE 4TH FIXTURE — the delta EXISTS: the reference reads the chop and
+      stack's masking involvements under full clarity protection (65.0);
+      timbaland's authored opt-in (confidence floor 0.75; both stems read
+      at 0.95) accepts the same involvements as blend (85.0). The full
+      real-data proof — events, evidence, attributability, the +0.7 overall
+      worth of the gate under timbaland's 0.4 weight — lives in
+      tests/test_vocal_chop_groove.py."""
     assert load_profile("timbaland").vocal_blend_policy["acceptable_blend"] is True
     assert load_profile("halee_ramone").vocal_blend_policy["acceptable_blend"] is False
     for name in FIXTURE_NAMES:
@@ -665,42 +681,45 @@ def test_no_vocal_blend_delta_the_inert_blend_corollary(analyzed, tim_analyzed):
         tim_v = tim_analyzed[name].doctrine_score["vocal_role_fit_score"]
         assert ref_v == tim_v == 85.0, (name, ref_v, tim_v)
 
+    ref_v = chop_groove_analyzed["halee_ramone"].doctrine_score["vocal_role_fit_score"]
+    tim_v = chop_groove_analyzed["timbaland"].doctrine_score["vocal_role_fit_score"]
+    assert ref_v == 65.0
+    assert tim_v == 85.0
+    assert ref_v != tim_v
 
-def test_no_intimate_mode_selection_the_authored_mode_is_unreachable(
+
+def test_intimate_mode_selection_the_authored_mode_is_reachable(
     analyzed, tim_analyzed
 ):
-    """PRE-REGISTERED NEGATIVE EXPECTATION 2 — NO intimate-mode-selection
-    claim. The CURRENT behavior, pinned honestly (the P-032h reviewer
-    trajectory finding):
+    """FORMERLY PRE-REGISTERED NEGATIVE EXPECTATION 2, FLIPPED BY P-033 —
+    exactly the packet the old pin named as its legitimate breaker. The
+    authored behavior, now pinned:
 
     * timbaland AUTHORS ``default_creative_mode.intimate_mode:
-      "conservative"`` and "conservative" IS a real mode in its own table —
-      the authored intent exists and is structurally valid;
-    * but ``pipeline._default_creative_mode`` HARDCODES the reference's mode
-      names (pipeline.py:285-290): the intimate fixture's truth resolves to
-      "ramone_vocal_truth" whatever the selected profile authored;
-    * timbaland has no mode of that name, so ``run_creative_engine`` falls
-      back to the hardcoded "dramatic_contrast" (creative.py:516-517) — the
-      authored intimate mode is UNREACHABLE end to end.
-
-    The right change is a FUTURE ENGINE PACKET (P-016-family, recorded in the
-    P-032h receipt/residue) that wires ``_default_creative_mode`` to the
-    profile's ``default_creative_mode`` map, byte-identical for the
-    reference; the same packet must also address the hardcoded
-    "dramatic_contrast" fallback (a KeyError risk for a future profile
-    lacking that mode name). This packet does NOT patch the pipeline; this
-    pin flips the day that packet lands."""
+      "conservative"`` and "conservative" IS a real mode in its own table;
+    * ``pipeline._default_creative_mode`` reads the PASSED profile's
+      ``default_creative_mode`` table (P-033): the intimate fixture's truth
+      resolves to "ramone_vocal_truth" under the reference (its table
+      coincides string-for-string with the old hardcoded map — the
+      byte-identity construction) and to "conservative" under timbaland;
+    * each resolved name is real in its own profile's ``search_modes``, so
+      NO fallback fires on either producer (the hardcoded
+      "dramatic_contrast" substitute is gone; the profile-owned fallback
+      rule and its KeyError-scenario guard live in
+      test_creative_mode_wiring.py)."""
     tim = load_profile("timbaland")
     assert tim.default_creative_mode["intimate_mode"] == "conservative"
     assert "conservative" in tim.search_modes
 
     intent = analyzed["simple_vocal_piano_song"].project.intent
     assert pipeline._default_creative_mode(intent) == "ramone_vocal_truth"
+    assert pipeline._default_creative_mode(intent, tim) == "conservative"
     assert "ramone_vocal_truth" not in tim.search_modes
 
     observed = tim_analyzed["simple_vocal_piano_song"].creative["search_mode"]
-    assert observed == "dramatic_contrast"
-    assert observed != tim.default_creative_mode["intimate_mode"]
+    assert observed == "conservative"
+    assert observed == tim.default_creative_mode["intimate_mode"]
+    assert "search_mode_fallback" not in tim_analyzed["simple_vocal_piano_song"].creative
 
 
 # =========================================================================== #

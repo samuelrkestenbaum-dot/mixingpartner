@@ -91,7 +91,7 @@ def _mutated_profile(**doctrine_over) -> ProducerProfile:
     ref = load_profile("halee_ramone")
     doctrine = copy.deepcopy(ref.doctrine)
     for path, value in doctrine_over.items():
-        # path like "baselines.halee" or "weights.halee_score"
+        # path like "baselines.physical_space" or "weights.physical_space_score"
         keys = path.split(".")
         node = doctrine
         for k in keys[:-1]:
@@ -102,23 +102,24 @@ def _mutated_profile(**doctrine_over) -> ProducerProfile:
 
 @pytest.mark.parametrize("name", FIXTURE_NAMES)
 def test_doctrine_baseline_is_a_live_lever(name):
-    """Lowering the ``halee`` baseline by exactly 20 in a second profile must lower
-    the real ``halee_score`` by EXACTLY 20 vs the reference — proving
-    ``analyze(producer=…)`` threads the doctrine profile to ``_halee``, not ignoring
-    it. The ``_halee`` penalties are additive on top of the baseline and the
+    """Lowering the ``physical_space`` baseline by exactly 20 in a second profile
+    must lower the real ``physical_space_score`` by EXACTLY 20 vs the reference —
+    proving ``analyze(producer=…)`` threads the doctrine profile to
+    ``_physical_space``, not ignoring
+    it. The ``_physical_space`` penalties are additive on top of the baseline and the
     reference score has clamp headroom on every fixture (58.0 / 67.6 / 81.3, all in
     (20, 100)), so a -20 baseline shifts the whole score down by exactly 20. This
     FAILS if the profile is accepted but ignored (the score would not move)."""
     ref = _analyze(name, producer="halee_ramone")
-    lowered = _analyze(name, producer=_mutated_profile(**{"baselines.halee": 66.0}))
+    lowered = _analyze(name, producer=_mutated_profile(**{"baselines.physical_space": 66.0}))
 
-    ref_halee = ref.doctrine_score["halee_score"]
-    low_halee = lowered.doctrine_score["halee_score"]
+    ref_ps = ref.doctrine_score["physical_space_score"]
+    low_ps = lowered.doctrine_score["physical_space_score"]
     # Guard the arithmetic: the reference must have clamp headroom so the -20
     # baseline is not swallowed by the [0,100] clamp — true for all fixtures.
-    assert 20.0 < ref_halee < 100.0
-    assert round(ref_halee - low_halee, 1) == 20.0
-    # Overall readiness weights halee_score in, so it moves strictly down too.
+    assert 20.0 < ref_ps < 100.0
+    assert round(ref_ps - low_ps, 1) == 20.0
+    # Overall readiness weights physical_space_score in, so it moves strictly down too.
     assert (lowered.doctrine_score["overall_mix_readiness_score"]
             < ref.doctrine_score["overall_mix_readiness_score"])
 
@@ -134,7 +135,7 @@ def test_kind_score_is_a_live_lever():
     # Push every numeric dim of vocal_ride to 100 (and translation to the
     # zero-penalty class) so its overall_score is maximal in the boosted profile.
     boosted_cell = dict(kind_scores["vocal_ride"])
-    for dim in ("technical", "halee", "ramone", "contrast",
+    for dim in ("technical", "physical_space", "emotional_hierarchy", "contrast",
                 "vocal_belief", "excitement", "taste"):
         boosted_cell[dim] = 100
     boosted_cell["translation"] = "low"

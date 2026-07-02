@@ -4,6 +4,19 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
+## ★★ NEXT PACKET — THE STALE CONFIDENCE_MAP ENTRIES (NEW at P-035 close; JUMPS THE RESIDUE QUEUE per the reviewer's recommendation)
+
+- **Both profiles' "limited" vocal-blend `confidence_map` entries claim a
+  dormancy that is now FALSE on both halves** — P-034 delivered the
+  capacity and P-035 made it LIVE on real data (the `vocal_chop_groove`
+  fixture; vocal_role_fit 65.0 vs 85.0). Contained — no scorer consumes
+  the map — but reputationally FIRST for a product whose brand is honest
+  labeling. **Shape (the reviewer's recommended follow-up):** rewrite the
+  two entries' reasons to live status + re-judge levels; consciously flip
+  the verbatim map pins (TIM_AUTHORED_MAP + halee_ramone's) for exactly
+  those entries; byte-identical everywhere else. Small packet. STAGED in
+  `build-os/packets/active_packet.md`, NOT active until confirmed.
+
 ## ★ RESOLVED USER DECISION (was: "read this first")
 
 - **Deeper creative scoring (`creative.py::_KIND_SCORES`) — RESOLVED via P-012
@@ -108,8 +121,10 @@
     (kill-switches, risk classes, non-destructive, masked-lead) across both,
     (d) the binding expectations — deltas from
     groove/space/low-end/loop/surprise; NO vocal-blend delta (the inert
-    corollary below); NO intimate-mode-selection claim (the NEW
-    `default_creative_mode` inertness finding below), (e) the confidence
+    corollary below); NO intimate-mode-selection claim (the
+    `default_creative_mode` inertness finding — ✓ since RESOLVED by P-033,
+    the pin flipped via its designed conscious-edit path), (e) the
+    confidence
     maps render correctly per-profile; byte-identical discipline for the
     reference throughout — ALL PROVEN AND LANDED as the permanent 21-test
     `tests/test_differential_proof.py` (single commit `010734d`, 772+/0−,
@@ -197,7 +212,25 @@
     axes). A future ANALYZER-EXTENSION packet could emit non-lead vocal-band
     events to make the gate live on real data — when that packet opens, note
     that `creative.py:98`'s name-based "vocal" match is a LATENT MISFIRE
-    RISK there.
+    RISK there. **★ UPDATE (P-034 close, 2026-07-02): the
+    analyzer-extension capacity is HALF delivered — P-034 emits non-lead
+    vocal-band events under the NEW classification `vocal_band_masking`
+    (consumed ONLY by the vocal-role surface) and FIXED creative.py:98's
+    latent misfire risk (identity-derived lead names), but all 3 current
+    fixtures have no non-lead vocal stems, so the gate is STILL
+    fixture-inert on real data — the LIVE half (the 4th fixture + the
+    real-data blend differential) belongs to P-035, which carries a BINDING
+    reviewer fixture-design advisory: the fixture MUST include at least one
+    forward/heard masker-set member (synth/keys/guitar) with vocal-presence
+    overlap ≥ 0.1 against the chop/stack, or the differential stays
+    dormant.** **★★ UPDATE (P-035 close, 2026-07-02): ✓ FULLY RESOLVED —
+    the corollary's whole chain is closed: policy (P-032f, dormant) →
+    capacity (P-034, inert) → LIVE, MEASURED, ATTRIBUTABLE (P-035). The
+    4th fixture `vocal_chop_groove` honors the binding advisory (guitar
+    masker; overlaps 0.2191/0.1655 ≥ 0.1); the blend gate finally differs
+    on real data — vocal_role_fit 65.0 vs 85.0, overalls 76.3 vs 60.9,
+    the gate worth exactly +0.7 at tim's authored 0.4 weight. Receipt:
+    `build-os/receipts/P-035-vocal-chop-groove-differential.md`.**
   - **★ NEW (P-032f — cosmetic ride-alongs):** (1) NaN-floor self-guard — add
     `0.0 <= floor <= 1.0` (qa suggested `math.isfinite`) in the raw
     `accepted_blend_under_policy` gate (the loader validates; the raw gate
@@ -222,25 +255,29 @@
     identical; the pins came out STRONGER — five deferred entries
     verbatim-pinned vs four). Record this as the STANDARD route for
     pin-guarded content changes.
-  - **★★ NEW (P-032h reviewer TRAJECTORY FINDING, P-016-family —
-    non-blocking, recorded prominently): `default_creative_mode` is
-    pipeline-INERT.** `pipeline._default_creative_mode` (pipeline.py:285-290)
-    hardcodes the REFERENCE's mode names, so timbaland's authored
-    `intimate_mode: "conservative"` is UNREACHABLE — intimate material under
-    timbaland falls back to `dramatic_contrast` (creative.py:516). Invisible
-    until the second producer existed. **Right fix: a FUTURE ENGINE PACKET
-    wires `_default_creative_mode` to the profile (byte-identical for the
-    reference) — NOT an in-JSON change.** Ride-along: the hardcoded
-    `"dramatic_contrast"` fallback would KeyError for a future profile
-    lacking that mode name. **BINDING on P-032i: must NOT claim
-    intimate-mode selection as a live profile lever.**
-  - **★ NEW (P-032h — scope note):** P-030 (rename the halee/ramone dims off
-    the producer names) now touches TWO producer JSONs (`halee_ramone.json`
-    + `timbaland.json`) — still orthogonal, slightly wider.
-  - **★ NEW (P-032i reviewer — scope note):** P-030's expected-touch list
-    now ALSO includes `tests/test_differential_proof.py` (the differential
-    pins reference the halee/ramone dimension names) — THREE files: two
-    producer JSONs + the differential-proof test file.
+  - **✓ RESOLVED by P-033 (2026-07-02) — (was: ★★ P-032h reviewer
+    TRAJECTORY FINDING, P-016-family): `default_creative_mode` was
+    pipeline-INERT.** `pipeline._default_creative_mode` hardcoded the
+    REFERENCE's mode names, so timbaland's authored `intimate_mode:
+    "conservative"` was UNREACHABLE (intimate material under timbaland
+    silently fell back to `dramatic_contrast`), and the hardcoded fallback
+    risked a KeyError for a profile lacking that mode name. **P-033 wired
+    the table to the PASSED profile (byte-identical for the reference),
+    made the fallback profile-owned (declared default_mode if present in
+    search_modes, else the first authored mode) with a conditional
+    `search_mode_fallback` evidence key, and flipped the P-032i negative
+    pin through its designed conscious-edit path (STRENGTHENED). Timbaland's
+    authored intimate mode is now REACHABLE: `conservative` on
+    `simple_vocal_piano_song`.** Receipt:
+    `build-os/receipts/P-033-default-creative-mode-wiring.md`.
+  - **✓ DISCHARGED by P-030 (2026-07-02) — (was: ★ NEW P-032h — scope
+    note):** P-030 (rename the halee/ramone dims off the producer names)
+    touches TWO producer JSONs (`halee_ramone.json` + `timbaland.json`) —
+    it DID (both JSONs migrated in Commit-1 `21c0ab0`).
+  - **✓ DISCHARGED by P-030 (2026-07-02) — (was: ★ NEW P-032i reviewer —
+    scope note):** P-030's expected-touch list also includes
+    `tests/test_differential_proof.py` — it DID (migrated in Commit-2
+    `0c7885e`, among the 26 updated test files).
   - **★ NEW (P-032i — cosmetic):** two truthiness asserts in
     `tests/test_differential_proof.py` (`v["risk"] and v["validation"]`;
     `0 <= len(nxt)`) — tighten opportunistically on the next touch of that
@@ -253,6 +290,78 @@
     per the mandated stop-and-report behavior):** the verdict filename is
     producer-independent — the legitimizing change is a future
     verdict-filename cosmetic packet.
+  - **★ NEW (P-033 reviewer — validation gaps, → the future
+    validation-sweep packet):** `_validate` lacks (a) a NON-EMPTY check on
+    `search_modes` — a zero-mode profile would StopIteration in the
+    first-authored-mode fallback (NARROWED vs pre-P-033, where ANY profile
+    lacking `dramatic_contrast` crashed with KeyError; not a regression) —
+    and (b) structural checks on `default_creative_mode`'s three keys
+    (intimate/dense/default), which the pipeline now hard-dereferences.
+    Both to the future validation-sweep packet.
+  - **★ NEW (P-033 — cosmetic):** `cli.py:446-447` `--mode` help text
+    hardcodes the REFERENCE's mode names (pre-existing; will go stale as
+    profiles diverge) — ties to the unstaged CLI-producer-exposure backlog.
+  - **★ NEW (P-033 — cosmetic):** the fallback `reason` wording says "the
+    profile's own default" even on the first-authored-mode branch — tighten
+    on the next touch of that code.
+  - **★★ NEW (P-033 reviewer CALIBRATION — record for future arc
+    language):** the creative-mode lever is real but THIN — `search_mode`
+    steers the reported mode/bias surface; `generate_variants` does NOT yet
+    fork on it. P-033 makes the authored mode REACHABLE and VISIBLE; a
+    future packet would make modes reshape variant generation/scoring. Do
+    NOT over-claim behavioral steering.
+  - **★★ NEW (P-030 reviewer JUDGMENT CALL — residue-sweep candidates,
+    explicitly NOT contract keys):** three producer-named-VALUE surfaces
+    survive the migration — (1) the search-mode NAMES
+    (`halee_depth`/`ramone_vocal_truth`), profile-internal vocabulary that
+    appears in emitted creative.json as VALUES; (2) the engine action prose
+    ("Halee naturalism…"/"Ramone-style…"); (3) the warning doctrine tags
+    (`phil_ramone_vocal_centrality`/`phil_ramone_restraint`) emitted as
+    values. Ruled in-scope-as-built (the user's rule bans old-KEY aliases;
+    mode names are values; profile vocabulary is protected) — route to the
+    residue sweeps.
+  - **★ NEW (P-030 qa — cosmetic, self-healing):** stale gitignored .pyc
+    caches observed during the qa run — no action needed; they regenerate.
+  - **★ NEW (P-034 — residue-sweep candidate, same family as the
+    FIXED creative.py:98):** `logic_action_generator.py:38` uses a
+    name-based "vocal" substring match — gated behind `bad_masking`, so
+    UNREACHABLE by the new `vocal_band_masking` classification today; joins
+    the residue-sweep list (reported out-of-scope by the builder, the
+    mandated stop-and-report behavior).
+  - **★ NEW (P-034 — the three deferrals, each pinned in-code as a
+    named conscious-extension point; P-035 OWNS the revisits):** (1)
+    forward-only emission — the buried-vocal reading deferred to the
+    fixture that makes it real; (2) no `per_track_masking_risk`
+    contribution from the new classification (risk feeds track_analysis,
+    consumed broadly — revisit consciously); (3) the
+    `severity != "info"` consumption filter in `_vocal_role_fit` —
+    re-examine against real data. **✓ ALL THREE DECIDED by P-035
+    (2026-07-02), against the real data and pinned: (1) the buried-vocal
+    reading FLIPPED (Commit-1 `0b940c7` — either-side-forward; the
+    moderate tier was structurally unreachable under stem-forward-only);
+    (2) the risk-exclusion KEPT (4 real events, all risks 0.0); (3) the
+    info-filter KEPT (the chorus infos are the lead-acceptable
+    controlled-overlap shape; consuming them would protect non-lead
+    vocals STRICTER than the lead — consumption-invariance pinned).**
+  - **★ NEW (P-034 — cosmetic, deliberate):** the P-032i pin's
+    docstring line is now capacity-STALE (the analyzer CAN emit non-lead
+    vocal-band events; the current fixtures just never trigger it) —
+    left VERBATIM; the revisit belongs to P-035's conscious pin flip.
+    **✓ DISCHARGED by P-035 (2026-07-02) — the pin flipped exactly as
+    its docstring pre-registered: the no-delta guard RETAINED on the
+    original 3; the 65-vs-85 delta pinned on the 4th.**
+  - **★ NEW (P-035 — convention note, standing):** FIXTURE_NAMES /
+    EXPECTED_SNAPSHOT and every pinned-value suite are PINNED-TO-3 by
+    conscious decision (reviewer-endorsed: scope-explosion avoidance;
+    nothing load-bearing runs only via the shared parametrization — the
+    4th fixture's snapshot, component picture and divergence audit live
+    in `tests/test_vocal_chop_groove.py`). **Every future fixture needs
+    its own file or a conscious re-parametrization** — never silently
+    widen the shared parametrization.
+  - **★ NEW (P-035 — cosmetic):** the mechanically-repeated "(P-035
+    moved the corpus count consciously…)" parenthetical appears ~15×
+    across 10 files (the count-pin updates) — a future tidy pass; fold
+    into a doctrine/test-touching packet.
   - **★ LIVENESS-DOCSTRING OVERCLAIM (non-blocking — reviewer; NOW
     POTENTIALLY AN EIGHT-FILE FAMILY, fold ONE sweep):** the `liveness` test docstrings OVERCLAIM — a
     general hardcoded-constant sabotage is actually caught by the
@@ -368,8 +477,18 @@
     modules, so the per-module aliasing discipline still carries on the default path
     (carry-forward for P-032). Receipt:
     `build-os/receipts/P-029-parameterize-pipeline-by-per-call-producer-profile.md`.
-  - **P-030 — rename** the `halee` / `ramone` dimension names off the producer
-    names (they were kept verbatim in P-025 per the byte-identical-first decision).
+  - **P-030 — rename the `halee` / `ramone` dimension names off the producer
+    names: ✓ RESOLVED (2026-07-02 — the artifact-contract migration).** The
+    long-standing "rename dims before a second producer" caution (kept
+    verbatim since P-025 per the byte-identical-first decision) is PAID —
+    done AFTER, not before, per that strategy, and the migration proved
+    clean: `halee_score` → `physical_space_score`, `ramone_score` →
+    `emotional_hierarchy_score`, internal/evidence/profile keys renamed,
+    `halee_ramone_mix_verdict.md` → `mix_verdict.md`; clean break, NO
+    emitted aliases, memory.py read-only dual-read the only carve-out; all
+    90 numeric values identical under both producers; suite 705 / 68/68 vs
+    the regenerated goldens. Receipt:
+    `build-os/receipts/P-030-artifact-contract-migration.md`.
   - **P-031 — confidence framework: ✓ DONE (2026-07-02; scope USER-UPGRADED
     to PER-AREA at P-032f close):** the REQUIRED `confidence_map` (area /
     level ∈ {high, limited, deferred} / reason) is structurally validated (no
@@ -387,6 +506,12 @@
     differential proof). Receipt:
     `build-os/receipts/P-032h-author-timbaland-json.md`.
   - **P-033 — expose producer selection** (the user-facing selection surface).
+    **[NUMBERING SUPERSEDED (2026-07-02): the id P-033 was RE-USED for the
+    confirmed-and-now-✓-CLOSED `_default_creative_mode` wiring packet
+    (receipt: `build-os/receipts/P-033-default-creative-mode-wiring.md`).
+    Selection is already LIVE via `analyze(producer=…)`; any CLI exposure
+    remains UNSTAGED backlog (ties to the cli.py `--mode` help-text
+    residue above).]**
 
 - **★ FINDING A — SECONDARY PRODUCER-AESTHETIC CONSTANTS (reviewer, from P-025;
   deferred by design, NOT drift). ✓ NOW FULLY RESOLVED (governance ✓ P-027; doctrine
@@ -455,7 +580,12 @@
   profile to the exact key names in the runtime `scores` dict. Byte-identical and
   correct today, but **watch this coupling when P-028 generalizes scoring and when
   P-029 threads the profile per-call** — any rename/restructure of the score keys must
-  stay in lockstep with `emotion_dims`.
+  stay in lockstep with `emotion_dims`. **★ UPDATE (P-030 close): the
+  coupling HELD through the contract migration** — the reference
+  taste-triangle dim was renamed IN PLACE, in lockstep with the score-key
+  rename (`ramone_score` → `emotional_hierarchy_score`), with untouched
+  blend arithmetic (reviewer-verified). The coupling itself still exists —
+  keep watching on any future score-key change.
 
 - **★ CONFIRMED HONESTY / SOURCING POLICY — a STANDING product decision governing
   P-031 / P-032 (confirmed by the user).** hand-curated → high-confidence;

@@ -8,6 +8,14 @@ from typing import Dict
 def render_creative(creative: Dict) -> str:
     out = ["# Creative Experimentation", ""]
     out.append(f"**Search mode:** `{creative.get('search_mode')}` — {creative.get('search_mode_bias')}")
+    # P-033: the fallback evidence renders where the mode is reported — the
+    # key is present only when a requested mode was substituted, so this line
+    # emits zero bytes on every run whose mode resolved from the profile's own
+    # table.
+    fallback = creative.get("search_mode_fallback")
+    if fallback:
+        out.append("")
+        out.append(f"_{fallback['reason']}_")
     out.append("")
 
     svd = creative.get("static_vs_dynamic", {})

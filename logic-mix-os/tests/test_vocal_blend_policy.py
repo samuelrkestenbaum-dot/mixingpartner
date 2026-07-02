@@ -21,14 +21,22 @@ misclassification fails CLOSED toward vocal protection.
 WHERE THE RULE BITES (scouted honestly): masking-as-fault for a chop/stack
 vocal manifests in the ``vocal_role_fit`` doctrine axis — the ONE surface
 that reads a non-lead vocal's OWN masking involvement. Every OTHER
-manifestation of vocal-band masking in the engine (the ``_ramone`` /
+manifestation of vocal-band masking in the engine (the ``_emotional_hierarchy`` /
 ``_vocal_centrality`` penalties, the creative ``lead_masked`` nudges, the
 action-generator presence-band carve, per-track masking risk) is the
-MASKED-LEAD pathway — the current masking analyzer emits vocal-band events
-only against the lead — and the user's safety rails place that pathway
-beyond profile authority, so the gate cannot bite there BY DESIGN. Inside
-the axis the separation is structural: events including a lead stem belong
-to the lead reading and are never offered to the gate.
+MASKED-LEAD pathway — those consumers key on the lead-inclusive
+``bad_masking`` classification — and the user's safety rails place that
+pathway beyond profile authority, so the gate cannot bite there BY DESIGN.
+Inside the axis the separation is structural: events including a lead stem
+belong to the lead reading and are never offered to the gate.
+
+P-034 CONSCIOUS EDIT: the masking analyzer now emits NON-LEAD vocal-band
+events under their own classification (``vocal_band_masking``, lead never
+present), and the non-lead ``vocal_role_fit`` pathway keys on it. The
+synthetic events below construct that honest classification (``_vband``)
+instead of the lead-free ``bad_masking`` shape production code never emits;
+every assertion strength is held verbatim. Lead-inclusive events stay
+``bad_masking`` (``_mask``) — the lead pathway is untouched.
 
 THE SIX USER-MANDATED ADVERSARIAL ATTACKS (any success = must-fix) are each
 attempted below and must FAIL:
@@ -76,6 +84,7 @@ from test_vocal_type import (
     _piano,
     _rec,
     _stack,
+    _vband,
 )
 
 _ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -182,7 +191,7 @@ def test_attack_1_uncertain_never_blends_even_with_high_stated_confidence():
     assert accepted_blend_under_policy(uncertain, _policy(optin=True, floor=0.75)) is False
 
     c = _constants()
-    events = [_mask(uncertain["name"], "Synth Lead")]
+    events = [_vband(uncertain["name"], "Synth Lead")]
     score, ev = _vrf([_lead(), uncertain], events=events, policy=_policy(True))
     assert score == doctrine_engine._clamp(
         c["baseline"] + c["lead_forward_bonus"] - c["masked_penalty"])
@@ -246,7 +255,7 @@ def test_attack_3_halee_ramone_defaults_no_drift(analyzed):
         assert "vocal_blend_policy" not in blob
 
     # Flag-false policy == no policy at all, on a masked qualified chop.
-    events = [_mask("Vox Chops", "Synth Lead")]
+    events = [_vband("Vox Chops", "Synth Lead")]
     records = [_lead(), _chop()]
     assert _vrf(records, events=events, policy=None) == \
         _vrf(records, events=events, policy=prof.vocal_blend_policy)
@@ -260,7 +269,7 @@ def test_attack_5_below_threshold_never_blends():
     assert accepted_blend_under_policy(low, _policy(optin=True, floor=0.75)) is False
 
     c = _constants()
-    events = [_mask(low["name"], "Synth Lead")]
+    events = [_vband(low["name"], "Synth Lead")]
     score, ev = _vrf([_lead(), low], events=events, policy=_policy(True, 0.75))
     assert score == doctrine_engine._clamp(
         c["baseline"] + c["lead_forward_bonus"] - c["masked_penalty"])
@@ -278,7 +287,7 @@ def test_attack_6_hook_candidate_never_blends_without_explicit_authority():
     assert accepted_blend_under_policy(forced, _policy(optin=True)) is False
 
     c = _constants()
-    events = [_mask(hook["name"], "Synth Lead")]
+    events = [_vband(hook["name"], "Synth Lead")]
     score, ev = _vrf([_lead(), hook], events=events, policy=_policy(True))
     assert score == doctrine_engine._clamp(
         c["baseline"] + c["lead_forward_bonus"] - c["masked_penalty"])
@@ -297,7 +306,7 @@ def test_blend_applies_for_qualified_chop_and_stack_under_optin():
     for stem in (_chop(), _stack()):
         assert stem["vocal_type"] in BLEND_ELIGIBLE_TYPES
         assert accepted_blend_under_policy(stem, _policy(True, 0.75)) is True
-        events = [_mask(stem["name"], "Synth Lead")]
+        events = [_vband(stem["name"], "Synth Lead")]
         score, ev = _vrf([_lead(), stem], events=events, policy=_policy(True))
         assert score == doctrine_engine._clamp(c["baseline"] + c["lead_forward_bonus"])
         assert any(BLEND_LINE in e for e in ev)
@@ -320,7 +329,7 @@ def test_flag_alone_is_the_lever():
     masked_penalty, attributable to the authored decision alone."""
     c = _constants()
     records = [_lead(), _chop()]
-    events = [_mask("Vox Chops", "Synth Lead")]
+    events = [_vband("Vox Chops", "Synth Lead")]
     off, ev_off = _vrf(records, events=events, policy=_policy(False))
     on, ev_on = _vrf(records, events=events, policy=_policy(True))
     assert on - off == c["masked_penalty"]
@@ -331,17 +340,17 @@ def test_flag_alone_is_the_lever():
 def test_blend_liveness_through_score_doctrine():
     """The full wire: ``score_doctrine`` under two profiles differing ONLY
     in the flag (both weighting vocal_role_fit non-zero) — the axis and the
-    overall move; the lead-protection scorers (``_ramone`` /
+    overall move; the lead-protection scorers (``_emotional_hierarchy`` /
     ``_vocal_centrality``) are identical, policy-blind."""
     records = [_lead(), _chop()]
-    masking = {"events": [_mask("Vox Chops", "Synth Lead")]}
+    masking = {"events": [_vband("Vox Chops", "Synth Lead")]}
     off = doctrine_engine.score_doctrine(records, [], masking, None,
                                          profile=_blend_profile(False, weight=5.0))
     on = doctrine_engine.score_doctrine(records, [], masking, None,
                                         profile=_blend_profile(True, weight=5.0))
     assert on["vocal_role_fit_score"] > off["vocal_role_fit_score"]
     assert on["overall_mix_readiness_score"] > off["overall_mix_readiness_score"]
-    assert on["ramone_score"] == off["ramone_score"]
+    assert on["emotional_hierarchy_score"] == off["emotional_hierarchy_score"]
     assert on["vocal_centrality_score"] == off["vocal_centrality_score"]
 
 
@@ -371,7 +380,7 @@ def test_blend_never_relaxes_the_lead_reading_alongside_an_accepted_stem():
     the lead's penalty stands at full strength in both worlds."""
     c = _constants()
     records = [_lead(), _chop()]
-    events = [_mask("Lead Vocal", "Piano"), _mask("Vox Chops", "Synth Lead")]
+    events = [_mask("Lead Vocal", "Piano"), _vband("Vox Chops", "Synth Lead")]
     off, _ = _vrf(records, events=events, policy=_policy(False))
     on, ev_on = _vrf(records, events=events, policy=_policy(True))
     assert off == doctrine_engine._clamp(c["baseline"] - 2 * c["masked_penalty"])
@@ -382,13 +391,13 @@ def test_blend_never_relaxes_the_lead_reading_alongside_an_accepted_stem():
 
 def test_lead_protection_surfaces_do_not_read_the_policy():
     """Structural proof the policy cannot reach the other lead-protection
-    surfaces: neither ``_ramone`` nor ``_vocal_centrality`` (nor the creative
+    surfaces: neither ``_emotional_hierarchy`` nor ``_vocal_centrality`` (nor the creative
     ``_lead_masked`` predicate) accepts a blend-policy argument."""
     import inspect
 
     from logic_mix_os import creative
 
-    assert "blend_policy" not in inspect.signature(doctrine_engine._ramone).parameters
+    assert "blend_policy" not in inspect.signature(doctrine_engine._emotional_hierarchy).parameters
     assert "blend_policy" not in inspect.signature(doctrine_engine._vocal_centrality).parameters
     assert "blend_policy" not in inspect.signature(creative._lead_masked).parameters
 
@@ -434,7 +443,7 @@ def test_gate_and_axis_do_not_mutate_policy_records_or_profile():
     policy_before = copy.deepcopy(policy)
     records = [_lead(), _chop(), _stack()]
     records_before = copy.deepcopy(records)
-    events = [_mask("Vox Chops", "Synth Lead"), _mask("Lead Vocal", "BV Stack")]
+    events = [_vband("Vox Chops", "Synth Lead"), _mask("Lead Vocal", "BV Stack")]
     events_before = copy.deepcopy(events)
     doctrine = load_profile("halee_ramone").doctrine
     doctrine_before = copy.deepcopy(doctrine)
@@ -468,7 +477,7 @@ def test_blend_evidence_is_observational_zero_judgment_words():
     blend reading (and its clarity-protection counterpart) contains zero
     judgment words."""
     records = [_lead(), _chop(), _stack()]
-    events = [_mask("Vox Chops", "Synth Lead"), _mask("BV Stack", "Synth Lead")]
+    events = [_vband("Vox Chops", "Synth Lead"), _vband("BV Stack", "Synth Lead")]
     for policy in (_policy(True), _policy(False), None):
         _, ev = _vrf(records, events=events, policy=policy)
         blob = " ".join(ev).lower()

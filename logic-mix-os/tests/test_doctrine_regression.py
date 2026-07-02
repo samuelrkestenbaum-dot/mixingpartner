@@ -54,4 +54,4 @@ def test_specific_doctrine_protections(analyzed):
     # The dense arrangement must surface a hierarchy/crowding signal.
     dense = analyzed["dense_chorus_with_loops"]
     has_crowding = any(e["classification"] == "width_crowding" for e in dense.masking_report["events"])
-    assert has_crowding or dense.doctrine_score["halee_score"] < 80
+    assert has_crowding or dense.doctrine_score["physical_space_score"] < 80

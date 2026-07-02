@@ -21,7 +21,7 @@ Five guards, mirroring the packet:
 1. **Byte-identical** — for all 3 fixtures, ``analyze()`` (default halee_ramone)
    leaves every PRE-EXISTING component score (now 9) AND
    ``overall_mix_readiness_score`` unchanged vs the pinned base, and the golden
-   regression still reports 68/68. AND ``result.expanded["groove"]`` is
+   regression still reports 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture). AND ``result.expanded["groove"]`` is
    byte-unchanged vs the pinned base (the relocation is behavior-preserving).
 2. **No-re-run live-wire (THE P-016 GUARD)** — during a full ``analyze()``,
    ``analyze_groove`` is called EXACTLY ONCE (spy/patch a call counter) — proving
@@ -56,8 +56,8 @@ from logic_mix_os.doctrine.producer_profile import load_profile
 # the seven original components + beat_identity_score (P-032e) +
 # negative_space_score (P-032a). groove_coherence_score is appended after these.
 EXISTING_COMPONENT_KEYS = [
-    "halee_score",
-    "ramone_score",
+    "physical_space_score",
+    "emotional_hierarchy_score",
     "vocal_centrality_score",
     "depth_hierarchy_score",
     "section_contrast_score",
@@ -78,8 +78,8 @@ FIXTURE_NAMES = [
 # relocation must leave all of these byte-unchanged.
 BASE_COMPONENT_SCORES = {
     "simple_vocal_piano_song": {
-        "halee_score": 58.0,
-        "ramone_score": 86.0,
+        "physical_space_score": 58.0,
+        "emotional_hierarchy_score": 86.0,
         "vocal_centrality_score": 90.0,
         "depth_hierarchy_score": 40.0,
         "section_contrast_score": 100.0,
@@ -90,8 +90,8 @@ BASE_COMPONENT_SCORES = {
         "overall_mix_readiness_score": 73.8,
     },
     "dense_chorus_with_loops": {
-        "halee_score": 67.6,
-        "ramone_score": 86.0,
+        "physical_space_score": 67.6,
+        "emotional_hierarchy_score": 86.0,
         "vocal_centrality_score": 90.0,
         "depth_hierarchy_score": 65.3,
         "section_contrast_score": 82,
@@ -102,8 +102,8 @@ BASE_COMPONENT_SCORES = {
         "overall_mix_readiness_score": 70.7,
     },
     "splice_loop_problem": {
-        "halee_score": 81.3,
-        "ramone_score": 86.0,
+        "physical_space_score": 81.3,
+        "emotional_hierarchy_score": 86.0,
         "vocal_centrality_score": 90.0,
         "depth_hierarchy_score": 72.0,
         "section_contrast_score": 82,
@@ -204,17 +204,17 @@ def test_expanded_groove_is_behavior_preserving(analyzed):
         assert analyzed[name].expanded["groove"] == BASE_GROOVE[name]
 
 
-def test_regression_still_sixty_eight_of_sixty_eight():
+def test_regression_still_green_full_corpus():
     """The golden corpus regression — which pins ``doctrine_score`` — still passes
-    68/68 with the new axis wired in at weight 0."""
+    93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture) with the new axis wired in at weight 0."""
     from pathlib import Path
 
     from logic_mix_os.regression import run_regression_suite
 
     base = Path(__file__).resolve().parent.parent / "fixtures"
     report = run_regression_suite(base)
-    assert report["tests_run"] == 68
-    assert report["passed"] == 68
+    assert report["tests_run"] == 93
+    assert report["passed"] == 93
     assert report["failed"] == 0
 
 

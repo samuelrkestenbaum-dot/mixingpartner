@@ -12,7 +12,7 @@ honesty-labeled / safety-invariant**, and these are the guards for each word:
    honesty stamp (hand-curated-documented -> HIGH).
 2. **Byte-identity of the DEFAULT** — authoring a second JSON must not touch
    the reference path: the pinned doctrine surface (73.8 / 70.7 / 74.3 + all
-   14 components), the full creative base capture, and regression 68/68 all
+   14 components), the full creative base capture, and regression 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture) all
    hold on the DEFAULT producer.
 3. **THE DIFFERENTIAL IS ALIVE** — ``analyze(producer="timbaland")`` produces
    a DIFFERENT ``overall_mix_readiness_score`` on every fixture; on the loop
@@ -86,8 +86,8 @@ _TIMBALAND_PATH = _ROOT / "logic_mix_os" / "doctrine" / "producers" / "timbaland
 # never 100) carry deliberately MODERATED weights so the ceilings do not
 # systematically drag the weighted mean.
 TIM_WEIGHTS = {
-    "halee_score": 0.5,
-    "ramone_score": 0.7,
+    "physical_space_score": 0.5,
+    "emotional_hierarchy_score": 0.7,
     "vocal_centrality_score": 0.6,
     "depth_hierarchy_score": 0.5,
     "section_contrast_score": 1.2,
@@ -110,7 +110,7 @@ WEIGHTED_UP = (
     "section_contrast_score", "dynamic_mix_score", "vocal_role_fit_score",
 )
 RELAXED = (
-    "halee_score", "ramone_score", "vocal_centrality_score",
+    "physical_space_score", "emotional_hierarchy_score", "vocal_centrality_score",
     "depth_hierarchy_score", "static_mix_score",
 )
 
@@ -338,14 +338,14 @@ def test_default_creative_surface_unchanged(analyzed):
                 assert v["scores"].get("score_nudges") == nudges, (name, vid)
 
 
-def test_regression_still_sixty_eight_of_sixty_eight():
+def test_regression_still_green_full_corpus():
     """The golden corpus regression (which runs the DEFAULT producer) still
-    passes 68/68 with the second profile authored."""
+    passes 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture) with the second profile authored."""
     from logic_mix_os.regression import run_regression_suite
 
     report = run_regression_suite(_ROOT / "fixtures")
-    assert report["tests_run"] == 68
-    assert report["passed"] == 68
+    assert report["tests_run"] == 93
+    assert report["passed"] == 93
     assert report["failed"] == 0
 
 
@@ -417,8 +417,11 @@ def test_creative_emphasis_diverges_too(analyzed, timbaland_analyzed):
     """The creative judgment is profile-authored as well: on the dense loop
     fixture the subtraction move scores from TIMBALAND's curated table (86.7,
     not the reference's 85.3), and on the intimate fixture the search mode
-    resolves through timbaland's OWN mode table (no ``ramone_vocal_truth``
-    there — the documented fallback applies)."""
+    resolves through timbaland's OWN authored ``default_creative_mode`` table
+    to its ``intimate_mode`` ("conservative") — P-033 wired the table per
+    call, the pre-registered flip of the honest fallback this test pinned
+    at P-032h (``ramone_vocal_truth`` exists only in the reference's
+    table)."""
     tim_loop = _loop_branch(timbaland_analyzed["dense_chorus_with_loops"].creative)
     ref_loop = _loop_branch(analyzed["dense_chorus_with_loops"].creative)
     tim_b = _variant_by_id(tim_loop, "loop_B")["scores"]["overall_score"]
@@ -428,9 +431,10 @@ def test_creative_emphasis_diverges_too(analyzed, timbaland_analyzed):
     assert tim_b != ref_b
 
     assert analyzed["simple_vocal_piano_song"].creative["search_mode"] == "ramone_vocal_truth"
-    assert timbaland_analyzed["simple_vocal_piano_song"].creative["search_mode"] == "dramatic_contrast"
+    assert timbaland_analyzed["simple_vocal_piano_song"].creative["search_mode"] == "conservative"
     assert "ramone_vocal_truth" not in load_profile("timbaland").search_modes
-    assert "dramatic_contrast" in load_profile("timbaland").search_modes
+    assert load_profile("timbaland").default_creative_mode["intimate_mode"] == "conservative"
+    assert "conservative" in load_profile("timbaland").search_modes
 
 
 # --------------------------------------------------------------------------- #
@@ -722,7 +726,7 @@ def test_artifacts_render_timbalands_map_not_the_references(timbaland_analyzed, 
     dsj = json.loads((tmp_path / "doctrine_score.json").read_text(encoding="utf-8"))
     assert dsj["confidence"] == TIM_AUTHORED_MAP
 
-    md = (tmp_path / "halee_ramone_mix_verdict.md").read_text(encoding="utf-8")
+    md = (tmp_path / "mix_verdict.md").read_text(encoding="utf-8")
     assert "## Confidence" in md
     for entry in TIM_AUTHORED_MAP:
         assert entry["area"] in md, entry["area"]

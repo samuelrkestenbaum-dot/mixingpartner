@@ -39,7 +39,7 @@ from logic_mix_os.creative import (
 from logic_mix_os.governance import emotional_truth_lock, govern_branches
 
 
-_NUMERIC = ["technical", "halee", "ramone", "contrast", "vocal_belief", "excitement", "taste"]
+_NUMERIC = ["technical", "physical_space", "emotional_hierarchy", "contrast", "vocal_belief", "excitement", "taste"]
 
 # Verbatim evidence strings from the nudge table (the contract surface).
 # P-015: row-0 (lead_masked) was strengthened -8 -> -14 and its reason rewritten
@@ -54,18 +54,23 @@ ROW2_REASON = "vocal_belief -6: stereo image is already width-crowded"
 
 # --------------------------------------------------------------------------- #
 # Fake-result builders: only the masking_report["events"] shape score_variant
-# reads. An "event" needs classification + elements.
+# reads. An "event" needs classification + elements. (P-034: ``_lead_masked``
+# now derives the lead's NAME from record identity instead of a "vocal"
+# substring match, so the stub carries the one record field it reads.)
 # --------------------------------------------------------------------------- #
 def _event(classification, elements):
     return {"classification": classification, "elements": list(elements)}
 
 
 def _result(*events):
-    return SimpleNamespace(masking_report={"events": list(events)})
+    return SimpleNamespace(
+        records=[{"name": "Lead Vocal", "instrument_identity": "lead_vocal"}],
+        masking_report={"events": list(events)},
+    )
 
 
 def _lead_masked_event():
-    # bad_masking with an element containing "vocal" -> fires row 1.
+    # bad_masking including the lead record's identity-derived name -> fires row 1.
     return _event("bad_masking", ["Lead Vocal", "Rhythm Guitar"])
 
 
@@ -258,11 +263,11 @@ def test_overall_clamped_0_100_under_extreme_bases():
     # Patch _KIND_SCORES with a near-zero and a near-max profile, force nudges,
     # and confirm the [0,100] clamp still holds on the overall axis.
     extreme_low = dict(
-        technical=0, halee=0, ramone=0, contrast=0, vocal_belief=0,
+        technical=0, physical_space=0, emotional_hierarchy=0, contrast=0, vocal_belief=0,
         excitement=0, taste=0, translation="high", mono="low",
     )
     extreme_high = dict(
-        technical=100, halee=100, ramone=100, contrast=100, vocal_belief=100,
+        technical=100, physical_space=100, emotional_hierarchy=100, contrast=100, vocal_belief=100,
         excitement=100, taste=100, translation="low", mono="low",
     )
     saved = copy.deepcopy(_KIND_SCORES)

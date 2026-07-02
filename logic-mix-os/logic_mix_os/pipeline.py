@@ -49,6 +49,11 @@ from .project import Project
 from .renderers import checklist_renderer, creative_renderer, markdown_renderer
 from .renderers.html_dashboard import render_dashboard
 
+# P-033: the module-default profile for ``_default_creative_mode`` — the same
+# consumer pattern as creative.py / governance.py / doctrine_engine.py: passing
+# ``profile=None`` reads the reference, so no-profile callers are byte-identical.
+_DEFAULT_PROFILE = load_profile("halee_ramone")
+
 
 @dataclass
 class ProjectAnalysis:
@@ -271,7 +276,7 @@ def analyze(
     result.source_audits = audit_all(records)
 
     # Creative experimentation engine + governance / taste protection.
-    mode = creative_mode or _default_creative_mode(project.intent)
+    mode = creative_mode or _default_creative_mode(project.intent, profile)
     result.creative = run_creative_engine(result, mode, profile=profile)
     result.governance = run_governance(result, result.creative, taste_profile=_taste, profile=profile)
 
@@ -282,12 +287,22 @@ def analyze(
     return result
 
 
-def _default_creative_mode(intent: Dict) -> str:
-    """Pick a sensible search mode from the song's emotional truth."""
+def _default_creative_mode(intent: Dict, profile: Optional[ProducerProfile] = None) -> str:
+    """Pick a sensible search mode from the song's emotional truth.
+
+    P-033 (the P-029 pattern): the truth->mode map is read from the PASSED
+    profile's authored ``default_creative_mode`` table (default = the
+    reference), so ``analyze(producer=…)`` resolves each producer's OWN mode
+    names — timbaland's authored ``intimate_mode`` is reachable end to end.
+    The reference's authored table carries the same truth words and mode
+    names the old hardcoded map did (string for string), so the default path
+    resolves identically.
+    """
+    table = (profile or _DEFAULT_PROFILE).default_creative_mode
     truth = (intent.get("singular_emotional_truth", "") or "").lower()
-    if any(w in truth for w in ["intimate", "vulnerable", "conflicted", "ache", "quiet", "restrained", "composed"]):
-        return "ramone_vocal_truth"
-    return "dramatic_contrast"
+    if any(w in truth for w in table["intimate_truth_words"]):
+        return table["intimate_mode"]
+    return table["default_mode"]
 
 
 # --------------------------------------------------------------------------- #
@@ -344,7 +359,7 @@ def write_artifacts(result: ProjectAnalysis, out_dir: str | Path) -> List[str]:
     md_files = {
         "source_material_report.md": markdown_renderer.render_source_material_report(result.source_material),
         "track_identity_report.md": markdown_renderer.render_track_identity_report(result.track_identity),
-        "halee_ramone_mix_verdict.md": markdown_renderer.render_halee_ramone_verdict(result.mix_plan, result.doctrine_score),
+        "mix_verdict.md": markdown_renderer.render_mix_verdict(result.mix_plan, result.doctrine_score),
         "logic_action_checklist.md": checklist_renderer.render_logic_checklist(result.mix_plan),
         "next_pass_recommendations.md": markdown_renderer.render_next_pass(result.mix_plan["next_pass"], result.creative_hypotheses),
         # Bonus reports (not part of the required MVP set, but cheap and useful):
