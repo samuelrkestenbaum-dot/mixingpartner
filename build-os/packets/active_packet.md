@@ -4,9 +4,9 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** NONE ACTIVE — P-034 ✓ CLOSED by the archivist (2026-07-02).
-  The packet below is **STAGED, NOT active** — it does not open until the
-  orchestrator confirms it active (on the user's go).
+- **Status:** ACTIVE — P-035 confirmed by the orchestrator-in-chief
+  (2026-07-02; packet 2 of the two-packet plan the user approved with "Do
+  it"). Handed to builder.
 
 ## Last-closed
 
@@ -22,12 +22,12 @@
   NOT merged** (merge base `58d21dd` = PR #17). Receipt:
   `build-os/receipts/P-034-vocal-band-masking-capacity.md`.
 
-## Staged next (NOT active until the orchestrator confirms)
+## Active packet spec (confirmed)
 
 - **Packet id:** P-035
 - **Title:** the 4th fixture + the real-data vocal-blend differential — the
   arc's payoff (packet 2 of the two-packet plan).
-- **Scope (staged):**
+- **Scope:**
   1. **The 4th fixture** (`vocal_chop_groove`-style): lead + chopped vocal +
      backing stack + beat **+ at least one forward/heard masker-set
      instrument (synth/keys/guitar) with vocal-presence overlap ≥ 0.1
@@ -52,7 +52,7 @@
 
 ## Epic arc (post-merge backlog)
 
-**P-033 ✓ → P-030 ✓ → P-034 ✓ → P-035 (STAGED) →** the residue sweeps.
+**P-033 ✓ → P-030 ✓ → P-034 ✓ → P-035 (ACTIVE) →** the residue sweeps.
 
 ---
 _Cleared by the archivist at P-034 close (2026-07-02). One packet at a time.
