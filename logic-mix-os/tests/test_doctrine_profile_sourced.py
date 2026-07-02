@@ -97,6 +97,10 @@ def test_weights_value_pins():
         # static-vs-iconic — the hinge), weight 0 for the reference producer
         # (the byte-identical anchor).
         "loop_context_score": 0,
+        # P-032f — the producer-agnostic vocal_role_fit axis (vocal function:
+        # the engine detects, the profile authors masking philosophy), weight
+        # 0 for the reference producer (the byte-identical anchor).
+        "vocal_role_fit_score": 0,
     }
 
 

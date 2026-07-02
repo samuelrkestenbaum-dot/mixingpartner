@@ -240,7 +240,9 @@ def test_loop_context_appended_last_preserves_summation_order(analyzed):
         ds = analyzed[name].doctrine_score
         keys = [k for k in ds if k.endswith("_score") and k != "overall_mix_readiness_score"]
         assert keys[:12] == EXISTING_COMPONENT_KEYS
-        assert keys[-1] == "loop_context_score"
+        # P-032f appended vocal_role_fit_score after this axis, so the anchor
+        # is positional (index 12), no longer the tail.
+        assert keys[12] == "loop_context_score"
 
 
 def test_every_preexisting_component_score_is_byte_identical(analyzed):

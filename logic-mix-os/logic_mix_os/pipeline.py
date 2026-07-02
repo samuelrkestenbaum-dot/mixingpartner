@@ -32,6 +32,7 @@ from .analyzers.track_identity_detector import detect_track_identity
 from .analyzers.transition_quality_analyzer import analyze_transitions
 from .analyzers.translation_analyzer import analyze_translation
 from .analyzers.vocal_performance_analyzer import analyze_vocal
+from .analyzers.vocal_type_classifier import classify_vocal_type
 from .bridge.applescript_bridge import generate_applescript
 from .bridge.exporter import export_actions
 from .creative import run_creative_engine
@@ -123,7 +124,7 @@ def analyze(
         result.depth_map.append(depth)
         if metrics is not None:
             result.track_analysis.append({"track_id": track.track_id, "name": track.name, "metrics": metrics})
-            records.append({
+            record = {
                 "track_id": track.track_id,
                 "name": track.name,
                 "instrument_identity": ident["instrument_identity"],
@@ -139,7 +140,19 @@ def analyze(
                 "brightness": metrics["brightness"],
                 "metrics": metrics,
                 "source_warnings": sm.get("warnings", []),
-            })
+            }
+            # P-032f: ADDITIVE vocal-role fields. The engine DETECTS vocal
+            # function observationally (lead / hook_candidate / percussive /
+            # stack / uncertain, each with a confidence in [0,1]); profiles
+            # decide what the reading is worth. Computed ONCE here, before any
+            # producer profile applies, so every consumer shares ONE detection
+            # basis. Non-vocal stems carry EXPLICIT None in both fields (the
+            # keys are always present — documented contract). No existing
+            # record key changes.
+            vocal_type = classify_vocal_type(record)
+            record["vocal_type"] = vocal_type["vocal_type"] if vocal_type else None
+            record["vocal_type_confidence"] = vocal_type["confidence"] if vocal_type else None
+            records.append(record)
 
     result.records = records
 

@@ -573,11 +573,14 @@ def test_doctrine_subfields_present():
     # P-032g added the eleventh: the producer-agnostic ``loop_context`` axis
     # (loop static-vs-iconic — the hinge; the engine detects, the profile
     # decides).
+    # P-032f added the twelfth: the producer-agnostic ``vocal_role_fit`` axis
+    # (vocal function: the engine detects lead/hook_candidate/percussive/
+    # stack/uncertain; the profile authors masking philosophy).
     assert set(d["scorers"]) == {
         "vocal_centrality", "depth_hierarchy", "section_contrast",
         "static_mix", "dynamic_mix", "beat_identity", "negative_space",
         "groove_coherence", "rhythmic_surprise", "low_end_motion",
-        "loop_context",
+        "loop_context", "vocal_role_fit",
     }
 
 

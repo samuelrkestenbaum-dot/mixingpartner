@@ -108,6 +108,16 @@ def score_doctrine(
     # and ``overall`` stays bit-identical for halee_ramone (its loop_context
     # weight is 0).
     lc, lc_ev = _loop_context(records, sections_analysis, masking_report, doctrine)
+    # P-032f: the seventh producer-agnostic axis — vocal-role FIT. The engine
+    # DETECTS vocal function on the record (``vocal_type`` /
+    # ``vocal_type_confidence``, classified once in the pipeline); this axis
+    # reads those types against the masking events OBSERVATIONALLY. The
+    # masking PHILOSOPHY (whether a chop/stack blending into the bed is
+    # acceptable) is profile-authored, never engine-coded. Appended LAST
+    # (after loop_context) so the pre-existing 13-term summation order is
+    # preserved and ``overall`` stays bit-identical for halee_ramone (its
+    # vocal_role_fit weight is 0).
+    vrf, vrf_ev = _vocal_role_fit(records, events, doctrine)
 
     component_scores = {
         "halee_score": halee,
@@ -123,6 +133,7 @@ def score_doctrine(
         "rhythmic_surprise_score": rs,
         "low_end_motion_score": lem,
         "loop_context_score": lc,
+        "vocal_role_fit_score": vrf,
     }
     weights = doctrine["weights"]
     present = {k: v for k, v in component_scores.items() if v is not None}
@@ -149,6 +160,7 @@ def score_doctrine(
             "rhythmic_surprise": rs_ev,
             "low_end_motion": lem_ev,
             "loop_context": lc_ev,
+            "vocal_role_fit": vrf_ev,
         },
         "warnings": warnings,
     }
@@ -1130,3 +1142,119 @@ def _loop_context(records: List[Dict], sections_analysis: List[Dict],
         f"({detail}) — an ambiguous loop context."
     )
     return _clamp(c[status]), ev
+
+
+def _vocal_role_fit(records: List[Dict], events: List[Dict],
+                    doctrine: Dict = _DOCTRINE):
+    """Producer-AGNOSTIC scorer for vocal-role FIT — the LAST of the seven
+    P-032.x axes (P-032f) and the vocal half of the doctrine pin: **the
+    engine DETECTS vocal function; the profile decides masking philosophy.**
+
+    DETECTION IS UPSTREAM AND SHARED: the ``vocal_type`` /
+    ``vocal_type_confidence`` record fields are classified ONCE in the
+    pipeline by ``analyzers.vocal_type_classifier`` (lead / hook_candidate /
+    percussive / stack / uncertain — see its module doc for the honesty caps
+    and deferrals: hook recurrence, lyric meaning, per-onset stutter rate are
+    NOT measurable at doctrine time and are never claimed). This scorer never
+    re-classifies — it reads the record fields, so every consumer shares one
+    detection basis.
+
+    THE READING (strictly observational — the evidence reports what IS and
+    never rules on it):
+
+      * **No vocal stems** → the documented ``no_vocals`` NEUTRAL float.
+        Always a clamped float, never None.
+      * **Census** — every classified vocal stem's type + confidence is
+        reported as evidence colour.
+      * **The lead** (``vocal_lead``): forward and clear of vocal-band
+        masking conflicts → ``lead_forward_bonus`` (high fit — the lead owns
+        the presence band). Challenged by forward elements (vocal-band
+        masking events that include the lead) → ``masked_penalty`` per event
+        (low fit). Not forward → reported, no bonus.
+      * **Non-lead vocal stems** (hook_candidate / percussive / stack /
+        uncertain): their OWN vocal-band masking involvements — events that
+        do NOT include a lead stem — read as reduced role fit
+        (``masked_penalty`` per event): the default philosophy protects
+        every vocal's clarity at lead grade, uncertain included
+        (misclassification fails CLOSED toward vocal protection).
+
+    THE MASKED-LEAD PATHWAY IS STRUCTURALLY SEPARATE: an event that includes
+    a lead stem belongs to the LEAD reading above — it is counted there,
+    once, and is never re-read (or re-interpreted) through any non-lead
+    stem in the same event. Profile-authored blend policy (P-032f Commit-2)
+    can therefore never reach the masked-lead pathway by construction.
+
+    DISTINCTNESS vs the live vocal scorers — this axis READS, it never
+    rewires: ``_ramone`` / ``_vocal_centrality`` keep sole ownership of the
+    reference producer's lead-masking PENALTIES (and their behavior for
+    halee_ramone is untouched; this axis is weight-0 there). This axis adds
+    the role-TYPE dimension those scorers do not have: they see "a lead" and
+    "events"; this axis sees WHAT KIND of vocal every stem is and reads fit
+    per role. ``_static_mix``'s no-lead hygiene penalty is likewise
+    untouched.
+
+    Constants are read-only from ``doctrine["scorers"]["vocal_role_fit"]``.
+    """
+    c = doctrine["scorers"]["vocal_role_fit"]
+    ev: List[str] = []
+
+    vocal_stems = [r for r in records if r.get("vocal_type")]
+    if not vocal_stems:
+        ev.append("No vocal stems present — vocal-role fit is neutral.")
+        return _clamp(c["no_vocals"]), ev
+
+    def _conf(r: Dict) -> float:
+        return float(r.get("vocal_type_confidence") or 0.0)
+
+    census = ", ".join(
+        f"'{r['name']}' reads {r['vocal_type']} (confidence {_conf(r):.2f})"
+        for r in vocal_stems
+    )
+    ev.append(f"Vocal roles read: {census}.")
+
+    lead_names = {r["name"] for r in vocal_stems if r["vocal_type"] == "vocal_lead"}
+
+    def _vocal_masking(name: str) -> List[Dict]:
+        return [
+            e for e in events
+            if name in e.get("elements", []) and e.get("classification") == "bad_masking"
+        ]
+
+    score = c["baseline"]
+    for r in vocal_stems:
+        name = r["name"]
+        involved = _vocal_masking(name)
+        if r["vocal_type"] == "vocal_lead":
+            if involved:
+                score -= c["masked_penalty"] * len(involved)
+                ev.append(
+                    f"Lead vocal '{name}' is challenged by {len(involved)} "
+                    f"forward element(s) in the presence band — reduced role fit."
+                )
+            elif r.get("depth_default") in FORWARD:
+                score += c["lead_forward_bonus"]
+                ev.append(
+                    f"Lead vocal '{name}' sits forward and clear of masking "
+                    f"conflicts — the lead owns the presence band."
+                )
+            else:
+                ev.append(
+                    f"Lead vocal '{name}' sits {r.get('depth_default')}, "
+                    f"clear of masking conflicts."
+                )
+        else:
+            # The masked-LEAD pathway (events including a lead stem) belongs
+            # to the lead reading above — never re-read through this stem.
+            own = [
+                e for e in involved
+                if not (set(e.get("elements", [])) & lead_names)
+            ]
+            if own:
+                score -= c["masked_penalty"] * len(own)
+                ev.append(
+                    f"'{name}' ({r['vocal_type']}, confidence {_conf(r):.2f}) "
+                    f"overlaps {len(own)} forward element(s) in the vocal band "
+                    f"— read under full clarity protection: reduced role fit."
+                )
+
+    return _clamp(score), ev
