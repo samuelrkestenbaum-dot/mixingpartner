@@ -4,45 +4,108 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** NONE ACTIVE — P-038 closed by the archivist (2026-07-02).
-  **★★★ THE ENTIRE POST-MERGE BACKLOG IS COMPLETE — THE RESIDUE LIST IS
-  ZERO** (everything remaining is an accepted standing note in
-  `build-os/memory/residue.md`). No packet staged.
+- **Status:** ACTIVE — P-039 confirmed by the orchestrator-in-chief on the
+  USER'S GO (2026-07-02). Handed to builder.
+- **Packet id:** P-039
+- **Title:** Producer Selection CLI Exposure + Demo-Safe Invocation (the
+  user's title). The first packet of the post-substrate product arc.
 
-## Last-closed / context
+## Why (the user's puck read, verbatim in spirit)
 
-- **P-038 ✓ CLOSED** — residue sweep 2 of 2 (NAMING/PROSE), **THE LAST
-  BACKLOG PACKET**: six items — producer names off engine-emitted VALUES
-  + the honesty/precision tidies; ZERO behavior change AST-verified (only
-  string literals moved). Single product commit `7b9eda7` (**AMENDED
-  TREE-NEUTRALLY** from `e1ddfbf` — message-only, the mandated trailers;
-  tree `b49c4b2d…` identical, parent `6f7fd99`). qa GREEN (767 →
-  **768**; regression **93/93, goldens untouched**; artifact deltas
-  enumerated TO THE LINE — 76 changed lines, all 1-for-1, 0
-  unenumerated, 0 producer leaks) + reviewer **fix-then-pass → PASS**
-  (the one must-fix was commit METADATA — the missing trailers; Codex
-  NOT available, single-model review both rounds). Pushed, NOT merged.
-  Receipt: `build-os/receipts/P-038-naming-prose-sweep.md`.
+The puck is not "more profiles" — it is making the second producer REACHABLE
+and DEMONSTRABLE from the product surface: internal capability → operator/
+product lever → repeatable demo → then the third producer. The `producer=`
+lever has been live in the library since P-029; the CLI has never exposed it.
 
-## ★★ THE open boundary — the batch-merge USER GATE
+## THE ACCEPTANCE BAR (user-stated, verbatim)
 
-- **The batch merge — P-036 + P-037 + P-038 (+ closes) onto merge base
-  `dc921ec` (= PR #18) — awaits the user's EXPLICIT word. No merge
-  without go.** The dev branch `claude/logic-mix-os-hardening-12-7hbeh1`
-  carries the complete batch, pushed under the orchestrator's standing
-  dev-branch go. Nothing else is pending: no deploy, no publish, no
-  secrets touched.
+```
+same stems
+explicit producer arg
+clear selected producer in artifacts
+Halee/Ramone remains default
+Timbaland reachable without code changes
+safety/governance unchanged
+regression clean
+```
 
-## Next packet (staged)
+## Spec
 
-- **NONE.** The system is coherent and shippable. Future arcs are
-  USER-INITIATED OPTIONS, not debt: a third producer profile; CLI
-  producer exposure; deeper mode-forking in variant generation; the
-  sample-refresh doc pass (`examples/sample_output/` — accepted
-  standing note).
+1. **`--producer` on every analyze-family CLI command** (the ~13 `analyze()`
+   call sites: analyze, detect-identities, analyze-sections, generate-plan,
+   creative, governance, mixer-feedback, memory-record, audit, status,
+   dashboard, compare-reference where applicable, album per-project if
+   sensible — the builder maps the exact set). Default `halee_ramone`
+   (byte-for-byte today's behavior when omitted); value = any profile name
+   resolvable by `load_profile` (`doctrine/producers/<name>.json`). Unknown
+   name → the loader's clean FileNotFoundError surfaced as a friendly CLI
+   error naming the available profiles (list the producers dir) — no
+   traceback. Help text names the SEMANTICS, not a hardcoded profile list
+   (the P-038 --mode precedent).
+2. **Clear selected producer in artifacts** — an ADDITIVE identity surface,
+   rendered from the PER-CALL profile (the P-029/P-031 threading pattern):
+   - `doctrine_score.json`: an additive `producer` key carrying
+     `{name, display_name, provenance, confidence}` from the loaded profile's
+     metadata (machine-readable);
+   - `mix_verdict.md`: a producer line near the top (e.g. "**Producer
+     profile:** Roy Halee / Phil Ramone (halee_ramone)");
+   - `status` / `dashboard` surfaces: the producer named where the verdict
+     is already summarized (small, consistent).
+   Wording observational; the schema updated additively (no
+   additionalProperties conflicts — verify).
+3. **Cowork passthrough (OPTIONAL rider):** if exposing the producer through
+   the cowork ctx (`cli.py` cowork command + `cowork.py`) is genuinely small
+   (≤ a few lines + tests), include it; otherwise STOP on the rider only and
+   report the radius — the CLI commands are the packet.
+4. **Demo-safe invocation proven end-to-end:** from the repo (fixtures
+   generated), BOTH of these must work and be pinned by tests:
+   ```
+   logic-mix-os analyze --stems … --manifest … --out out_ref
+   logic-mix-os analyze --stems … --manifest … --out out_tim --producer timbaland
+   ```
+   — same stems, two coherent artifact trees, each naming its producer, the
+   known differential values (76.3 vs 60.9 on vocal_chop_groove or the
+   equivalent on the chosen fixture), zero code changes needed.
+
+## Pin interactions (pre-scoped — flip consciously, never weaken)
+
+- **The differential-proof divergence audit** asserts exactly which
+  doctrine_score keys DIFFER between producers — the new `producer` key
+  differs BY DESIGN (like `confidence` already does): extend
+  DIVERGENT_DOCTRINE_KEYS consciously.
+- **Artifact-delta discipline:** the additive producer key/lines change
+  artifacts on ALL runs (default included) — enumerate the exact delta
+  (files + lines) as P-031/P-036/P-038 did; every score surface
+  byte-identical; goldens must hold **93/93** (build_snapshot is
+  categorical+scores — verify the new key is invisible to it, don't assume).
+- Any test pinning full doctrine_score keysets or verdict headers: conscious
+  flips, enumerated.
+
+## The bar (established rigor)
+
+- Suite green from the **768** baseline (+ the new tests); regression
+  **93/93**; both profiles load; safety/governance surfaces untouched
+  (kill-switches, risk classes, non-destructive — assert unchanged under
+  both producers via the existing pins).
+- ≤2 commits, Commit-1 green in isolation;
+  `python fixtures/generate_fixtures.py` FIRST; observational language;
+  trailers `Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>` + the
+  Claude-Session link; NO push/merge/remotes (orchestrator pushes).
+- Anything beyond the spec: STOP and report.
+
+## Context
+
+- Default tip `2c09428` (the post-backlog batch, merged git-natively on the
+  user's word). Dev branch restarted from it. Suite 768 / 93/93 / residue
+  zero.
+
+## The arc after (user-sequenced)
+
+**P-039 (CLI exposure — ACTIVE) → sample refresh (Halee/Ramone vs Timbaland
+demo outputs in examples/) → third producer → deeper mode-forking.** (The
+analyzer extension already landed as P-034/P-035.)
 
 ---
-_P-038 cleared by the archivist on close (2026-07-02). Nothing in
-flight. One packet at a time. The orchestrator stages the next packet
-with the user; builder implements exactly that; qa proves; reviewer
-judges; archivist closes with a receipt._
+_Set active by the orchestrator-in-chief on the user's go (2026-07-02). One
+packet at a time. Builder implements exactly this; qa proves; reviewer judges;
+archivist closes with a receipt._
