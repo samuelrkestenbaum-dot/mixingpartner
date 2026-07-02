@@ -6,8 +6,12 @@ scorers over signals already visible to doctrine — ``groove_coherence`` reads 
 signal (``analyze_groove`` → ``overall_regularity`` = per-track ``1 − CoV(IOIs)``)
 that used to be computed AFTER ``score_doctrine`` in the pipeline. To feed it to
 doctrine the pipeline now computes ``groove`` ONCE, BEFORE doctrine, threads it in
-via a new ``score_doctrine(..., groove=…)`` keyword, and REUSES the exact same
-object in ``result.expanded["groove"]`` — a behavior-preserving relocation.
+via a new ``score_doctrine(..., groove=…)`` keyword, and REUSES the computed
+value in ``result.expanded["groove"]`` — a behavior-preserving relocation.
+(P-037 consciously amended the original "exact same object" contract: the
+expanded value is now a DEFENSIVE COPY — byte-equal, never an alias — so a
+future doctrine mutation of its ``groove`` arg cannot corrupt the artifact;
+``analyze_groove`` still runs exactly once.)
 
 HONEST NAMING: ``overall_regularity`` measures rhythmic tightness/CONSISTENCY, not
 "identity coherence" in the full sense. This axis scores groove
@@ -21,7 +25,7 @@ Five guards, mirroring the packet:
 1. **Byte-identical** — for all 3 fixtures, ``analyze()`` (default halee_ramone)
    leaves every PRE-EXISTING component score (now 9) AND
    ``overall_mix_readiness_score`` unchanged vs the pinned base, and the golden
-   regression still reports 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture). AND ``result.expanded["groove"]`` is
+   regression still reports 93/93 (the P-035 corpus — see conftest.py). AND ``result.expanded["groove"]`` is
    byte-unchanged vs the pinned base (the relocation is behavior-preserving).
 2. **No-re-run live-wire (THE P-016 GUARD)** — during a full ``analyze()``,
    ``analyze_groove`` is called EXACTLY ONCE (spy/patch a call counter) — proving
@@ -206,7 +210,7 @@ def test_expanded_groove_is_behavior_preserving(analyzed):
 
 def test_regression_still_green_full_corpus():
     """The golden corpus regression — which pins ``doctrine_score`` — still passes
-    93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture) with the new axis wired in at weight 0."""
+    93/93 (the P-035 corpus — see conftest.py) with the new axis wired in at weight 0."""
     from pathlib import Path
 
     from logic_mix_os.regression import run_regression_suite
@@ -233,11 +237,18 @@ def _analyze_dense_with_groove_spy(monkeypatch):
 
     root = Path(__file__).resolve().parent.parent
     real = pipeline.analyze_groove
-    counter = {"n": 0}
+    counter = {"n": 0, "obj": None, "pristine": None}
 
     def _spy(rhythm_tracks):
         counter["n"] += 1
-        return real(rhythm_tracks)
+        counter["obj"] = real(rhythm_tracks)
+        # P-037 review fix: the PRISTINE value, snapshotted INSIDE the spy
+        # before anything downstream (doctrine included) can touch the live
+        # object. The defensive-copy pin compares against this — never
+        # against the post-doctrine live object, which would stay green
+        # under the very mutation the copy defends against.
+        counter["pristine"] = copy.deepcopy(counter["obj"])
+        return counter["obj"]
 
     monkeypatch.setattr(pipeline, "analyze_groove", _spy)
     manifest = load_manifest(root / "fixtures" / "dense_chorus_with_loops" / "project_manifest.json")
@@ -251,6 +262,74 @@ def test_analyze_groove_called_exactly_once(monkeypatch):
     ``expanded``) is the live-wire being wrong — this catches it."""
     _res, counter = _analyze_dense_with_groove_spy(monkeypatch)
     assert counter["n"] == 1
+
+
+def test_expanded_groove_is_a_defensive_copy_not_an_alias(monkeypatch):
+    """P-037 (the P-032b adversarial skeptic's shared-mutable-groove note,
+    resolved): ``result.expanded["groove"]`` equals the PRISTINE
+    ``analyze_groove`` value — snapshotted in the spy before doctrine runs —
+    and is NOT the live object doctrine consumed. The pipeline takes its
+    defensive snapshot BEFORE ``score_doctrine`` (the review-fixed
+    placement), so a future doctrine change mutating its ``groove`` arg
+    during scoring can never silently corrupt the expanded artifact.
+
+    THE CONSCIOUS FLIP: P-032b's original contract was "the exact same
+    object is REUSED" (identity). P-037 keeps every value byte-identical and
+    keeps compute-once intact (``analyze_groove`` still runs exactly once —
+    asserted here too), but deliberately breaks the aliasing: equal, never
+    identical. The companion mutation test below proves this pin is
+    load-bearing against the placement, not just the aliasing."""
+    res, counter = _analyze_dense_with_groove_spy(monkeypatch)
+    assert counter["n"] == 1                                # compute-once holds
+    assert res.expanded["groove"] == counter["pristine"]    # the PRISTINE value
+    assert res.expanded["groove"] == counter["obj"]         # (unmutated today)
+    assert res.expanded["groove"] is not counter["obj"]     # never an alias
+
+
+def test_doctrine_mutation_of_its_groove_arg_cannot_corrupt_the_artifact(monkeypatch):
+    """THE LOAD-BEARING PROOF for the P-037 defensive copy — the exact
+    residue threat, simulated: a (hypothetical future) doctrine change that
+    MUTATES its ``groove`` arg during scoring. The expanded artifact must
+    still carry the pristine ``analyze_groove`` value.
+
+    This test discriminates the snapshot PLACEMENT: with the copy taken
+    AFTER ``score_doctrine`` returns (the naive placement P-037 first
+    shipped), the artifact inherits the corruption and this test FAILS —
+    verified during the review fix. With the snapshot taken between
+    ``analyze_groove`` and ``score_doctrine`` (the fixed placement), it
+    passes. Doctrine keeps the live dict; the artifact gets the snapshot."""
+    from pathlib import Path
+
+    from logic_mix_os.project import load_manifest
+
+    root = Path(__file__).resolve().parent.parent
+    real_groove = pipeline.analyze_groove
+    seen = {}
+
+    def _groove_spy(rhythm_tracks):
+        out = real_groove(rhythm_tracks)
+        seen["pristine"] = copy.deepcopy(out)
+        return out
+
+    real_score = pipeline.score_doctrine
+
+    def _mutating_score_doctrine(*args, **kwargs):
+        scored = real_score(*args, **kwargs)
+        g = kwargs.get("groove")
+        assert g is not None  # the pipeline threads groove by keyword
+        g["overall_regularity"] = -999.0        # the future-doctrine sabotage
+        g["mutated_by_doctrine"] = True
+        return scored
+
+    monkeypatch.setattr(pipeline, "analyze_groove", _groove_spy)
+    monkeypatch.setattr(pipeline, "score_doctrine", _mutating_score_doctrine)
+    manifest = load_manifest(
+        root / "fixtures" / "dense_chorus_with_loops" / "project_manifest.json")
+    res = pipeline.analyze(
+        str(root / "fixtures" / "dense_chorus_with_loops" / "stems"), manifest)
+
+    assert "mutated_by_doctrine" not in res.expanded["groove"]
+    assert res.expanded["groove"] == seen["pristine"]
 
 
 def test_score_doctrine_receives_the_real_groove(monkeypatch):

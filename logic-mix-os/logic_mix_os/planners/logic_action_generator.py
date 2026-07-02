@@ -7,8 +7,9 @@ level/pan, depth, subtractive EQ, compression, then additive moves.
 
 from __future__ import annotations
 
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Set
 
+from ..analyzers.vocal_type_classifier import lead_vocal_names
 from ..constants import LOOP_SAMPLE_KINDS
 
 DEPTH_SEND = {
@@ -23,7 +24,8 @@ def _action(plugin: str, setting: str, reason: str, risk_class: int = 2) -> Dict
     return {"plugin": plugin, "setting": setting, "reason": reason, "risk_class": risk_class}
 
 
-def generate_track_actions(record: Dict, masking_events: List[Dict]) -> Dict:
+def generate_track_actions(record: Dict, masking_events: List[Dict],
+                           lead_names: Optional[Set[str]] = None) -> Dict:
     ident = record["instrument_identity"]
     metrics = record.get("metrics", {})
     depth = record["depth_default"]
@@ -31,11 +33,21 @@ def generate_track_actions(record: Dict, masking_events: List[Dict]) -> Dict:
     automation: List[Dict] = []
     warnings: List[str] = []
 
+    # P-037 (the P-034 residue item — the same fix creative._lead_masked got):
+    # a vocal-masking event is matched by the IDENTITY-derived lead name(s)
+    # (``lead_vocal_names``, threaded in by ``generate_logic_actions``), never
+    # by the "vocal" NAME substring — a lead-free vocal-NAMED element can no
+    # longer read as vocal masking, and a lead named without the substring is
+    # now seen. On the lead-inclusive ``bad_masking`` events the analyzer
+    # actually emits, the two predicates agree: byte-identical everywhere.
+    # A caller without a record basis (``lead_names=None``) matches nothing —
+    # fail closed, never a name-based guess.
+    lead_names = lead_names or set()
     masks_vocal = [
         e for e in masking_events
         if record["name"] in e["elements"]
         and e["classification"] in {"bad_masking"}
-        and any("vocal" in el.lower() for el in e["elements"])
+        and any(el in lead_names for el in e["elements"])
     ]
 
     if ident == "lead_vocal":
@@ -77,7 +89,8 @@ def generate_track_actions(record: Dict, masking_events: List[Dict]) -> Dict:
 
 def generate_logic_actions(records: List[Dict], masking_report: Dict) -> List[Dict]:
     events = masking_report.get("events", [])
-    return [generate_track_actions(r, events) for r in records]
+    lead_names = lead_vocal_names(records)
+    return [generate_track_actions(r, events, lead_names) for r in records]
 
 
 # --------------------------------------------------------------------------- #
@@ -85,7 +98,7 @@ def _vocal_actions(actions, automation, metrics):
     automation.append({
         "parameter": "gain (clip gain + fader)",
         "move": "Ride phrase endings +0.5 to +1 dB where the lyric drops, before adding compression.",
-        "reason": "Ramone-style vocal belief: performance rides before brute-force compression.",
+        "reason": "Vocal belief: performance rides before brute-force compression.",
         "risk_class": 2,
     })
     eq = "High-pass ~80 Hz."
@@ -114,7 +127,7 @@ def _drum_actions(actions, ident, metrics):
     if ident in {"overhead", "drum_room", "cymbal", "hi_hat"} and metrics.get("harshness_indicator", 0) > 0.45:
         actions.append(_action("Channel EQ", "Tame 2-4 kHz harshness gently; high-shelf control if brittle.", "Smooth cymbal/room harshness.", 2))
     else:
-        actions.append(_action("Channel EQ", "Light tonal shaping only; preserve transient detail and room realism.", "Halee naturalism: keep the kit believable.", 2))
+        actions.append(_action("Channel EQ", "Light tonal shaping only; preserve transient detail and room realism.", "Naturalistic space: keep the kit believable.", 2))
 
 
 def _harmonic_actions(actions, ident, metrics, masks_vocal):

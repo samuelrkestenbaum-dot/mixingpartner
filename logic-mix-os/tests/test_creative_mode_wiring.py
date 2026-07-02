@@ -63,8 +63,10 @@ OLD_HARDCODED_MAP = {
 }
 
 # The reference's resolved mode per fixture — identical pre/post wiring.
+# P-038 renamed the reference's producer-named mode values off the producer
+# names (ramone_vocal_truth -> vocal_truth); the resolution path is unchanged.
 REFERENCE_RESOLVED_MODES = {
-    "simple_vocal_piano_song": "ramone_vocal_truth",
+    "simple_vocal_piano_song": "vocal_truth",
     "dense_chorus_with_loops": "dramatic_contrast",
     "splice_loop_problem": "dramatic_contrast",
 }
@@ -104,8 +106,15 @@ def tim_analyzed():
 def test_reference_table_coincides_with_the_old_hardcoded_map():
     """The reference's authored ``default_creative_mode`` equals the map the
     pipeline used to hardcode, string for string — the construction that
-    keeps the reference path byte-identical across the wiring."""
-    assert load_profile("halee_ramone").default_creative_mode == OLD_HARDCODED_MAP
+    kept the reference path byte-identical across the P-033 wiring.
+
+    P-038 (conscious flip): the reference renamed its producer-named mode
+    values (``ramone_vocal_truth`` -> ``vocal_truth``), so the coincidence
+    now holds modulo exactly that one rename — pinned explicitly so the
+    historical map stays verbatim and the rename stays visible."""
+    assert load_profile("halee_ramone").default_creative_mode == dict(
+        OLD_HARDCODED_MAP, intimate_mode="vocal_truth"
+    )
 
 
 @pytest.mark.parametrize("name", FIXTURE_NAMES)
@@ -165,8 +174,10 @@ def test_intimate_truth_selects_timbalands_authored_mode_end_to_end(tim_analyzed
     intimate-truth fixture resolves to timbaland's AUTHORED
     ``intimate_mode`` — mode name AND its authored bias — with no fallback.
     Re-hardcoding the truth->mode map (or dropping the profile read at the
-    ``analyze`` call site) resolves "ramone_vocal_truth", which timbaland
-    does not carry, lands on the substitute instead, and FAILS here."""
+    ``analyze`` call site) resolves the REFERENCE's intimate mode
+    ("vocal_truth" — "ramone_vocal_truth" before the P-038 rename), which
+    timbaland does not carry, lands on the substitute instead, and FAILS
+    here."""
     tim = load_profile("timbaland")
     authored = tim.default_creative_mode["intimate_mode"]
     assert authored == "conservative"
@@ -309,7 +320,7 @@ def test_passed_profiles_table_is_consulted_never_the_module_defaults():
     ``experimental`` (a REAL reference mode) must see ``experimental`` end to
     end. If ``_default_creative_mode`` ignored the passed profile and read
     the module default, the intimate fixture would resolve
-    ``ramone_vocal_truth`` (also real in this profile) — and this fails."""
+    ``vocal_truth`` (also real in this profile) — and this fails."""
     ref = load_profile("halee_ramone")
     table = dict(ref.default_creative_mode)
     table["intimate_mode"] = "experimental"
@@ -321,7 +332,7 @@ def test_passed_profiles_table_is_consulted_never_the_module_defaults():
 
     intent = {"singular_emotional_truth": "quiet and intimate"}
     assert pipeline._default_creative_mode(intent, prof) == "experimental"
-    assert pipeline._default_creative_mode(intent) == "ramone_vocal_truth"
+    assert pipeline._default_creative_mode(intent) == "vocal_truth"
 
 
 # =========================================================================== #

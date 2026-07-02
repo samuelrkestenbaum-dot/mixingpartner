@@ -21,6 +21,7 @@ dicts (or a previous load) through it.
 from __future__ import annotations
 
 import json
+import math
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List
@@ -189,6 +190,32 @@ def _validate(raw: Dict[str, Any], name: str) -> None:
                "loop_context", "vocal_role_fit"):
         if fn not in doctrine["scorers"]:
             raise ValueError(f"profile {name!r}: doctrine.scorers missing {fn!r}")
+    # P-037: search_modes must be a non-empty object — a zero-mode profile
+    # would leave ``creative._profile_default_mode`` with no authored mode to
+    # fall back to (its first-authored-mode branch StopIterations on an empty
+    # table). Rejected at load, never at judgment time.
+    modes = raw["search_modes"]
+    if not isinstance(modes, dict) or not modes:
+        raise ValueError(f"profile {name!r}: search_modes must be a non-empty object")
+    # P-037: default_creative_mode structural check — the three keys
+    # ``pipeline._default_creative_mode`` hard-dereferences must be present
+    # with sane types, so a malformed table is a load-time ValueError rather
+    # than a KeyError/TypeError mid-analyze.
+    dcm = raw["default_creative_mode"]
+    if not isinstance(dcm, dict):
+        raise ValueError(f"profile {name!r}: default_creative_mode must be an object")
+    for key in ("intimate_truth_words", "intimate_mode", "default_mode"):
+        if key not in dcm:
+            raise ValueError(f"profile {name!r}: default_creative_mode missing {key!r}")
+    words = dcm["intimate_truth_words"]
+    if not isinstance(words, list) or not all(isinstance(w, str) for w in words):
+        raise ValueError(
+            f"profile {name!r}: default_creative_mode.intimate_truth_words "
+            f"must be a list of strings"
+        )
+    for key in ("intimate_mode", "default_mode"):
+        if not isinstance(dcm[key], str):
+            raise ValueError(f"profile {name!r}: default_creative_mode.{key} must be a str")
     # P-032f: the vocal blend policy must be structurally sound — an explicit
     # bool opt-in plus a real confidence floor in [0, 1]. No silent defaults.
     policy = raw["vocal_blend_policy"]
@@ -200,7 +227,18 @@ def _validate(raw: Dict[str, Any], name: str) -> None:
     if not isinstance(policy["acceptable_blend"], bool):
         raise ValueError(f"profile {name!r}: vocal_blend_policy.acceptable_blend must be a bool")
     floor = policy["confidence_floor"]
-    if isinstance(floor, bool) or not isinstance(floor, (int, float)) or not 0.0 <= floor <= 1.0:
+    if isinstance(floor, bool) or not isinstance(floor, (int, float)):
+        raise ValueError(
+            f"profile {name!r}: vocal_blend_policy.confidence_floor must be a number in [0, 1]"
+        )
+    # P-037: reject NaN/±inf EXPLICITLY (the belt to the range check below —
+    # NaN comparison semantics happened to fail the range check too, but only
+    # as a side effect; the error should name finiteness).
+    if not math.isfinite(floor):
+        raise ValueError(
+            f"profile {name!r}: vocal_blend_policy.confidence_floor must be finite"
+        )
+    if not 0.0 <= floor <= 1.0:
         raise ValueError(
             f"profile {name!r}: vocal_blend_policy.confidence_floor must be a number in [0, 1]"
         )
@@ -220,6 +258,16 @@ def _validate(raw: Dict[str, Any], name: str) -> None:
         for key in ("area", "level", "reason"):
             if key not in entry:
                 raise ValueError(f"profile {name!r}: confidence_map[{i}] missing {key!r}")
+        # P-037 (the P-031 reviewer judgment note, now conscious): an entry's
+        # key set is EXACTLY {area, level, reason} — an unknown extra key (a
+        # typo, a smuggled weight, a stray annotation) is rejected, never
+        # silently carried onto the report surface.
+        extra = set(entry) - {"area", "level", "reason"}
+        if extra:
+            raise ValueError(
+                f"profile {name!r}: confidence_map[{i}] has unknown key(s) "
+                f"{sorted(extra)}"
+            )
         for key in ("area", "reason"):
             if not isinstance(entry[key], str) or not entry[key].strip():
                 raise ValueError(
@@ -230,6 +278,15 @@ def _validate(raw: Dict[str, Any], name: str) -> None:
                 f"profile {name!r}: confidence_map[{i}].level must be one of "
                 f"{CONFIDENCE_LEVELS}, got {entry['level']!r}"
             )
+    # P-037 (the same P-031 note): duplicate ``area`` strings are ambiguous
+    # honesty — which level does the reader trust? — so uniqueness is
+    # structural. Every entry is a validated dict with a string area by here.
+    areas = [entry["area"] for entry in cmap]
+    duplicates = sorted({a for a in areas if areas.count(a) > 1})
+    if duplicates:
+        raise ValueError(
+            f"profile {name!r}: confidence_map has duplicate area(s) {duplicates}"
+        )
 
 
 def load_profile(name: str = "halee_ramone") -> ProducerProfile:

@@ -12,7 +12,7 @@ honesty-labeled / safety-invariant**, and these are the guards for each word:
    honesty stamp (hand-curated-documented -> HIGH).
 2. **Byte-identity of the DEFAULT** — authoring a second JSON must not touch
    the reference path: the pinned doctrine surface (73.8 / 70.7 / 74.3 + all
-   14 components), the full creative base capture, and regression 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture) all
+   14 components), the full creative base capture, and regression 93/93 (the P-035 corpus — see conftest.py) all
    hold on the DEFAULT producer.
 3. **THE DIFFERENTIAL IS ALIVE** — ``analyze(producer="timbaland")`` produces
    a DIFFERENT ``overall_mix_readiness_score`` on every fixture; on the loop
@@ -71,7 +71,7 @@ from test_protect_iconic_loops import (
     _with_iconic_loop,
     _with_masked_lead,
 )
-from test_vocal_type import BASE_COMPONENT_SCORES, JUDGMENT_WORDS
+from test_vocal_type import BASE_COMPONENT_SCORES, judgment_word_hits
 
 _ROOT = pathlib.Path(__file__).resolve().parent.parent
 _TIMBALAND_PATH = _ROOT / "logic_mix_os" / "doctrine" / "producers" / "timbaland.json"
@@ -153,7 +153,7 @@ TIM_AUTHORED_MAP = [
     {
         "area": "vocal blend interpretation",
         "level": "limited",
-        "reason": "the masking analyzer emits vocal-band events only against the lead today; the acceptable-blend policy this profile opts into is mechanically live but dormant on real exported-stem data",
+        "reason": "the masking analyzer reads the vocal band against non-lead vocals when either side of the pair is forward (the vocal stem itself, or a heard masker standing forward in front of it); the acceptable-blend policy this profile opts into is live and measured on real exported-stem data — a qualified vocal chop under masking reads 85.0 on vocal_role_fit against the reference's 65.0 (the reference draws the masked penalty once for the chop and once for the stack; the accepted blend waives both), worth +0.7 overall at the authored 0.4 weight; coverage stays bounded: events arise only from the masker-instrument set, info-tier events are emitted but not consumed, and vocal-band events carry no per-track masking risk",
     },
     {
         "area": "cultural loop recognizability",
@@ -340,7 +340,7 @@ def test_default_creative_surface_unchanged(analyzed):
 
 def test_regression_still_green_full_corpus():
     """The golden corpus regression (which runs the DEFAULT producer) still
-    passes 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture) with the second profile authored."""
+    passes 93/93 (the P-035 corpus — see conftest.py) with the second profile authored."""
     from logic_mix_os.regression import run_regression_suite
 
     report = run_regression_suite(_ROOT / "fixtures")
@@ -420,8 +420,9 @@ def test_creative_emphasis_diverges_too(analyzed, timbaland_analyzed):
     resolves through timbaland's OWN authored ``default_creative_mode`` table
     to its ``intimate_mode`` ("conservative") — P-033 wired the table per
     call, the pre-registered flip of the honest fallback this test pinned
-    at P-032h (``ramone_vocal_truth`` exists only in the reference's
-    table)."""
+    at P-032h (the reference's intimate mode — ``vocal_truth`` since the
+    P-038 rename, ``ramone_vocal_truth`` before it — exists only in the
+    reference's table)."""
     tim_loop = _loop_branch(timbaland_analyzed["dense_chorus_with_loops"].creative)
     ref_loop = _loop_branch(analyzed["dense_chorus_with_loops"].creative)
     tim_b = _variant_by_id(tim_loop, "loop_B")["scores"]["overall_score"]
@@ -430,9 +431,9 @@ def test_creative_emphasis_diverges_too(analyzed, timbaland_analyzed):
     assert ref_b == pytest.approx(85.3, abs=1e-9)
     assert tim_b != ref_b
 
-    assert analyzed["simple_vocal_piano_song"].creative["search_mode"] == "ramone_vocal_truth"
+    assert analyzed["simple_vocal_piano_song"].creative["search_mode"] == "vocal_truth"
     assert timbaland_analyzed["simple_vocal_piano_song"].creative["search_mode"] == "conservative"
-    assert "ramone_vocal_truth" not in load_profile("timbaland").search_modes
+    assert "vocal_truth" not in load_profile("timbaland").search_modes
     assert load_profile("timbaland").default_creative_mode["intimate_mode"] == "conservative"
     assert "conservative" in load_profile("timbaland").search_modes
 
@@ -510,7 +511,8 @@ def test_timbaland_confidence_map_verbatim():
 
 def test_confidence_level_distribution():
     """5 high (groove / space+contrast / low-end / loop / retained
-    measurement), 1 limited (vocal blend — the inert-blend corollary),
+    measurement), 1 limited (vocal blend — live and measured since
+    P-034/P-035, coverage-bounded per the P-036 re-authoring),
     5 deferred (the engine boundaries, shared with the reference)."""
     levels = [e["level"] for e in load_profile("timbaland").confidence_map]
     assert levels.count("high") == 5
@@ -519,13 +521,26 @@ def test_confidence_level_distribution():
 
 
 def test_limited_blend_entry_matches_the_opt_in_policy():
-    """The honest corollary, stated by the profile that OPTS IN: the blend
-    policy is mechanically live but dormant on real data (the analyzer emits
-    vocal-band events only against the lead)."""
+    """The honest corollary, RE-AUTHORED LIVE in P-036: the opt-in this
+    profile authors is live and MEASURED on real exported-stem data — the
+    P-035 differential (vocal_role_fit 85.0 vs the reference's 65.0, +0.7
+    overall at the authored 0.4 weight). The entry stays LIMITED because the
+    constraint is real and stated: masker-set-bounded coverage, the
+    unconsumed info tier, and the per-track-risk exclusion. P-038 tidied the
+    text only (the two P-036 reviewer observations): the "either side"
+    shorthand now carries the masker-arm's heard qualifier, and the 65.0/85.0
+    differential states its per-stem mechanics (the reference draws the
+    masked penalty once per stem; the accepted blend waives both)."""
     p = load_profile("timbaland")
     limited = [e for e in p.confidence_map if e["level"] == "limited"]
     assert limited == [TIM_AUTHORED_MAP[5]]
-    assert "only against the lead" in limited[0]["reason"]
+    # the measured differential is stated, the falsified claims are gone
+    assert "measured on real exported-stem data" in limited[0]["reason"]
+    assert "85.0" in limited[0]["reason"] and "65.0" in limited[0]["reason"]
+    assert "heard masker standing forward" in limited[0]["reason"]  # P-038
+    assert "the accepted blend waives both" in limited[0]["reason"]  # P-038
+    assert "only against the lead" not in limited[0]["reason"]
+    assert "dormant" not in limited[0]["reason"]
     assert p.vocal_blend_policy["acceptable_blend"] is True  # opt-in + honesty
 
 
@@ -564,8 +579,8 @@ def test_whole_profile_language_is_observational():
     philosophy, reasons, biases, switches, map. The profile reports and
     decides; it never rules on other producers or styles."""
     blob = _TIMBALAND_PATH.read_text(encoding="utf-8").lower()
-    for word in JUDGMENT_WORDS:
-        assert word not in blob, f"judgment word {word!r} in timbaland.json"
+    hits = judgment_word_hits(blob)
+    assert not hits, f"judgment word(s) {hits} in timbaland.json"
 
 
 # --------------------------------------------------------------------------- #

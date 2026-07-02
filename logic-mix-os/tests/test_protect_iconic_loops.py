@@ -65,9 +65,12 @@ FIXTURE_NAMES = [
 # The FULL default-profile creative surface, captured at the packet base
 # (`6af00fa`, before the gate existed): per branch — the winner and every
 # variant's (kind, overall_score, score_nudges). Byte-identity surface (b).
+# P-038 (conscious flip): the reference renamed its intimate search mode
+# (ramone_vocal_truth -> vocal_truth) — a NAME-only edit to this capture;
+# every winner, kind, score and nudge below is the untouched base value.
 BASE_CREATIVE_SURFACE = {
     "simple_vocal_piano_song": {
-        "search_mode": "ramone_vocal_truth",
+        "search_mode": "vocal_truth",
         "branches": {
             "vocal_belief": ("vocal_A", [
                 ("vocal_A", "vocal_ride", 82.9, None),

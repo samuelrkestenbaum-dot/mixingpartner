@@ -27,16 +27,19 @@ Four guards, mirroring the packet:
 1. **Byte-identical** — for all 3 fixtures, ``analyze()`` (default halee_ramone)
    leaves every PRE-EXISTING component score (now 10, incl.
    ``groove_coherence_score``) AND ``overall_mix_readiness_score`` unchanged vs
-   the pinned base, and the golden regression still reports 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture).
+   the pinned base, and the golden regression still reports 93/93 (the P-035 corpus — see conftest.py).
 2. **Value-discrimination (unit)** — varied/fill-like sections (big transient
    swings) → HIGH; a flat/constant transient bed → LOW; <2 sections → the
    documented fallback. AND the distinctness case: a high-MEAN but
    ZERO-VARIANCE transient bed → LOW rhythmic_surprise, disagreeing with the
    mean-reading / stem-reading / movement-reading axes.
 3. **Liveness (load-bearing)** — a profile weighting ``rhythmic_surprise_score``
-   non-zero CHANGES ``analyze()``'s overall on a fixture; a sabotage
-   (hardcoding the term / dropping it from ``component_scores``) FAILS that
-   liveness while byte-identical stays green (P-016/P-029).
+   non-zero CHANGES ``analyze()``'s overall on a fixture; a sabotage that
+   DROPS the term from ``component_scores`` or breaks its threading FAILS
+   that liveness while byte-identical stays green (P-016/P-029). A term
+   hardcoded to a constant is caught by the value-discrimination guards,
+   not by liveness (the direction check reads the score from the same
+   output a constant would poison).
 4. **No-aliasing** — the scorer only reads ``doctrine[...]``/``sections[...]``;
    it never mutates the shared profile structures or the section dicts.
 """
@@ -207,7 +210,7 @@ def test_overall_is_byte_identical_to_ten_term_weighted_mean(analyzed):
 
 def test_regression_still_green_full_corpus():
     """The golden corpus regression — which pins ``doctrine_score`` — still
-    passes 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture) with the new axis wired in at weight 0."""
+    passes 93/93 (the P-035 corpus — see conftest.py) with the new axis wired in at weight 0."""
     from pathlib import Path
 
     from logic_mix_os.regression import run_regression_suite
@@ -379,8 +382,10 @@ def test_nonzero_weight_moves_the_overall(analyzed):
 def test_liveness_direction_tracks_the_rhythmic_surprise_score(analyzed):
     """A sharper sabotage guard: the direction the overall moves under a
     non-zero weight must be consistent with rhythmic_surprise's value relative
-    to the other components. A hardcoded term would not track the real score
-    and this assertion would break."""
+    to the other components. This catches DROP/THREADING sabotage in the
+    weighted mean; a term hardcoded to a constant would still pass here (the
+    check reads the score from the same dict a constant poisons) — hardcoding
+    is caught by the value-discrimination guards."""
     res = analyzed["dense_chorus_with_loops"]
     base_args = (res.records, res.section_analysis, res.masking_report, res.mix_metrics, res.project.intent)
     groove = res.expanded["groove"]

@@ -7,6 +7,7 @@ the CLI is a thin wrapper around it.
 
 from __future__ import annotations
 
+import copy
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -187,15 +188,24 @@ def analyze(
     # computed ONCE). Its inputs — ``result.track_identity`` + ``loaded_by_id`` —
     # are already filled by the per-track loop above, so this is a pure relocation
     # of the ``rhythm_tracks``/``analyze_groove`` pair that used to live in the
-    # expanded suite below. The exact same ``groove`` object is REUSED in
-    # ``result.expanded["groove"]`` (never re-run), keeping that value
-    # byte-identical.
+    # expanded suite below. The computed ``groove`` value is REUSED in
+    # ``result.expanded["groove"]`` (never re-run) — since P-037 as a defensive
+    # COPY: byte-equal, never the same object (see the expanded suite below).
     rhythm_tracks = [
         {"name": ident["name"], "identity": ident["instrument_identity"], "loaded": loaded_by_id[ident["track_id"]]}
         for ident in result.track_identity
         if ident["instrument_identity"] in RHYTHM_IDENTITIES and ident["track_id"] in loaded_by_id
     ]
     groove = analyze_groove(rhythm_tracks)
+    # P-037 (review-fixed placement): the pristine snapshot is taken HERE —
+    # after ``analyze_groove`` returns and BEFORE ``score_doctrine`` consumes
+    # the live dict — so a future doctrine change mutating its ``groove`` arg
+    # DURING scoring cannot reach the expanded artifact (a copy taken after
+    # doctrine would inherit the corruption). Doctrine keeps the live dict;
+    # ``expanded["groove"]`` below gets this snapshot. Equal values today
+    # (byte-identical); the dict is small, so a deepcopy is the measured
+    # choice.
+    groove_snapshot = copy.deepcopy(groove)
 
     # Doctrine scoring.
     result.doctrine_score = score_doctrine(
@@ -220,10 +230,15 @@ def analyze(
         "arrangement_density": map_density(records, result.section_analysis),
         "listener_experience": map_experience(result.section_analysis, lead_present),
         "transitions": analyze_transitions(mixdown, project.sections),
-        # P-032b: REUSE the exact ``groove`` computed above (before doctrine) —
-        # never re-run ``analyze_groove`` here. This keeps the value byte-identical
+        # P-032b: REUSE the ``groove`` computed above (before doctrine) — never
+        # re-run ``analyze_groove`` here. This keeps the value byte-identical
         # and honours the compute-once discipline (the no-re-run guard).
-        "groove": groove,
+        # P-037 (the P-032b skeptic's shared-mutable-groove note, resolved;
+        # review-fixed placement): the DEFENSIVE snapshot taken above, BEFORE
+        # doctrine consumed the live dict — the artifact never aliases
+        # doctrine's input, and a doctrine mutation during scoring can never
+        # reach it.
+        "groove": groove_snapshot,
         "harmonic": analyze_harmony(mixdown, project.key),
         "vocal_performance": analyze_vocal(lead_vocal_loaded, lead_record["metrics"] if lead_record else None),
         "lyrics": analyze_lyrics(manifest, result.section_analysis, lead_present),

@@ -94,7 +94,7 @@ def _drum_recs(ident: str, harsh: float) -> List[str]:
     elif ident in {"hi_hat", "cymbal"}:
         recs.append("High-pass spill and tame harshness gently; preserve transient sheen.")
     elif ident in {"overhead", "drum_room"}:
-        recs.append("Set the kit's depth and width here and check phase against the close mics — this is where the Halee room lives.")
+        recs.append("Set the kit's depth and width here and check phase against the close mics — this is where the room sound lives.")
     else:
         recs.append("Shape transients and balance room/overheads; preserve punch.")
     if harsh > 0.45 and ident in {"hi_hat", "cymbal", "overhead", "drum_room"}:

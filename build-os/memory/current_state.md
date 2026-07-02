@@ -213,21 +213,60 @@
     (P-034 close). **★★★ THE ANALYZER-EXTENSION ARC (P-034 + P-035) IS
     COMPLETE. The dev branch now carries FIVE unmerged packets — P-033,
     P-030, P-034, P-035 + closes — the MERGE decision is an OPEN USER
-    GATE.**
+    GATE — ✓ RESOLVED below (PR #18, `dc921ec`).**
+    ★★ THE HARDENING BATCH IS MERGED — **PR #18 (post-epic hardening:
+    P-033, P-030, P-034, P-035 + closes) is MERGED to default on the
+    user's go — merge commit `dc921ec`, the CURRENT default-branch tip.
+    The base for MERGE/landing decisions is now `dc921ec`.** The dev
+    branch RESTARTED from `dc921ec` and now carries **P-036 (`95de041`,
+    single product commit — THE HONESTY-LAYER CATCH-UP: both profiles'
+    stale vocal-blend confidence entries re-authored to the live,
+    measured status — the entry's `reason` ONLY, both levels honestly
+    stay `limited`, the verbatim map pins consciously flipped;
+    byte-identical everywhere except exactly the 16 confidence text
+    surfaces), PUSHED to the dev branch (NOT merged)**, atop the
+    set-active `6c0d9bf`. P-036's parent chain: `95de041` → `6c0d9bf`
+    (active-packet confirmation) → `dc921ec` (PR #18 merge). **★ ONE
+    small packet on the branch — the merge cadence is the user's call:
+    ride with the next batch or merge alone on the user's word.**
+    ★ ON TOP of P-036, the dev branch now ALSO carries **P-037
+    (`cb566b1` + review-fix `5f94456`, product — residue sweep 1 of 2,
+    the CODE-BEHAVIOR sweep: six defensive/validation items,
+    byte-identical 240/240; THE REAL FINDING: NaN floors FAILED OPEN on
+    raw dicts, now fail CLOSED), PUSHED to the dev branch (NOT
+    merged)**, atop the set-active `4df134c`. P-037's parent chain:
+    `5f94456` → `cb566b1` → `4df134c` (active-packet confirmation) →
+    `b970603` (P-036 close). ★ ON TOP of P-037, the dev branch now ALSO
+    carries **P-038 (`7b9eda7`, single product commit — residue sweep 2
+    of 2, the NAMING/PROSE sweep: producer names off engine-emitted
+    VALUES + the honesty/precision tidies, zero behavior change
+    AST-verified; AMENDED TREE-NEUTRALLY from `e1ddfbf` — message-only,
+    the mandated trailers; tree `b49c4b2d…` identical, parent
+    `6f7fd99`), PUSHED to the dev branch (NOT merged)**, atop the
+    set-active `6f7fd99`. P-038's parent chain: `7b9eda7` → `6f7fd99`
+    (active-packet confirmation) → `3d81fc4` (P-037 close). **★★★ THE
+    BRANCH NOW CARRIES THE COMPLETE BATCH — P-036 + P-037 + P-038
+    (+ closes) atop merge base `dc921ec` (= PR #18). THE ENTIRE
+    POST-MERGE BACKLOG IS COMPLETE; THE BATCH MERGE IS THE OPEN USER
+    GATE — it awaits the user's explicit word.**
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-02, P-035):** suite **754 passed** (0
-  failed / skipped); regression **93/93** — the corpus is now **4
+- **Green baseline (verified 2026-07-02, P-038 — THE BACKLOG-COMPLETE
+  baseline):** suite **768 passed** (0 failed / skipped); regression
+  **93/93, 0 warnings, goldens untouched** — the corpus is **4
   fixtures** (the 68/68 era ended CONSCIOUSLY at P-035: +16 golden +9
   invariants for `vocal_chop_groove`, the 1 inapplicable invariant
-  correctly reasoned; the original 3 fixtures' goldens/manifests/stems
-  byte-untouched, git diff EMPTY). Two commits `0b940c7` + `e5a12dc` —
-  Commit-1 green in isolation (real worktree check: 741 + 68/68,
-  fixture-inert at that tree). (Prior baseline was 741 at P-034; P-035
+  correctly reasoned). Single product commit `7b9eda7` (P-038 —
+  AMENDED TREE-NEUTRALLY from `e1ddfbf`, message-only for the mandated
+  trailers; tree `b49c4b2d…` identical, parent `6f7fd99`) — HEAD IS
+  Commit-1 → green in isolation. (History: 767 → 768 at P-038 — +1
+  synthetic warning-tag pin; 754 → 766 → 767 at P-037 — +12 the
+  code-behavior sweep, then +1 the review-fix mutation test; P-036
+  HELD 754 — labeling only. Prior baseline was 741 at P-034; P-035
   added +13 — the new 13-test `tests/test_vocal_chop_groove.py`.
   Earlier: 705 → 741 at P-034; 678 → 705 at P-030; 660 → 678 at P-033;
   639 → 660 at P-032i; 600 → 639 at P-032h; 572 → 600 at P-031;
@@ -237,6 +276,229 @@
   331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-038 SWEEPS THE NAMING/PROSE RESIDUE — residue sweep 2 of 2,
+  THE LAST BACKLOG PACKET: six items — producer names off
+  engine-emitted VALUES + the honesty/precision tidies; ZERO behavior
+  change AST-verified (only string literals moved). ★★★ WITH THIS
+  CLOSE THE RESIDUE-SWEEP ARC AND THE ENTIRE POST-MERGE BACKLOG ARE
+  COMPLETE — THE RESIDUE LIST IS ZERO (everything remaining is an
+  accepted standing note). qa GREEN + reviewer fix-then-pass → PASS
+  (one fix round: the missing mandated commit trailers — METADATA, not
+  content — resolved by a tree-neutral amend). Last-closed = P-038.**
+  - **Single product commit** on parent `6f7fd99` (active-packet
+    confirmation): originally `e1ddfbf`, **AMENDED TREE-NEUTRALLY to
+    `7b9eda7`** (message-only — the reviewer's one must-fix, the
+    mandated trailers; tree hash `b49c4b2d…` identical before/after,
+    so every content proof carried over without re-execution;
+    force-with-lease under the standing dev-branch go). 25 files,
+    +201/−88. HEAD IS Commit-1 → green in isolation. **PUSHED to the
+    dev branch, NOT merged** (merge base `dc921ec` = PR #18). **★★ THE
+    OPEN USER GATE: the batch merge — P-036 + P-037 + P-038 (+ closes)
+    onto `dc921ec` — awaits the user's explicit word.**
+  - **★ The six items:** (1a) warning doctrine tags renamed
+    (`phil_ramone_vocal_centrality`→`vocal_centrality`,
+    `phil_ramone_restraint`→`restraint`) — found UNPINNED and never
+    emitted on any fixture (reviewer-verified LIVE: no fixture reaches
+    those warning branches — why the goldens held); a NEW synthetic
+    pin binds both payloads + asserts no producer substring in any
+    tag; (1b) search-mode names renamed (`halee_depth`→`spatial_depth`,
+    `ramone_vocal_truth`→`vocal_truth`) — the full radius landed in
+    ONE commit; OLD_HARDCODED_MAP kept VERBATIM as history with the
+    coincidence pin consciously adjusted (`dict(OLD_HARDCODED_MAP,
+    intimate_mode="vocal_truth")` — reviewer-judged honest: semantic
+    identity modulo exactly the one visible rename); (1c) engine
+    action prose de-producer-named ("Vocal belief:", "Naturalistic
+    space:", "physical room lift", the source_auditors room line) —
+    profile JSON prose KEEPS its producer names (profiles are named
+    for producers; the engine is not); (2) the liveness-docstring
+    sweep — 6 files corrected to the empirically-true claim (liveness
+    catches drop/threading; discrimination catches hardcoding —
+    reviewer-validated by live sabotage on test_beat_identity), 4
+    files verified accurate and untouched; (3) cli.py --mode help
+    de-hardcoded; (4) the count-pin parenthetical tidy (21 sites → one
+    canonical explanation in conftest.py); (5) the fallback reason now
+    branch-accurate (declared-default vs first-authored, the
+    discriminator pre-existing and exact — AST-verified no new logic);
+    (6) both profiles' blend-confidence reasons: the heard-qualifier
+    appended (PAIRED with the masking_analyzer doc headline) + the
+    65.0/85.0 attribution made explicit — verbatim pins STRENGTHENED,
+    the P-036 pinned-OUT assertions retained.
+  - **★ qa GREEN:** suite 767 → **768** (+1 synthetic pin); regression
+    **93/93, goldens untouched** (zero golden files in the diff); the
+    artifact-delta enumeration verified TO THE LINE with qa's OWN
+    harness — **76 changed lines, all 1-for-1 replacements, 0
+    unenumerated, 0 producer leaks** (16 confidence surfaces +
+    Vocal-belief ×32 + Naturalistic-space ×20 + physical-room-lift ×6
+    + the search-mode pair confined to reference × simple ONLY); score
+    surfaces byte-equal ×8 (overalls 73.8 / 70.7 / 74.3 / 76.3 ref,
+    68.4 / 52.6 / 49.7 / 60.9 tim); renames complete (2 residual
+    `phil_ramone_` hits are explanatory comments — allowed category,
+    reported exactly); safety grep none.
+  - **★ reviewer fix-then-pass → PASS:** all nine scrutiny points
+    clean on CONTENT (zero behavior change AST-verified — only string
+    literals moved; the 1(b) radius fully landed; the sabotage bit:
+    reverting a tag FAILED the new pin); the one must-fix was commit
+    METADATA (the missing trailers) — resolved by the tree-neutral
+    amend; trailer-only re-check passed (`git interpret-trailers`
+    clean; one cosmetic: the trailer block duplicated verbatim in the
+    raw message, dedup'd by tooling, judged not worth another
+    force-push → accepted standing note). **Codex NOT available —
+    single-model review, both rounds.**
+  - **★ ACCEPTED STANDING NOTES (user-level, recorded not fixed):**
+    (1) `examples/sample_output/` ships pre-P-036/P-038 prose
+    (producer-named action strings, stale verdict text) — not
+    test-pinned, predates P-038; a conscious doc-refresh decision for
+    a future moment, NOT expanded into this packet (the P-030
+    precedent regenerated samples for a CONTRACT change; this is
+    prose); (2) the duplicated trailer block in `7b9eda7`'s raw
+    message (cosmetic); (3) the push-state observation: remote-ref
+    updates on the dev branch are the orchestrator's standing-go
+    session pushes.
+  - **★ NEXT: NOTHING STAGED — the system is coherent and shippable.**
+    **THE OPEN USER GATE is the batch merge — P-036 + P-037 + P-038
+    (+ closes) onto merge base `dc921ec` (= PR #18) — on the user's
+    explicit word.** Future arcs (a third producer, CLI producer
+    exposure, deeper mode-forking in variant generation, the
+    sample-refresh doc pass) are USER-INITIATED options, not debt.
+    Receipt: `build-os/receipts/P-038-naming-prose-sweep.md`.
+
+- **★★★ P-037 SWEEPS THE CODE-BEHAVIOR RESIDUE — residue sweep 1 of 2:
+  six defensive/validation items from residue.md, byte-identical on
+  EVERY artifact surface (4 fixtures × 2 producers). ★ THE REAL
+  FINDING: NaN floors previously FAILED OPEN on raw dicts
+  (`confidence < nan` is False → blend accepted; −0.5/−inf accepted
+  everything) — now fails CLOSED, verified at base by builder, qa, AND
+  reviewer independently. qa GREEN + reviewer fix-then-pass → PASS
+  (one fix round, fully resolved). Last-closed = P-037.**
+  - **1 + 1 review-fix commits** on parent `4df134c` (active-packet
+    confirmation): `cb566b1` (the six items — 14 files, 432+/48−) +
+    `5f94456` (the review-fix — the groove snapshot moved BEFORE
+    score_doctrine + the load-bearing mutation pin + the amended
+    docstring; 3 files, 83+/17−). **PUSHED to the dev branch
+    (orchestrator standing go), NOT merged** (merge base `dc921ec` =
+    PR #18). **★ The branch carries P-036 + P-037 (+ closes) — the
+    batch merge decision (P-036 + P-037 + P-038) is the user's call
+    after P-038.**
+  - **★ The six items:** (1) logic_action_generator identity-derived
+    lead matching, consolidated with creative onto ONE shared
+    `lead_vocal_names()` basis (vocal_type_classifier) — zero
+    substring-match sites remain; (2) `_validate` tightening —
+    search_modes non-empty, default_creative_mode's three
+    hard-dereferenced keys, confidence_map duplicate-areas + exact
+    entry keys {area, level, reason}, non-finite floors rejected; (3)
+    the raw-gate floor self-guard — fails CLOSED (THE REAL FINDING
+    above); (4) `lead_names` identity-derived (the mangle pin: old
+    behavior double-penalized a hand-mangled lead — 60.0 → new 70.0
+    baseline with zero clarity lines); (5) the groove defensive
+    snapshot — THE FIX-THEN-PASS ROUND: the copy as first shipped ran
+    AFTER doctrine and could not deliver the defense; moved to
+    pre-doctrine, with a mutation test that FAILS under the old
+    placement (the reviewer reproduced the corruption: −999.0
+    inherited) and passes at HEAD; compute-once intact; (6)
+    JUDGMENT_WORDS word-boundary + plural-suffix matching
+    (`\b{w}(?:e?s)?\b`), 9–10 guard sites migrated to one shared
+    helper, "fixture" freed / "fix" + "fixes" + "problems" caught;
+    other inflections consciously OUTSIDE the closed vocabulary
+    (extend explicitly, never stem-guess).
+  - **★ qa GREEN (pre-fix tree):** suite 754 → **766** (+12);
+    regression **93/93**; byte-identity **240/240** via qa's OWN
+    harness; the fail-open confirmed REAL at base (7/7 probes); 14/14
+    validation probes; both shipped profiles load; the shared basis
+    verified fork-free; safety grep clean. **Post-fix:** suite **767**
+    (+1 mutation test); regression 93/93; byte-identity **re-proven
+    240/240** by builder AND spot-verified by reviewer.
+  - **★ reviewer fix-then-pass → PASS:** the three must-fix items
+    (placement; pin-detects-threat; stale claim) ALL resolved as
+    specified, load-bearing verified both directions. **Codex NOT
+    available — single-model review, both rounds.** The fix-then-pass
+    path (the P-031 precedent) used as designed — **the SECOND time a
+    "defensive" change was caught not defending: defense claims need
+    MUTATION TESTS, not placement faith (→ residue, named lesson,
+    alongside the fail-open lesson: raw-dict NaN comparisons fail
+    open — audit future raw-comparison gates).** Benign observation
+    (qa): the remote-ref updates on the branch are the orchestrator's
+    standing-go session pushes, not agent-initiated pushes.
+  - **★ NEXT = P-038 (residue sweep 2 of 2 — naming/prose, the LAST
+    backlog packet), STAGED not active:** the three
+    producer-named-VALUE surfaces (scoped against the goldens —
+    warning doctrine tags may be golden-pinned; search-mode names
+    appear in emitted creative.json), the liveness-docstring sweep
+    (~8 files), cli.py --mode help text, the P-035 count-pin
+    parenthetical tidy, fallback-reason wording, the two P-036
+    observations (the heard-qualifier shorthand; the elliptical 65.0
+    attribution). Then the batch merge decision (P-036 + P-037 +
+    P-038) on the user's word. **(✓ UPDATE P-038 close, 2026-07-02:
+    ✓ DONE — closed as P-038, THE LAST BACKLOG PACKET; the residue
+    list is ZERO and the batch merge is THE open user gate.)**
+    Receipt: `build-os/receipts/P-037-code-behavior-sweep.md`.
+
+- **★★★ P-036 RE-AUTHORS THE STALE VOCAL-BLEND CONFIDENCE ENTRIES —
+  the honesty layer catches up with P-035's reality (the P-035
+  reviewer's queue-jump recommendation, user-approved). Labeling only,
+  never judgment. ★ THE HONESTY LAYER IS CURRENT with P-034/P-035:
+  every confidence claim in both shipped profiles is now true,
+  code-verified, and pinned against regression to the stale text. qa
+  GREEN + reviewer PASS (no must-fix). Last-closed = P-036.**
+  - **Single commit `95de041`** on parent `6c0d9bf` (active-packet
+    confirmation), atop the merged default `dc921ec` (PR #18). 4 files,
+    34+/16−: both producer JSONs (the vocal-blend entry's `reason`
+    ONLY; `area` and `level` untouched) + both pin files (conscious
+    flips + docstrings). HEAD IS Commit-1 → green in isolation.
+    **PUSHED to the dev branch, NOT merged** (merge base `dc921ec` =
+    PR #18). **★ ONE small packet on the branch — the merge cadence is
+    the user's call: P-036 can ride with the next batch or merge alone
+    on the user's word.**
+  - **★ The re-authored entries: both levels stayed `limited`** — the
+    honest call per the closed vocabulary (`limited` = "mechanically
+    live but constrained on today's data — the constraint stated in the
+    reason"; `high` = "live, WEIGHTED, curated" would OVERCLAIM for the
+    reference whose vocal_role_fit weight is 0, and would DROP the
+    stated constraints for timbaland). New reasons state the LIVE facts
+    (the either-side-forward reading; the measured 65.0/85.0
+    differential; timbaland's +0.7 at its authored 0.4 weight) AND the
+    three real constraints (masker-set-bounded coverage; info tier
+    emitted but unconsumed; no per-track masking risk) — every clause
+    fact-checked TRUE by both gates against code and pinned data. The
+    high-claims machine-checks' scope unchanged (the entry is not
+    weight-backed; no extension needed).
+  - **★ qa GREEN:** suite **754** (count held); regression **93/93, 0
+    warnings**; artifact-delta audit — EXACTLY 16 of 240 files differ
+    (8 × doctrine_score.json + 8 × mix_verdict.md), one line each,
+    every score/variant/promotion/recommendation surface
+    byte-identical; pins: 1 entry per map, reason-only, 2 assertions
+    removed / 8 added (live phrasing pinned IN, the falsified claims
+    pinned OUT — "only against the lead" and "dormant" now asserted
+    ABSENT); safety grep + judgment-word guards clean.
+  - **★ reviewer PASS (no must-fix):** every claim table-verified (the
+    +0.7 correctly the measured artifact delta, not the unrounded
+    0.66 — the honest number); the level decision endorsed; the
+    pinned-OUT shape proven strictly stronger by a FULL-REGRESSION
+    sabotage (JSON + pin constant reverted TOGETHER → the pinned
+    assertions still fail); the corollary tests still bind;
+    byte-identity spot-verified independently. **Codex NOT available —
+    single-model review.** Two non-blocking observations (→ residue):
+    (A) "either side of the pair is forward" elides the masker-arm's
+    `heard` qualifier — repo-canonical shorthand (the analyzer doc's
+    own headline); (B) the 65.0 attribution is elliptical (chop AND
+    stack each penalized once) but numerically exact.
+  - **★ A wording constraint discovered (→ residue):** JUDGMENT_WORDS
+    substring-matches "fix", so "fixture" is unusable in profile text —
+    "real exported-stem data" used instead (accurate; the reviewer
+    confirmed the dodge did not bend the truth).
+  - **★ NEXT = the RESIDUE SWEEPS — the backlog is now PURELY the
+    residue sweeps** (see residue.md: the three producer-named-VALUE
+    surfaces; logic_action_generator.py:38; validation tightening incl.
+    search_modes non-empty + default_creative_mode structural checks +
+    the NaN-floor guard; the liveness-docstring sweep ~8 files; cli.py
+    --mode text; the P-035 count-pin parenthetical tidy; the two P-036
+    observations; duplicate-areas/extra-keys; fallback-reason wording;
+    the shared groove dict defensive copy; lead_names derivation). NO
+    single packet staged — the orchestrator scopes sweep packets with
+    the user. **(✓ UPDATE P-037 close, 2026-07-02: sweep 1 of 2 —
+    the code-behavior items — CLOSED as P-037; P-038 = sweep 2 of
+    2, naming/prose, STAGED as the LAST backlog packet.)** Receipt:
+    `build-os/receipts/P-036-confidence-map-honesty-fix.md`.
 
 - **★★★ P-035 LANDS THE 4TH FIXTURE + THE REAL-DATA VOCAL-BLEND
   DIFFERENTIAL — packet 2 of 2; ★ THE ANALYZER-EXTENSION ARC (P-034 +
@@ -258,7 +520,9 @@
     pin flips, README). **PUSHED to the dev branch, NOT merged** (merge
     base `58d21dd` = PR #17). **★ The dev branch now carries FIVE
     unmerged packets — P-033, P-030, P-034, P-035 + closes — SURFACE
-    THE MERGE DECISION AS THE OPEN USER GATE.**
+    THE MERGE DECISION AS THE OPEN USER GATE.** **(✓ RESOLVED
+    2026-07-02 — the user's go: PR #18 MERGED, `dc921ec` = the new
+    merge base.)**
   - **★ THE CENTRAL FINDING (Commit-1):** the moderate event was
     STRUCTURALLY UNREACHABLE on any real fixture under P-034's
     stem-forward-only gate — a non-lead vocal is necessarily
@@ -304,7 +568,9 @@
     vocals stricter than the lead — consumption-invariance pinned); (c)
     buried-vocal FLIPPED (Commit-1, the packet that owned it).
   - **★ NEXT = the STALE-CONFIDENCE-MAP FIX packet, JUMPING THE RESIDUE
-    QUEUE per the reviewer's recommendation, STAGED not active:** both
+    QUEUE per the reviewer's recommendation — ✓ DONE, closed as P-036
+    (2026-07-02; receipt
+    `build-os/receipts/P-036-confidence-map-honesty-fix.md`):** both
     profiles' "limited" vocal-blend entries claim a dormancy that is now
     FALSE on both halves — contained (no scorer consumes the map) but
     reputationally first for a product whose brand is honest labeling.
@@ -2278,4 +2544,4 @@
   OWN map under this policy (hand-curated-documented → HIGH).
 
 ---
-_Updated by the archivist on close. Last advanced on P-031 close (2026-07-02) — THE HONESTY LAYER lands: the REQUIRED per-area `confidence_map` (high/limited/deferred + reason) is validated, authored + verbatim-pinned for halee_ramone, and rendered per-call; baseline 600 passed / regression 68-of-68; `51a107c`+`4af24e2` pushed, `b869ebd` local (orchestrator pushes at close); NOT merged (merge base `e79426a` = PR #16). Next: P-032h — author `timbaland.json` (THE PAYOFF PACKET), then P-032i (differential proof; no vocal-blend delta expected)._
+_Updated by the archivist on close. Last advanced on P-038 close (2026-07-02) — residue sweep 2 of 2 (naming/prose) lands: producer names off engine-emitted VALUES + the honesty/precision tidies, zero behavior change AST-verified; ★★★ THE ENTIRE POST-MERGE BACKLOG IS COMPLETE — THE RESIDUE LIST IS ZERO (accepted standing notes only); baseline **768** passed / regression **93/93, goldens untouched**; single commit `7b9eda7` (AMENDED TREE-NEUTRALLY from `e1ddfbf` — message-only, the mandated trailers) pushed, NOT merged. **THE OPEN USER GATE: the batch merge — P-036 + P-037 + P-038 (+ closes) onto merge base `dc921ec` (= PR #18) — awaits the user's explicit word.** Nothing staged — future arcs (a third producer, CLI producer exposure, deeper mode-forking in variant generation, the sample-refresh doc pass) are user-initiated options, not debt._

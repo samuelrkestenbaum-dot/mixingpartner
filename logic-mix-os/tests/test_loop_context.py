@@ -30,7 +30,7 @@ Five guards, mirroring the packet:
 1. **Byte-identical** — for all 3 fixtures, ``analyze()`` (default
    halee_ramone) leaves every PRE-EXISTING component score (now 12, incl.
    ``low_end_motion_score``) AND ``overall_mix_readiness_score`` unchanged vs
-   the pinned base, and the golden regression still reports 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture).
+   the pinned base, and the golden regression still reports 93/93 (the P-035 corpus — see conftest.py).
 2. **Value-discrimination (unit)** — a static-dominating loop (dominant + no
    sectional evolution) → LOW; an iconic-functioning loop (dominant +
    groove-carrying + heard/unmasked + evolution around it) → HIGH; no loop →
@@ -39,9 +39,12 @@ Five guards, mirroring the packet:
    words (the ``test_groove_coherence`` "tighter is better" guard idiom,
    applied to the user's banned list).
 4. **Liveness (load-bearing)** — a profile weighting ``loop_context_score``
-   non-zero CHANGES ``analyze()``'s overall on a fixture; a sabotage
-   (hardcoding the term / dropping it from ``component_scores``) FAILS that
-   liveness while byte-identical stays green (P-016/P-029).
+   non-zero CHANGES ``analyze()``'s overall on a fixture; a sabotage that
+   DROPS the term from ``component_scores`` or breaks its threading FAILS
+   that liveness while byte-identical stays green (P-016/P-029). A term
+   hardcoded to a constant is caught by the value-discrimination guards,
+   not by liveness (the direction check reads the score from the same
+   output a constant would poison).
 5. **No-aliasing** — the scorer only reads ``doctrine[...]`` / ``records[...]``
    / ``sections[...]`` / ``masking_report[...]``; it never mutates the shared
    profile structures or the input dicts.
@@ -56,6 +59,7 @@ import pytest
 
 from logic_mix_os.doctrine import doctrine_engine
 from logic_mix_os.doctrine.producer_profile import load_profile
+from test_vocal_type import judgment_word_hits
 
 
 # The twelve pre-existing component score keys (the byte-identical anchor set):
@@ -135,8 +139,9 @@ BASE_COMPONENT_SCORES = {
     },
 }
 
-# The user's banned judgment vocabulary — the engine reads, it never rules.
-JUDGMENT_WORDS = ("bad", "problem", "should", "fix", "better", "worse", "wrong")
+# The user's banned judgment vocabulary lives in ``test_vocal_type`` —
+# P-037 consolidated this file's duplicate tuple onto that single shared
+# guard (``judgment_word_hits``: whole-word + plural matching).
 
 
 # --------------------------------------------------------------------------- #
@@ -271,7 +276,7 @@ def test_overall_is_byte_identical_to_twelve_term_weighted_mean(analyzed):
 
 def test_regression_still_green_full_corpus():
     """The golden corpus regression — which pins ``doctrine_score`` — still
-    passes 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture) with the new axis wired in at weight 0."""
+    passes 93/93 (the P-035 corpus — see conftest.py) with the new axis wired in at weight 0."""
     from pathlib import Path
 
     from logic_mix_os.regression import run_regression_suite
@@ -516,8 +521,8 @@ def test_engine_language_is_observational_zero_judgment_words():
     full banned list across every status the axis can emit."""
     for ev in _all_status_evidence():
         blob = " ".join(ev).lower()
-        for word in JUDGMENT_WORDS:
-            assert word not in blob, f"judgment word {word!r} in evidence: {blob}"
+        hits = judgment_word_hits(blob)
+        assert not hits, f"judgment word(s) {hits} in evidence: {blob}"
 
 
 def test_live_fixture_evidence_is_observational(analyzed):
@@ -526,8 +531,8 @@ def test_live_fixture_evidence_is_observational(analyzed):
     for name in FIXTURE_NAMES:
         ev = analyzed[name].doctrine_score["evidence"]["loop_context"]
         blob = " ".join(ev).lower()
-        for word in JUDGMENT_WORDS:
-            assert word not in blob, f"judgment word {word!r} in {name}: {blob}"
+        hits = judgment_word_hits(blob)
+        assert not hits, f"judgment word(s) {hits} in {name}: {blob}"
 
 
 # --------------------------------------------------------------------------- #
@@ -568,8 +573,10 @@ def test_nonzero_weight_moves_the_overall(analyzed):
 def test_liveness_direction_tracks_the_loop_context_score(analyzed):
     """A sharper sabotage guard: the direction the overall moves under a
     non-zero weight must be consistent with loop_context's value relative to
-    the other components. A hardcoded term would not track the real score and
-    this assertion would break."""
+    the other components. This catches DROP/THREADING sabotage in the
+    weighted mean; a term hardcoded to a constant would still pass here (the
+    check reads the score from the same dict a constant poisons) — hardcoding
+    is caught by the value-discrimination guards."""
     res = analyzed["dense_chorus_with_loops"]
     base_args = (res.records, res.section_analysis, res.masking_report, res.mix_metrics, res.project.intent)
     groove = res.expanded["groove"]

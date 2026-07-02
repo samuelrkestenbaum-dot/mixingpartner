@@ -11,7 +11,7 @@ FIRST-CLASS, machine-readable profile data.
 
 **THIS PACKET IS LABELING, NEVER JUDGMENT.** No scorer reads the map; no
 score, variant, promotion, or recommendation may change. The byte-identity
-guards below (both mandated surfaces, all 3 fixtures, regression 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture)) are
+guards below (both mandated surfaces, all 3 fixtures, regression 93/93 (the P-035 corpus — see conftest.py)) are
 the health metric.
 
 Guard groups, mirroring the packet:
@@ -21,7 +21,9 @@ Guard groups, mirroring the packet:
    loader (no silent defaults — the P-032f attack-4 discipline; an honesty
    layer with zero entries is not honest).
 2. **Honesty pins** — halee_ramone's authored map verbatim-pinned: the
-   ``limited`` inert-blend entry (the P-032f reviewer corollary) and the
+   ``limited`` blend entry (the P-032f reviewer corollary, re-authored in
+   P-036 once P-034/P-035 made the blend differential live and measured on
+   real exported-stem data) and the
    standing deferrals (cultural loop recognizability / true hook recurrence /
    motif provenance / onset-timing strong forms / per-section true-sub
    movement — the latter deferred on BAND RESOLUTION: sections expose
@@ -30,7 +32,7 @@ Guard groups, mirroring the packet:
    ``high`` claims are checked against machine facts (live axes weighted;
    agnostic axes weight-0 as stated).
 3. **Byte-identity, BOTH surfaces** — doctrine pins (73.8 / 70.7 / 74.3 + all
-   14 components) + the full creative base capture + regression 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture).
+   14 components) + the full creative base capture + regression 93/93 (the P-035 corpus — see conftest.py).
 4. **No-aliasing** — every load parses fresh; mutating a loaded map can never
    reach a reload or the module default.
 5. **Observational language** — zero judgment words across every authored
@@ -70,7 +72,7 @@ from logic_mix_os.pipeline import analyze, write_artifacts
 from logic_mix_os.project import load_manifest
 from logic_mix_os.renderers import markdown_renderer
 from test_protect_iconic_loops import BASE_CREATIVE_SURFACE
-from test_vocal_type import BASE_COMPONENT_SCORES, FIXTURE_NAMES, JUDGMENT_WORDS
+from test_vocal_type import BASE_COMPONENT_SCORES, FIXTURE_NAMES, judgment_word_hits
 
 _ROOT = pathlib.Path(__file__).resolve().parent.parent
 _PROFILE_PATH = _ROOT / "logic_mix_os" / "doctrine" / "producers" / "halee_ramone.json"
@@ -91,7 +93,7 @@ AUTHORED_MAP = [
     {
         "area": "vocal blend interpretation",
         "level": "limited",
-        "reason": "the masking analyzer emits vocal-band events only against the lead today; the blend policy is mechanically live but dormant on real exported-stem data",
+        "reason": "the masking analyzer reads the vocal band against non-lead vocals when either side of the pair is forward (the vocal stem itself, or a heard masker standing forward in front of it), and this profile's clarity protection (acceptable_blend: false) is live and measured on real exported-stem data — a masked vocal chop and stack read 65.0 on vocal_role_fit (the chop and the stack each draw the masked penalty once); coverage stays bounded: events arise only from the masker-instrument set, info-tier events are emitted but not consumed, and vocal-band events carry no per-track masking risk",
     },
     {
         "area": "cultural loop recognizability",
@@ -191,6 +193,35 @@ def test_structure_is_validated():
     _validate(_raw_with([ok]), "halee_ramone")
 
 
+def test_duplicate_areas_are_rejected():
+    """P-037 (the P-031 reviewer judgment note, now conscious): two entries
+    labeling the SAME area is ambiguous honesty — which level does the
+    reader trust? — so duplicate ``area`` strings are structurally
+    rejected."""
+    a = {"area": "same area", "level": "high", "reason": "r1"}
+    b = {"area": "same area", "level": "deferred", "reason": "r2"}
+    other = {"area": "another area", "level": "limited", "reason": "r3"}
+    with pytest.raises(ValueError, match="confidence_map"):
+        _validate(_raw_with([a, b]), "halee_ramone")
+    with pytest.raises(ValueError, match="confidence_map"):
+        _validate(_raw_with([a, other, dict(a)]), "halee_ramone")
+    # Distinct areas still pass — uniqueness is the only new constraint here.
+    _validate(_raw_with([a, other]), "halee_ramone")
+
+
+def test_entry_keys_are_exactly_area_level_reason():
+    """P-037 (the P-031 reviewer judgment note, now conscious): an entry's
+    key set is EXACTLY {area, level, reason} — an unknown extra key (a typo,
+    a smuggled weight, a stray annotation) is rejected, never silently
+    carried onto the report surface."""
+    ok = {"area": "a", "level": "high", "reason": "r"}
+    for extra in ("weight", "score", "Area", "note"):
+        broken = dict(ok, **{extra: "x"})
+        with pytest.raises(ValueError, match="confidence_map"):
+            _validate(_raw_with([broken]), "halee_ramone")
+    _validate(_raw_with([ok]), "halee_ramone")
+
+
 def test_every_authored_level_is_from_the_closed_vocabulary():
     for entry in load_profile("halee_ramone").confidence_map:
         assert entry["level"] in CONFIDENCE_LEVELS
@@ -205,15 +236,29 @@ def test_halee_ramone_authored_map_verbatim():
     assert load_profile("halee_ramone").confidence_map == AUTHORED_MAP
 
 
-def test_limited_inert_blend_entry_is_pinned_verbatim():
-    """THE P-032f REVIEWER COROLLARY, first-class: vocal blend interpretation
-    is LIMITED — the analyzer emits vocal-band events only against the lead,
-    so the blend policy is mechanically live but dormant on real data. A
-    future packet deleting or relaxing this label breaks here."""
+def test_limited_blend_entry_is_pinned_verbatim():
+    """THE P-032f REVIEWER COROLLARY, re-authored LIVE in P-036: P-034 gave
+    the analyzer non-lead vocal-band events and P-035 made the blend
+    differential measured on real exported-stem data (vocal_role_fit 65.0
+    under this profile's declined blend), so the old dormancy claim is
+    retired. The entry stays LIMITED because the constraint is real and
+    stated: masker-set-bounded coverage, the unconsumed info tier, and the
+    per-track-risk exclusion. P-038 tidied the text only (the two P-036
+    reviewer observations): the "either side" shorthand now carries the
+    masker-arm's heard qualifier (paired with the analyzer doc line), and
+    the 65.0 attribution states that the chop and the stack each draw the
+    masked penalty once (70 + 15 − 2×10). A future packet deleting or
+    relaxing this label breaks here."""
     limited = [e for e in load_profile("halee_ramone").confidence_map
                if e["level"] == "limited"]
     assert limited == [AUTHORED_MAP[2]]
-    assert "only against the lead" in limited[0]["reason"]
+    # the live status is stated, the falsified P-032f claims are gone
+    assert "either side of the pair is forward" in limited[0]["reason"]
+    assert "heard masker standing forward" in limited[0]["reason"]  # P-038
+    assert "each draw the masked penalty once" in limited[0]["reason"]  # P-038
+    assert "measured on real exported-stem data" in limited[0]["reason"]
+    assert "only against the lead" not in limited[0]["reason"]
+    assert "dormant" not in limited[0]["reason"]
 
 
 def test_deferred_entries_are_pinned_verbatim():
@@ -276,8 +321,8 @@ def test_map_language_is_observational_zero_judgment_words():
     'bad', 'problem', 'should', 'fix' (nor better/worse/wrong)."""
     blob = json.dumps(load_profile("halee_ramone").confidence_map,
                       sort_keys=True).lower()
-    for word in JUDGMENT_WORDS:
-        assert word not in blob, f"judgment word {word!r} in confidence_map"
+    hits = judgment_word_hits(blob)
+    assert not hits, f"judgment word(s) {hits} in confidence_map"
 
 
 # --------------------------------------------------------------------------- #
@@ -315,7 +360,7 @@ def test_creative_surface_byte_identical_to_base_capture(analyzed):
 
 def test_regression_still_green_full_corpus():
     """The golden corpus regression — categorical fingerprint + the original
-    score keys — still passes 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture) with the map authored."""
+    score keys — still passes 93/93 (the P-035 corpus — see conftest.py) with the map authored."""
     from logic_mix_os.regression import run_regression_suite
 
     report = run_regression_suite(_ROOT / "fixtures")

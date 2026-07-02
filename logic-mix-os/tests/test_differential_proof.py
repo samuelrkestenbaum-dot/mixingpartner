@@ -183,7 +183,9 @@ EXPECTED_SNAPSHOT = {
                 ("loop_context_score", 50.0),
             ],
             "winning_variants": {"vocal_belief": "vocal_A"},
-            "search_mode": "ramone_vocal_truth",
+            # P-038 renamed the reference's mode value (ramone_vocal_truth ->
+            # vocal_truth): a NAME-only flip; every score in this snapshot held.
+            "search_mode": "vocal_truth",
         },
         "timbaland": {
             "overall": 68.4,
@@ -340,7 +342,7 @@ def test_plan_surfaces_differ_where_the_value_systems_diverge(analyzed, tim_anal
     """The SPECIFIC known plan-surface differences, pinned:
 
     * intimate fixture — different SEARCH MODES, each profile's OWN authored
-      ``intimate_mode`` (ramone_vocal_truth vs conservative — P-033 wired the
+      ``intimate_mode`` (vocal_truth vs conservative — P-033 wired the
       ``default_creative_mode`` table per call; obligation (d)'s pin below
       carries the reachability proof);
     * loop fixtures — the loop branch scores from each profile's own curated
@@ -350,7 +352,7 @@ def test_plan_surfaces_differ_where_the_value_systems_diverge(analyzed, tim_anal
     * dense chorus_lift_D (drum_room_bloom) — the one move timbaland's tables
       score UP vs the reference (82.1 > 81.4): the physical drum-room lift
       matters more to a groove-first value system."""
-    assert analyzed["simple_vocal_piano_song"].creative["search_mode"] == "ramone_vocal_truth"
+    assert analyzed["simple_vocal_piano_song"].creative["search_mode"] == "vocal_truth"
     assert tim_analyzed["simple_vocal_piano_song"].creative["search_mode"] == "conservative"
 
     for name in LOOP_FIXTURES:
@@ -699,9 +701,11 @@ def test_intimate_mode_selection_the_authored_mode_is_reachable(
       "conservative"`` and "conservative" IS a real mode in its own table;
     * ``pipeline._default_creative_mode`` reads the PASSED profile's
       ``default_creative_mode`` table (P-033): the intimate fixture's truth
-      resolves to "ramone_vocal_truth" under the reference (its table
-      coincides string-for-string with the old hardcoded map — the
-      byte-identity construction) and to "conservative" under timbaland;
+      resolves to "vocal_truth" under the reference ("ramone_vocal_truth"
+      before the P-038 mode-name rename; the coincidence with the old
+      hardcoded map — the P-033 byte-identity construction — is pinned,
+      modulo that rename, in test_creative_mode_wiring.py) and to
+      "conservative" under timbaland;
     * each resolved name is real in its own profile's ``search_modes``, so
       NO fallback fires on either producer (the hardcoded
       "dramatic_contrast" substitute is gone; the profile-owned fallback
@@ -712,9 +716,9 @@ def test_intimate_mode_selection_the_authored_mode_is_reachable(
     assert "conservative" in tim.search_modes
 
     intent = analyzed["simple_vocal_piano_song"].project.intent
-    assert pipeline._default_creative_mode(intent) == "ramone_vocal_truth"
+    assert pipeline._default_creative_mode(intent) == "vocal_truth"
     assert pipeline._default_creative_mode(intent, tim) == "conservative"
-    assert "ramone_vocal_truth" not in tim.search_modes
+    assert "vocal_truth" not in tim.search_modes
 
     observed = tim_analyzed["simple_vocal_piano_song"].creative["search_mode"]
     assert observed == "conservative"

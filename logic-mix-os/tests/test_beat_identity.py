@@ -10,7 +10,7 @@ Four guards, mirroring the packet:
 
 1. **Byte-identical** — for all 3 fixtures, ``analyze()`` (default halee_ramone)
    leaves every pre-existing component score AND ``overall_mix_readiness_score``
-   unchanged, and the golden regression still reports 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture). The mechanism: the
+   unchanged, and the golden regression still reports 93/93 (the P-035 corpus — see conftest.py). The mechanism: the
    new term is appended LAST to ``component_scores`` (summation order preserved)
    and its weight is 0 (``beat*0`` numerator, ``+0`` denominator).
 2. **Value-discrimination (unit)** — a punchy, foregrounded, distinct rhythmic
@@ -18,8 +18,11 @@ Four guards, mirroring the packet:
    ``no_beat`` floor. Proves the scorer measures what it claims.
 3. **Liveness (load-bearing)** — a synthetic profile that weights
    ``beat_identity_score`` non-zero CHANGES ``analyze()``'s overall on
-   ``dense_chorus_with_loops``; and a sabotage (hardcoding the term to a
-   constant) FAILS that liveness while byte-identical stays green (P-016/P-029).
+   ``dense_chorus_with_loops``; a sabotage that DROPS the term or breaks its
+   threading FAILS that liveness while byte-identical stays green
+   (P-016/P-029). A term hardcoded to a constant is caught by the
+   value-discrimination guards, not by liveness (the direction check reads
+   the score from the same output a constant would poison).
 4. **No-aliasing** — the scorer only reads ``doctrine[...]``; it never mutates
    the shared profile structures.
 """
@@ -136,7 +139,7 @@ def test_overall_is_byte_identical_to_seven_term_weighted_mean(analyzed):
 
 def test_regression_still_green_full_corpus():
     """The golden corpus regression — which pins ``doctrine_score`` — still passes
-    93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture) with the new axis wired in at weight 0."""
+    93/93 (the P-035 corpus — see conftest.py) with the new axis wired in at weight 0."""
     from pathlib import Path
 
     from logic_mix_os.regression import run_regression_suite
@@ -244,8 +247,10 @@ def test_nonzero_weight_moves_the_overall(analyzed):
 def test_liveness_direction_tracks_the_beat_score(analyzed):
     """A sharper sabotage guard: the direction the overall moves under a non-zero
     weight must be consistent with beat_identity's value relative to the other
-    components. If the term were hardcoded to a fixed number the move would not
-    track the real beat score, and this assertion would break."""
+    components. This catches DROP/THREADING sabotage in the weighted mean; a
+    term hardcoded to a constant would still pass here (the check reads the
+    score from the same dict a constant poisons) — hardcoding is caught by
+    the value-discrimination guards."""
     res = analyzed["dense_chorus_with_loops"]
     args = (res.records, res.section_analysis, res.masking_report, res.mix_metrics, res.project.intent)
 

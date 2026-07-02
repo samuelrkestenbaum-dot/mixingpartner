@@ -86,7 +86,6 @@ from logic_mix_os.project import load_manifest
 from conftest import FIXTURE_NAMES, ROOT
 from test_vocal_type import (
     BASE_COMPONENT_SCORES,
-    JUDGMENT_WORDS,
     _chop,
     _constants,
     _lead,
@@ -95,6 +94,7 @@ from test_vocal_type import (
     _rec,
     _stack,
     _vband,
+    judgment_word_hits,
 )
 
 BLEND_LINE = "accepted as blend under profile policy"
@@ -329,8 +329,8 @@ def test_emission_wording_is_observational_and_philosophy_neutral():
     assert {e["severity"] for e in vband} == {"moderate", "info"}
     for e in vband:
         blob = (e["reason"] + " " + e["recommendation"]).lower()
-        for word in JUDGMENT_WORDS:
-            assert word not in blob, f"judgment word {word!r} in: {blob}"
+        hits = judgment_word_hits(blob)
+        assert not hits, f"judgment word(s) {hits} in: {blob}"
         assert "no action is prescribed" in e["recommendation"].lower()
         assert "producer-profile decision" in e["recommendation"].lower()
         assert f"{e['overlap']:.2f}" in e["reason"]
@@ -362,7 +362,7 @@ def test_no_aliasing_between_runs():
 
 
 # --------------------------------------------------------------------------- #
-# 2. BYTE-IDENTITY — 3 fixtures x both producers, every surface, 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture).
+# 2. BYTE-IDENTITY — 3 fixtures x both producers, every surface, 93/93 (the P-035 corpus — see conftest.py).
 # --------------------------------------------------------------------------- #
 def test_no_new_events_on_any_fixture_under_either_producer(analyzed, tim_analyzed):
     """The fixture-inert guarantee, at the masking_report surface: zero
@@ -420,7 +420,7 @@ def test_plan_surfaces_carry_no_new_vocabulary(analyzed, tim_analyzed):
 
 
 def test_regression_still_green_full_corpus():
-    """The golden corpus — fixture-inert packet: 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture), goldens unchanged."""
+    """The golden corpus — fixture-inert packet: 93/93 (the P-035 corpus — see conftest.py), goldens unchanged."""
     from logic_mix_os.regression import run_regression_suite
 
     report = run_regression_suite(ROOT / "fixtures")
@@ -566,6 +566,51 @@ def test_lead_match_is_identity_derived_not_name_derived(analyzed):
     assert creative._lead_masked(res) is True
 
 
+# --------------------------------------------------------------------------- #
+# 4b. THE ACTION-GENERATOR FIX (P-037) — the same identity-derived lead-name
+#     matching, applied to logic_action_generator's ``masks_vocal`` read (the
+#     P-034 residue item: the last name-based "vocal" substring match in the
+#     engine; unreachable today via the lead-inclusive ``bad_masking`` gate,
+#     hardened anyway — same family as creative.py:98).
+# --------------------------------------------------------------------------- #
+def test_action_generator_lead_match_is_identity_derived_not_name_derived():
+    """THE SHARP PROOF, action-generator arm: a lead named WITHOUT the
+    'vocal' substring still drives the harmonic carve-a-pocket action and
+    the competing-with-the-vocal diagnosis on its masker (the old substring
+    predicate could not see it)."""
+    lead = _lead()
+    lead["name"] = "The Voice"
+    piano = _piano()
+    report = {"events": [{
+        "classification": "bad_masking",
+        "elements": ["The Voice", "Piano"],
+        "severity": "critical",
+    }]}
+    actions = generate_logic_actions([lead, piano], report)
+    piano_entry = next(a for a in actions if a["track"] == "Piano")
+    assert "competing with the vocal" in piano_entry["diagnosis"].lower()
+    assert any("carve a pocket" in a["setting"].lower()
+               for a in piano_entry["actions"])
+
+
+def test_action_generator_lead_free_vocal_named_event_is_not_a_lead_mask():
+    """DIRECTION 2: a lead-free ``bad_masking`` event whose element names
+    contain the SUBSTRING 'vocal' (the old predicate's false trigger — a
+    shape production code never emits today) no longer reads as vocal
+    masking on the co-elements."""
+    lead, piano = _lead(), _piano()
+    report = {"events": [{
+        "classification": "bad_masking",
+        "elements": ["Backing Vocal Stack", "Piano"],
+        "severity": "moderate",
+    }]}
+    actions = generate_logic_actions([lead, piano], report)
+    piano_entry = next(a for a in actions if a["track"] == "Piano")
+    assert "competing with the vocal" not in piano_entry["diagnosis"].lower()
+    assert not any("carve a pocket" in a["setting"].lower()
+                   for a in piano_entry["actions"])
+
+
 def test_new_classification_never_reaches_the_nudge_layer(analyzed):
     """Even an adversarial lead-NAMED ``vocal_band_masking`` event (which the
     analyzer never emits) cannot fire the masked-lead nudge — the
@@ -686,5 +731,5 @@ def test_axis_evidence_language_with_new_events_is_observational():
                    load_profile("timbaland").vocal_blend_policy, None):
         _, ev = _ref_vrf(records, events, policy=policy)
         blob = " ".join(ev).lower()
-        for word in JUDGMENT_WORDS:
-            assert word not in blob, f"judgment word {word!r} in evidence: {blob}"
+        hits = judgment_word_hits(blob)
+        assert not hits, f"judgment word(s) {hits} in evidence: {blob}"

@@ -16,7 +16,10 @@ from __future__ import annotations
 import statistics
 from typing import Dict, List, Optional
 
-from ..analyzers.vocal_type_classifier import accepted_blend_under_policy
+from ..analyzers.vocal_type_classifier import (
+    accepted_blend_under_policy,
+    lead_vocal_names,
+)
 from ..constants import LOOP_SAMPLE_KINDS
 from .producer_profile import ProducerProfile, load_profile
 
@@ -233,8 +236,11 @@ def _emotional_hierarchy(records: List[Dict], lead: Optional[Dict], events: List
         score -= c["no_lead"]
         ev.append("No identified lead vocal — the emotional centre is undefined.")
         warnings.append({
+            # P-038: aesthetic-descriptive tag (was producer-named
+            # "phil_ramone_vocal_centrality") — engine-emitted values carry
+            # no producer names; vocal_centrality is the P-030 vocabulary.
             "warning": "No lead vocal identified. Confirm the emotional centre before mixing.",
-            "doctrine": ["phil_ramone_vocal_centrality"],
+            "doctrine": ["vocal_centrality"],
         })
     else:
         bad_vocal = [e for e in events if lead["name"] in e["elements"] and e["classification"] == "bad_masking"]
@@ -250,8 +256,11 @@ def _emotional_hierarchy(records: List[Dict], lead: Optional[Dict], events: List
         score -= c["decorative_penalty"]
         ev.append(f"{len(decorative)} decorative/expendable element(s); risk of overmixing.")
         warnings.append({
+            # P-038: aesthetic-descriptive tag (was producer-named
+            # "phil_ramone_restraint") — joins the bare-aesthetic tag family
+            # (sacred_vs_expendable / section_contrast / felt_vs_heard).
             "warning": "Many decorative elements relative to core. Consider subtraction before processing.",
-            "doctrine": ["phil_ramone_restraint", "sacred_vs_expendable"],
+            "doctrine": ["restraint", "sacred_vs_expendable"],
         })
     return _clamp(score), ev
 
@@ -550,8 +559,9 @@ def _groove_coherence(groove: Optional[Dict], doctrine: Dict = _DOCTRINE):
     it reads a signal — ``analyze_groove``'s ``overall_regularity`` (mean per-track
     ``1 − CoV(IOIs)``, i.e. rhythmic tightness) — that used to be computed AFTER
     ``score_doctrine`` in the pipeline. To feed it to doctrine the pipeline now
-    computes ``groove`` ONCE, BEFORE this call, and threads it in here; the same
-    object is reused for ``result.expanded["groove"]`` (behavior-preserving).
+    computes ``groove`` ONCE, BEFORE this call, and threads it in here; a
+    pre-doctrine defensive SNAPSHOT of it — byte-equal, never the same object
+    since P-037 — becomes ``result.expanded["groove"]`` (behavior-preserving).
 
     HONEST NAMING — this does NOT overclaim. ``overall_regularity`` measures
     rhythmic tightness/consistency, NOT "identity coherence" in the full sense. We
@@ -1260,7 +1270,14 @@ def _vocal_role_fit(records: List[Dict], events: List[Dict],
     )
     ev.append(f"Vocal roles read: {census}.")
 
-    lead_names = {r["name"] for r in vocal_stems if r["vocal_type"] == "vocal_lead"}
+    # P-037 (the P-032f reviewer note): the lead exclusion set is IDENTITY-
+    # derived (the shared ``lead_vocal_names`` basis), never read off the
+    # classifier's ``vocal_type`` field. Identical on all pipeline data —
+    # identity wins guarantees ``lead_vocal`` ⟺ ``vocal_lead`` — but the type
+    # field was hand-mangle-able: forcing a lead's type off ``vocal_lead``
+    # emptied the old set and re-routed the lead's events through the
+    # non-lead pathway. Identity outranks any (mis)typed read.
+    lead_names = lead_vocal_names(records)
 
     def _lead_band_masking(name: str) -> List[Dict]:
         """The masked-LEAD pathway: the analyzer's lead-inclusive
