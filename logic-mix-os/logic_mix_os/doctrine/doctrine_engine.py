@@ -169,6 +169,13 @@ def score_doctrine(
             "vocal_role_fit": vrf_ev,
         },
         "warnings": warnings,
+        # P-031: the per-area honesty map, copied VERBATIM from the PASSED
+        # profile (per-call — the P-029 threading; the default path carries
+        # the reference map) into the judgment artifact it qualifies. This is
+        # LABELING, never judgment: no scorer reads it, and the golden
+        # snapshot (categorical + the original score keys) cannot see it.
+        # Fresh dict copies, so the artifact never aliases the profile.
+        "confidence": [dict(entry) for entry in prof.confidence_map],
     }
 
 

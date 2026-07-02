@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import Dict, List, Optional
 
+from ..doctrine.producer_profile import CONFIDENCE_LEVELS
+
 
 def _fmt_score(v) -> str:
     return "n/a" if v is None else f"{v}/100"
@@ -100,6 +102,28 @@ def render_halee_ramone_verdict(mix_plan: Dict, doctrine_score: Dict) -> str:
     out.append("**The Halee test:** Can the listener visualize musicians in a real physical space?  ")
     out.append("**The Ramone test:** Do I believe every word the singer is saying?")
     out.append("")
+
+    # P-031: the per-area honesty map, read from the SAME doctrine_score the
+    # scores above come from (the per-call profile's map — the P-029
+    # threading — never the module default's). Data-driven: no key (or an
+    # empty list) renders no section; the grouping order IS the closed
+    # vocabulary (one source of truth). Read-only — never mutated here.
+    confidence = doctrine_score.get("confidence") or []
+    if confidence:
+        out.append("## Confidence")
+        out.append("")
+        out.append("_Per-area trust labels from the producer profile: which parts of "
+                   "this judgment carry what strength, and why._")
+        out.append("")
+        for level in CONFIDENCE_LEVELS:
+            entries = [e for e in confidence if e.get("level") == level]
+            if not entries:
+                continue
+            out.append(f"**{level.capitalize()}**")
+            out.append("")
+            for e in entries:
+                out.append(f"- {e['area']} — {e['reason']}")
+            out.append("")
 
     risks = mix_plan.get("biggest_risks", [])
     if risks:

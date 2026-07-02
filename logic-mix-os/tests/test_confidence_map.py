@@ -1,5 +1,6 @@
 """P-031 — the binding guards for the per-area confidence framework:
-``confidence_map`` (Commit-1: schema + authored map + validation).
+``confidence_map`` (Commit-1: schema + authored map + validation;
+Commit-2: the map rendered on the report surface).
 
 THE USER-UPGRADED SCOPE (binding): per-interpretation-AREA confidence, not a
 single profile-level stamp. Every producer profile must carry a REQUIRED
@@ -31,10 +32,25 @@ Guard groups, mirroring the packet:
    reach a reload or the module default.
 5. **Observational language** — zero judgment words across every authored
    area and reason.
+6. **The machine-readable copy** (Commit-2) — ``doctrine_score`` carries a
+   ``confidence`` key copied VERBATIM from the PASSED profile (per-call, the
+   P-029 threading), fresh — never an alias; the schema documents it.
+7. **Rendering + liveness** (Commit-2) — the verdict markdown gains a compact
+   "Confidence" section grouped by level; a synthetic profile with a
+   DIFFERENT map, driven through the REAL ``analyze()`` path and
+   ``write_artifacts``, renders ITS entries (sabotage — sourcing the section
+   from the module default or hardcoding it — fails here while byte-identity
+   stays green); the section is data-driven (absent key => absent section);
+   the renderer reads, never mutates.
+8. **Golden blindness** — ``build_snapshot`` (categorical + the original
+   score keys) cannot see the addition: the live snapshot carries no map
+   vocabulary and still matches the stored golden, 0 criticals.
 """
 
 from __future__ import annotations
 
+import copy
+import dataclasses
 import json
 import pathlib
 
@@ -47,6 +63,9 @@ from logic_mix_os.doctrine.producer_profile import (
     _validate,
     load_profile,
 )
+from logic_mix_os.pipeline import analyze, write_artifacts
+from logic_mix_os.project import load_manifest
+from logic_mix_os.renderers import markdown_renderer
 from test_protect_iconic_loops import BASE_CREATIVE_SURFACE
 from test_vocal_type import BASE_COMPONENT_SCORES, FIXTURE_NAMES, JUDGMENT_WORDS
 
@@ -325,3 +344,163 @@ def test_two_loads_are_equal_but_independent():
     assert a.confidence_map == b.confidence_map
     assert a.confidence_map is not b.confidence_map
     assert all(x is not y for x, y in zip(a.confidence_map, b.confidence_map))
+
+
+# --------------------------------------------------------------------------- #
+# 6. THE MACHINE-READABLE COPY — doctrine_score carries the per-call map.
+# --------------------------------------------------------------------------- #
+def test_doctrine_score_carries_the_authored_confidence_copy(analyzed):
+    """Every fixture's ``doctrine_score`` carries the authored map verbatim
+    under the additive ``confidence`` key — the machine-readable copy a human
+    or Cowork reads next to the scores it qualifies."""
+    for name in FIXTURE_NAMES:
+        assert analyzed[name].doctrine_score["confidence"] == AUTHORED_MAP
+
+
+def test_confidence_copy_is_fresh_never_an_alias_of_the_profile():
+    """The artifact copy is freshly built per call: mutating it can never
+    reach the profile (nor the module default)."""
+    prof = load_profile("halee_ramone")
+    ds = doctrine_engine.score_doctrine([], [], {"events": []}, None, profile=prof)
+    assert ds["confidence"] == prof.confidence_map
+    assert ds["confidence"] is not prof.confidence_map
+    assert all(a is not b for a, b in zip(ds["confidence"], prof.confidence_map))
+
+    ds["confidence"][0]["level"] = "deferred"
+    ds["confidence"].append({"area": "x", "level": "high", "reason": "y"})
+    assert prof.confidence_map == AUTHORED_MAP
+    assert doctrine_engine._DEFAULT_PROFILE.confidence_map == AUTHORED_MAP
+
+
+def test_doctrine_score_json_still_validates_and_schema_documents_the_shape(analyzed):
+    """The artifact still validates, and the schema documents the additive
+    key with the closed level vocabulary (no additionalProperties conflict —
+    the doctrine_score schema declares none)."""
+    from logic_mix_os.validation.output_validator import load_schema, validate_instance
+
+    schema = load_schema("doctrine_score.schema.json")
+    assert "additionalProperties" not in schema
+    conf_schema = schema["properties"]["confidence"]
+    assert conf_schema["items"]["properties"]["level"]["enum"] == list(CONFIDENCE_LEVELS)
+    assert conf_schema["items"]["required"] == ["area", "level", "reason"]
+    assert "confidence" not in schema["required"]  # additive, never breaking
+
+    for name in FIXTURE_NAMES:
+        assert validate_instance(analyzed[name].doctrine_score, schema) == []
+
+
+# --------------------------------------------------------------------------- #
+# 7. RENDERING + LIVENESS — the verdict section, sourced per-call.
+# --------------------------------------------------------------------------- #
+def test_verdict_markdown_renders_the_authored_entries(analyzed):
+    """The verdict artifact gains a compact "Confidence" section carrying
+    every authored area and reason, grouped by level in the closed-vocabulary
+    order (high before limited before deferred)."""
+    for name in FIXTURE_NAMES:
+        res = analyzed[name]
+        md = markdown_renderer.render_halee_ramone_verdict(res.mix_plan, res.doctrine_score)
+        assert "## Confidence" in md
+        for entry in AUTHORED_MAP:
+            assert entry["area"] in md, (name, entry["area"])
+            assert entry["reason"] in md, (name, entry["area"])
+        hi, li, de = md.index("**High**"), md.index("**Limited**"), md.index("**Deferred**")
+        assert hi < li < de
+        # compact `area — reason` lines, one per entry
+        for entry in AUTHORED_MAP:
+            assert f"- {entry['area']} — {entry['reason']}" in md
+
+
+def test_rendering_liveness_a_passed_profiles_map_renders_not_the_defaults(tmp_path):
+    """P-029 threading, load-bearing: a synthetic profile with a DIFFERENT
+    map, driven through the REAL ``analyze()`` path and ``write_artifacts``,
+    renders ITS entries in both the JSON copy and the markdown section — and
+    NONE of halee_ramone's.
+
+    Sabotage this catches: sourcing the copy/section from the module default
+    (``_DEFAULT_PROFILE``) or hardcoding the section renders the reference
+    entries here and FAILS — while every byte-identity guard stays green."""
+    from conftest import ROOT
+
+    synthetic_map = [
+        {"area": "synthetic groove interpretation", "level": "high",
+         "reason": "authored for the liveness proof"},
+        {"area": "synthetic hook reading", "level": "deferred",
+         "reason": "not measurable in this synthetic profile"},
+    ]
+    prof = dataclasses.replace(load_profile("halee_ramone"),
+                               confidence_map=synthetic_map)
+    name = "simple_vocal_piano_song"
+    manifest = load_manifest(ROOT / "fixtures" / name / "project_manifest.json")
+    res = analyze(str(ROOT / "fixtures" / name / "stems"), manifest, producer=prof)
+
+    assert res.doctrine_score["confidence"] == synthetic_map
+    write_artifacts(res, tmp_path)
+
+    dsj = json.loads((tmp_path / "doctrine_score.json").read_text(encoding="utf-8"))
+    assert dsj["confidence"] == synthetic_map
+
+    md = (tmp_path / "halee_ramone_mix_verdict.md").read_text(encoding="utf-8")
+    assert "synthetic groove interpretation" in md
+    assert "authored for the liveness proof" in md
+    assert "synthetic hook reading" in md
+    for reference_area in ("vocal blend interpretation",
+                           "cultural loop recognizability",
+                           "true hook recurrence", "motif provenance"):
+        assert reference_area not in md, f"module default leaked: {reference_area}"
+
+
+def test_verdict_section_is_data_driven_absent_key_absent_section():
+    """A doctrine_score WITHOUT the key (a pre-P-031 artifact) renders no
+    Confidence section — the section is data-driven, never hardcoded."""
+    md = markdown_renderer.render_halee_ramone_verdict({}, {})
+    assert "## Confidence" not in md
+    md_empty = markdown_renderer.render_halee_ramone_verdict({}, {"confidence": []})
+    assert "## Confidence" not in md_empty
+
+
+def test_renderer_reads_never_mutates(analyzed):
+    res = analyzed["dense_chorus_with_loops"]
+    ds_before = copy.deepcopy(res.doctrine_score)
+    mp_before = copy.deepcopy(res.mix_plan)
+    markdown_renderer.render_halee_ramone_verdict(res.mix_plan, res.doctrine_score)
+    assert res.doctrine_score == ds_before
+    assert res.mix_plan == mp_before
+
+
+def test_rendered_level_order_is_the_closed_vocabulary_single_source():
+    """The renderer groups by ``CONFIDENCE_LEVELS`` itself (one source of
+    truth for vocabulary AND order) — a level absent from a map renders no
+    empty group header."""
+    ds = {"confidence": [
+        {"area": "only-deferred area", "level": "deferred", "reason": "stated"},
+    ]}
+    md = markdown_renderer.render_halee_ramone_verdict({}, ds)
+    assert "**Deferred**" in md
+    assert "**High**" not in md
+    assert "**Limited**" not in md
+
+
+# --------------------------------------------------------------------------- #
+# 8. GOLDEN BLINDNESS — the addition is invisible to build_snapshot.
+# --------------------------------------------------------------------------- #
+def test_build_snapshot_is_blind_to_the_confidence_addition(analyzed):
+    """What the golden pins — the categorical track fingerprint, masking
+    classifications, section lift warnings, the original score keys and the
+    next-pass titles — cannot see the map: the live snapshot carries no map
+    vocabulary and still matches the stored golden with 0 criticals."""
+    from conftest import ROOT
+    from logic_mix_os.regression import build_snapshot, compare_snapshots
+
+    for name in FIXTURE_NAMES:
+        snapshot = build_snapshot(analyzed[name])
+        blob = json.dumps(snapshot, sort_keys=True)
+        for entry in AUTHORED_MAP:
+            assert entry["area"] not in blob
+            assert entry["reason"] not in blob
+
+        golden_path = ROOT / "fixtures" / name / "golden" / "snapshot.json"
+        golden = json.loads(golden_path.read_text(encoding="utf-8"))
+        tests, passed, critical, warnings = compare_snapshots(name, golden, snapshot)
+        assert critical == []
+        assert passed == tests
+        assert warnings == []
