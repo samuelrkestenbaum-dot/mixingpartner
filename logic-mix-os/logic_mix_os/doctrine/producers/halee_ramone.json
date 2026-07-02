@@ -240,5 +240,10 @@
     "default_mode": "dramatic_contrast"
   },
 
-  "protect_iconic_loops": false
+  "protect_iconic_loops": false,
+
+  "vocal_blend_policy": {
+    "acceptable_blend": false,
+    "confidence_floor": 0.75
+  }
 }

@@ -48,6 +48,7 @@ _REQUIRED_DATA_FIELDS = (
     "doctrine",
     "default_creative_mode",
     "protect_iconic_loops",
+    "vocal_blend_policy",
 )
 
 _REQUIRED_METADATA_FIELDS = (
@@ -112,6 +113,20 @@ class ProducerProfile:
     # protection (the Ramone gate lives in creative.py).
     protect_iconic_loops: bool
 
+    # doctrine_engine.py — P-032f: the profile-AUTHORED masking philosophy for
+    # non-lead vocal roles (the P-032g pattern: a REQUIRED top-level field so
+    # every producer's decision is explicit in its JSON, never defaulted).
+    # Shape: {"acceptable_blend": bool, "confidence_floor": float in [0, 1]}.
+    # ``acceptable_blend: true`` lets masking of a QUALIFIED vocal_percussive /
+    # vocal_stack stem (classifier confidence >= confidence_floor, never the
+    # lead, never on an event that includes the lead) read as accepted blend
+    # in the ``vocal_role_fit`` axis. ``false`` (halee_ramone) => the gated
+    # path is unreachable and every vocal keeps full lead-grade clarity
+    # protection. Uncertain and hook_candidate vocals and the masked-lead
+    # pathway are NEVER blend-eligible whatever this field says (the
+    # fail-closed gates live in ``accepted_blend_under_policy``).
+    vocal_blend_policy: Dict[str, Any]
+
 
 def _normalize_kinds_sets(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """JSON has no set type: the nudge/promotion rows store ``kinds`` as a list.
@@ -151,6 +166,21 @@ def _validate(raw: Dict[str, Any], name: str) -> None:
                "loop_context", "vocal_role_fit"):
         if fn not in doctrine["scorers"]:
             raise ValueError(f"profile {name!r}: doctrine.scorers missing {fn!r}")
+    # P-032f: the vocal blend policy must be structurally sound — an explicit
+    # bool opt-in plus a real confidence floor in [0, 1]. No silent defaults.
+    policy = raw["vocal_blend_policy"]
+    if not isinstance(policy, dict):
+        raise ValueError(f"profile {name!r}: vocal_blend_policy must be an object")
+    for key in ("acceptable_blend", "confidence_floor"):
+        if key not in policy:
+            raise ValueError(f"profile {name!r}: vocal_blend_policy missing {key!r}")
+    if not isinstance(policy["acceptable_blend"], bool):
+        raise ValueError(f"profile {name!r}: vocal_blend_policy.acceptable_blend must be a bool")
+    floor = policy["confidence_floor"]
+    if isinstance(floor, bool) or not isinstance(floor, (int, float)) or not 0.0 <= floor <= 1.0:
+        raise ValueError(
+            f"profile {name!r}: vocal_blend_policy.confidence_floor must be a number in [0, 1]"
+        )
 
 
 def load_profile(name: str = "halee_ramone") -> ProducerProfile:
@@ -185,6 +215,7 @@ def load_profile(name: str = "halee_ramone") -> ProducerProfile:
         doctrine=raw["doctrine"],
         default_creative_mode=raw["default_creative_mode"],
         protect_iconic_loops=raw["protect_iconic_loops"],
+        vocal_blend_policy=raw["vocal_blend_policy"],
     )
 
 

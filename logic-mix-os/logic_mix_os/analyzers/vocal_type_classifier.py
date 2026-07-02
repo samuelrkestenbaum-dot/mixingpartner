@@ -170,8 +170,84 @@ def classify_vocal_type(record: Dict) -> Optional[Dict]:
     }
 
 
+# --------------------------------------------------------------------------- #
+# P-032f Commit-2 — the profile-gated acceptable-blend rule.
+# --------------------------------------------------------------------------- #
+
+# The ONLY vocal types a profile can ever author blend for. Uncertain and
+# hook_candidate are deliberately absent: uncertain is protected AS THE LEAD
+# (Decision 2, stricter), and hook protection is not profile-authorable in
+# this packet.
+BLEND_ELIGIBLE_TYPES = frozenset({"vocal_percussive", "vocal_stack"})
+
+
+def accepted_blend_under_policy(record: Dict, policy: Optional[Dict]) -> bool:
+    """THE USER'S APPROVED RULE (verbatim, binding), applied per stem:
+
+    ::
+
+        lead or uncertain            -> protect clarity (full lead-grade protection)
+        hook_candidate               -> protect impact/clarity unless a profile
+                                        explicitly says otherwise LATER (NOT this packet)
+        chop/stutter/adlib or stack
+          + profile opt-in
+          + confidence threshold met -> acceptable blend MAY apply
+
+    Pure and read-only. Checked in EXACTLY this order:
+
+    1. **The flag FIRST** — ``policy["acceptable_blend"]`` must be literally
+       ``True``. The reference ``halee_ramone`` declares ``false``, so the
+       entire gated path below is UNREACHABLE under defaults (byte-identity
+       by construction). A missing/None/malformed policy fails closed here.
+    2. **Safety gates — misclassification fails CLOSED toward vocal
+       protection:**
+       * never the LEAD: a stem whose ``instrument_identity`` is
+         ``lead_vocal`` is refused on IDENTITY, before any type read — even
+         a hand-forced percussive ``vocal_type`` cannot strip the lead;
+       * never UNCERTAIN, never HOOK_CANDIDATE, never a lead-typed or
+         untyped/non-vocal stem: only ``BLEND_ELIGIBLE_TYPES`` pass,
+         whatever confidence number rides along (uncertain + stated 0.99 is
+         still refused — the type is categorical);
+       * never BELOW THRESHOLD: ``vocal_type_confidence`` must be a real
+         number at or above the profile's explicit ``confidence_floor``; a
+         missing confidence or a malformed floor fails closed.
+    3. Only then does blend apply.
+
+    THE MASKED-LEAD PATHWAY is excluded at the CALLER, structurally: the
+    ``vocal_role_fit`` axis never offers this gate an event that includes a
+    lead stem (those events belong to the lead reading, which no policy can
+    touch). This function is per-STEM; the per-EVENT lead exclusion lives
+    where the events are read.
+
+    SHARED DETECTION BASIS: this gate only READS the record's
+    ``vocal_type`` / ``vocal_type_confidence`` fields — it never
+    re-classifies, so the profile decision and the doctrine reading can
+    never fork the physics.
+    """
+    # 1. The flag, FIRST — unreachable under halee_ramone defaults.
+    if not isinstance(policy, dict) or policy.get("acceptable_blend") is not True:
+        return False
+    # 2. Safety gates — fail closed toward vocal protection.
+    if record.get("instrument_identity") == "lead_vocal":
+        return False  # never the lead — identity outranks any (mis)typed read
+    if record.get("vocal_type") not in BLEND_ELIGIBLE_TYPES:
+        return False  # never uncertain / hook_candidate / lead-typed / untyped
+    confidence = record.get("vocal_type_confidence")
+    if isinstance(confidence, bool) or not isinstance(confidence, (int, float)):
+        return False  # no real confidence -> full protection
+    floor = policy.get("confidence_floor")
+    if isinstance(floor, bool) or not isinstance(floor, (int, float)):
+        return False  # a policy without a real floor -> full protection
+    if confidence < floor:
+        return False  # never below the profile's explicit threshold
+    # 3. Blend applies.
+    return True
+
+
 __all__ = [
+    "BLEND_ELIGIBLE_TYPES",
     "VOCAL_TYPES",
+    "accepted_blend_under_policy",
     "classify_vocal_type",
     "is_vocal_record",
 ]

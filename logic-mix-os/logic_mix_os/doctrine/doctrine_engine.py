@@ -10,6 +10,7 @@ from __future__ import annotations
 import statistics
 from typing import Dict, List, Optional
 
+from ..analyzers.vocal_type_classifier import accepted_blend_under_policy
 from ..constants import LOOP_SAMPLE_KINDS
 from .producer_profile import ProducerProfile, load_profile
 
@@ -54,7 +55,8 @@ def score_doctrine(
     # ``_DEFAULT_PROFILE`` is used, so every existing caller (and the no-arg
     # pipeline path) stays byte-identical; when a profile IS passed, EVERY scorer
     # reads ITS doctrine constants, so ``analyze(producer=…)`` is a live lever.
-    doctrine = (profile or _DEFAULT_PROFILE).doctrine
+    prof = profile or _DEFAULT_PROFILE
+    doctrine = prof.doctrine
     events = masking_report.get("events", [])
     lead = next((r for r in records if r["instrument_identity"] == "lead_vocal"), None)
     warnings: List[Dict] = []
@@ -116,8 +118,12 @@ def score_doctrine(
     # acceptable) is profile-authored, never engine-coded. Appended LAST
     # (after loop_context) so the pre-existing 13-term summation order is
     # preserved and ``overall`` stays bit-identical for halee_ramone (its
-    # vocal_role_fit weight is 0).
-    vrf, vrf_ev = _vocal_role_fit(records, events, doctrine)
+    # vocal_role_fit weight is 0). P-032f Commit-2: the profile's
+    # ``vocal_blend_policy`` (a REQUIRED top-level field) is threaded in — the
+    # ONE place masking philosophy is profile-authored. halee_ramone declares
+    # ``acceptable_blend: false``, so the gated path is unreachable under
+    # defaults and the reading is byte-identical to the policy-free form.
+    vrf, vrf_ev = _vocal_role_fit(records, events, doctrine, prof.vocal_blend_policy)
 
     component_scores = {
         "halee_score": halee,
@@ -1145,7 +1151,8 @@ def _loop_context(records: List[Dict], sections_analysis: List[Dict],
 
 
 def _vocal_role_fit(records: List[Dict], events: List[Dict],
-                    doctrine: Dict = _DOCTRINE):
+                    doctrine: Dict = _DOCTRINE,
+                    blend_policy: Optional[Dict] = None):
     """Producer-AGNOSTIC scorer for vocal-role FIT — the LAST of the seven
     P-032.x axes (P-032f) and the vocal half of the doctrine pin: **the
     engine DETECTS vocal function; the profile decides masking philosophy.**
@@ -1178,11 +1185,34 @@ def _vocal_role_fit(records: List[Dict], events: List[Dict],
         every vocal's clarity at lead grade, uncertain included
         (misclassification fails CLOSED toward vocal protection).
 
+    THE PROFILE-AUTHORED BLEND RULE (P-032f Commit-2) — the user's approved
+    rule table, verbatim and binding::
+
+        lead or uncertain            -> protect clarity (full lead-grade protection)
+        hook_candidate               -> protect impact/clarity unless a profile
+                                        explicitly says otherwise LATER (NOT this packet)
+        chop/stutter/adlib or stack
+          + profile opt-in
+          + confidence threshold met -> acceptable blend MAY apply
+
+    ``blend_policy`` is the profile's REQUIRED top-level
+    ``vocal_blend_policy`` field, threaded in by ``score_doctrine``. When a
+    non-lead stem's OWN masking involvement passes
+    ``accepted_blend_under_policy`` (flag FIRST — unreachable under
+    halee_ramone defaults — then the fail-closed safety gates: never lead,
+    never uncertain, never hook_candidate, never below the profile's
+    confidence floor), the involvement is reported as ACCEPTED BLEND UNDER
+    PROFILE POLICY and takes no penalty. The gate reads the record's
+    classifier output only (one shared detection basis, never re-classified
+    here). Default ``None`` (and every module-default caller) fails closed
+    to full protection.
+
     THE MASKED-LEAD PATHWAY IS STRUCTURALLY SEPARATE: an event that includes
     a lead stem belongs to the LEAD reading above — it is counted there,
     once, and is never re-read (or re-interpreted) through any non-lead
-    stem in the same event. Profile-authored blend policy (P-032f Commit-2)
-    can therefore never reach the masked-lead pathway by construction.
+    stem in the same event. The blend gate is only ever offered events that
+    exclude the lead, so profile-authored blend can never reach the
+    masked-lead pathway by construction.
 
     DISTINCTNESS vs the live vocal scorers — this axis READS, it never
     rewires: ``_ramone`` / ``_vocal_centrality`` keep sole ownership of the
@@ -1250,11 +1280,20 @@ def _vocal_role_fit(records: List[Dict], events: List[Dict],
                 if not (set(e.get("elements", [])) & lead_names)
             ]
             if own:
-                score -= c["masked_penalty"] * len(own)
-                ev.append(
-                    f"'{name}' ({r['vocal_type']}, confidence {_conf(r):.2f}) "
-                    f"overlaps {len(own)} forward element(s) in the vocal band "
-                    f"— read under full clarity protection: reduced role fit."
-                )
+                # P-032f Commit-2: the ONE profile-authored decision point.
+                # Only the stem's OWN (lead-free) events ever reach the gate.
+                if accepted_blend_under_policy(r, blend_policy):
+                    ev.append(
+                        f"'{name}' ({r['vocal_type']}, confidence {_conf(r):.2f}): "
+                        f"{len(own)} masking involvement(s) accepted as blend "
+                        f"under profile policy."
+                    )
+                else:
+                    score -= c["masked_penalty"] * len(own)
+                    ev.append(
+                        f"'{name}' ({r['vocal_type']}, confidence {_conf(r):.2f}) "
+                        f"overlaps {len(own)} forward element(s) in the vocal band "
+                        f"— read under full clarity protection: reduced role fit."
+                    )
 
     return _clamp(score), ev
