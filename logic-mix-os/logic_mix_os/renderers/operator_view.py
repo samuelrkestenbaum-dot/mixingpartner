@@ -34,6 +34,13 @@ def render_status(result: ProjectAnalysis) -> str:
     truth = proj.intent.get("singular_emotional_truth")
     if truth:
         out.append(f" Emotional truth: {truth}")
+    # P-039: the selected producer, named in the header where the verdict is
+    # summarized — read off the per-call doctrine_score identity (never inside
+    # the SCORES block: its labels stay producer-agnostic, the P-030 contract).
+    # Data-driven: no key renders no line.
+    producer = ds.get("producer") or {}
+    if producer:
+        out.append(f" Producer profile: {producer['display_name']} ({producer['name']})")
     out.append("")
 
     out.append(" SCORES")

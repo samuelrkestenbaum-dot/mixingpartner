@@ -19,6 +19,7 @@ from .analyzers.reference_comparator import compare_to_reference
 from .bridge.applescript_bridge import generate_applescript, generate_shortcuts
 from .bridge.executor import dry_run
 from .bridge.exporter import export_actions
+from .doctrine.producer_profile import _PRODUCERS_DIR, ProducerProfile, load_profile
 from .memory import ProjectMemory
 from .pipeline import analyze, write_artifacts
 from .planners.next_pass_planner import generate_creative_hypotheses
@@ -35,6 +36,25 @@ def _load_manifest(path: Optional[str]) -> dict:
     return load_manifest(path)
 
 
+def _resolve_producer(name: str) -> ProducerProfile:
+    """Load the selected producer profile (P-039) — the ``--producer`` value
+    every analyze-family command threads into ``analyze()``.
+
+    An unknown name surfaces the loader's clean FileNotFoundError as a
+    friendly one-line error naming the AVAILABLE profiles (scanned from the
+    producers directory, never hardcoded), exit code 2, no traceback.
+    """
+    try:
+        return load_profile(name)
+    except FileNotFoundError:
+        available = ", ".join(sorted(p.stem for p in _PRODUCERS_DIR.glob("*.json")))
+        print(
+            f"Unknown producer profile: '{name}'. Available profiles: {available}.",
+            file=sys.stderr,
+        )
+        raise SystemExit(2) from None
+
+
 def _run_analyze(args) -> int:
     manifest = _load_manifest(args.manifest)
     result = analyze(
@@ -42,6 +62,7 @@ def _run_analyze(args) -> int:
         manifest,
         bounce_path=args.bounce,
         reference_path=args.reference,
+        producer=_resolve_producer(args.producer),
     )
     written = write_artifacts(result, args.out)
     _print_summary(result, args.out, len(written))
@@ -66,7 +87,7 @@ def _print_summary(result, out_dir, n_written) -> None:
 
 def _run_detect_identities(args) -> int:
     manifest = _load_manifest(args.manifest)
-    result = analyze(args.stems, manifest)
+    result = analyze(args.stems, manifest, producer=_resolve_producer(args.producer))
     write_artifacts(result, args.out)
     print(f"{'Track':<28} {'Identity':<18} {'Family':<10} Conf")
     print("-" * 64)
@@ -77,7 +98,8 @@ def _run_detect_identities(args) -> int:
 
 def _run_analyze_sections(args) -> int:
     manifest = _load_manifest(args.manifest)
-    result = analyze(args.stems, manifest, bounce_path=args.bounce)
+    result = analyze(args.stems, manifest, bounce_path=args.bounce,
+                     producer=_resolve_producer(args.producer))
     write_artifacts(result, args.out)
     if not result.section_analysis:
         print("No sections found (provide section markers in the manifest or a bounce).")
@@ -96,7 +118,8 @@ def _run_analyze_sections(args) -> int:
 
 def _run_generate_plan(args) -> int:
     manifest = _load_manifest(args.manifest)
-    result = analyze(args.stems, manifest, bounce_path=args.bounce, reference_path=args.reference)
+    result = analyze(args.stems, manifest, bounce_path=args.bounce, reference_path=args.reference,
+                     producer=_resolve_producer(args.producer))
     written = write_artifacts(result, args.out)
     print(f"Mix plan written. {len(written)} artifacts in {args.out}/")
     print(f"Overall diagnosis: {result.mix_plan.get('overall_diagnosis')}")
@@ -152,14 +175,16 @@ def _run_suggest_creative(args) -> int:
 
 def _run_status(args) -> int:
     manifest = _load_manifest(args.manifest)
-    result = analyze(args.stems, manifest, bounce_path=args.bounce)
+    result = analyze(args.stems, manifest, bounce_path=args.bounce,
+                     producer=_resolve_producer(args.producer))
     print(render_status(result))
     return 0
 
 
 def _run_creative(args) -> int:
     manifest = _load_manifest(args.manifest)
-    result = analyze(args.stems, manifest, bounce_path=args.bounce, creative_mode=args.mode)
+    result = analyze(args.stems, manifest, bounce_path=args.bounce, creative_mode=args.mode,
+                     producer=_resolve_producer(args.producer))
     write_artifacts(result, args.out)
     c = result.creative
     print(f"Creative engine (mode: {c['search_mode']})")
@@ -177,7 +202,8 @@ def _run_creative(args) -> int:
 
 def _run_governance(args) -> int:
     manifest = _load_manifest(args.manifest)
-    result = analyze(args.stems, manifest, bounce_path=args.bounce)
+    result = analyze(args.stems, manifest, bounce_path=args.bounce,
+                     producer=_resolve_producer(args.producer))
     write_artifacts(result, args.out)
     g = result.governance
     truth = g["emotional_truth_lock"]
@@ -193,7 +219,8 @@ def _run_governance(args) -> int:
 
 def _run_mixer_feedback(args) -> int:
     manifest = _load_manifest(args.manifest)
-    result = analyze(args.stems, manifest, bounce_path=args.bounce)
+    result = analyze(args.stems, manifest, bounce_path=args.bounce,
+                     producer=_resolve_producer(args.producer))
     fb = result.governance["mixer_feedback"]
     print(fb.get(args.tone, fb["collaborative"]))
     return 0
@@ -216,7 +243,8 @@ def _run_regression(args) -> int:
 def _run_dashboard(args) -> int:
     from .renderers.html_dashboard import render_dashboard
     manifest = _load_manifest(args.manifest)
-    result = analyze(args.stems, manifest, bounce_path=args.bounce)
+    result = analyze(args.stems, manifest, bounce_path=args.bounce,
+                     producer=_resolve_producer(args.producer))
     out = args.out or "dashboard.html"
     Path(out).write_text(render_dashboard(result), encoding="utf-8")
     print(f"Wrote {out} — open with file:// in a browser (local-first, no server).")
@@ -234,7 +262,8 @@ def _run_cowork(args) -> int:
         return 1
     params = json.loads(args.params) if args.params else {}
     ctx = build_context(stems=args.stems, manifest=_load_manifest(args.manifest),
-                        memory_dir=args.memory_dir)
+                        memory_dir=args.memory_dir,
+                        producer=_resolve_producer(args.producer))
     result = run_command(args.name, ctx, **params)
     print(result if isinstance(result, str) else json.dumps(result, indent=2))
     return 0
@@ -274,7 +303,8 @@ def _run_bridge_dryrun(args) -> int:
 
 def _run_audit(args) -> int:
     manifest = _load_manifest(args.manifest)
-    result = analyze(args.stems, manifest, bounce_path=args.bounce)
+    result = analyze(args.stems, manifest, bounce_path=args.bounce,
+                     producer=_resolve_producer(args.producer))
     write_artifacts(result, args.out)
     for a in result.source_audits["audits"]:
         flags = f"  [red flags: {', '.join(a['red_flags'])}]" if a["red_flags"] else ""
@@ -286,7 +316,8 @@ def _run_audit(args) -> int:
 
 def _run_memory_record(args) -> int:
     manifest = _load_manifest(args.manifest)
-    result = analyze(args.stems, manifest, bounce_path=args.bounce)
+    result = analyze(args.stems, manifest, bounce_path=args.bounce,
+                     producer=_resolve_producer(args.producer))
     mem = ProjectMemory(args.memory_dir)
     record = mem.record_pass(args.name, result, input_bounce=args.bounce,
                              reverted=args.reverted)
@@ -332,6 +363,9 @@ def _run_feedback(args) -> int:
 
 def _run_album(args) -> int:
     base = Path(args.projects)
+    # P-039: one selected producer for the whole album run, resolved ONCE and
+    # threaded into both per-song passes below.
+    producer = _resolve_producer(args.producer)
     # Pass 1: analyze each song on its own (album-context-free), exactly as before,
     # then derive the album means via analyze_album.
     results, names, dirs, manifests = [], [], [], []
@@ -339,7 +373,7 @@ def _run_album(args) -> int:
         manifest_path = sub / "project_manifest.json"
         if manifest_path.exists():
             manifest = _load_manifest(str(manifest_path))
-            results.append(analyze(str(sub / "stems"), manifest))
+            results.append(analyze(str(sub / "stems"), manifest, producer=producer))
             names.append(sub.name)
             dirs.append(sub)
             manifests.append(manifest)
@@ -362,7 +396,8 @@ def _run_album(args) -> int:
             "brightness_delta": song["brightness_delta"],
             "lufs_delta": song["lufs_delta"],
         }
-        album_aware.append(analyze(str(sub / "stems"), manifest, album_context=ctx))
+        album_aware.append(analyze(str(sub / "stems"), manifest, album_context=ctx,
+                                   producer=producer))
     report["per_song_next_pass"] = [
         {"name": n, "next_pass": r.mix_plan["next_pass"]}
         for n, r in zip(names, album_aware)
@@ -385,10 +420,22 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--version", action="version", version=f"logic-mix-os {__version__}")
     sub = p.add_subparsers(dest="command", required=True)
 
+    # P-039: the producer lever on the product surface. Shared by every
+    # analyze-family command (each handler threads it into ``analyze()``); the
+    # help names the SEMANTICS, never a hardcoded profile list (the P-038
+    # --mode precedent) — the actual default is interpolated, not restated.
+    def add_producer(sp):
+        sp.add_argument("--producer", default="halee_ramone",
+                        help="Producer profile whose judgment drives the analysis "
+                             "(a profile name resolvable from the local producers "
+                             "directory); default: %(default)s — the reference "
+                             "profile.")
+
     def add_common(sp):
         sp.add_argument("--stems", help="Folder of exported stems")
         sp.add_argument("--manifest", help="project_manifest.json")
         sp.add_argument("--out", default="./output", help="Output directory")
+        add_producer(sp)
 
     a = sub.add_parser("analyze", help="Full analysis + mix plan")
     add_common(a)
@@ -486,6 +533,7 @@ def build_parser() -> argparse.ArgumentParser:
     al = sub.add_parser("album", help="Album-level coherence across a folder of projects")
     al.add_argument("--projects", required=True, help="Folder containing project subfolders")
     al.add_argument("--out", help="Optional output .json path")
+    add_producer(al)
     al.set_defaults(func=_run_album)
 
     au = sub.add_parser("audit", help="Source-aware auditors (live / synth / sampler / loop)")
@@ -518,6 +566,7 @@ def build_parser() -> argparse.ArgumentParser:
     cw.add_argument("--manifest", help="project_manifest.json")
     cw.add_argument("--memory-dir", help="Project memory directory (for ledger/taste commands)")
     cw.add_argument("--params", help="JSON object of command params")
+    add_producer(cw)
     cw.set_defaults(func=_run_cowork)
 
     return p

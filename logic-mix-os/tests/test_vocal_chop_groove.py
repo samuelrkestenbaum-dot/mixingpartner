@@ -144,6 +144,9 @@ ORIGINAL_OVERALLS = {
 # The anti-drift set for the 4th fixture: exactly these doctrine_score keys
 # diverge between the producers, each divergence explained:
 #   overall / confidence          — each profile's own mean / authored map;
+#   producer                      — the P-039 identity surface (a conscious
+#                                   widening, like confidence): each artifact
+#                                   names its own selecting profile BY DESIGN;
 #   loop_context_score            — the authored static polarity (15 vs 10);
 #   vocal_role_fit_score          — THE BLEND GATE (65 protected vs 85 accepted);
 #   evidence                      — the vocal_role_fit evidence lines carry the
@@ -153,7 +156,7 @@ ORIGINAL_OVERALLS = {
 #                                   policy (pinned below).
 DIVERGENT_DOCTRINE_KEYS = {
     "confidence", "evidence", "loop_context_score",
-    "overall_mix_readiness_score", "vocal_role_fit_score",
+    "overall_mix_readiness_score", "producer", "vocal_role_fit_score",
 }
 
 REF_PROTECTION_LINE = "read under full clarity protection: reduced role fit"

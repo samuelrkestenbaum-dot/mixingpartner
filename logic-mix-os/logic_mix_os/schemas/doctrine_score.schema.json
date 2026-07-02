@@ -33,6 +33,16 @@
           "reason": { "type": "string", "minLength": 1 }
         }
       }
+    },
+    "producer": {
+      "type": "object",
+      "required": ["name", "display_name", "provenance", "confidence"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "display_name": { "type": "string", "minLength": 1 },
+        "provenance": { "type": "string", "minLength": 1 },
+        "confidence": { "type": "string", "minLength": 1 }
+      }
     }
   }
 }

@@ -100,6 +100,9 @@ OVERALLS = {
 # two producers may diverge, per fixture, each divergence EXPLAINED:
 #   - overall_mix_readiness_score — each profile's own weighted mean;
 #   - confidence                  — each profile's own authored honesty map;
+#   - producer                    — the P-039 identity surface (a CONSCIOUS
+#     widening, like ``confidence``): each artifact names its own selecting
+#     profile's {name, display_name, provenance, confidence} BY DESIGN;
 #   - loop_context_score          — ONLY on the loop fixtures: the authored
 #     status->score polarity (both profiles read STATIC from the same stems;
 #     the reference maps static to 15.0, timbaland authors 10.0).
@@ -108,12 +111,16 @@ OVERALLS = {
 # widens this set has introduced a NEW divergence channel — this guard exists
 # so that happens as a conscious, test-visible decision, never as drift.
 DIVERGENT_DOCTRINE_KEYS = {
-    "simple_vocal_piano_song": {"overall_mix_readiness_score", "confidence"},
+    "simple_vocal_piano_song": {
+        "overall_mix_readiness_score", "confidence", "producer",
+    },
     "dense_chorus_with_loops": {
-        "overall_mix_readiness_score", "confidence", "loop_context_score",
+        "overall_mix_readiness_score", "confidence", "producer",
+        "loop_context_score",
     },
     "splice_loop_problem": {
-        "overall_mix_readiness_score", "confidence", "loop_context_score",
+        "overall_mix_readiness_score", "confidence", "producer",
+        "loop_context_score",
     },
 }
 

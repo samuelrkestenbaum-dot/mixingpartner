@@ -28,11 +28,17 @@ API_VERSION = "1.0"
 
 
 def build_context(stems=None, manifest=None, memory_dir=None, bounce=None,
-                  reference=None, result=None) -> Dict:
-    """Build the shared context (runs one full analysis unless ``result`` given)."""
+                  reference=None, result=None, producer="halee_ramone") -> Dict:
+    """Build the shared context (runs one full analysis unless ``result`` given).
+
+    P-039: ``producer`` (a profile name or a loaded ``ProducerProfile``) selects
+    whose judgment drives the shared analysis — threaded straight into
+    ``analyze()``; the default is the reference profile, byte-identical to the
+    pre-P-039 path. Ignored when a ready ``result`` is supplied.
+    """
     if result is None:
         result = analyze(stems, manifest or {}, bounce_path=bounce, reference_path=reference,
-                         memory_dir=memory_dir)
+                         memory_dir=memory_dir, producer=producer)
     return {"result": result, "memory": ProjectMemory(memory_dir) if memory_dir else None}
 
 
