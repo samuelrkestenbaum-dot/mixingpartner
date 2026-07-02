@@ -4,70 +4,90 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** NONE ACTIVE — P-032i closed (2026-07-02). **★★★ THE TIMBALAND
-  SUB-ARC IS COMPLETE.** No packet is in flight; the orchestrator confirms the
-  next packet (from the staged candidates below) before the builder touches
-  anything.
+- **Status:** ACTIVE — P-033 confirmed by the orchestrator-in-chief
+  (2026-07-02) on the user's explicit go, handed to builder.
+- **Packet id:** P-033
+- **Title:** wire `_default_creative_mode` to the producer profile — make the
+  authored creative-mode table a REAL product lever; byte-identical for the
+  reference.
+- **Numbering note:** next free packet number. (An old roadmap idea once
+  tentatively labeled P-033 — "expose producer selection on CLI surface" — was
+  never confirmed and is superseded: selection is live via
+  `analyze(producer=…)`; any CLI exposure remains unstaged backlog.)
 
-## ★★★ SUB-ARC COMPLETE (P-032.x + P-031)
+## Why this packet (user-stated: the puck)
 
-- **P-032e ✓ → P-032a ✓ → P-032b ✓ → P-032d ✓ → P-032c ✓ → P-032g ✓ →
-  P-032f ✓ → P-031 ✓ → P-032h ✓ → P-032i ✓ — TEN PACKETS.** What was built:
-  seven new producer-agnostic measurement axes (14 doctrine components), two
-  profile-decided gates (loop protection, vocal blend) with engine-fixed
-  safety rails, the per-area honesty/confidence layer, the second live
-  producer profile (`timbaland.json`), and the permanent differential proof.
-  The reference profile stayed byte-identical throughout (73.8 / 70.7 / 74.3
-  on every surface, every packet). The user's architecture doctrine held
-  end-to-end: **axes are shared measurable substrate; taste is the weighting
-  layer; safety/governance is invariant.** The next producer profile is now:
-  a JSON file + three required declarations + its own confidence map + a
-  differential test.
+The sub-arc proved the producer lever end-to-end EXCEPT one wire: the profile
+field `default_creative_mode` (required since P-025, authored by BOTH profiles)
+is **pipeline-inert** — `pipeline._default_creative_mode` (pipeline.py:285-290)
+hardcodes the REFERENCE's mode names, so Timbaland's authored
+`intimate_mode: "conservative"` is unreachable and intimate material under
+timbaland silently falls back to `"dramatic_contrast"` (creative.py:516-517).
+This packet makes the second producer FEEL real: authored mode → reachable
+mode. (Found by the P-032h reviewer; pre-registered in P-032i's negative pin
+as THE packet that legitimately changes it.)
 
-## Last-closed
+## Spec (build exactly this)
 
-- **P-032i ✓ CLOSED (2026-07-02) — the Timbaland-vs-Halee/Ramone DIFFERENTIAL
-  PROOF, the sub-arc's formal close:** the permanent, binding 21-test suite
-  `tests/test_differential_proof.py` formalizing the five obligations
-  (a)–(e). Headline: THE PLAN REVERSAL (reference promotes `loop_A` 85.9 =
-  deconstruct; timbaland promotes `loop_B` 86.7 = keep the loop, punctuate
-  around it — exact keep/reject mirrors, both plans coherent, schema-valid,
-  non-destructive); attributability divergence == exactly {overall,
-  confidence} (+loop_context on the loop fixtures); the 5 SAFETY switches
-  verbatim-pinned FILE-LOCALLY, first-in-order under both; negative pins with
-  NAMED legitimizing packets (no vocal-blend delta; no intimate-mode claim;
-  next-pass identical). qa GREEN (suite 639 → **660**, +21; regression 68/68;
-  obligations (a)–(e) re-derived independently LIVE, 60/60 checks;
-  proof-liveness sabotage bites; safety grep none); reviewer PASS (no
-  must-fix; Codex NOT available — single-model review). Single commit
-  `010734d` on parent `b884a59` (1 NEW test file, 772+/0−, ZERO product code;
-  HEAD IS Commit-1 → green in isolation) — pushed, NOT merged. Receipt:
-  `build-os/receipts/P-032i-differential-proof.md`.
+1. **Wire it per-call (the P-029 pattern):** `_default_creative_mode` reads the
+   PASSED profile's `default_creative_mode` table (profile or `_DEFAULT_PROFILE`
+   when None) instead of the hardcoded name map. The reference's declared table
+   values coincide with today's hardcoded strings (why the inertness was
+   invisible) → the reference path stays BYTE-IDENTICAL by construction — prove
+   it, don't assume it.
+2. **Close the KeyError risk (creative.py:532):** when a resolved mode name is
+   absent from the profile's `search_modes`, do NOT dereference blindly and do
+   NOT hardcode `"dramatic_contrast"` — fall back to a mode the profile
+   ACTUALLY HAS (deterministic, documented rule; observational language), and
+   surface the fallback in evidence/output where the mode is already reported.
+3. **Update the pre-registered pins via the conscious-edit path** (each was
+   written naming THIS packet as its legitimate breaker — update, never weaken):
+   - `tests/test_differential_proof.py` — the intimate-mode-inertness negative
+     pin (now: timbaland's authored mode IS reachable); the search-mode pins
+     and `EXPECTED_SNAPSHOT` wherever timbaland's resolved mode changes.
+   - `tests/test_timbaland_profile.py` (~:430-433) — the honestly-pinned
+     fallback behavior (now the authored behavior).
+   Report EVERY pin changed, old → new, with the receipt noting each.
 
-## ★★ THE OPEN USER GATE (explicit — the next user-gated boundary)
+## Tests (test-first — the binding guards)
 
-- **Merge-to-default of the ENTIRE EPIC awaits the user's explicit go.**
-  Everything since `e79426a` (= PR #16, the merge base for landing
-  decisions) — P-025 → P-032i + P-031 — sits on the dev branch
-  `claude/logic-mix-os-hardening-12-7hbeh1`, pushed, NOT merged. No
-  merge/push/deploy without the user's explicit go.
+1. **Byte-identical (reference):** doctrine + creative + artifact surfaces
+   unchanged on all 3 fixtures (73.8/70.7/74.3); regression 68/68. The
+   reference's mode selection provably identical pre/post wiring.
+2. **Liveness (the P-016 lesson — end-to-end, not unit):** a REAL `analyze()`
+   under timbaland with intimate-truth intent selects timbaland's authored
+   `"conservative"` (not the fallback); sabotage (re-hardcode the map / drop
+   the profile read) FAILS liveness while reference byte-identity stays green.
+3. **Fallback safety:** a synthetic profile whose table maps to a mode name
+   missing from its `search_modes` → no KeyError; the documented fallback rule
+   applies; observational evidence.
+4. **Per-call threading:** a passed profile's table is consulted, never the
+   module default's (sabotage-guarded).
+5. **No-aliasing:** reads only; `_DEFAULT_PROFILE` untouched after runs.
 
-## Staged candidates (orthogonal backlog — NONE confirmed, no order dependency)
+## Rigor bar (established)
 
-- **P-030** — rename the halee/ramone dims off the producer names; now
-  touches TWO producer JSONs + `tests/test_differential_proof.py` (the
-  P-032i reviewer note).
-- **The `_default_creative_mode` wiring packet** (P-016-family) — wire the
-  pipeline default to the profile; byte-identical for the reference; must
-  fix the dramatic_contrast-fallback KeyError risk (creative.py:532).
-- **The analyzer-extension packet** — emit non-lead vocal-band events →
-  makes vocal blend live on real data; also fix the creative.py:98
-  name-matching latent misfire.
-- **The verdict-filename cosmetic packet** (the P-032i builder observation).
-- **Standing residue sweeps** — liveness-docstrings across ~8 files;
-  validation tightening (duplicate areas / extra keys); NaN-floor guard;
-  etc.
+- `python fixtures/generate_fixtures.py` FIRST; **≤2 commits, Commit-1 green in
+  isolation**; full suite green from the **660** baseline; regression 68/68;
+  observational language; commit trailers `Co-Authored-By: Claude Fable 5
+  <noreply@anthropic.com>` + the Claude-Session link; NO push/merge/remotes
+  (orchestrator pushes). If anything beyond the wiring + fallback + pins needs
+  touching, STOP and report.
+
+## Last-closed / context
+
+- **PR #17 MERGED** — the producer-agnostic epic is on default (merge commit
+  `58d21dd`, the new default tip and this branch's restart base). Suite 660;
+  68/68; reference 73.8/70.7/74.3; sub-arc complete (10 packets).
+
+## Epic arc (post-merge backlog order, user-confirmed)
+
+**P-033 (default_creative_mode wiring — ACTIVE) →** P-030 (rename halee/ramone
+dims; touches 2 producer JSONs + test_differential_proof.py) → analyzer
+extension (non-lead vocal-band events + creative.py:98 fix) →
+verdict-filename cosmetic → residue sweeps.
 
 ---
-_Cleared by the archivist on P-032i close (2026-07-02). One packet at a time.
-The orchestrator confirms the staged packet before the builder touches it._
+_Set active by the orchestrator-in-chief on the user's go (2026-07-02). One
+packet at a time. Builder implements exactly this; qa proves; reviewer judges;
+archivist closes with a receipt._
