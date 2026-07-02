@@ -42,7 +42,10 @@
 
 ## Deferred (follow-up packets)
 
-- **★★ THE TIMBALAND SUB-ARC (P-032.x) IS UNDERWAY — P-032e ✓ (beat_identity —
+- **★★ THE TIMBALAND SUB-ARC (P-032.x) IS ✓ COMPLETE (2026-07-02 — formally
+  closed by P-032i, the differential proof; TEN packets: P-032e → P-032a →
+  P-032b → P-032d → P-032c → P-032g → P-032f → P-031 → P-032h → P-032i)** —
+  **P-032e ✓ (beat_identity —
   the front-loaded CRUX) + P-032a ✓ (negative_space) + P-032b ✓
   (groove_coherence LIVE-WIRE — the RISKIEST packet so far, triple-verified) +
   P-032d ✓ (rhythmic_surprise, weak form) + P-032c ✓ (low_end_motion — the
@@ -78,8 +81,14 @@
   `build-os/receipts/P-032d-rhythmic-surprise.md`,
   `build-os/receipts/P-032c-low-end-motion.md`,
   `build-os/receipts/P-032g-loop-context-hinge.md`,
-  `build-os/receipts/P-032f-vocal-role-blend-policy.md`. **Carry-forwards:**
-  - **★ REMAINING ORDER (updated at P-032h close):**
+  `build-os/receipts/P-032f-vocal-role-blend-policy.md`,
+  `build-os/receipts/P-031-confidence-framework.md`,
+  `build-os/receipts/P-032h-author-timbaland-json.md`,
+  `build-os/receipts/P-032i-differential-proof.md`.
+  **Carry-forwards — NOW THE POST-SUB-ARC BACKLOG (the sub-arc is ✓
+  COMPLETE; every item below is future-packet backlog, none active, no
+  order dependency):**
+  - **★ ORDER — ✓ ALL TEN CLOSED (final at P-032i close):**
     **P-032d ✓ → P-032c ✓ → P-032g ✓ → P-032f ✓ → P-031 ✓ → P-032h ✓ (AUTHOR
     `timbaland.json` — THE PAYOFF PACKET, DONE: the second live producer
     profile, the FIRST non-byte-identical output of the epic — same stems,
@@ -91,8 +100,8 @@
     verified; default path moved ZERO bytes; single commit `70a0b69`, 2 NEW
     files, zero engine code, pushed NOT merged — receipt
     `build-os/receipts/P-032h-author-timbaland-json.md`)** →
-    **P-032i (the Timbaland-vs-Halee/Ramone DIFFERENTIAL PROOF — NEXT, the
-    formal close of the sub-arc):** same stems, both profiles — prove (a)
+    **P-032i ✓ (the Timbaland-vs-Halee/Ramone DIFFERENTIAL PROOF — DONE
+    2026-07-02, the formal close of the sub-arc):** same stems, both profiles — prove (a)
     recognizably-different-but-COHERENT judgment AND plan surfaces (doctrine
     + creative + the mix_plan/checklist/verdict artifacts, not just scores),
     (b) full component-level attributability, (c) safety invariance
@@ -102,8 +111,15 @@
     corollary below); NO intimate-mode-selection claim (the NEW
     `default_creative_mode` inertness finding below), (e) the confidence
     maps render correctly per-profile; byte-identical discipline for the
-    reference throughout. P-030 (rename dims — now touches TWO producer
-    JSONs, still orthogonal, slightly wider) last.
+    reference throughout — ALL PROVEN AND LANDED as the permanent 21-test
+    `tests/test_differential_proof.py` (single commit `010734d`, 772+/0−,
+    ZERO product code, pushed NOT merged); qa 639 → **660** + 68/68,
+    obligations (a)–(e) re-derived independently LIVE (60/60 checks),
+    proof-liveness sabotage bites (a SAFETY-switch reorder fails the
+    verbatim pin); reviewer PASS (no must-fix). Receipt:
+    `build-os/receipts/P-032i-differential-proof.md`. P-030 (rename dims —
+    now touches TWO producer JSONs + `tests/test_differential_proof.py`,
+    still orthogonal, slightly wider) moves to the post-sub-arc backlog.
   - **★ P-032g STAGING NOTES — ✓ DISCHARGED IN FULL (P-032g close):** the
     USER-MANDATED dual byte-identity surface was PROVEN — (a) doctrine 0
     mismatches × 3 fixtures AND (b) creative full `result.creative` sorted-key
@@ -221,6 +237,22 @@
   - **★ NEW (P-032h — scope note):** P-030 (rename the halee/ramone dims off
     the producer names) now touches TWO producer JSONs (`halee_ramone.json`
     + `timbaland.json`) — still orthogonal, slightly wider.
+  - **★ NEW (P-032i reviewer — scope note):** P-030's expected-touch list
+    now ALSO includes `tests/test_differential_proof.py` (the differential
+    pins reference the halee/ramone dimension names) — THREE files: two
+    producer JSONs + the differential-proof test file.
+  - **★ NEW (P-032i — cosmetic):** two truthiness asserts in
+    `tests/test_differential_proof.py` (`v["risk"] and v["validation"]`;
+    `0 <= len(nxt)`) — tighten opportunistically on the next touch of that
+    file.
+  - **★ NEW (P-032i — cosmetic):** the `tim_analyzed` fixture duplicates
+    `test_timbaland_profile`'s module fixture (~3 extra analyses per full
+    run) — promote to a session conftest fixture ONLY if a third consumer
+    appears.
+  - **★ NEW (P-032i builder observation — cosmetic, reported NOT patched
+    per the mandated stop-and-report behavior):** the verdict filename is
+    producer-independent — the legitimizing change is a future
+    verdict-filename cosmetic packet.
   - **★ LIVENESS-DOCSTRING OVERCLAIM (non-blocking — reviewer; NOW
     POTENTIALLY AN EIGHT-FILE FAMILY, fold ONE sweep):** the `liveness` test docstrings OVERCLAIM — a
     general hardcoded-constant sabotage is actually caught by the

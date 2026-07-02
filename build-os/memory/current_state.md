@@ -158,29 +158,115 @@
     the dev branch (NOT merged)**, atop the set-active `b7b4a0e`. P-032h's
     parent chain: `70a0b69` → `b7b4a0e` (active-packet confirmation) →
     `bedb680` (P-031 close).
+    ★ ON TOP of P-032h, the dev branch now ALSO carries P-032i (`010734d`,
+    single commit — THE SUB-ARC'S FORMAL CLOSE: the permanent, binding
+    Timbaland-vs-Halee/Ramone DIFFERENTIAL PROOF — 1 NEW file
+    `tests/test_differential_proof.py`, 21 tests, 772+/0−, ZERO product
+    code), **PUSHED to the dev branch (NOT merged)**, atop the set-active
+    `b884a59`. P-032i's parent chain: `010734d` → `b884a59` (active-packet
+    confirmation) → `40eb94d` (P-032h close). **★★★ THE TIMBALAND SUB-ARC
+    IS COMPLETE (ten packets, P-032e → … → P-032i).**
     The base for MERGE decisions is still `e79426a` = PR #16 (nothing since P-025
-    has been merged).
+    has been merged) — **THE STANDING DECISION NOW OPEN: the merge of the
+    ENTIRE EPIC (P-025 → P-032i + P-031) to default awaits the USER'S
+    explicit GO.**
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-02, P-032h):** suite **639 passed** (0
+- **Green baseline (verified 2026-07-02, P-032i):** suite **660 passed** (0
   failed / skipped); regression **68/68** (0 critical / 0 warnings) —
-  UNCHANGED on the default path (P-032h touches ZERO engine code: qa dumped
-  the FULL default analyze() surface + artifact trees at base and HEAD →
-  byte-identical — 73.8 / 70.7 / 74.3, creative EMPTY; the timbaland path is
-  the FIRST intentionally non-byte-identical output: 68.4 / 52.6 / 49.7).
-  Single commit `70a0b69` — HEAD IS Commit-1, green in isolation. (Prior
-  baseline was 600 at P-031; P-032h added +39, all in
-  `tests/test_timbaland_profile.py`. Earlier: 572 → 600 at P-031; 512 → 572
+  UNCHANGED (P-032i touches ZERO product code: 1 NEW test file only —
+  `tests/test_differential_proof.py`, 21 tests; obligations (a)–(e)
+  re-derived independently LIVE by qa: 60/60 checks passed). Single commit
+  `010734d` — HEAD IS Commit-1, green in isolation. (Prior baseline was 639
+  at P-032h; P-032i added +21, all in `tests/test_differential_proof.py`.
+  Earlier: 600 → 639 at P-032h; 572 → 600 at P-031; 512 → 572
   at P-032f; 473 → 512 at P-032g; 451 → 473 at P-032c; 433 → 451 at P-032d;
   413 → 433 at P-032b; 396 → 413 at P-032a; 384 → 396 at P-032e; 370 → 384
   at P-029; 351 → 370 at P-028; 331 → 351 at P-027; 319 → 331 at P-026;
   293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-032i CLOSES THE TIMBALAND SUB-ARC — the permanent, binding
+  differential proof is IN THE SUITE. THE SUB-ARC IS COMPLETE: P-032e ✓ →
+  P-032a ✓ → P-032b ✓ → P-032d ✓ → P-032c ✓ → P-032g ✓ → P-032f ✓ →
+  P-031 ✓ → P-032h ✓ → P-032i ✓ — TEN PACKETS. What was built: seven new
+  producer-agnostic measurement axes (14 doctrine components), two
+  profile-decided gates (loop protection, vocal blend) with engine-fixed
+  safety rails, the per-area honesty/confidence layer, the second live
+  producer profile (`timbaland.json`), and the permanent differential
+  proof. The reference profile stayed byte-identical throughout
+  (73.8 / 70.7 / 74.3 on every surface, every packet). The user's
+  architecture doctrine held end-to-end: axes are shared measurable
+  substrate; taste is the weighting layer; safety/governance is invariant.
+  The next producer profile is now: a JSON file + three required
+  declarations + its own confidence map + a differential test. qa GREEN +
+  reviewer PASS (no must-fix). Last-closed = P-032i.**
+  - **Single commit `010734d`** on parent `b884a59` (active-packet
+    confirmation), atop `40eb94d` (P-032h close) — 1 NEW file
+    (`tests/test_differential_proof.py`, 21 tests), 772+/0−, ZERO product
+    code. HEAD IS Commit-1 → green in isolation. **Pushed to the dev
+    branch, NOT merged.**
+  - **★★ THE STANDING DECISION NOW OPEN — the next USER-GATED boundary:
+    the ENTIRE EPIC (P-025 → P-032i + P-031, everything since `e79426a`
+    = PR #16) sits on the dev branch, pushed, awaiting the USER'S MERGE
+    GO.** Nothing merges/deploys without it.
+  - **The proof's headline facts (permanent):**
+    - **THE PLAN REVERSAL (iconic scenario):** reference winner `loop_A`
+      85.9 (chop / high-pass / narrow / push = DECONSTRUCT) vs timbaland
+      winner `loop_B` 86.7 (one-shot accents = KEEP the loop, punctuate
+      around it); keep/reject exact mirrors; BOTH plans coherent,
+      schema-valid, non-destructive.
+    - Search modes: `ramone_vocal_truth` vs `dramatic_contrast` on simple.
+    - Attributability: divergence == exactly {overall, confidence}
+      (+loop_context on the loop fixtures); the overalls reconstruct from
+      shared components + authored values.
+    - Safety: the 5 SAFETY switches verbatim-pinned FILE-LOCALLY,
+      first-in-order under both; masked-lead pressure under both; zero
+      class-5 anywhere.
+    - Negative pins with NAMED legitimizing packets: no vocal-blend delta
+      (→ the future analyzer-extension packet); no intimate-mode claim
+      (→ the future `_default_creative_mode` wiring packet); next-pass
+      identical (→ a future profile-aware planner).
+    - Confidence: the 8-entry vs 11-entry maps, deferred tails
+      verbatim-shared, zero cross-leak.
+  - **★ qa GREEN:** suite 639 → **660** (+21); regression **68/68**;
+    obligations (a)–(e) re-derived independently LIVE — **60/60 checks
+    passed**; proof-liveness verified (a SAFETY-switch reorder in a
+    throwaway worktree → the verbatim pin FAILED — the guard bites);
+    safety grep NONE.
+  - **★ reviewer PASS (no must-fix):** the tests BIND, not describe —
+    strongest-form attributability re-verified BY HAND in plain Python
+    (reference components + authored values alone reconstruct
+    68.4 / 52.6 / 49.7 exactly); the anti-drift audit covers the FULL
+    18-key doctrine surface with exact set-equality (a NEW divergence OR a
+    VANISHED one both fail); the file-local safety pin closes a REAL gap
+    (sabotage: rewording a safety switch FAILED the new pin while
+    P-032h's module-referencing test PASSED — proven empirically);
+    legitimizing-change comments fact-checked to line numbers (the
+    `dramatic_contrast` fallback KeyError risk confirmed real at
+    creative.py:532); pins judged right-not-brittle (established
+    differential facts, mostly mirroring existing pins). **Codex NOT
+    available — single-model review.**
+  - **Builder conduct:** two observations reported NOT patched (the
+    verdict-filename producer-independence — cosmetic; residue
+    re-confirmations) — the mandated stop-and-report behavior.
+  - **★ REMAINING WORK (the post-sub-arc backlog — ORTHOGONAL, no order
+    dependency, all staged-not-active, none confirmed):** P-030 (rename
+    the halee/ramone dims — now touches TWO producer JSONs +
+    `tests/test_differential_proof.py`, per the reviewer note); the
+    `_default_creative_mode` wiring packet (P-016-family; byte-identical
+    for the reference; must fix the dramatic_contrast-fallback KeyError
+    risk); the analyzer-extension packet (non-lead vocal-band events →
+    makes vocal blend live on real data; also fix creative.py:98
+    name-matching); the verdict-filename cosmetic packet; the standing
+    residue sweeps (liveness-docstrings across ~8 files; validation
+    tightening; NaN-floor guard; etc.). Receipt:
+    `build-os/receipts/P-032i-differential-proof.md`.
 
 - **★★★ P-032h AUTHORS `timbaland.json` — THE PAYOFF PACKET IS DUAL-GREEN.
   THE EPIC'S PAYOFF IS REAL: two live producer profiles;
