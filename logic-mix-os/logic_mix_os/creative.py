@@ -334,7 +334,10 @@ def _variant(vid, problem, kind, name, hypothesis, changes, tracks, risk, valida
     }
 
 
-def generate_variants(problem: Dict, result, mode: str = "dramatic_contrast") -> List[Dict]:
+# P-033: the ``mode`` parameter is carried for the engine's call shape but is
+# not read by the variant builders below; its old ``"dramatic_contrast"``
+# default was the last hardcoded reference-mode name in product code.
+def generate_variants(problem: Dict, result, mode: Optional[str] = None) -> List[Dict]:
     records = result.records
     supporting = _supporting_elements(records)
     loops = [r["name"] for r in records if r["source_kind"] in LOOP_SAMPLE_KINDS]
@@ -505,7 +508,26 @@ def winning_variant(scored_variants: List[Dict]) -> Optional[Dict]:
     }
 
 
-def run_creative_engine(result, mode: str = "dramatic_contrast",
+def _profile_default_mode(prof: ProducerProfile) -> str:
+    """The profile's own deterministic default search mode (P-033).
+
+    Resolution, in order — every candidate comes from the profile's OWN
+    authored tables, so no reference mode name is hardcoded here:
+
+    1. the profile's declared ``default_creative_mode["default_mode"]``, when
+       that name exists in its ``search_modes`` — the mode the profile itself
+       authors as its non-intimate default;
+    2. otherwise the FIRST mode in the profile's ``search_modes`` (JSON
+       authoring order, preserved by the loader) — a mode the profile is
+       guaranteed to actually carry.
+    """
+    declared = prof.default_creative_mode.get("default_mode")
+    if declared in prof.search_modes:
+        return declared
+    return next(iter(prof.search_modes))
+
+
+def run_creative_engine(result, mode: Optional[str] = None,
                         profile: Optional[ProducerProfile] = None) -> Dict:
     # P-029: per-call producer selection. Search modes, the per-variant scoring
     # profile, and the philosophy line are read from the PASSED ``profile``
@@ -513,8 +535,18 @@ def run_creative_engine(result, mode: str = "dramatic_contrast",
     # engine. Passing ``profile is None`` reproduces the reference byte-for-byte.
     prof = profile or _DEFAULT_PROFILE
     search_modes = prof.search_modes
-    if mode not in search_modes:
-        mode = "dramatic_contrast"
+    # P-033: mode resolution is profile-owned. ``mode=None`` resolves to the
+    # profile's own default (for the reference that is ``dramatic_contrast`` —
+    # the same name this signature used to default to, so no-mode callers are
+    # byte-identical). A REQUESTED mode absent from the profile's
+    # ``search_modes`` resolves to the same profile-owned default and the
+    # substitution is surfaced in ``search_mode_fallback`` below (present ONLY
+    # when it happened — the ``score_nudges`` evidence-key discipline). The
+    # old hardcoded ``"dramatic_contrast"`` substitute dereferenced a mode a
+    # profile may not carry (a KeyError for any profile without that name).
+    requested = mode
+    if mode is None or mode not in search_modes:
+        mode = _profile_default_mode(prof)
     problems = detect_creative_problems(result)
     branches: List[Dict] = []
     for problem in problems:
@@ -527,7 +559,7 @@ def run_creative_engine(result, mode: str = "dramatic_contrast",
             "variants": variants,
             "winning": winning_variant(variants),
         })
-    return {
+    out = {
         "search_mode": mode,
         "search_mode_bias": search_modes[mode]["bias"],
         "static_baseline": static_baseline(result),
@@ -543,3 +575,16 @@ def run_creative_engine(result, mode: str = "dramatic_contrast",
         ],
         "philosophy": prof.philosophy,
     }
+    # P-033: observational fallback evidence — present ONLY when a requested
+    # mode was substituted (never on the ``mode=None`` default resolution, and
+    # never when the requested mode exists in the profile's table).
+    if requested is not None and requested != mode:
+        out["search_mode_fallback"] = {
+            "requested_mode": requested,
+            "resolved_mode": mode,
+            "reason": (
+                f"requested mode {requested!r} is not one of this profile's "
+                f"search_modes; resolved to the profile's own default {mode!r}"
+            ),
+        }
+    return out

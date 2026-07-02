@@ -417,8 +417,11 @@ def test_creative_emphasis_diverges_too(analyzed, timbaland_analyzed):
     """The creative judgment is profile-authored as well: on the dense loop
     fixture the subtraction move scores from TIMBALAND's curated table (86.7,
     not the reference's 85.3), and on the intimate fixture the search mode
-    resolves through timbaland's OWN mode table (no ``ramone_vocal_truth``
-    there — the documented fallback applies)."""
+    resolves through timbaland's OWN authored ``default_creative_mode`` table
+    to its ``intimate_mode`` ("conservative") — P-033 wired the table per
+    call, the pre-registered flip of the honest fallback this test pinned
+    at P-032h (``ramone_vocal_truth`` exists only in the reference's
+    table)."""
     tim_loop = _loop_branch(timbaland_analyzed["dense_chorus_with_loops"].creative)
     ref_loop = _loop_branch(analyzed["dense_chorus_with_loops"].creative)
     tim_b = _variant_by_id(tim_loop, "loop_B")["scores"]["overall_score"]
@@ -428,9 +431,10 @@ def test_creative_emphasis_diverges_too(analyzed, timbaland_analyzed):
     assert tim_b != ref_b
 
     assert analyzed["simple_vocal_piano_song"].creative["search_mode"] == "ramone_vocal_truth"
-    assert timbaland_analyzed["simple_vocal_piano_song"].creative["search_mode"] == "dramatic_contrast"
+    assert timbaland_analyzed["simple_vocal_piano_song"].creative["search_mode"] == "conservative"
     assert "ramone_vocal_truth" not in load_profile("timbaland").search_modes
-    assert "dramatic_contrast" in load_profile("timbaland").search_modes
+    assert load_profile("timbaland").default_creative_mode["intimate_mode"] == "conservative"
+    assert "conservative" in load_profile("timbaland").search_modes
 
 
 # --------------------------------------------------------------------------- #

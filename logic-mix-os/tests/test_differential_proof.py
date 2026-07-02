@@ -27,11 +27,11 @@ place:
     present and within bounds on every recommendation in both plans; no
     destructive pattern anywhere; the masked-lead override reaches the plan
     surface under BOTH profiles.
-(d) **The two binding negative expectations, pre-registered:** NO vocal-blend
-    delta (the inert-blend corollary, pinned); NO intimate-mode-selection
-    claim (timbaland's authored ``intimate_mode`` is unreachable today — the
-    pipeline hardcodes the reference's mode names; pinned honestly, not
-    patched here).
+(d) **The pre-registered expectations:** NO vocal-blend delta (the
+    inert-blend corollary, still binding and pinned); and the intimate-mode
+    pin, FLIPPED by P-033 exactly as pre-registered — the pipeline now reads
+    the profile's own ``default_creative_mode`` table, so timbaland's
+    authored ``intimate_mode`` ("conservative") is reachable end to end.
 (e) **Per-profile confidence rendering at the differential level** — each
     producer's artifacts carry ITS OWN map (8 entries vs 11), the maps differ
     where authored, and neither voice leaks into the other's artifacts.
@@ -185,7 +185,7 @@ EXPECTED_SNAPSHOT = {
                 ("loop_context_score", 50.0),
             ],
             "winning_variants": {"vocal_belief": "vocal_A"},
-            "search_mode": "dramatic_contrast",
+            "search_mode": "conservative",
         },
     },
     "dense_chorus_with_loops": {
@@ -330,9 +330,10 @@ def test_verdict_markdown_differs_meaningfully(name, rendered):
 def test_plan_surfaces_differ_where_the_value_systems_diverge(analyzed, tim_analyzed):
     """The SPECIFIC known plan-surface differences, pinned:
 
-    * intimate fixture — different SEARCH MODES (ramone_vocal_truth vs the
-      dramatic_contrast fallback; the honest mechanics of the fallback are
-      obligation (d)'s intimate-mode pin below);
+    * intimate fixture — different SEARCH MODES, each profile's OWN authored
+      ``intimate_mode`` (ramone_vocal_truth vs conservative — P-033 wired the
+      ``default_creative_mode`` table per call; obligation (d)'s pin below
+      carries the reachability proof);
     * loop fixtures — the loop branch scores from each profile's own curated
       tables (loop_B 85.3 vs 86.7; loop_A 81.9 vs 80.7);
     * dense chorus_lift_A (width_bloom, width-crowded evidence) — each profile
@@ -341,7 +342,7 @@ def test_plan_surfaces_differ_where_the_value_systems_diverge(analyzed, tim_anal
       score UP vs the reference (82.1 > 81.4): the physical drum-room lift
       matters more to a groove-first value system."""
     assert analyzed["simple_vocal_piano_song"].creative["search_mode"] == "ramone_vocal_truth"
-    assert tim_analyzed["simple_vocal_piano_song"].creative["search_mode"] == "dramatic_contrast"
+    assert tim_analyzed["simple_vocal_piano_song"].creative["search_mode"] == "conservative"
 
     for name in LOOP_FIXTURES:
         ref_loop = _loop_branch(analyzed[name].creative)
@@ -639,7 +640,8 @@ def test_masked_lead_override_reaches_the_plan_surface_under_both(analyzed):
 
 
 # =========================================================================== #
-# (d) THE BINDING NEGATIVE EXPECTATIONS — pre-registered, asserted honestly.
+# (d) THE PRE-REGISTERED EXPECTATIONS — one still-binding negative (the inert
+# blend), and the intimate-mode pin FLIPPED by P-033 as pre-registered.
 # =========================================================================== #
 def test_no_vocal_blend_delta_the_inert_blend_corollary(analyzed, tim_analyzed):
     """PRE-REGISTERED NEGATIVE EXPECTATION 1 — NO vocal-blend delta.
@@ -666,41 +668,38 @@ def test_no_vocal_blend_delta_the_inert_blend_corollary(analyzed, tim_analyzed):
         assert ref_v == tim_v == 85.0, (name, ref_v, tim_v)
 
 
-def test_no_intimate_mode_selection_the_authored_mode_is_unreachable(
+def test_intimate_mode_selection_the_authored_mode_is_reachable(
     analyzed, tim_analyzed
 ):
-    """PRE-REGISTERED NEGATIVE EXPECTATION 2 — NO intimate-mode-selection
-    claim. The CURRENT behavior, pinned honestly (the P-032h reviewer
-    trajectory finding):
+    """FORMERLY PRE-REGISTERED NEGATIVE EXPECTATION 2, FLIPPED BY P-033 —
+    exactly the packet the old pin named as its legitimate breaker. The
+    authored behavior, now pinned:
 
     * timbaland AUTHORS ``default_creative_mode.intimate_mode:
-      "conservative"`` and "conservative" IS a real mode in its own table —
-      the authored intent exists and is structurally valid;
-    * but ``pipeline._default_creative_mode`` HARDCODES the reference's mode
-      names (pipeline.py:285-290): the intimate fixture's truth resolves to
-      "ramone_vocal_truth" whatever the selected profile authored;
-    * timbaland has no mode of that name, so ``run_creative_engine`` falls
-      back to the hardcoded "dramatic_contrast" (creative.py:516-517) — the
-      authored intimate mode is UNREACHABLE end to end.
-
-    The right change is a FUTURE ENGINE PACKET (P-016-family, recorded in the
-    P-032h receipt/residue) that wires ``_default_creative_mode`` to the
-    profile's ``default_creative_mode`` map, byte-identical for the
-    reference; the same packet must also address the hardcoded
-    "dramatic_contrast" fallback (a KeyError risk for a future profile
-    lacking that mode name). This packet does NOT patch the pipeline; this
-    pin flips the day that packet lands."""
+      "conservative"`` and "conservative" IS a real mode in its own table;
+    * ``pipeline._default_creative_mode`` reads the PASSED profile's
+      ``default_creative_mode`` table (P-033): the intimate fixture's truth
+      resolves to "ramone_vocal_truth" under the reference (its table
+      coincides string-for-string with the old hardcoded map — the
+      byte-identity construction) and to "conservative" under timbaland;
+    * each resolved name is real in its own profile's ``search_modes``, so
+      NO fallback fires on either producer (the hardcoded
+      "dramatic_contrast" substitute is gone; the profile-owned fallback
+      rule and its KeyError-scenario guard live in
+      test_creative_mode_wiring.py)."""
     tim = load_profile("timbaland")
     assert tim.default_creative_mode["intimate_mode"] == "conservative"
     assert "conservative" in tim.search_modes
 
     intent = analyzed["simple_vocal_piano_song"].project.intent
     assert pipeline._default_creative_mode(intent) == "ramone_vocal_truth"
+    assert pipeline._default_creative_mode(intent, tim) == "conservative"
     assert "ramone_vocal_truth" not in tim.search_modes
 
     observed = tim_analyzed["simple_vocal_piano_song"].creative["search_mode"]
-    assert observed == "dramatic_contrast"
-    assert observed != tim.default_creative_mode["intimate_mode"]
+    assert observed == "conservative"
+    assert observed == tim.default_creative_mode["intimate_mode"]
+    assert "search_mode_fallback" not in tim_analyzed["simple_vocal_piano_song"].creative
 
 
 # =========================================================================== #
