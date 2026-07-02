@@ -359,7 +359,7 @@ def write_artifacts(result: ProjectAnalysis, out_dir: str | Path) -> List[str]:
     md_files = {
         "source_material_report.md": markdown_renderer.render_source_material_report(result.source_material),
         "track_identity_report.md": markdown_renderer.render_track_identity_report(result.track_identity),
-        "halee_ramone_mix_verdict.md": markdown_renderer.render_halee_ramone_verdict(result.mix_plan, result.doctrine_score),
+        "mix_verdict.md": markdown_renderer.render_mix_verdict(result.mix_plan, result.doctrine_score),
         "logic_action_checklist.md": checklist_renderer.render_logic_checklist(result.mix_plan),
         "next_pass_recommendations.md": markdown_renderer.render_next_pass(result.mix_plan["next_pass"], result.creative_hypotheses),
         # Bonus reports (not part of the required MVP set, but cheap and useful):

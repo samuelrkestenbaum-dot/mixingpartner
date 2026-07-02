@@ -36,7 +36,7 @@ JSON_OUTPUTS = {
 MD_OUTPUTS = [
     "source_material_report.md",
     "track_identity_report.md",
-    "halee_ramone_mix_verdict.md",
+    "mix_verdict.md",
     "logic_action_checklist.md",
     "next_pass_recommendations.md",
 ]

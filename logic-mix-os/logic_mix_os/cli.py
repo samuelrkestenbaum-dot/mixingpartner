@@ -55,7 +55,8 @@ def _print_summary(result, out_dir, n_written) -> None:
     print(f"Tracks analysed: {len(result.track_analysis)} | Sections: {len(result.section_analysis)}")
     if ds.get("overall_mix_readiness_score") is not None:
         print(f"Overall mix readiness: {ds['overall_mix_readiness_score']}/100")
-        print(f"  Halee {ds.get('halee_score')} | Ramone {ds.get('ramone_score')} | "
+        print(f"  Physical space {ds.get('physical_space_score')} | "
+              f"Emotional hierarchy {ds.get('emotional_hierarchy_score')} | "
               f"Static {ds.get('static_mix_score')} | Dynamic {ds.get('dynamic_mix_score')}")
     print("\nTop next-pass moves:")
     for item in result.mix_plan.get("next_pass", []):

@@ -68,8 +68,8 @@ def render_track_identity_report(items: List[Dict]) -> str:
     return "\n".join(out)
 
 
-def render_halee_ramone_verdict(mix_plan: Dict, doctrine_score: Dict) -> str:
-    out = ["# Halee / Ramone Mix Verdict", ""]
+def render_mix_verdict(mix_plan: Dict, doctrine_score: Dict) -> str:
+    out = ["# Mix Verdict", ""]
     truth = mix_plan.get("singular_emotional_truth")
     if truth:
         out.append(f"> **Emotional truth:** {truth}")
@@ -84,8 +84,8 @@ def render_halee_ramone_verdict(mix_plan: Dict, doctrine_score: Dict) -> str:
     out.append("")
     rows = [
         ("Overall mix readiness", "overall_mix_readiness_score"),
-        ("Roy Halee (physical space)", "halee_score"),
-        ("Phil Ramone (vocal centrality)", "ramone_score"),
+        ("Physical space / depth", "physical_space_score"),
+        ("Emotional hierarchy / vocal belief", "emotional_hierarchy_score"),
         ("Vocal centrality", "vocal_centrality_score"),
         ("Depth hierarchy", "depth_hierarchy_score"),
         ("Section contrast", "section_contrast_score"),
@@ -99,8 +99,8 @@ def render_halee_ramone_verdict(mix_plan: Dict, doctrine_score: Dict) -> str:
         out.append(f"| {label} | {_fmt_score(v)} | `{_bar(v)}` |")
     out.append("")
 
-    out.append("**The Halee test:** Can the listener visualize musicians in a real physical space?  ")
-    out.append("**The Ramone test:** Do I believe every word the singer is saying?")
+    out.append("**The physical-space test:** Can the listener visualize musicians in a real physical space?  ")
+    out.append("**The emotional-hierarchy test:** Do I believe every word the singer is saying?")
     out.append("")
 
     # P-031: the per-area honesty map, read from the SAME doctrine_score the

@@ -426,7 +426,7 @@ def score_variant(variant: Dict, result, profile: Optional[ProducerProfile] = No
     promotion_cap = prof.creative_promotion_cap
 
     base = dict(kind_scores.get(variant["kind"], kind_scores["depth_cleanup"]))
-    numeric = ["technical", "halee", "ramone", "contrast", "vocal_belief", "excitement", "taste"]
+    numeric = ["technical", "physical_space", "emotional_hierarchy", "contrast", "vocal_belief", "excitement", "taste"]
 
     # Base overall on the curated dims, before any context nudge — this is the
     # axis governance ranks on, and the axis the cap binds.
@@ -477,8 +477,8 @@ def score_variant(variant: Dict, result, profile: Optional[ProducerProfile] = No
 
     scores = {
         "technical_score": base["technical"],
-        "halee_score": base["halee"],
-        "ramone_score": base["ramone"],
+        "physical_space_score": base["physical_space"],
+        "emotional_hierarchy_score": base["emotional_hierarchy"],
         "section_contrast_score": base["contrast"],
         "vocal_belief_score": base["vocal_belief"],
         "listener_excitement_score": base["excitement"],

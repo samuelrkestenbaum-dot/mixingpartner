@@ -16,10 +16,35 @@ from typing import Dict, List, Optional
 from .constants import EVENT_TYPES
 
 SCORE_KEYS = [
-    "overall_mix_readiness_score", "halee_score", "ramone_score", "static_mix_score",
-    "dynamic_mix_score", "section_contrast_score", "depth_hierarchy_score",
-    "vocal_centrality_score", "translation_score", "mono_compatibility_score",
+    "overall_mix_readiness_score", "physical_space_score", "emotional_hierarchy_score",
+    "static_mix_score", "dynamic_mix_score", "section_contrast_score",
+    "depth_hierarchy_score", "vocal_centrality_score", "translation_score",
+    "mono_compatibility_score",
 ]
+
+# P-030 read-only compatibility for PERSISTED local mix-pass history: records
+# written before the artifact-contract migration carry the old producer-named
+# keys ("halee_score" / "ramone_score"). Reading a stored record PREFERS the
+# new aesthetic-descriptive key and falls back to the legacy key when the new
+# one is absent. This mapping exists ONLY for reading historical local data —
+# nothing here (or anywhere else) ever WRITES the legacy keys.
+_LEGACY_SCORE_KEYS = {
+    "physical_space_score": "halee_score",
+    "emotional_hierarchy_score": "ramone_score",
+}
+
+
+def _read_stored_score(scores: Dict, key: str):
+    """Read one score from a PERSISTED history record's ``scores`` dict.
+
+    Prefers the new contract key; falls back to the legacy producer-named key
+    (pre-P-030 history) only when the new key is absent. Read-only compat —
+    the legacy keys are never written back.
+    """
+    value = scores.get(key)
+    if value is None and key in _LEGACY_SCORE_KEYS:
+        value = scores.get(_LEGACY_SCORE_KEYS[key])
+    return value
 
 # feedback label -> taste statement when it recurs
 _TASTE_MAP = {
@@ -73,7 +98,9 @@ class ProjectMemory:
         improved, worse = [], []
         if prev:
             for k, v in scores.items():
-                pv = prev.get(k)
+                # Dual-read: ``prev`` is a PERSISTED record and may predate the
+                # P-030 key migration; read it through the legacy fallback.
+                pv = _read_stored_score(prev, k)
                 if v is None or pv is None:
                     continue
                 if v - pv > 1.0:

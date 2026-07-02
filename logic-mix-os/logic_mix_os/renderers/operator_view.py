@@ -39,8 +39,8 @@ def render_status(result: ProjectAnalysis) -> str:
     out.append(" SCORES")
     for label, key in [
         ("Overall mix readiness", "overall_mix_readiness_score"),
-        ("Roy Halee (space)", "halee_score"),
-        ("Phil Ramone (vocal)", "ramone_score"),
+        ("Physical space", "physical_space_score"),
+        ("Emotional hierarchy", "emotional_hierarchy_score"),
         ("Depth hierarchy", "depth_hierarchy_score"),
         ("Section contrast", "section_contrast_score"),
         ("Dynamic movement", "dynamic_mix_score"),

@@ -127,7 +127,7 @@ Written to `--out`:
 is supplied).
 
 **Markdown** — `source_material_report.md`, `track_identity_report.md`,
-`halee_ramone_mix_verdict.md`, `logic_action_checklist.md`,
+`mix_verdict.md`, `logic_action_checklist.md`,
 `next_pass_recommendations.md` (+ bonus `automation_plan.md`,
 `section_contrast_report.md`).
 
@@ -145,7 +145,11 @@ Every decision is evaluated through three simultaneous maps:
 
 Roy Halee supplies the physical-space model; Phil Ramone supplies the emotional
 hierarchy model; Logic Pro is the execution surface; the planner is the
-reasoning layer.
+reasoning layer. In the emitted artifact contract these two models score as
+`physical_space_score` (the physical-space / depth / spatial-realism model) and
+`emotional_hierarchy_score` (the emotional hierarchy / vocal-belief /
+narrative-priority model) — the contract keys describe the aesthetic, while the
+producer profiles keep the producers' names.
 
 ### Masking as hierarchy, not as a fault
 

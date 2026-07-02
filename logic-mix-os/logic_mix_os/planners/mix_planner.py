@@ -77,8 +77,8 @@ def build_plan(
         "singular_emotional_truth": intent.get("singular_emotional_truth", ""),
         "negative_constraints": intent.get("negative_constraints", []),
         "overall_diagnosis": _overall_diagnosis(doctrine_score, mute_candidates, sections_analysis),
-        "halee_score": doctrine_score.get("halee_score"),
-        "ramone_score": doctrine_score.get("ramone_score"),
+        "physical_space_score": doctrine_score.get("physical_space_score"),
+        "emotional_hierarchy_score": doctrine_score.get("emotional_hierarchy_score"),
         "section_contrast_score": doctrine_score.get("section_contrast_score"),
         "depth_hierarchy_score": doctrine_score.get("depth_hierarchy_score"),
         "vocal_centrality_score": doctrine_score.get("vocal_centrality_score"),
@@ -235,8 +235,8 @@ def _risks_and_opportunities(doctrine_score, records, events, sections):
         risks.append(w["warning"])
 
     scores = {
-        "Halee physical-space realism": doctrine_score.get("halee_score"),
-        "Ramone vocal centrality": doctrine_score.get("ramone_score"),
+        "Physical-space realism": doctrine_score.get("physical_space_score"),
+        "Emotional hierarchy": doctrine_score.get("emotional_hierarchy_score"),
         "Section contrast": doctrine_score.get("section_contrast_score"),
         "Depth hierarchy": doctrine_score.get("depth_hierarchy_score"),
         "Dynamic movement": doctrine_score.get("dynamic_mix_score"),

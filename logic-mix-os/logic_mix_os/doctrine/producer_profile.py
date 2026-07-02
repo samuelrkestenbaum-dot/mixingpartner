@@ -101,7 +101,8 @@ class ProducerProfile:
     taste_triangle: Dict[str, Any]
     veto_thresholds: Dict[str, int]
 
-    # doctrine_engine.py — weights / baselines / _halee+_ramone penalty coeffs
+    # doctrine_engine.py — weights / baselines / the _physical_space +
+    # _emotional_hierarchy penalty coeffs
     # (P-025), plus (P-028 Finding A) the widened ``scorers`` group holding the
     # per-function aesthetic constants for the five remaining scorers
     # (vocal_centrality / depth_hierarchy / section_contrast / static_mix /

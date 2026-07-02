@@ -1,8 +1,14 @@
-"""Doctrine engine: turns the analysis into Halee/Ramone scores + warnings.
+"""Doctrine engine: turns the analysis into doctrine scores + warnings.
 
 Every score is 0-100 and carries evidence. The engine never invents numbers it
 cannot justify; when there is not enough information (e.g. fewer than two
 sections) it says so rather than guessing.
+
+P-030 artifact-contract migration: the two dimensions historically named for
+the reference producers now carry aesthetic-descriptive contract keys —
+``physical_space_score`` (the physical-space / depth / spatial-realism model)
+and ``emotional_hierarchy_score`` (the emotional hierarchy / vocal-belief /
+narrative-priority model). Same math, same values; only the key names changed.
 """
 
 from __future__ import annotations
@@ -61,8 +67,9 @@ def score_doctrine(
     lead = next((r for r in records if r["instrument_identity"] == "lead_vocal"), None)
     warnings: List[Dict] = []
 
-    halee, halee_ev = _halee(records, events, doctrine)
-    ramone, ramone_ev = _ramone(records, lead, events, warnings, doctrine)
+    physical_space, physical_space_ev = _physical_space(records, events, doctrine)
+    emotional_hierarchy, emotional_hierarchy_ev = _emotional_hierarchy(
+        records, lead, events, warnings, doctrine)
     vocal, vocal_ev = _vocal_centrality(lead, events, doctrine)
     depth, depth_ev = _depth_hierarchy(records, doctrine)
     contrast, contrast_ev = _section_contrast(sections_analysis, warnings, doctrine)
@@ -126,8 +133,8 @@ def score_doctrine(
     vrf, vrf_ev = _vocal_role_fit(records, events, doctrine, prof.vocal_blend_policy)
 
     component_scores = {
-        "halee_score": halee,
-        "ramone_score": ramone,
+        "physical_space_score": physical_space,
+        "emotional_hierarchy_score": emotional_hierarchy,
         "vocal_centrality_score": vocal,
         "depth_hierarchy_score": depth,
         "section_contrast_score": contrast,
@@ -153,8 +160,8 @@ def score_doctrine(
         **component_scores,
         "overall_mix_readiness_score": overall,
         "evidence": {
-            "halee": halee_ev,
-            "ramone": ramone_ev,
+            "physical_space": physical_space_ev,
+            "emotional_hierarchy": emotional_hierarchy_ev,
             "vocal_centrality": vocal_ev,
             "depth_hierarchy": depth_ev,
             "section_contrast": contrast_ev,
@@ -180,9 +187,9 @@ def score_doctrine(
 
 
 # --------------------------------------------------------------------------- #
-def _halee(records: List[Dict], events: List[Dict], doctrine: Dict = _DOCTRINE):
-    c = doctrine["penalty_coeffs"]["halee"]
-    score = doctrine["baselines"]["halee"]
+def _physical_space(records: List[Dict], events: List[Dict], doctrine: Dict = _DOCTRINE):
+    c = doctrine["penalty_coeffs"]["physical_space"]
+    score = doctrine["baselines"]["physical_space"]
     ev: List[str] = []
     n = len(records) or 1
 
@@ -217,10 +224,10 @@ def _halee(records: List[Dict], events: List[Dict], doctrine: Dict = _DOCTRINE):
     return _clamp(score), ev
 
 
-def _ramone(records: List[Dict], lead: Optional[Dict], events: List[Dict],
-            warnings: List[Dict], doctrine: Dict = _DOCTRINE):
-    c = doctrine["penalty_coeffs"]["ramone"]
-    score = doctrine["baselines"]["ramone"]
+def _emotional_hierarchy(records: List[Dict], lead: Optional[Dict], events: List[Dict],
+                         warnings: List[Dict], doctrine: Dict = _DOCTRINE):
+    c = doctrine["penalty_coeffs"]["emotional_hierarchy"]
+    score = doctrine["baselines"]["emotional_hierarchy"]
     ev: List[str] = []
     if lead is None:
         score -= c["no_lead"]
@@ -1222,9 +1229,9 @@ def _vocal_role_fit(records: List[Dict], events: List[Dict],
     masked-lead pathway by construction.
 
     DISTINCTNESS vs the live vocal scorers — this axis READS, it never
-    rewires: ``_ramone`` / ``_vocal_centrality`` keep sole ownership of the
-    reference producer's lead-masking PENALTIES (and their behavior for
-    halee_ramone is untouched; this axis is weight-0 there). This axis adds
+    rewires: ``_emotional_hierarchy`` / ``_vocal_centrality`` keep sole
+    ownership of the reference producer's lead-masking PENALTIES (and their
+    behavior for halee_ramone is untouched; this axis is weight-0 there). This axis adds
     the role-TYPE dimension those scorers do not have: they see "a lead" and
     "events"; this axis sees WHAT KIND of vocal every stem is and reads fit
     per role. ``_static_mix``'s no-lead hygiene penalty is likewise
