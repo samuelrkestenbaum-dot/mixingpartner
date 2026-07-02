@@ -4,9 +4,9 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** NONE ACTIVE — P-037 ✓ CLOSED by the archivist (2026-07-02).
-  P-038 is STAGED below, **NOT active until the orchestrator confirms** (on
-  the user's go).
+- **Status:** ACTIVE — P-038 confirmed by the orchestrator-in-chief
+  (2026-07-02; within the user's standing "Go for it" = sweep the residue,
+  two packets). Handed to builder.
 
 ## Last-closed / context
 
@@ -20,7 +20,7 @@
   pushed, NOT merged. Receipt:
   `build-os/receipts/P-037-code-behavior-sweep.md`.
 
-## STAGED (next, unconfirmed): P-038 — residue sweep 2 of 2 (naming/prose)
+## Active packet spec (confirmed): P-038 — residue sweep 2 of 2 (naming/prose)
 
 - **Packet id:** P-038
 - **Title:** residue sweep 2 of 2 — the NAMING/PROSE sweep. **THE LAST
