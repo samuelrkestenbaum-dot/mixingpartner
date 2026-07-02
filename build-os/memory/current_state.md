@@ -255,6 +255,74 @@
 
 ## Where we are
 
+- **★★★ P-037 SWEEPS THE CODE-BEHAVIOR RESIDUE — residue sweep 1 of 2:
+  six defensive/validation items from residue.md, byte-identical on
+  EVERY artifact surface (4 fixtures × 2 producers). ★ THE REAL
+  FINDING: NaN floors previously FAILED OPEN on raw dicts
+  (`confidence < nan` is False → blend accepted; −0.5/−inf accepted
+  everything) — now fails CLOSED, verified at base by builder, qa, AND
+  reviewer independently. qa GREEN + reviewer fix-then-pass → PASS
+  (one fix round, fully resolved). Last-closed = P-037.**
+  - **1 + 1 review-fix commits** on parent `4df134c` (active-packet
+    confirmation): `cb566b1` (the six items — 14 files, 432+/48−) +
+    `5f94456` (the review-fix — the groove snapshot moved BEFORE
+    score_doctrine + the load-bearing mutation pin + the amended
+    docstring; 3 files, 83+/17−). **PUSHED to the dev branch
+    (orchestrator standing go), NOT merged** (merge base `dc921ec` =
+    PR #18). **★ The branch carries P-036 + P-037 (+ closes) — the
+    batch merge decision (P-036 + P-037 + P-038) is the user's call
+    after P-038.**
+  - **★ The six items:** (1) logic_action_generator identity-derived
+    lead matching, consolidated with creative onto ONE shared
+    `lead_vocal_names()` basis (vocal_type_classifier) — zero
+    substring-match sites remain; (2) `_validate` tightening —
+    search_modes non-empty, default_creative_mode's three
+    hard-dereferenced keys, confidence_map duplicate-areas + exact
+    entry keys {area, level, reason}, non-finite floors rejected; (3)
+    the raw-gate floor self-guard — fails CLOSED (THE REAL FINDING
+    above); (4) `lead_names` identity-derived (the mangle pin: old
+    behavior double-penalized a hand-mangled lead — 60.0 → new 70.0
+    baseline with zero clarity lines); (5) the groove defensive
+    snapshot — THE FIX-THEN-PASS ROUND: the copy as first shipped ran
+    AFTER doctrine and could not deliver the defense; moved to
+    pre-doctrine, with a mutation test that FAILS under the old
+    placement (the reviewer reproduced the corruption: −999.0
+    inherited) and passes at HEAD; compute-once intact; (6)
+    JUDGMENT_WORDS word-boundary + plural-suffix matching
+    (`\b{w}(?:e?s)?\b`), 9–10 guard sites migrated to one shared
+    helper, "fixture" freed / "fix" + "fixes" + "problems" caught;
+    other inflections consciously OUTSIDE the closed vocabulary
+    (extend explicitly, never stem-guess).
+  - **★ qa GREEN (pre-fix tree):** suite 754 → **766** (+12);
+    regression **93/93**; byte-identity **240/240** via qa's OWN
+    harness; the fail-open confirmed REAL at base (7/7 probes); 14/14
+    validation probes; both shipped profiles load; the shared basis
+    verified fork-free; safety grep clean. **Post-fix:** suite **767**
+    (+1 mutation test); regression 93/93; byte-identity **re-proven
+    240/240** by builder AND spot-verified by reviewer.
+  - **★ reviewer fix-then-pass → PASS:** the three must-fix items
+    (placement; pin-detects-threat; stale claim) ALL resolved as
+    specified, load-bearing verified both directions. **Codex NOT
+    available — single-model review, both rounds.** The fix-then-pass
+    path (the P-031 precedent) used as designed — **the SECOND time a
+    "defensive" change was caught not defending: defense claims need
+    MUTATION TESTS, not placement faith (→ residue, named lesson,
+    alongside the fail-open lesson: raw-dict NaN comparisons fail
+    open — audit future raw-comparison gates).** Benign observation
+    (qa): the remote-ref updates on the branch are the orchestrator's
+    standing-go session pushes, not agent-initiated pushes.
+  - **★ NEXT = P-038 (residue sweep 2 of 2 — naming/prose, the LAST
+    backlog packet), STAGED not active:** the three
+    producer-named-VALUE surfaces (scoped against the goldens —
+    warning doctrine tags may be golden-pinned; search-mode names
+    appear in emitted creative.json), the liveness-docstring sweep
+    (~8 files), cli.py --mode help text, the P-035 count-pin
+    parenthetical tidy, fallback-reason wording, the two P-036
+    observations (the heard-qualifier shorthand; the elliptical 65.0
+    attribution). Then the batch merge decision (P-036 + P-037 +
+    P-038) on the user's word. Receipt:
+    `build-os/receipts/P-037-code-behavior-sweep.md`.
+
 - **★★★ P-036 RE-AUTHORS THE STALE VOCAL-BLEND CONFIDENCE ENTRIES —
   the honesty layer catches up with P-035's reality (the P-035
   reviewer's queue-jump recommendation, user-approved). Labeling only,
@@ -317,7 +385,9 @@
     observations; duplicate-areas/extra-keys; fallback-reason wording;
     the shared groove dict defensive copy; lead_names derivation). NO
     single packet staged — the orchestrator scopes sweep packets with
-    the user. Receipt:
+    the user. **(✓ UPDATE P-037 close, 2026-07-02: sweep 1 of 2 —
+    the code-behavior items — CLOSED as P-037; P-038 = sweep 2 of
+    2, naming/prose, STAGED as the LAST backlog packet.)** Receipt:
     `build-os/receipts/P-036-confidence-map-honesty-fix.md`.
 
 - **★★★ P-035 LANDS THE 4TH FIXTURE + THE REAL-DATA VOCAL-BLEND
@@ -2364,4 +2434,4 @@
   OWN map under this policy (hand-curated-documented → HIGH).
 
 ---
-_Updated by the archivist on close. Last advanced on P-031 close (2026-07-02) — THE HONESTY LAYER lands: the REQUIRED per-area `confidence_map` (high/limited/deferred + reason) is validated, authored + verbatim-pinned for halee_ramone, and rendered per-call; baseline 600 passed / regression 68-of-68; `51a107c`+`4af24e2` pushed, `b869ebd` local (orchestrator pushes at close); NOT merged (merge base `e79426a` = PR #16). Next: P-032h — author `timbaland.json` (THE PAYOFF PACKET), then P-032i (differential proof; no vocal-blend delta expected)._
+_Updated by the archivist on close. Last advanced on P-037 close (2026-07-02) — residue sweep 1 of 2 (code-behavior) lands: six defensive/validation items, byte-identical 240/240 (proven twice); THE REAL FINDING — NaN floors FAILED OPEN on raw dicts, now fail CLOSED; baseline **767** passed / regression **93/93**; `cb566b1` + `5f94456` pushed, NOT merged (merge base `dc921ec` = PR #18; the branch carries P-036 + P-037). Next: P-038 — residue sweep 2 of 2 (naming/prose), the LAST backlog packet, then the batch merge decision (P-036 + P-037 + P-038) on the user's word._
