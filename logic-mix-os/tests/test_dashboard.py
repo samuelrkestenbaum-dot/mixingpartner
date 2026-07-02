@@ -44,7 +44,10 @@ def test_dashboard_shows_song_and_scores(analyzed):
     res = analyzed["dense_chorus_with_loops"]
     html = render_dashboard(res)
     assert res.project.song_title in html
-    assert "Roy Halee" in html and "Phil Ramone" in html
+    # P-030: the score labels are producer-agnostic (aesthetic-descriptive);
+    # no producer name appears in the dashboard's score grid labels.
+    assert "Physical space" in html and "Emotional hierarchy" in html
+    assert "Roy Halee (space)" not in html and "Phil Ramone (vocal)" not in html
 
 
 def test_dashboard_escapes_content(analyzed):

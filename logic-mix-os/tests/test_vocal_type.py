@@ -62,8 +62,8 @@ from logic_mix_os.doctrine.producer_profile import load_profile
 # set): the seven originals + the six P-032.x axes already landed.
 # vocal_role_fit_score is appended after these.
 EXISTING_COMPONENT_KEYS = [
-    "halee_score",
-    "ramone_score",
+    "physical_space_score",
+    "emotional_hierarchy_score",
     "vocal_centrality_score",
     "depth_hierarchy_score",
     "section_contrast_score",
@@ -88,8 +88,8 @@ FIXTURE_NAMES = [
 # add must leave all of these byte-unchanged.
 BASE_COMPONENT_SCORES = {
     "simple_vocal_piano_song": {
-        "halee_score": 58.0,
-        "ramone_score": 86.0,
+        "physical_space_score": 58.0,
+        "emotional_hierarchy_score": 86.0,
         "vocal_centrality_score": 90.0,
         "depth_hierarchy_score": 40.0,
         "section_contrast_score": 100.0,
@@ -104,8 +104,8 @@ BASE_COMPONENT_SCORES = {
         "overall_mix_readiness_score": 73.8,
     },
     "dense_chorus_with_loops": {
-        "halee_score": 67.6,
-        "ramone_score": 86.0,
+        "physical_space_score": 67.6,
+        "emotional_hierarchy_score": 86.0,
         "vocal_centrality_score": 90.0,
         "depth_hierarchy_score": 65.3,
         "section_contrast_score": 82,
@@ -120,8 +120,8 @@ BASE_COMPONENT_SCORES = {
         "overall_mix_readiness_score": 70.7,
     },
     "splice_loop_problem": {
-        "halee_score": 81.3,
-        "ramone_score": 86.0,
+        "physical_space_score": 81.3,
+        "emotional_hierarchy_score": 86.0,
         "vocal_centrality_score": 90.0,
         "depth_hierarchy_score": 72.0,
         "section_contrast_score": 82,

@@ -74,35 +74,35 @@ def test_kind_scores_value_pins():
         "loop_deconstruct", "depth_cleanup", "intimacy_pass",
     }
     assert ks["width_bloom"] == dict(
-        technical=82, halee=78, ramone=79, contrast=91, vocal_belief=74,
+        technical=82, physical_space=78, emotional_hierarchy=79, contrast=91, vocal_belief=74,
         excitement=88, taste=80, translation="medium", mono="medium",
     )
     assert ks["subtractive_drop"] == dict(
-        technical=85, halee=88, ramone=86, contrast=88, vocal_belief=86,
+        technical=85, physical_space=88, emotional_hierarchy=86, contrast=88, vocal_belief=86,
         excitement=78, taste=86, translation="low", mono="low",
     )
     assert ks["vocal_ride"] == dict(
-        technical=84, halee=84, ramone=92, contrast=70, vocal_belief=92,
+        technical=84, physical_space=84, emotional_hierarchy=92, contrast=70, vocal_belief=92,
         excitement=70, taste=88, translation="low", mono="low",
     )
     assert ks["drum_room_bloom"] == dict(
-        technical=80, halee=89, ramone=78, contrast=82, vocal_belief=76,
+        technical=80, physical_space=89, emotional_hierarchy=78, contrast=82, vocal_belief=76,
         excitement=83, taste=82, translation="low", mono="low",
     )
     assert ks["loop_deconstruct"] == dict(
-        technical=83, halee=87, ramone=84, contrast=78, vocal_belief=85,
+        technical=83, physical_space=87, emotional_hierarchy=84, contrast=78, vocal_belief=85,
         excitement=72, taste=84, translation="low", mono="low",
     )
     assert ks["depth_cleanup"] == dict(
-        technical=84, halee=90, ramone=85, contrast=72, vocal_belief=86,
+        technical=84, physical_space=90, emotional_hierarchy=85, contrast=72, vocal_belief=86,
         excitement=66, taste=85, translation="low", mono="low",
     )
     assert ks["intimacy_pass"] == dict(
-        technical=82, halee=85, ramone=88, contrast=72, vocal_belief=90,
+        technical=82, physical_space=85, emotional_hierarchy=88, contrast=72, vocal_belief=90,
         excitement=64, taste=87, translation="low", mono="low",
     )
     # A representative single-cell pin (matches the packet's example).
-    assert ks["width_bloom"]["halee"] == 78
+    assert ks["width_bloom"]["physical_space"] == 78
 
 
 def test_caps_value_pins():

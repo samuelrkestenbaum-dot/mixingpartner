@@ -86,8 +86,8 @@ _TIMBALAND_PATH = _ROOT / "logic_mix_os" / "doctrine" / "producers" / "timbaland
 # never 100) carry deliberately MODERATED weights so the ceilings do not
 # systematically drag the weighted mean.
 TIM_WEIGHTS = {
-    "halee_score": 0.5,
-    "ramone_score": 0.7,
+    "physical_space_score": 0.5,
+    "emotional_hierarchy_score": 0.7,
     "vocal_centrality_score": 0.6,
     "depth_hierarchy_score": 0.5,
     "section_contrast_score": 1.2,
@@ -110,7 +110,7 @@ WEIGHTED_UP = (
     "section_contrast_score", "dynamic_mix_score", "vocal_role_fit_score",
 )
 RELAXED = (
-    "halee_score", "ramone_score", "vocal_centrality_score",
+    "physical_space_score", "emotional_hierarchy_score", "vocal_centrality_score",
     "depth_hierarchy_score", "static_mix_score",
 )
 
@@ -726,7 +726,7 @@ def test_artifacts_render_timbalands_map_not_the_references(timbaland_analyzed, 
     dsj = json.loads((tmp_path / "doctrine_score.json").read_text(encoding="utf-8"))
     assert dsj["confidence"] == TIM_AUTHORED_MAP
 
-    md = (tmp_path / "halee_ramone_mix_verdict.md").read_text(encoding="utf-8")
+    md = (tmp_path / "mix_verdict.md").read_text(encoding="utf-8")
     assert "## Confidence" in md
     for entry in TIM_AUTHORED_MAP:
         assert entry["area"] in md, entry["area"]

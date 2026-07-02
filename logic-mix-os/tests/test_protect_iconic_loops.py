@@ -226,10 +226,10 @@ def test_gate_reuses_the_shared_detection_basis():
 
 
 def test_packet_cautions_untouched():
-    """Packet-mandated: the ``_halee`` loop_foregrounded penalty coefficient
+    """Packet-mandated: the ``_physical_space`` loop_foregrounded penalty coefficient
     and the halee_ramone promotion table rows/deltas are NOT modified."""
     p = load_profile("halee_ramone")
-    assert p.doctrine["penalty_coeffs"]["halee"]["loop_foregrounded"] == 6
+    assert p.doctrine["penalty_coeffs"]["physical_space"]["loop_foregrounded"] == 6
     assert p.promotion_table == [{
         "kinds": {"loop_deconstruct"},
         "evidence": "foregrounded_loop",

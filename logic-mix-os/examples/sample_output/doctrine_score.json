@@ -1,6 +1,6 @@
 {
-  "halee_score": 67.6,
-  "ramone_score": 86.0,
+  "physical_space_score": 67.6,
+  "emotional_hierarchy_score": 86.0,
   "vocal_centrality_score": 90.0,
   "depth_hierarchy_score": 65.3,
   "section_contrast_score": 82,
@@ -8,11 +8,11 @@
   "dynamic_mix_score": 23.4,
   "overall_mix_readiness_score": 70.7,
   "evidence": {
-    "halee": [
+    "physical_space": [
       "78% of elements sit in forward layers; depth is collapsing.",
       "1 section(s) show stereo-width crowding (artificial width)."
     ],
-    "ramone": [
+    "emotional_hierarchy": [
       "Vocal is not critically masked by forward elements."
     ],
     "vocal_centrality": [

@@ -62,7 +62,7 @@ PROMOTION_REASON = (
     "(source material respected), don't just accent it"
 )
 
-_NUMERIC = ["technical", "halee", "ramone", "contrast", "vocal_belief", "excitement", "taste"]
+_NUMERIC = ["technical", "physical_space", "emotional_hierarchy", "contrast", "vocal_belief", "excitement", "taste"]
 
 
 def _curated_base_overall(kind: str) -> float:

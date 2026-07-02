@@ -39,7 +39,7 @@ from logic_mix_os.creative import (
 from logic_mix_os.governance import emotional_truth_lock, govern_branches
 
 
-_NUMERIC = ["technical", "halee", "ramone", "contrast", "vocal_belief", "excitement", "taste"]
+_NUMERIC = ["technical", "physical_space", "emotional_hierarchy", "contrast", "vocal_belief", "excitement", "taste"]
 
 # Verbatim evidence strings from the nudge table (the contract surface).
 # P-015: row-0 (lead_masked) was strengthened -8 -> -14 and its reason rewritten
@@ -258,11 +258,11 @@ def test_overall_clamped_0_100_under_extreme_bases():
     # Patch _KIND_SCORES with a near-zero and a near-max profile, force nudges,
     # and confirm the [0,100] clamp still holds on the overall axis.
     extreme_low = dict(
-        technical=0, halee=0, ramone=0, contrast=0, vocal_belief=0,
+        technical=0, physical_space=0, emotional_hierarchy=0, contrast=0, vocal_belief=0,
         excitement=0, taste=0, translation="high", mono="low",
     )
     extreme_high = dict(
-        technical=100, halee=100, ramone=100, contrast=100, vocal_belief=100,
+        technical=100, physical_space=100, emotional_hierarchy=100, contrast=100, vocal_belief=100,
         excitement=100, taste=100, translation="low", mono="low",
     )
     saved = copy.deepcopy(_KIND_SCORES)

@@ -78,7 +78,7 @@ LOOP_FIXTURES = ("dense_chorus_with_loops", "splice_loop_problem")
 # The 14 component axes (shared measurement substrate; each profile weights
 # them its own way).
 COMPONENT_KEYS = [
-    "halee_score", "ramone_score", "vocal_centrality_score",
+    "physical_space_score", "emotional_hierarchy_score", "vocal_centrality_score",
     "depth_hierarchy_score", "section_contrast_score", "static_mix_score",
     "dynamic_mix_score", "beat_identity_score", "negative_space_score",
     "groove_coherence_score", "rhythmic_surprise_score",
@@ -278,7 +278,7 @@ def rendered(analyzed, tim_analyzed, tmp_path_factory):
 
 
 def _verdict(rendered, producer, name) -> str:
-    return (rendered[(producer, name)] / "halee_ramone_mix_verdict.md").read_text(
+    return (rendered[(producer, name)] / "mix_verdict.md").read_text(
         encoding="utf-8"
     )
 
@@ -296,7 +296,7 @@ def test_verdict_markdown_differs_meaningfully(name, rendered):
     documents: each carries ITS OWN overall + diagnosis + confidence voice —
     while the shared measurement rows stay identical (one substrate, two
     judgments). The rendered verdict filename/title is producer-independent
-    today (``halee_ramone_mix_verdict.md`` — the renderer's fixed name), so
+    today (``mix_verdict.md`` — the renderer's fixed name), so
     the difference is IN the document, where the judgment lives."""
     ref_md = _verdict(rendered, "halee_ramone", name)
     tim_md = _verdict(rendered, "timbaland", name)
@@ -309,9 +309,10 @@ def test_verdict_markdown_differs_meaningfully(name, rendered):
     assert f"Overall mix readiness {tim_overall}/100." not in ref_md
     assert f"Overall mix readiness {ref_overall}/100." not in tim_md
 
-    # The shared-measurement row renders identically under both: ramone_score
-    # is 86.0 on every fixture and is a COMPONENT (measurement), not judgment.
-    shared_row = "| Phil Ramone (vocal centrality) | 86.0/100 |"
+    # The shared-measurement row renders identically under both:
+    # emotional_hierarchy_score is 86.0 on every fixture and is a COMPONENT
+    # (measurement), not judgment.
+    shared_row = "| Emotional hierarchy / vocal belief | 86.0/100 |"
     assert shared_row in ref_md and shared_row in tim_md
 
     # Each verdict speaks its own confidence voice (the full per-entry check

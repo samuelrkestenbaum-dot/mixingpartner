@@ -5,8 +5,8 @@ from __future__ import annotations
 from logic_mix_os.validation.output_validator import load_schema, validate_instance
 
 SCORE_KEYS = [
-    "halee_score",
-    "ramone_score",
+    "physical_space_score",
+    "emotional_hierarchy_score",
     "vocal_centrality_score",
     "depth_hierarchy_score",
     "static_mix_score",
@@ -33,8 +33,8 @@ def test_dense_arrangement_creates_hierarchy_signal(analyzed):
     res = analyzed["dense_chorus_with_loops"]
     events = res.masking_report["events"]
     width_crowding = [e for e in events if e["classification"] == "width_crowding"]
-    # Either an explicit crowding event, or the Halee score is penalised below 80.
-    assert width_crowding or res.doctrine_score["halee_score"] < 80
+    # Either an explicit crowding event, or the physical-space score is penalised below 80.
+    assert width_crowding or res.doctrine_score["physical_space_score"] < 80
 
 
 def test_masking_is_hierarchy_not_blanket(analyzed):

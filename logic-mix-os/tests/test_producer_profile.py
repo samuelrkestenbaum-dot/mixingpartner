@@ -12,7 +12,7 @@ Round-trip assertions are of two kinds:
   loaded field must ``==`` it exactly (ordering/tuples-vs-lists normalized
   honestly, never loosened to pass).
 * **indirect** — the source value is computed INLINE inside a function (the
-  doctrine component weights, the 86.0 baselines, and the ``_halee``/``_ramone``
+  doctrine component weights, the 86.0 baselines, and the ``_physical_space``/``_emotional_hierarchy``
   penalty coefficients are locals, not constants). Refactoring the source to
   expose them would break the byte-identical / no-wiring contract of P-025, so we
   instead DRIVE the real function with crafted inputs and assert the captured
@@ -33,7 +33,7 @@ from logic_mix_os.doctrine.producer_profile import ProducerProfile, load_profile
 # Byte-identical ROUND-TRIP — exact-equal (clean module-level constants)
 # --------------------------------------------------------------------------- #
 def test_kind_scores_round_trip_exact():
-    """The 7 kinds × 9 dims (incl. the verbatim ``halee``/``ramone`` dim names)."""
+    """The 7 kinds × 9 dims (incl. the P-030 ``physical_space``/``emotional_hierarchy`` dim names)."""
     assert load_profile().kind_scores == creative._KIND_SCORES
 
 
@@ -109,7 +109,7 @@ def test_taste_triangle_round_trip_exact():
     tt = load_profile().taste_triangle
     assert tt["intimate_width_penalty"] == 30
     assert tt["emotion_dims"] == [
-        "ramone_score", "listener_excitement_score", "vocal_belief_score",
+        "emotional_hierarchy_score", "listener_excitement_score", "vocal_belief_score",
     ]
 
 
@@ -131,11 +131,11 @@ def test_taste_triangle_round_trip_indirect():
     tt = load_profile().taste_triangle
     vt = load_profile().veto_thresholds
 
-    def _variant(kind, ramone, excite, belief, taste):
+    def _variant(kind, emotional_hierarchy, excite, belief, taste):
         return {
             "variant_id": "x", "kind": kind, "name": kind, "changes": [],
             "scores": {
-                "ramone_score": ramone, "listener_excitement_score": excite,
+                "emotional_hierarchy_score": emotional_hierarchy, "listener_excitement_score": excite,
                 "vocal_belief_score": belief, "technical_score": 80,
                 "taste_alignment_score": taste, "overall_score": 90.0,
             },
@@ -171,7 +171,7 @@ def test_veto_thresholds_round_trip_indirect():
         return {
             "variant_id": "x", "kind": kind, "name": kind, "changes": [],
             "scores": {
-                "ramone_score": 80, "listener_excitement_score": 80,
+                "emotional_hierarchy_score": 80, "listener_excitement_score": 80,
                 "vocal_belief_score": 80, "technical_score": 80,
                 "taste_alignment_score": taste, "overall_score": 90.0,
             },
@@ -259,7 +259,7 @@ def test_doctrine_weights_round_trip_indirect():
 
 
 def test_doctrine_baselines_round_trip_indirect():
-    """The 86.0 baselines for ``_halee`` and ``_ramone`` are inline literals.
+    """The 86.0 baselines for ``_physical_space`` and ``_emotional_hierarchy`` are inline literals.
     On a CLEAN project (no penalty condition fires) each function returns exactly
     its baseline, so the captured baseline must equal that clean-project score."""
     b = load_profile().doctrine["baselines"]
@@ -269,58 +269,58 @@ def test_doctrine_baselines_round_trip_indirect():
         _record(name="Gtr1", depth_default="background"),
         _record(name="Gtr2", depth_default="midground"),
     ]
-    halee, _ = doctrine_engine._halee(clean, [])
-    # _ramone with a lead present and low decorative fraction => baseline.
+    physical_space, _ = doctrine_engine._physical_space(clean, [])
+    # _emotional_hierarchy with a lead present and low decorative fraction => baseline.
     lead = clean[0]
-    ramone, _ = doctrine_engine._ramone(clean, lead, [], [])
-    assert halee == b["halee"]
-    assert ramone == b["ramone"]
+    emotional_hierarchy, _ = doctrine_engine._emotional_hierarchy(clean, lead, [], [])
+    assert physical_space == b["physical_space"]
+    assert emotional_hierarchy == b["emotional_hierarchy"]
 
 
-def test_doctrine_halee_penalty_coeffs_round_trip_indirect():
-    """Drive ``_halee`` with a single triggering condition at a time and assert
+def test_doctrine_physical_space_penalty_coeffs_round_trip_indirect():
+    """Drive ``_physical_space`` with a single triggering condition at a time and assert
     the captured coefficient reproduces the exact score drop the function applies.
     (Coefficients are inline; this is the honest indirect round-trip.)"""
-    c = load_profile().doctrine["penalty_coeffs"]["halee"]
-    baseline = load_profile().doctrine["baselines"]["halee"]
+    c = load_profile().doctrine["penalty_coeffs"]["physical_space"]
+    baseline = load_profile().doctrine["baselines"]["physical_space"]
 
     # felt element forward: score -= felt_coeff * count (count=1)
     felt = [_record(name="f", perceptual_role="felt", depth_default="foreground")]
     # Also add enough background records so fg_frac stays <= 0.6 (only felt fires).
     felt += [_record(name=f"b{i}", depth_default="background") for i in range(3)]
-    score, _ = doctrine_engine._halee(felt, [])
+    score, _ = doctrine_engine._physical_space(felt, [])
     assert score == doctrine_engine._clamp(baseline - c["felt_forward"] * 1)
 
     # width-crowding events: score -= width_coeff * count (count=2)
     plain = [_record(name=f"b{i}", depth_default="background") for i in range(4)]
     events = [{"classification": "width_crowding"}, {"classification": "width_crowding"}]
-    score, _ = doctrine_engine._halee(plain, events)
+    score, _ = doctrine_engine._physical_space(plain, events)
     assert score == doctrine_engine._clamp(baseline - c["width_crowding"] * 2)
 
     # foregrounded full-width loop: score -= loop_coeff * count (count=1)
     loop = [_record(name="loop", source_kind="splice_sample",
                     depth_default="foreground", stereo_width=0.9)]
     loop += [_record(name=f"b{i}", depth_default="background") for i in range(3)]
-    score, _ = doctrine_engine._halee(loop, [])
+    score, _ = doctrine_engine._physical_space(loop, [])
     assert score == doctrine_engine._clamp(baseline - c["loop_foregrounded"] * 1)
 
     # forward-occupancy: fg_frac > threshold => score -= (fg_frac-threshold)*coeff
     fwd = [_record(name=f"f{i}", depth_default="foreground") for i in range(4)]
     fwd += [_record(name="b", depth_default="background")]
     fg_frac = 4 / 5
-    score, _ = doctrine_engine._halee(fwd, [])
+    score, _ = doctrine_engine._physical_space(fwd, [])
     expected = baseline - (fg_frac - c["forward_threshold"]) * c["forward_occupancy"]
     # felt none, so only the occupancy penalty applies.
     assert score == doctrine_engine._clamp(expected)
 
 
-def test_doctrine_ramone_penalty_coeffs_round_trip_indirect():
-    c = load_profile().doctrine["penalty_coeffs"]["ramone"]
-    baseline = load_profile().doctrine["baselines"]["ramone"]
+def test_doctrine_emotional_hierarchy_penalty_coeffs_round_trip_indirect():
+    c = load_profile().doctrine["penalty_coeffs"]["emotional_hierarchy"]
+    baseline = load_profile().doctrine["baselines"]["emotional_hierarchy"]
 
     # No lead vocal: score -= no_lead
     no_lead = [_record(name="Gtr")]
-    score, _ = doctrine_engine._ramone(no_lead, None, [], [])
+    score, _ = doctrine_engine._emotional_hierarchy(no_lead, None, [], [])
     assert score == doctrine_engine._clamp(baseline - c["no_lead"])
 
     # Lead masked by N forward elements: score -= masked_coeff * N (N=2)
@@ -332,7 +332,7 @@ def test_doctrine_ramone_penalty_coeffs_round_trip_indirect():
         {"elements": ["Lead"], "classification": "bad_masking"},
         {"elements": ["Lead"], "classification": "bad_masking"},
     ]
-    score, _ = doctrine_engine._ramone(recs, lead, events, [])
+    score, _ = doctrine_engine._emotional_hierarchy(recs, lead, events, [])
     assert score == doctrine_engine._clamp(baseline - c["vocal_masked"] * 2)
 
     # Decorative fraction > threshold: score -= decorative_penalty
@@ -340,7 +340,7 @@ def test_doctrine_ramone_penalty_coeffs_round_trip_indirect():
                     identity_family="vocal", depth_default="foreground",
                     sacredness="sacred")
     deco = [lead2] + [_record(name=f"d{i}", sacredness="decorative") for i in range(3)]
-    score, _ = doctrine_engine._ramone(deco, lead2, [], [])
+    score, _ = doctrine_engine._emotional_hierarchy(deco, lead2, [], [])
     assert score == doctrine_engine._clamp(baseline - c["decorative_penalty"])
 
 
@@ -348,7 +348,7 @@ def test_doctrine_ramone_penalty_coeffs_round_trip_indirect():
 # P-028 Finding A — the WIDENED doctrine.scorers group: the per-function
 # aesthetic constants for the five remaining scorers. EXACT value pins + the
 # drive-the-function indirect round-trip (same honest pattern as the
-# _halee/_ramone coeffs above): fire each scorer one condition at a time and
+# _physical_space/_emotional_hierarchy coeffs above): fire each scorer one condition at a time and
 # assert the captured constant reproduces the function's own arithmetic.
 # --------------------------------------------------------------------------- #
 def test_doctrine_scorers_value_pins_exact():
@@ -561,7 +561,7 @@ def test_doctrine_subfields_present():
     d = load_profile().doctrine
     for key in ("weights", "baselines", "penalty_coeffs", "scorers"):
         assert key in d and d[key], f"doctrine missing {key!r}"
-    assert set(d["penalty_coeffs"]) == {"halee", "ramone"}
+    assert set(d["penalty_coeffs"]) == {"physical_space", "emotional_hierarchy"}
     # P-028 Finding A: the five widened scorers each have a captured group.
     # P-032e added the sixth: the producer-agnostic ``beat_identity`` axis.
     # P-032a added the seventh: the producer-agnostic ``negative_space`` axis.

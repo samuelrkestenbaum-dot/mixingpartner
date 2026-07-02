@@ -21,7 +21,7 @@ misclassification fails CLOSED toward vocal protection.
 WHERE THE RULE BITES (scouted honestly): masking-as-fault for a chop/stack
 vocal manifests in the ``vocal_role_fit`` doctrine axis — the ONE surface
 that reads a non-lead vocal's OWN masking involvement. Every OTHER
-manifestation of vocal-band masking in the engine (the ``_ramone`` /
+manifestation of vocal-band masking in the engine (the ``_emotional_hierarchy`` /
 ``_vocal_centrality`` penalties, the creative ``lead_masked`` nudges, the
 action-generator presence-band carve, per-track masking risk) is the
 MASKED-LEAD pathway — the current masking analyzer emits vocal-band events
@@ -331,7 +331,7 @@ def test_flag_alone_is_the_lever():
 def test_blend_liveness_through_score_doctrine():
     """The full wire: ``score_doctrine`` under two profiles differing ONLY
     in the flag (both weighting vocal_role_fit non-zero) — the axis and the
-    overall move; the lead-protection scorers (``_ramone`` /
+    overall move; the lead-protection scorers (``_emotional_hierarchy`` /
     ``_vocal_centrality``) are identical, policy-blind."""
     records = [_lead(), _chop()]
     masking = {"events": [_mask("Vox Chops", "Synth Lead")]}
@@ -341,7 +341,7 @@ def test_blend_liveness_through_score_doctrine():
                                         profile=_blend_profile(True, weight=5.0))
     assert on["vocal_role_fit_score"] > off["vocal_role_fit_score"]
     assert on["overall_mix_readiness_score"] > off["overall_mix_readiness_score"]
-    assert on["ramone_score"] == off["ramone_score"]
+    assert on["emotional_hierarchy_score"] == off["emotional_hierarchy_score"]
     assert on["vocal_centrality_score"] == off["vocal_centrality_score"]
 
 
@@ -382,13 +382,13 @@ def test_blend_never_relaxes_the_lead_reading_alongside_an_accepted_stem():
 
 def test_lead_protection_surfaces_do_not_read_the_policy():
     """Structural proof the policy cannot reach the other lead-protection
-    surfaces: neither ``_ramone`` nor ``_vocal_centrality`` (nor the creative
+    surfaces: neither ``_emotional_hierarchy`` nor ``_vocal_centrality`` (nor the creative
     ``_lead_masked`` predicate) accepts a blend-policy argument."""
     import inspect
 
     from logic_mix_os import creative
 
-    assert "blend_policy" not in inspect.signature(doctrine_engine._ramone).parameters
+    assert "blend_policy" not in inspect.signature(doctrine_engine._emotional_hierarchy).parameters
     assert "blend_policy" not in inspect.signature(doctrine_engine._vocal_centrality).parameters
     assert "blend_policy" not in inspect.signature(creative._lead_masked).parameters
 

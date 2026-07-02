@@ -46,7 +46,7 @@ FIXTURE = ROOT / "fixtures" / "dense_chorus_with_loops"
 # Verbatim row-2 evidence string (the width_crowding nudge) — the contract surface.
 ROW2_REASON = "vocal_belief -6: stereo image is already width-crowded"
 
-_NUMERIC = ["technical", "halee", "ramone", "contrast", "vocal_belief", "excitement", "taste"]
+_NUMERIC = ["technical", "physical_space", "emotional_hierarchy", "contrast", "vocal_belief", "excitement", "taste"]
 
 
 def _curated_base_overall(kind: str) -> float:

@@ -6,7 +6,7 @@ This is the last & largest producer-agnostic extraction. Two parts, mirroring
 the packet:
 
 * **Part A** — the ALREADY-captured (P-025) constants — ``score_doctrine``'s
-  component ``weights``, the ``_halee``/``_ramone`` ``baselines`` (86.0) and their
+  component ``weights``, the ``_physical_space``/``_emotional_hierarchy`` ``baselines`` (86.0) and their
   ``penalty_coeffs`` — are now read off ``_DEFAULT_PROFILE.doctrine``. The inline
   literals were DELETED from ``doctrine_engine.py``, so these tests PIN the
   concrete expected values inline (the value guard the removed literals used to
@@ -69,8 +69,8 @@ def test_weights_value_pins():
     """The 7 component weights, byte-for-byte the pre-P-028 local dict in
     ``score_doctrine``."""
     assert doctrine_engine._WEIGHTS == {
-        "halee_score": 1.0,
-        "ramone_score": 1.2,
+        "physical_space_score": 1.0,
+        "emotional_hierarchy_score": 1.2,
         "vocal_centrality_score": 1.2,
         "depth_hierarchy_score": 1.0,
         "section_contrast_score": 1.0,
@@ -105,11 +105,11 @@ def test_weights_value_pins():
 
 
 def test_baselines_value_pins():
-    assert doctrine_engine._BASELINES == {"halee": 86.0, "ramone": 86.0}
+    assert doctrine_engine._BASELINES == {"physical_space": 86.0, "emotional_hierarchy": 86.0}
 
 
-def test_halee_penalty_coeffs_value_pins():
-    assert doctrine_engine._PENALTY_COEFFS["halee"] == {
+def test_physical_space_penalty_coeffs_value_pins():
+    assert doctrine_engine._PENALTY_COEFFS["physical_space"] == {
         "forward_threshold": 0.6,
         "forward_occupancy": 70,
         "felt_forward": 4,
@@ -118,8 +118,8 @@ def test_halee_penalty_coeffs_value_pins():
     }
 
 
-def test_ramone_penalty_coeffs_value_pins():
-    assert doctrine_engine._PENALTY_COEFFS["ramone"] == {
+def test_emotional_hierarchy_penalty_coeffs_value_pins():
+    assert doctrine_engine._PENALTY_COEFFS["emotional_hierarchy"] == {
         "no_lead": 35,
         "vocal_masked": 6,
         "decorative_threshold": 0.4,
@@ -145,7 +145,7 @@ def _record(**over):
     return base
 
 
-def test_halee_baseline_from_profile():
+def test_physical_space_baseline_from_profile():
     """A clean project (no penalty fires) returns exactly the sourced baseline."""
     clean = [
         _record(name="Lead", instrument_identity="lead_vocal", identity_family="vocal",
@@ -153,19 +153,19 @@ def test_halee_baseline_from_profile():
         _record(name="Gtr1", depth_default="background"),
         _record(name="Gtr2", depth_default="midground"),
     ]
-    halee, _ = doctrine_engine._halee(clean, [])
-    assert halee == doctrine_engine._BASELINES["halee"]
+    physical_space, _ = doctrine_engine._physical_space(clean, [])
+    assert physical_space == doctrine_engine._BASELINES["physical_space"]
 
 
-def test_ramone_baseline_from_profile():
+def test_emotional_hierarchy_baseline_from_profile():
     clean = [
         _record(name="Lead", instrument_identity="lead_vocal", identity_family="vocal",
                 depth_default="foreground", sacredness="sacred"),
         _record(name="Gtr1"),
         _record(name="Gtr2"),
     ]
-    ramone, _ = doctrine_engine._ramone(clean, clean[0], [], [])
-    assert ramone == doctrine_engine._BASELINES["ramone"]
+    emotional_hierarchy, _ = doctrine_engine._emotional_hierarchy(clean, clean[0], [], [])
+    assert emotional_hierarchy == doctrine_engine._BASELINES["emotional_hierarchy"]
 
 
 def test_weights_drive_overall_from_profile():

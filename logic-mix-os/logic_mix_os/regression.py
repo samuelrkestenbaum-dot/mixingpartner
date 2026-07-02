@@ -27,8 +27,8 @@ from .pipeline import ProjectAnalysis, analyze
 from .project import load_manifest
 
 SCORE_KEYS = [
-    "halee_score",
-    "ramone_score",
+    "physical_space_score",
+    "emotional_hierarchy_score",
     "vocal_centrality_score",
     "depth_hierarchy_score",
     "section_contrast_score",

@@ -36,8 +36,8 @@ from logic_mix_os.doctrine.producer_profile import load_profile
 
 # The seven pre-existing component score keys (the byte-identical anchor set).
 EXISTING_COMPONENT_KEYS = [
-    "halee_score",
-    "ramone_score",
+    "physical_space_score",
+    "emotional_hierarchy_score",
     "vocal_centrality_score",
     "depth_hierarchy_score",
     "section_contrast_score",

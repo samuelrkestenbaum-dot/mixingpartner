@@ -154,7 +154,7 @@ def test_taste_triangle_rules_sourced_from_profile():
     tt = governance._DEFAULT_PROFILE.taste_triangle
     assert tt["intimate_width_penalty"] == 30
     assert tt["emotion_dims"] == [
-        "ramone_score", "listener_excitement_score", "vocal_belief_score",
+        "emotional_hierarchy_score", "listener_excitement_score", "vocal_belief_score",
     ]
 
 
@@ -168,23 +168,23 @@ def test_veto_thresholds_sourced_from_profile():
 
 
 def test_taste_triangle_emotion_blend_byte_identical():
-    """The emotion blend must reproduce ``round((ramone + listener_excitement +
+    """The emotion blend must reproduce ``round((emotional_hierarchy + listener_excitement +
     vocal_belief) / 3)`` EXACTLY — same order, same round(). Odd inputs exercise
     Python banker's rounding at the .5 boundary."""
-    def _v(ramone, excite, belief):
+    def _v(emotional_hierarchy, excite, belief):
         return {
             "variant_id": "x", "kind": "vocal_ride", "name": "vr", "changes": [],
             "scores": {
-                "ramone_score": ramone, "listener_excitement_score": excite,
+                "emotional_hierarchy_score": emotional_hierarchy, "listener_excitement_score": excite,
                 "vocal_belief_score": belief, "technical_score": 80,
                 "taste_alignment_score": 90, "overall_score": 90.0,
             },
         }
 
-    for ramone, excite, belief in [(91, 80, 60), (80, 80, 81), (80, 81, 80),
+    for emotional_hierarchy, excite, belief in [(91, 80, 60), (80, 80, 81), (80, 81, 80),
                                    (100, 100, 99), (45, 44, 46), (1, 2, 3)]:
-        tri = governance.taste_triangle(_v(ramone, excite, belief), "neutral")
-        assert tri["emotion"] == round((ramone + excite + belief) / 3)
+        tri = governance.taste_triangle(_v(emotional_hierarchy, excite, belief), "neutral")
+        assert tri["emotion"] == round((emotional_hierarchy + excite + belief) / 3)
 
 
 def test_intimate_width_penalty_byte_identical():
@@ -193,7 +193,7 @@ def test_intimate_width_penalty_byte_identical():
         return {
             "variant_id": "x", "kind": "width_bloom", "name": "wb", "changes": [],
             "scores": {
-                "ramone_score": 80, "listener_excitement_score": 80,
+                "emotional_hierarchy_score": 80, "listener_excitement_score": 80,
                 "vocal_belief_score": 80, "technical_score": 80,
                 "taste_alignment_score": taste, "overall_score": 90.0,
             },
@@ -221,7 +221,7 @@ def test_apply_taste_does_not_mutate_shared_globals():
         "variant_id": "x", "kind": "width_bloom", "name": "Width Bloom",
         "changes": [],
         "scores": {
-            "ramone_score": 80, "listener_excitement_score": 80,
+            "emotional_hierarchy_score": 80, "listener_excitement_score": 80,
             "vocal_belief_score": 80, "technical_score": 80,
             "taste_alignment_score": 70, "overall_score": 90.0,
         },
