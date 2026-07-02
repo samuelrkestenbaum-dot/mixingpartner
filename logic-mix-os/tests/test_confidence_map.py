@@ -21,11 +21,14 @@ Guard groups, mirroring the packet:
    loader (no silent defaults — the P-032f attack-4 discipline; an honesty
    layer with zero entries is not honest).
 2. **Honesty pins** — halee_ramone's authored map verbatim-pinned: the
-   ``limited`` inert-blend entry (the P-032f reviewer corollary) and the four
+   ``limited`` inert-blend entry (the P-032f reviewer corollary) and the
    standing deferrals (cultural loop recognizability / true hook recurrence /
-   motif provenance / onset-timing strong forms) so a future packet cannot
-   silently delete the honesty labels. The ``high`` claims are checked against
-   machine facts (live axes weighted; agnostic axes weight-0 as stated).
+   motif provenance / onset-timing strong forms / per-section true-sub
+   movement — the latter deferred on BAND RESOLUTION: sections expose
+   ``low_mid_energy`` 120-500 Hz only, per the P-032c boundary, NOT on onset
+   timing) so a future packet cannot silently delete the honesty labels. The
+   ``high`` claims are checked against machine facts (live axes weighted;
+   agnostic axes weight-0 as stated).
 3. **Byte-identity, BOTH surfaces** — doctrine pins (73.8 / 70.7 / 74.3 + all
    14 components) + the full creative base capture + regression 68/68.
 4. **No-aliasing** — every load parses fresh; mutating a loaded map can never
@@ -106,9 +109,14 @@ AUTHORED_MAP = [
         "reason": "motif lineage across sources is not measurable on exported stems at doctrine time",
     },
     {
-        "area": "onset-timing strong forms (fingerprint typing, fills/unexpected-hit detection, kick/sub temporal interlock, per-section true-sub movement)",
+        "area": "onset-timing strong forms (fingerprint typing, fills/unexpected-hit detection, kick/sub temporal interlock)",
         "level": "deferred",
         "reason": "these need per-onset timing and typing signals not measurable on exported stems at doctrine time; the section-aggregate weak forms are what ship",
+    },
+    {
+        "area": "per-section true-sub movement",
+        "level": "deferred",
+        "reason": "section analysis exposes low_mid_energy (120-500 Hz) only, so the true-sub band (20-120 Hz) is not measurable at section grain on exported stems; the low_mid section grain is what ships",
     },
 ]
 
@@ -209,11 +217,13 @@ def test_limited_inert_blend_entry_is_pinned_verbatim():
 
 
 def test_deferred_entries_are_pinned_verbatim():
-    """The four standing honest deferrals — cultural loop recognizability,
-    true hook recurrence, motif provenance, and the onset-timing strong forms
+    """The standing honest deferrals — cultural loop recognizability, true
+    hook recurrence, motif provenance, the onset-timing strong forms
     (fingerprint typing / fills and unexpected-hit detection / kick-sub
-    temporal interlock / per-section true-sub movement) — all present,
-    verbatim, so no later packet can silently claim or drop them."""
+    temporal interlock), and per-section true-sub movement (its OWN entry:
+    the P-032c boundary is BAND RESOLUTION — sections expose low_mid_energy
+    120-500 Hz only — not onset timing) — all present, verbatim, so no later
+    packet can silently claim or drop them."""
     deferred = [e for e in load_profile("halee_ramone").confidence_map
                 if e["level"] == "deferred"]
     assert deferred == AUTHORED_MAP[3:]

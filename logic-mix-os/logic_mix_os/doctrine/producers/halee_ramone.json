@@ -279,9 +279,14 @@
       "reason": "motif lineage across sources is not measurable on exported stems at doctrine time"
     },
     {
-      "area": "onset-timing strong forms (fingerprint typing, fills/unexpected-hit detection, kick/sub temporal interlock, per-section true-sub movement)",
+      "area": "onset-timing strong forms (fingerprint typing, fills/unexpected-hit detection, kick/sub temporal interlock)",
       "level": "deferred",
       "reason": "these need per-onset timing and typing signals not measurable on exported stems at doctrine time; the section-aggregate weak forms are what ship"
+    },
+    {
+      "area": "per-section true-sub movement",
+      "level": "deferred",
+      "reason": "section analysis exposes low_mid_energy (120-500 Hz) only, so the true-sub band (20-120 Hz) is not measurable at section grain on exported stems; the low_mid section grain is what ships"
     }
   ]
 }
