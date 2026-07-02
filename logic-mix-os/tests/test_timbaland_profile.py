@@ -153,7 +153,7 @@ TIM_AUTHORED_MAP = [
     {
         "area": "vocal blend interpretation",
         "level": "limited",
-        "reason": "the masking analyzer emits vocal-band events only against the lead today; the acceptable-blend policy this profile opts into is mechanically live but dormant on real exported-stem data",
+        "reason": "the masking analyzer reads the vocal band against non-lead vocals when either side of the pair is forward; the acceptable-blend policy this profile opts into is live and measured on real exported-stem data — a qualified vocal chop under masking reads 85.0 on vocal_role_fit against the reference's 65.0, worth +0.7 overall at the authored 0.4 weight; coverage stays bounded: events arise only from the masker-instrument set, info-tier events are emitted but not consumed, and vocal-band events carry no per-track masking risk",
     },
     {
         "area": "cultural loop recognizability",
@@ -510,7 +510,8 @@ def test_timbaland_confidence_map_verbatim():
 
 def test_confidence_level_distribution():
     """5 high (groove / space+contrast / low-end / loop / retained
-    measurement), 1 limited (vocal blend — the inert-blend corollary),
+    measurement), 1 limited (vocal blend — live and measured since
+    P-034/P-035, coverage-bounded per the P-036 re-authoring),
     5 deferred (the engine boundaries, shared with the reference)."""
     levels = [e["level"] for e in load_profile("timbaland").confidence_map]
     assert levels.count("high") == 5
@@ -519,13 +520,20 @@ def test_confidence_level_distribution():
 
 
 def test_limited_blend_entry_matches_the_opt_in_policy():
-    """The honest corollary, stated by the profile that OPTS IN: the blend
-    policy is mechanically live but dormant on real data (the analyzer emits
-    vocal-band events only against the lead)."""
+    """The honest corollary, RE-AUTHORED LIVE in P-036: the opt-in this
+    profile authors is live and MEASURED on real exported-stem data — the
+    P-035 differential (vocal_role_fit 85.0 vs the reference's 65.0, +0.7
+    overall at the authored 0.4 weight). The entry stays LIMITED because the
+    constraint is real and stated: masker-set-bounded coverage, the
+    unconsumed info tier, and the per-track-risk exclusion."""
     p = load_profile("timbaland")
     limited = [e for e in p.confidence_map if e["level"] == "limited"]
     assert limited == [TIM_AUTHORED_MAP[5]]
-    assert "only against the lead" in limited[0]["reason"]
+    # the measured differential is stated, the falsified claims are gone
+    assert "measured on real exported-stem data" in limited[0]["reason"]
+    assert "85.0" in limited[0]["reason"] and "65.0" in limited[0]["reason"]
+    assert "only against the lead" not in limited[0]["reason"]
+    assert "dormant" not in limited[0]["reason"]
     assert p.vocal_blend_policy["acceptable_blend"] is True  # opt-in + honesty
 
 

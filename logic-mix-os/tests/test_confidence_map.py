@@ -21,7 +21,9 @@ Guard groups, mirroring the packet:
    loader (no silent defaults — the P-032f attack-4 discipline; an honesty
    layer with zero entries is not honest).
 2. **Honesty pins** — halee_ramone's authored map verbatim-pinned: the
-   ``limited`` inert-blend entry (the P-032f reviewer corollary) and the
+   ``limited`` blend entry (the P-032f reviewer corollary, re-authored in
+   P-036 once P-034/P-035 made the blend differential live and measured on
+   real exported-stem data) and the
    standing deferrals (cultural loop recognizability / true hook recurrence /
    motif provenance / onset-timing strong forms / per-section true-sub
    movement — the latter deferred on BAND RESOLUTION: sections expose
@@ -91,7 +93,7 @@ AUTHORED_MAP = [
     {
         "area": "vocal blend interpretation",
         "level": "limited",
-        "reason": "the masking analyzer emits vocal-band events only against the lead today; the blend policy is mechanically live but dormant on real exported-stem data",
+        "reason": "the masking analyzer reads the vocal band against non-lead vocals when either side of the pair is forward, and this profile's clarity protection (acceptable_blend: false) is live and measured on real exported-stem data — a masked vocal chop reads 65.0 on vocal_role_fit; coverage stays bounded: events arise only from the masker-instrument set, info-tier events are emitted but not consumed, and vocal-band events carry no per-track masking risk",
     },
     {
         "area": "cultural loop recognizability",
@@ -205,15 +207,23 @@ def test_halee_ramone_authored_map_verbatim():
     assert load_profile("halee_ramone").confidence_map == AUTHORED_MAP
 
 
-def test_limited_inert_blend_entry_is_pinned_verbatim():
-    """THE P-032f REVIEWER COROLLARY, first-class: vocal blend interpretation
-    is LIMITED — the analyzer emits vocal-band events only against the lead,
-    so the blend policy is mechanically live but dormant on real data. A
-    future packet deleting or relaxing this label breaks here."""
+def test_limited_blend_entry_is_pinned_verbatim():
+    """THE P-032f REVIEWER COROLLARY, re-authored LIVE in P-036: P-034 gave
+    the analyzer non-lead vocal-band events and P-035 made the blend
+    differential measured on real exported-stem data (vocal_role_fit 65.0
+    under this profile's declined blend), so the old dormancy claim is
+    retired. The entry stays LIMITED because the constraint is real and
+    stated: masker-set-bounded coverage, the unconsumed info tier, and the
+    per-track-risk exclusion. A future packet deleting or relaxing this label
+    breaks here."""
     limited = [e for e in load_profile("halee_ramone").confidence_map
                if e["level"] == "limited"]
     assert limited == [AUTHORED_MAP[2]]
-    assert "only against the lead" in limited[0]["reason"]
+    # the live status is stated, the falsified P-032f claims are gone
+    assert "either side of the pair is forward" in limited[0]["reason"]
+    assert "measured on real exported-stem data" in limited[0]["reason"]
+    assert "only against the lead" not in limited[0]["reason"]
+    assert "dormant" not in limited[0]["reason"]
 
 
 def test_deferred_entries_are_pinned_verbatim():
