@@ -213,21 +213,38 @@
     (P-034 close). **★★★ THE ANALYZER-EXTENSION ARC (P-034 + P-035) IS
     COMPLETE. The dev branch now carries FIVE unmerged packets — P-033,
     P-030, P-034, P-035 + closes — the MERGE decision is an OPEN USER
-    GATE.**
+    GATE — ✓ RESOLVED below (PR #18, `dc921ec`).**
+    ★★ THE HARDENING BATCH IS MERGED — **PR #18 (post-epic hardening:
+    P-033, P-030, P-034, P-035 + closes) is MERGED to default on the
+    user's go — merge commit `dc921ec`, the CURRENT default-branch tip.
+    The base for MERGE/landing decisions is now `dc921ec`.** The dev
+    branch RESTARTED from `dc921ec` and now carries **P-036 (`95de041`,
+    single product commit — THE HONESTY-LAYER CATCH-UP: both profiles'
+    stale vocal-blend confidence entries re-authored to the live,
+    measured status — the entry's `reason` ONLY, both levels honestly
+    stay `limited`, the verbatim map pins consciously flipped;
+    byte-identical everywhere except exactly the 16 confidence text
+    surfaces), PUSHED to the dev branch (NOT merged)**, atop the
+    set-active `6c0d9bf`. P-036's parent chain: `95de041` → `6c0d9bf`
+    (active-packet confirmation) → `dc921ec` (PR #18 merge). **★ ONE
+    small packet on the branch — the merge cadence is the user's call:
+    ride with the next batch or merge alone on the user's word.**
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-02, P-035):** suite **754 passed** (0
-  failed / skipped); regression **93/93** — the corpus is now **4
+- **Green baseline (verified 2026-07-02, P-036 — the count HELD at a
+  labeling-only packet):** suite **754 passed** (0 failed / skipped);
+  regression **93/93, 0 warnings** — the corpus is now **4
   fixtures** (the 68/68 era ended CONSCIOUSLY at P-035: +16 golden +9
   invariants for `vocal_chop_groove`, the 1 inapplicable invariant
   correctly reasoned; the original 3 fixtures' goldens/manifests/stems
-  byte-untouched, git diff EMPTY). Two commits `0b940c7` + `e5a12dc` —
-  Commit-1 green in isolation (real worktree check: 741 + 68/68,
-  fixture-inert at that tree). (Prior baseline was 741 at P-034; P-035
+  byte-untouched, git diff EMPTY). Single commit `95de041` (P-036) —
+  HEAD IS Commit-1 → green in isolation. (P-036 HELD 754 — labeling
+  only: 2 assertions removed / 8 added inside the two existing pin
+  files, no test-count change. Prior baseline was 741 at P-034; P-035
   added +13 — the new 13-test `tests/test_vocal_chop_groove.py`.
   Earlier: 705 → 741 at P-034; 678 → 705 at P-030; 660 → 678 at P-033;
   639 → 660 at P-032i; 600 → 639 at P-032h; 572 → 600 at P-031;
@@ -237,6 +254,71 @@
   331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-036 RE-AUTHORS THE STALE VOCAL-BLEND CONFIDENCE ENTRIES —
+  the honesty layer catches up with P-035's reality (the P-035
+  reviewer's queue-jump recommendation, user-approved). Labeling only,
+  never judgment. ★ THE HONESTY LAYER IS CURRENT with P-034/P-035:
+  every confidence claim in both shipped profiles is now true,
+  code-verified, and pinned against regression to the stale text. qa
+  GREEN + reviewer PASS (no must-fix). Last-closed = P-036.**
+  - **Single commit `95de041`** on parent `6c0d9bf` (active-packet
+    confirmation), atop the merged default `dc921ec` (PR #18). 4 files,
+    34+/16−: both producer JSONs (the vocal-blend entry's `reason`
+    ONLY; `area` and `level` untouched) + both pin files (conscious
+    flips + docstrings). HEAD IS Commit-1 → green in isolation.
+    **PUSHED to the dev branch, NOT merged** (merge base `dc921ec` =
+    PR #18). **★ ONE small packet on the branch — the merge cadence is
+    the user's call: P-036 can ride with the next batch or merge alone
+    on the user's word.**
+  - **★ The re-authored entries: both levels stayed `limited`** — the
+    honest call per the closed vocabulary (`limited` = "mechanically
+    live but constrained on today's data — the constraint stated in the
+    reason"; `high` = "live, WEIGHTED, curated" would OVERCLAIM for the
+    reference whose vocal_role_fit weight is 0, and would DROP the
+    stated constraints for timbaland). New reasons state the LIVE facts
+    (the either-side-forward reading; the measured 65.0/85.0
+    differential; timbaland's +0.7 at its authored 0.4 weight) AND the
+    three real constraints (masker-set-bounded coverage; info tier
+    emitted but unconsumed; no per-track masking risk) — every clause
+    fact-checked TRUE by both gates against code and pinned data. The
+    high-claims machine-checks' scope unchanged (the entry is not
+    weight-backed; no extension needed).
+  - **★ qa GREEN:** suite **754** (count held); regression **93/93, 0
+    warnings**; artifact-delta audit — EXACTLY 16 of 240 files differ
+    (8 × doctrine_score.json + 8 × mix_verdict.md), one line each,
+    every score/variant/promotion/recommendation surface
+    byte-identical; pins: 1 entry per map, reason-only, 2 assertions
+    removed / 8 added (live phrasing pinned IN, the falsified claims
+    pinned OUT — "only against the lead" and "dormant" now asserted
+    ABSENT); safety grep + judgment-word guards clean.
+  - **★ reviewer PASS (no must-fix):** every claim table-verified (the
+    +0.7 correctly the measured artifact delta, not the unrounded
+    0.66 — the honest number); the level decision endorsed; the
+    pinned-OUT shape proven strictly stronger by a FULL-REGRESSION
+    sabotage (JSON + pin constant reverted TOGETHER → the pinned
+    assertions still fail); the corollary tests still bind;
+    byte-identity spot-verified independently. **Codex NOT available —
+    single-model review.** Two non-blocking observations (→ residue):
+    (A) "either side of the pair is forward" elides the masker-arm's
+    `heard` qualifier — repo-canonical shorthand (the analyzer doc's
+    own headline); (B) the 65.0 attribution is elliptical (chop AND
+    stack each penalized once) but numerically exact.
+  - **★ A wording constraint discovered (→ residue):** JUDGMENT_WORDS
+    substring-matches "fix", so "fixture" is unusable in profile text —
+    "real exported-stem data" used instead (accurate; the reviewer
+    confirmed the dodge did not bend the truth).
+  - **★ NEXT = the RESIDUE SWEEPS — the backlog is now PURELY the
+    residue sweeps** (see residue.md: the three producer-named-VALUE
+    surfaces; logic_action_generator.py:38; validation tightening incl.
+    search_modes non-empty + default_creative_mode structural checks +
+    the NaN-floor guard; the liveness-docstring sweep ~8 files; cli.py
+    --mode text; the P-035 count-pin parenthetical tidy; the two P-036
+    observations; duplicate-areas/extra-keys; fallback-reason wording;
+    the shared groove dict defensive copy; lead_names derivation). NO
+    single packet staged — the orchestrator scopes sweep packets with
+    the user. Receipt:
+    `build-os/receipts/P-036-confidence-map-honesty-fix.md`.
 
 - **★★★ P-035 LANDS THE 4TH FIXTURE + THE REAL-DATA VOCAL-BLEND
   DIFFERENTIAL — packet 2 of 2; ★ THE ANALYZER-EXTENSION ARC (P-034 +
@@ -258,7 +340,9 @@
     pin flips, README). **PUSHED to the dev branch, NOT merged** (merge
     base `58d21dd` = PR #17). **★ The dev branch now carries FIVE
     unmerged packets — P-033, P-030, P-034, P-035 + closes — SURFACE
-    THE MERGE DECISION AS THE OPEN USER GATE.**
+    THE MERGE DECISION AS THE OPEN USER GATE.** **(✓ RESOLVED
+    2026-07-02 — the user's go: PR #18 MERGED, `dc921ec` = the new
+    merge base.)**
   - **★ THE CENTRAL FINDING (Commit-1):** the moderate event was
     STRUCTURALLY UNREACHABLE on any real fixture under P-034's
     stem-forward-only gate — a non-lead vocal is necessarily
@@ -304,7 +388,9 @@
     vocals stricter than the lead — consumption-invariance pinned); (c)
     buried-vocal FLIPPED (Commit-1, the packet that owned it).
   - **★ NEXT = the STALE-CONFIDENCE-MAP FIX packet, JUMPING THE RESIDUE
-    QUEUE per the reviewer's recommendation, STAGED not active:** both
+    QUEUE per the reviewer's recommendation — ✓ DONE, closed as P-036
+    (2026-07-02; receipt
+    `build-os/receipts/P-036-confidence-map-honesty-fix.md`):** both
     profiles' "limited" vocal-blend entries claim a dormancy that is now
     FALSE on both halves — contained (no scorer consumes the map) but
     reputationally first for a product whose brand is honest labeling.

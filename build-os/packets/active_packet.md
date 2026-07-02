@@ -4,87 +4,51 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** ACTIVE — P-036 confirmed by the orchestrator-in-chief on the
-  USER'S GO (2026-07-02, "Both" = merge PR #18 ✓ + this packet). Handed to
-  builder.
-- **Packet id:** P-036
-- **Title:** re-author the stale vocal-blend confidence entries — the honesty
-  layer catches up with P-035's reality.
+- **Status:** NONE ACTIVE — P-036 CLOSED (2026-07-02; qa GREEN + reviewer PASS,
+  no must-fix). Receipt:
+  `build-os/receipts/P-036-confidence-map-honesty-fix.md`.
+- **Last-closed:** P-036 — re-author the stale vocal-blend confidence entries —
+  the honesty layer catches up with P-035's reality. Single commit `95de041`
+  on parent `6c0d9bf` (set-active), atop the merged default `dc921ec`
+  (= PR #18, the merge base). **PUSHED to the dev branch, NOT merged.** Suite
+  **754** (count held); regression **93/93, 0 warnings**; both levels honestly
+  stayed `limited`; byte-identical everywhere except exactly the 16 confidence
+  text surfaces.
+- **★ THE HONESTY LAYER IS CURRENT with P-034/P-035** — every confidence claim
+  in both shipped profiles is now true, code-verified, and pinned against
+  regression to the stale text.
 
-## Why (the P-035 reviewer's queue-jump recommendation)
+## Open user gate — merge cadence
 
-Both profiles' `confidence_map` "limited — vocal blend interpretation" entries
-still claim: the analyzer "emits vocal-band events only against the lead
-today" and the policy is "mechanically live but dormant on real exported-stem
-data." **Both halves are now FALSE** — P-034 delivered non-lead vocal-band
-events, P-035 made the blend differential live and measured on real audio
-(65.0 vs 85.0 on `vocal_chop_groove`). No scorer consumes the map (contained),
-but the product's brand is honest labeling: its own labels are corrected first.
+- The dev branch carries **ONE small packet** (P-036 + closes) atop merge base
+  `dc921ec` (= PR #18, the default tip). **The cadence is the user's call:**
+  P-036 can ride with the next batch or merge alone on the user's word. No
+  merge without explicit go.
 
-## Spec (small packet — labeling only, never judgment)
+## Staged backlog — the residue sweeps (NO single packet staged)
 
-1. **Re-author the vocal-blend entry in BOTH profiles**
-   (`doctrine/producers/halee_ramone.json` + `timbaland.json`):
-   - Rewrite the `reason` to the LIVE status: the analyzer emits non-lead
-     vocal-band events (`vocal_band_masking`); the blend policy is live and
-     measured on real fixture data; state each profile's own stance in its own
-     voice (the reference protects clarity / declines blend; timbaland accepts
-     qualified blend — measured).
-   - **Re-judge the `level` honestly per profile:** assess whether `limited`
-     still fits or the entry is now `high` (the interpretation is live,
-     hand-curated, and measured — but consider what remains genuinely limited:
-     e.g. the moderate tier reachable only via the either-side-forward reading;
-     the info tier unconsumed; coverage limited to the masker-instrument set).
-     Pick per profile, justify in the reason, observational wording.
-2. **Flip the verbatim map pins consciously** — `TIM_AUTHORED_MAP`
-   (tests/test_timbaland_profile.py) and halee_ramone's AUTHORED_MAP
-   (tests/test_confidence_map.py): exactly the changed entries, the pins'
-   designed conscious-edit path, nothing else in the maps touched, no
-   assertion weakened.
-3. **BYTE-IDENTITY everywhere else:** the maps render into `doctrine_score.json`
-   + the verdict markdown on EVERY fixture — so the rendered confidence
-   section changes are the ONLY artifact deltas allowed (the changed entries'
-   text), on all 4 fixtures × both producers; every score/variant/promotion/
-   recommendation numerically identical; regression **93/93** (the golden
-   snapshots pin scores/categoricals, not confidence text — verify, don't
-   assume).
+The backlog is now PURELY the residue sweeps (see `build-os/memory/residue.md`);
+the orchestrator will scope sweep packets with the user before anything goes
+active:
 
-## Tests
-
-1. The updated pins (verbatim, both files).
-2. Byte-identity of all score surfaces (4 fixtures × 2 producers) + regression
-   93/93.
-3. The artifact delta audit: base vs HEAD artifact trees — ONLY the confidence
-   section/key text moves, nothing else.
-4. The honesty machine-checks still hold (high claims vs weights; the P-031
-   idiom) — if an entry moves to `high`, the machine-check must cover it or be
-   consciously extended.
-5. Observational language on the new reasons.
-
-## Rigor bar (established)
-
-- `python fixtures/generate_fixtures.py` FIRST (4 fixtures); **≤2 commits,
-  Commit-1 green in isolation**; full suite green from the **754** baseline;
-  regression **93/93**; observational language; trailers
-  `Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>` + the Claude-Session
-  link; NO push/merge/remotes (orchestrator pushes). Anything beyond the two
-  entries + pins + proofs: STOP and report.
-
-## Last-closed / context
-
-- **PR #18 MERGED** — post-epic hardening (P-033, P-030, P-034, P-035) is on
-  default; merge commit `dc921ec` = the new default tip and this branch's
-  restart base + THE NEW MERGE BASE for landing decisions. Suite 754;
-  regression 93/93; the analyzer-extension arc complete.
-
-## Backlog after
-
-- The residue sweeps (the three producer-named-VALUE surfaces,
-  `logic_action_generator.py:38`, validation tightening, liveness docstrings,
-  `cli.py` `--mode` text, the P-035 count-pin parenthetical tidy — see
-  `build-os/memory/residue.md`).
+- The three producer-named-VALUE surfaces (search-mode names, engine action
+  prose, warning doctrine tags emitted as values — the P-030 reviewer's
+  judgment call).
+- `logic_action_generator.py:38` — name-based "vocal" substring match.
+- Validation tightening: `search_modes` non-empty + `default_creative_mode`
+  structural checks + the NaN-floor guard; `confidence_map`
+  duplicate-areas/extra-keys.
+- The liveness-docstring sweep (~8 files).
+- `cli.py` `--mode` help text.
+- The P-035 count-pin parenthetical tidy (~15× across 10 files).
+- The two P-036 reviewer observations: (A) the `heard`-qualifier shorthand
+  (pair with the analyzer doc line if ever tidied); (B) the
+  elliptical-but-exact 65.0 attribution.
+- The JUDGMENT_WORDS "fix"-substring constraint on profile prose
+  (word-boundary matching would free the vocabulary).
+- Fallback-reason wording; the shared groove dict defensive copy;
+  `lead_names` derivation.
 
 ---
-_Set active by the orchestrator-in-chief on the user's go (2026-07-02). One
-packet at a time. Builder implements exactly this; qa proves; reviewer judges;
-archivist closes with a receipt._
+_Cleared by the archivist at P-036 close (2026-07-02). One packet at a time.
+The orchestrator confirms the next packet with the user before it goes active._

@@ -4,7 +4,7 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
-## ★★ NEXT PACKET — THE STALE CONFIDENCE_MAP ENTRIES (NEW at P-035 close; JUMPS THE RESIDUE QUEUE per the reviewer's recommendation)
+## ★★ ✓ RESOLVED by P-036 (2026-07-02) — THE STALE CONFIDENCE_MAP ENTRIES (was: NEXT PACKET, NEW at P-035 close; jumped the residue queue per the reviewer's recommendation)
 
 - **Both profiles' "limited" vocal-blend `confidence_map` entries claim a
   dormancy that is now FALSE on both halves** — P-034 delivered the
@@ -16,6 +16,22 @@
   the verbatim map pins (TIM_AUTHORED_MAP + halee_ramone's) for exactly
   those entries; byte-identical everywhere else. Small packet. STAGED in
   `build-os/packets/active_packet.md`, NOT active until confirmed.
+
+- **✓ RESOLVED by P-036 (2026-07-02, single commit `95de041` on the merged
+  default `dc921ec` = PR #18):** both entries' `reason`s re-authored to the
+  live, measured status (the either-side-forward reading; the measured
+  65.0/85.0 differential; timbaland's +0.7 at its authored 0.4 weight) with
+  the three real constraints stated (masker-set-bounded coverage; info tier
+  emitted but unconsumed; no per-track masking risk) — every clause
+  fact-checked TRUE by both gates. **Both levels honestly STAYED `limited`**
+  per the closed vocabulary (`high` would overclaim for the weight-0
+  reference and drop timbaland's stated constraints). The verbatim map pins
+  consciously flipped (2 assertions removed / 8 added — the falsified claims
+  "only against the lead" and "dormant" now asserted ABSENT); byte-identical
+  everywhere except exactly the 16 confidence text surfaces (8 ×
+  doctrine_score.json + 8 × mix_verdict.md, one line each); suite 754 (count
+  held) + 93/93. ★ THE HONESTY LAYER IS CURRENT with P-034/P-035. Receipt:
+  `build-os/receipts/P-036-confidence-map-honesty-fix.md`.
 
 ## ★ RESOLVED USER DECISION (was: "read this first")
 
@@ -362,6 +378,20 @@
     moved the corpus count consciously…)" parenthetical appears ~15×
     across 10 files (the count-pin updates) — a future tidy pass; fold
     into a doctrine/test-touching packet.
+  - **★ NEW (P-036 reviewer — cosmetic, observation A):** the re-authored
+    reasons' "either side of the pair is forward" elides the masker-arm's
+    `heard` qualifier — repo-canonical shorthand (the analyzer doc's own
+    headline); a future tidy could append "…or a heard masker stands
+    forward" — PAIR with the analyzer doc line if ever tidied.
+  - **★ NEW (P-036 reviewer — cosmetic, observation B):** the 65.0
+    attribution in the re-authored reasons is elliptical (the chop AND the
+    stack are each penalized once) but numerically EXACT — tidy only if the
+    entry is ever re-authored again.
+  - **★ NEW (P-036 — residue-sweep candidate):** JUDGMENT_WORDS
+    substring-matches "fix", so "fixture" is UNUSABLE in profile prose
+    ("real exported-stem data" used instead — accurate; the reviewer
+    confirmed the dodge did not bend the truth). Word-boundary matching
+    would free the vocabulary — fold into a validation/sweep packet.
   - **★ LIVENESS-DOCSTRING OVERCLAIM (non-blocking — reviewer; NOW
     POTENTIALLY AN EIGHT-FILE FAMILY, fold ONE sweep):** the `liveness` test docstrings OVERCLAIM — a
     general hardcoded-constant sabotage is actually caught by the
