@@ -4,9 +4,8 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** NONE ACTIVE — P-031 CLOSED by the archivist (2026-07-02).
-  The next packet below is STAGED, not active — the orchestrator must
-  confirm it before any building.
+- **Status:** ACTIVE — P-032h confirmed by the orchestrator-in-chief
+  (2026-07-02), handed to builder. THE PAYOFF PACKET.
 
 ## Last-closed
 
@@ -24,7 +23,7 @@
   `e79426a` = PR #16). Receipt:
   `build-os/receipts/P-031-confidence-framework.md`.
 
-## Staged next — P-032h: AUTHOR `timbaland.json` (THE PAYOFF PACKET)
+## Active packet spec (confirmed) — P-032h: AUTHOR `timbaland.json` (THE PAYOFF PACKET)
 
 The first non-byte-identical output of the producer-agnostic epic: the second
 live producer profile. Everything the seven measurement packets + P-031 built
@@ -79,7 +78,7 @@ vocal-band events).
 ## Epic arc
 
 **e ✓ → a ✓ → b ✓ → d ✓ → c ✓ → g ✓ → f ✓ → P-031 ✓ (confidence — the
-honesty layer) → P-032h (author `timbaland.json` — STAGED NEXT) → P-032i
+honesty layer) → P-032h (author `timbaland.json` — ACTIVE) → P-032i
 (differential proof).** P-030 (rename dims) orthogonal/last.
 
 ---
