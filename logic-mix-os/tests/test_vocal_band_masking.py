@@ -25,11 +25,13 @@ THE PRE-REGISTERED SURFACE MAP (binding, from the packet):
 
 THE EMISSION DESIGN DECISIONS (builder's calls, documented and pinned):
 
-1. FORWARD-ONLY: the non-lead stem must sit in a forward depth for any
-   event — an exact mirror of the lead gate (``_depth(lead, sid) in
-   FORWARD_DEPTHS``). A buried (midground/background) vocal emits NOTHING
-   in this packet; what overlap over a deliberately-buried chop/stack means
-   is a profile-philosophy question deferred to P-035's real fixture.
+1. FORWARD-ONLY — CONSCIOUSLY FLIPPED BY P-035: P-034 required the
+   non-lead stem itself to sit forward and deferred the buried-vocal
+   question to P-035's real fixture. The fixture made it real: the depth
+   planner never co-fronts a non-lead vocal with a masker-set instrument,
+   so the pair is now read when EITHER side sits forward (see
+   ``test_buried_vocal_under_forward_masker_now_emits`` for the full
+   story); a pair with both sides midground/background stays silent.
 2. VOCAL-vs-VOCAL PAIRS DO NOT FIRE: two non-lead vocal stems overlapping
    in the presence band is the normal construction of a stack/arrangement
    (intentional layering), not masking — and emitting both [A,B] and [B,A]
@@ -204,13 +206,37 @@ def test_non_forward_other_reads_info_tier():
     assert vband[0]["overlap"] == 0.09
 
 
-def test_buried_vocal_stem_emits_nothing():
-    """DESIGN DECISION 1, pinned: the non-lead vocal stem must itself sit
-    FORWARD (the exact mirror of the lead gate). A background chop under a
-    forward synth emits NO event in this packet — the buried-vocal question
-    is deferred to P-035's real fixture."""
+def test_buried_vocal_under_forward_masker_now_emits():
+    """DESIGN DECISION 1, CONSCIOUSLY FLIPPED BY P-035 — this is the
+    'buried-vocal question' P-034 explicitly deferred to the fixture that
+    makes it real, and the ``vocal_chop_groove`` fixture made it real by
+    exposing a structural fact: the depth planner places a non-lead vocal
+    stem (necessarily ``backing_vocal`` identity) forward ONLY in
+    high-energy sections — exactly where it steps every masker-set
+    instrument back to the midground — so the stem-forward-only gate could
+    never observe a forward/heard masker over a non-lead vocal on pipeline
+    data, and the moderate tier (with the entire blend surface behind it)
+    was unreachable end to end, on every possible fixture.
+
+    The P-035 reading: the pair is read when EITHER side sits forward. A
+    background chop under a forward/heard synth now emits the moderate
+    reading (the masker stands in front of the vocal in its own band); a
+    pair with BOTH sides midground/background stays silent — that is
+    depth-separated arrangement fabric, no clarity question exists."""
     report = analyze_masking([_lead(), _chop(), _synth()], [])
-    assert _vband_events(report) == []
+    vband = _vband_events(report)
+    assert len(vband) == 1
+    e = vband[0]
+    assert e["elements"] == ["Vox Chops", "Synth Lead"]
+    assert e["severity"] == "moderate"
+    assert e["depth_layers"] == ["background", "foreground"]
+    assert e["overlap"] == 0.18
+    # Both sides back -> still nothing (heard or felt, the masker is not
+    # in front of the vocal): the depth-separated fabric stays silent.
+    for role in ("felt", "heard"):
+        quiet = analyze_masking(
+            [_lead(), _chop(), _synth(depth="midground", role=role)], [])
+        assert _vband_events(quiet) == [], role
 
 
 def test_lead_is_never_in_a_vocal_band_event_and_never_generates_one():

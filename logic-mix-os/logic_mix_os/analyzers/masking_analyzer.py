@@ -14,10 +14,20 @@ The LEAD is NEVER in these events; lead-inclusive vocal masking stays the
 ``bad_masking`` pathway, untouched. The design decisions, made honest and
 explicit:
 
-* **Forward-only** — the vocal stem must sit in a forward depth for any
-  event (the exact mirror of the lead gate). A buried chop/stack emits
-  nothing in this packet; what overlap over a deliberately-buried vocal
-  means is a profile question deferred to the fixture that makes it real.
+* **The pair is read when either side is forward (P-035)** — P-034 shipped
+  a forward-only gate on the vocal stem and deferred the buried-vocal
+  reading to the fixture that makes it real. The ``vocal_chop_groove``
+  fixture made it real and exposed a structural fact: the depth planner
+  places a non-lead vocal stem (necessarily ``backing_vocal`` identity)
+  forward only in high-energy sections — exactly where it steps every
+  masker-set instrument back to the midground — so the stem-forward-only
+  gate could never observe a forward/heard masker over a non-lead vocal on
+  pipeline data, and the moderate tier (with the entire blend surface
+  behind it) was unreachable end to end. The conscious P-035 decision: the
+  pair is read when the vocal stem sits forward OR a heard masker-set
+  element sits in a forward depth in front of it; a pair with BOTH sides
+  midground/background emits nothing (depth-separated arrangement fabric —
+  no clarity question).
 * **Vocal-vs-vocal pairs do not fire** — two non-lead vocal stems sharing
   the presence band is the normal construction of a stack (intentional
   layering, an arrangement fact), and emitting both [A,B] and [B,A] would
@@ -90,13 +100,13 @@ def analyze_masking(records: List[Dict], sections: List[Dict]) -> Dict:
                     if ev["classification"] == "bad_masking":
                         risk[r["track_id"]] = max(risk[r["track_id"]], ev["overlap"])
 
-        # --- P-034: non-lead vocal stems vs the same forward set ----------
-        # Forward-only (the mirror of the lead gate); the lead and every
-        # other vocal stem are excluded as maskers (see the module doc); the
-        # events contribute NOTHING to per_track_masking_risk in this packet.
+        # --- P-034/P-035: non-lead vocal stems vs the same forward set ----
+        # The pair is read when EITHER side sits forward (P-035's conscious
+        # flip of the P-034 stem-forward-only gate — the per-pair gate lives
+        # in ``_vocal_band_conflict``); the lead and every other vocal stem
+        # are excluded as maskers (see the module doc); the events
+        # contribute NOTHING to per_track_masking_risk in this packet.
         for stem in non_lead_vocals:
-            if _depth(stem, sid) not in FORWARD_DEPTHS:
-                continue
             for r in records:
                 if r is stem or r is lead or _is_non_lead_vocal_stem(r, lead):
                     continue
@@ -218,44 +228,64 @@ def _vocal_band_conflict(stem: Dict, other: Dict, sid: str) -> Optional[Dict]:
     ``_vocal_conflict``'s floors (0.05 / 0.1) with the PHILOSOPHY removed.
     One classification (``vocal_band_masking``) for both tiers; severity
     carries the tier (``moderate`` when the other element is forward/heard
-    at or above the conflict floor — capped there, never critical in this
-    packet — ``info`` otherwise). The wording reports the overlap and
-    prescribes nothing: what masking of this class means is the profile's
-    decision, not the analyzer's."""
+    at or above the conflict floor — capped there, never critical —
+    ``info`` otherwise).
+
+    P-035 (the buried-vocal decision, revisited against the
+    ``vocal_chop_groove`` fixture): the pair is read when EITHER side sits
+    forward — the vocal stem claiming a forward depth, or a heard
+    masker-set element standing in a forward depth in front of a
+    midground/background vocal. A pair with BOTH sides midground/background
+    emits nothing: that is depth-separated arrangement fabric, no clarity
+    question exists. The wording reports the overlap and the actual
+    placements and prescribes nothing: what masking of this class means is
+    the profile's decision, not the analyzer's."""
     overlap = round(min(stem.get("vocal_presence_energy", 0.0),
                         other.get("vocal_presence_energy", 0.0)), 4)
     if overlap < 0.05:
         return None
+    stem_depth = _depth(stem, sid)
     other_depth = _depth(other, sid)
-    both_forward = other_depth in FORWARD_DEPTHS
+    stem_forward = stem_depth in FORWARD_DEPTHS
+    other_forward = other_depth in FORWARD_DEPTHS
     other_heard = other["perceptual_role"] in HEARD_ROLES
+    if not stem_forward and not (other_forward and other_heard):
+        return None  # both sides back: depth-separated fabric (P-035)
     neutral = (
         "Observational reading: what vocal-band overlap means for a non-lead "
         "vocal is a producer-profile decision; no action is prescribed by "
         "this event."
     )
-    if both_forward and other_heard and overlap >= 0.1:
+    if other_forward and other_heard and overlap >= 0.1:
+        if stem_forward:
+            reason = (
+                f"Non-lead vocal '{stem['name']}' and '{other['name']}' sit "
+                f"forward/heard together in the vocal presence range "
+                f"(overlap {overlap:.2f})."
+            )
+        else:
+            reason = (
+                f"'{other['name']}' sits forward/heard in front of non-lead "
+                f"vocal '{stem['name']}' ({stem_depth}) in the vocal "
+                f"presence range (overlap {overlap:.2f})."
+            )
         return {
             "elements": [stem["name"], other["name"]],
             "frequency_range": "1.5kHz-4kHz",
             "section": sid,
-            "depth_layers": [_depth(stem, sid), other_depth],
+            "depth_layers": [stem_depth, other_depth],
             "perceptual_roles": [stem["perceptual_role"], other["perceptual_role"]],
             "classification": "vocal_band_masking",
             "severity": "moderate",
             "overlap": overlap,
-            "reason": (
-                f"Non-lead vocal '{stem['name']}' and '{other['name']}' sit "
-                f"forward/heard together in the vocal presence range "
-                f"(overlap {overlap:.2f})."
-            ),
+            "reason": reason,
             "recommendation": neutral,
         }
     return {
         "elements": [stem["name"], other["name"]],
         "frequency_range": "1.5kHz-4kHz",
         "section": sid,
-        "depth_layers": [_depth(stem, sid), other_depth],
+        "depth_layers": [stem_depth, other_depth],
         "perceptual_roles": [stem["perceptual_role"], other["perceptual_role"]],
         "classification": "vocal_band_masking",
         "severity": "info",
