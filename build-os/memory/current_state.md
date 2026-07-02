@@ -188,27 +188,108 @@
     producers), PUSHED to the dev branch (NOT merged)**, atop the
     set-active `8f14d4d`. P-030's parent chain: `0c7885e` → `21c0ab0` →
     `8f14d4d` (active-packet confirmation) → `8f1cbe4` (P-033 close).
+    ★ ON TOP of P-030, the dev branch now ALSO carries **P-034
+    (`e52bc1a`, single product commit — ANALYZER CAPACITY, packet 1 of
+    the user-approved two-packet analyzer-extension plan: the masking
+    analyzer emits NON-LEAD vocal-band masking events under the NEW
+    classification `vocal_band_masking`, consumed ONLY by the vocal-role
+    surface, + the `creative.py` `_lead_masked` identity-derived fix;
+    fixture-inert by construction; byte-identical everywhere), PUSHED to
+    the dev branch (NOT merged)**, atop the set-active `b53d51c`. P-034's
+    parent chain: `e52bc1a` → `b53d51c` (active-packet confirmation)
+    → `db13d08` (P-030 close).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-02, P-030):** suite **705 passed** (0
-  failed / skipped); regression **68/68 vs the REGENERATED goldens** (0
-  critical / 0 warnings). Two commits `21c0ab0` + `0c7885e` — the Commit-1
-  boundary is the HONEST contract-migration boundary pre-declared in the
-  packet spec (136 failed / 542 passed at `21c0ab0`, every failure in the 6
-  old-key-pin signature classes, ZERO behavioral). (Prior baseline was 678
-  at P-033; P-030 added +27 migration instances — the new 17-test
-  `tests/test_contract_migration.py`. Earlier: 660 → 678 at P-033;
-  639 → 660 at P-032i; 600 → 639 at P-032h; 572 → 600 at P-031; 512 → 572
-  at P-032f; 473 → 512 at P-032g; 451 → 473 at P-032c; 433 → 451 at P-032d;
-  413 → 433 at P-032b; 396 → 413 at P-032a; 384 → 396 at P-032e; 370 → 384
-  at P-029; 351 → 370 at P-028; 331 → 351 at P-027; 319 → 331 at P-026;
-  293 → 319 at P-025.)
+- **Green baseline (verified 2026-07-02, P-034):** suite **741 passed** (0
+  failed / skipped); regression **68/68, goldens UNTOUCHED** (zero golden
+  paths in the P-034 diff — the packet is fixture-inert by construction).
+  Single commit `e52bc1a` — HEAD IS Commit-1 → green in isolation (real
+  worktree check: 741 + 68/68). (Prior baseline was 705 at P-030; P-034
+  added +36 — the new 36-test `tests/test_vocal_band_masking.py`.
+  Earlier: 678 → 705 at P-030; 660 → 678 at P-033; 639 → 660 at P-032i;
+  600 → 639 at P-032h; 572 → 600 at P-031; 512 → 572 at P-032f;
+  473 → 512 at P-032g; 451 → 473 at P-032c; 433 → 451 at P-032d;
+  413 → 433 at P-032b; 396 → 413 at P-032a; 384 → 396 at P-032e;
+  370 → 384 at P-029; 351 → 370 at P-028; 331 → 351 at P-027;
+  319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-034 LANDS THE ANALYZER CAPACITY — packet 1 of the
+  user-approved two-packet analyzer-extension plan: the masking analyzer now
+  emits NON-LEAD vocal-band masking events under the NEW classification
+  `vocal_band_masking`, consumed ONLY by the vocal-role surface
+  (`_vocal_role_fit` re-keyed + the profile blend gate), plus the
+  `creative.py` `_lead_masked` identity-derived fix. FIXTURE-INERT BY
+  CONSTRUCTION — all 3 fixtures have no non-lead vocal stems, so zero new
+  events fire on real data: byte-identical everywhere, 68/68 with goldens
+  untouched, and the P-032i no-vocal-blend-delta pin STANDS (its conscious
+  flip belongs to P-035). qa GREEN + reviewer PASS (no must-fix).
+  Last-closed = P-034.**
+  - **Single commit `e52bc1a`** on parent `b53d51c` (active-packet
+    confirmation), atop `db13d08` (P-030 close) — 8 files, 920+/48−
+    (masking_analyzer, doctrine_engine `_vocal_role_fit` re-keying, the
+    creative.py fix, the NEW 36-test `tests/test_vocal_band_masking.py`,
+    conscious P-032f edits in test_vocal_type/test_vocal_blend_policy, 2
+    stub updates). HEAD IS Commit-1 → green in isolation (real worktree:
+    741 + 68/68). **PUSHED to the dev branch, NOT merged** (merge base
+    `58d21dd` = PR #17).
+  - **★ qa GREEN:** suite 705 → **741** (+36); regression **68/68,
+    goldens untouched** (zero golden paths in the diff); byte-identity
+    independent — full artifact trees, BOTH producers × 3 fixtures,
+    base vs HEAD → `diff -r` EMPTY (12 dirs × 29 artifacts; overalls
+    73.8 / 70.7 / 74.3 and 68.4 / 52.6 / 49.7; zero `vocal_band_masking`
+    traces; fixture summaries keep the exact pre-P-034 key set); 52
+    QA-authored live checks (17 emission, 11 consumption, 7 creative-fix
+    incl. "The Voice" and the adversarial lead-named event, 17
+    immovability); the P-032i pin passes with source byte-identical;
+    conscious-edit audit — only `_mask`→`_vband` on non-lead events,
+    every assertion line verbatim; safety grep + observational language
+    clean.
+  - **★ reviewer PASS (no must-fix):** the emission mirror honest
+    (floors/gates/rounding identical; the hoisted `VOCAL_MASKER_IDENTITIES`
+    string-for-string; the lead pathway unchanged); the four design calls
+    endorsed (vocal-vs-vocal exclusion with the deliberate asymmetry —
+    backing vocals still mask the LEAD; lead-never-a-masker; severity capped
+    at moderate with the info tier; the conditional summary key);
+    fixture-inertness verified STRUCTURAL (every non-lead record:
+    vocal_type None, identity non-backing_vocal); the re-keying single-basis
+    with the old lead-free-bad_masking shape DEAD and pinned both sides; the
+    creative fix plural-safe (set-based lead names, consistent with
+    doctrine_engine's) and identity-consistent with the classifier; every
+    immovable filter read; TWO sabotages caught (lead-as-subject → 5
+    failures; widened _emotional_hierarchy filter → both immovability
+    pins fail). **Codex NOT available — single-model review.**
+  - **★ Design calls recorded (each pinned as a named
+    conscious-extension point):** forward-only emission (the buried-vocal
+    reading deferred to P-035); no `per_track_masking_risk` contribution
+    (P-035 revisits); the `severity != "info"` consumption filter (P-035
+    re-examines against real data).
+  - **★★ REVIEWER ADVISORY — BINDING ON THE P-035 FIXTURE
+    DESIGN:** the staged fixture as literally described ("lead + chopped
+    vocal + backing stack + beat") would emit **ZERO** `vocal_band_masking`
+    events — vocal-vs-vocal pairs are excluded and beat identities are
+    not in the masker set. **The 4th fixture MUST include at least one
+    forward/heard masker-set member (synth/keys/guitar) with vocal-presence
+    overlap ≥ 0.1 against the chop/stack**, or the blend differential
+    stays dormant. A fixture-design requirement created by a sound design
+    call.
+  - **Out-of-scope reported:** `logic_action_generator.py:38` substring
+    match (gated behind bad_masking, unreachable by the new classification
+    — → the residue sweep); the P-032i pin's now-capacity-stale
+    docstring line (left verbatim; the revisit belongs to P-035).
+  - **★ NEXT = P-035 (the 4th fixture + the real-data vocal-blend
+    differential — the arc's payoff), STAGED not active:** carries the
+    binding fixture-design requirement above + the P-034 deferrals to
+    revisit (per-track risk, the info-tier filter, the buried-vocal
+    reading) + the conscious flips it owns (the P-032i no-vocal-blend-delta
+    pin + its docstring; the regression count moves off 68/68 consciously;
+    the new golden; the new fixture pins). Then the residue sweeps.
+    Receipt: `build-os/receipts/P-034-vocal-band-masking-capacity.md`.
 
 - **★★★ P-030 PAYS THE CONTRACT DEBT — the artifact-contract migration
   (THE USER'S DECISION: Option A + memory.py dual-read + verdict filename

@@ -199,7 +199,18 @@
     axes). A future ANALYZER-EXTENSION packet could emit non-lead vocal-band
     events to make the gate live on real data — when that packet opens, note
     that `creative.py:98`'s name-based "vocal" match is a LATENT MISFIRE
-    RISK there.
+    RISK there. **★ UPDATE (P-034 close, 2026-07-02): the
+    analyzer-extension capacity is HALF delivered — P-034 emits non-lead
+    vocal-band events under the NEW classification `vocal_band_masking`
+    (consumed ONLY by the vocal-role surface) and FIXED creative.py:98's
+    latent misfire risk (identity-derived lead names), but all 3 current
+    fixtures have no non-lead vocal stems, so the gate is STILL
+    fixture-inert on real data — the LIVE half (the 4th fixture + the
+    real-data blend differential) belongs to P-035, which carries a BINDING
+    reviewer fixture-design advisory: the fixture MUST include at least one
+    forward/heard masker-set member (synth/keys/guitar) with vocal-presence
+    overlap ≥ 0.1 against the chop/stack, or the differential stays
+    dormant.**
   - **★ NEW (P-032f — cosmetic ride-alongs):** (1) NaN-floor self-guard — add
     `0.0 <= floor <= 1.0` (qa suggested `math.isfinite`) in the raw
     `accepted_blend_under_policy` gate (the loader validates; the raw gate
@@ -291,6 +302,24 @@
     residue sweeps.
   - **★ NEW (P-030 qa — cosmetic, self-healing):** stale gitignored .pyc
     caches observed during the qa run — no action needed; they regenerate.
+  - **★ NEW (P-034 — residue-sweep candidate, same family as the
+    FIXED creative.py:98):** `logic_action_generator.py:38` uses a
+    name-based "vocal" substring match — gated behind `bad_masking`, so
+    UNREACHABLE by the new `vocal_band_masking` classification today; joins
+    the residue-sweep list (reported out-of-scope by the builder, the
+    mandated stop-and-report behavior).
+  - **★ NEW (P-034 — the three deferrals, each pinned in-code as a
+    named conscious-extension point; P-035 OWNS the revisits):** (1)
+    forward-only emission — the buried-vocal reading deferred to the
+    fixture that makes it real; (2) no `per_track_masking_risk`
+    contribution from the new classification (risk feeds track_analysis,
+    consumed broadly — revisit consciously); (3) the
+    `severity != "info"` consumption filter in `_vocal_role_fit` —
+    re-examine against real data.
+  - **★ NEW (P-034 — cosmetic, deliberate):** the P-032i pin's
+    docstring line is now capacity-STALE (the analyzer CAN emit non-lead
+    vocal-band events; the current fixtures just never trigger it) —
+    left VERBATIM; the revisit belongs to P-035's conscious pin flip.
   - **★ LIVENESS-DOCSTRING OVERCLAIM (non-blocking — reviewer; NOW
     POTENTIALLY AN EIGHT-FILE FAMILY, fold ONE sweep):** the `liveness` test docstrings OVERCLAIM — a
     general hardcoded-constant sabotage is actually caught by the
