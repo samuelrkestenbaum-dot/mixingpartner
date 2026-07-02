@@ -11,7 +11,7 @@ FIRST-CLASS, machine-readable profile data.
 
 **THIS PACKET IS LABELING, NEVER JUDGMENT.** No scorer reads the map; no
 score, variant, promotion, or recommendation may change. The byte-identity
-guards below (both mandated surfaces, all 3 fixtures, regression 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture)) are
+guards below (both mandated surfaces, all 3 fixtures, regression 93/93 (the P-035 corpus — see conftest.py)) are
 the health metric.
 
 Guard groups, mirroring the packet:
@@ -32,7 +32,7 @@ Guard groups, mirroring the packet:
    ``high`` claims are checked against machine facts (live axes weighted;
    agnostic axes weight-0 as stated).
 3. **Byte-identity, BOTH surfaces** — doctrine pins (73.8 / 70.7 / 74.3 + all
-   14 components) + the full creative base capture + regression 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture).
+   14 components) + the full creative base capture + regression 93/93 (the P-035 corpus — see conftest.py).
 4. **No-aliasing** — every load parses fresh; mutating a loaded map can never
    reach a reload or the module default.
 5. **Observational language** — zero judgment words across every authored
@@ -93,7 +93,7 @@ AUTHORED_MAP = [
     {
         "area": "vocal blend interpretation",
         "level": "limited",
-        "reason": "the masking analyzer reads the vocal band against non-lead vocals when either side of the pair is forward, and this profile's clarity protection (acceptable_blend: false) is live and measured on real exported-stem data — a masked vocal chop reads 65.0 on vocal_role_fit; coverage stays bounded: events arise only from the masker-instrument set, info-tier events are emitted but not consumed, and vocal-band events carry no per-track masking risk",
+        "reason": "the masking analyzer reads the vocal band against non-lead vocals when either side of the pair is forward (the vocal stem itself, or a heard masker standing forward in front of it), and this profile's clarity protection (acceptable_blend: false) is live and measured on real exported-stem data — a masked vocal chop and stack read 65.0 on vocal_role_fit (the chop and the stack each draw the masked penalty once); coverage stays bounded: events arise only from the masker-instrument set, info-tier events are emitted but not consumed, and vocal-band events carry no per-track masking risk",
     },
     {
         "area": "cultural loop recognizability",
@@ -243,13 +243,19 @@ def test_limited_blend_entry_is_pinned_verbatim():
     under this profile's declined blend), so the old dormancy claim is
     retired. The entry stays LIMITED because the constraint is real and
     stated: masker-set-bounded coverage, the unconsumed info tier, and the
-    per-track-risk exclusion. A future packet deleting or relaxing this label
-    breaks here."""
+    per-track-risk exclusion. P-038 tidied the text only (the two P-036
+    reviewer observations): the "either side" shorthand now carries the
+    masker-arm's heard qualifier (paired with the analyzer doc line), and
+    the 65.0 attribution states that the chop and the stack each draw the
+    masked penalty once (70 + 15 − 2×10). A future packet deleting or
+    relaxing this label breaks here."""
     limited = [e for e in load_profile("halee_ramone").confidence_map
                if e["level"] == "limited"]
     assert limited == [AUTHORED_MAP[2]]
     # the live status is stated, the falsified P-032f claims are gone
     assert "either side of the pair is forward" in limited[0]["reason"]
+    assert "heard masker standing forward" in limited[0]["reason"]  # P-038
+    assert "each draw the masked penalty once" in limited[0]["reason"]  # P-038
     assert "measured on real exported-stem data" in limited[0]["reason"]
     assert "only against the lead" not in limited[0]["reason"]
     assert "dormant" not in limited[0]["reason"]
@@ -354,7 +360,7 @@ def test_creative_surface_byte_identical_to_base_capture(analyzed):
 
 def test_regression_still_green_full_corpus():
     """The golden corpus regression — categorical fingerprint + the original
-    score keys — still passes 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture) with the map authored."""
+    score keys — still passes 93/93 (the P-035 corpus — see conftest.py) with the map authored."""
     from logic_mix_os.regression import run_regression_suite
 
     report = run_regression_suite(_ROOT / "fixtures")

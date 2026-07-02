@@ -191,7 +191,7 @@ def test_veto_thresholds_round_trip_indirect():
 
 def test_default_creative_mode_map_round_trip():
     """``pipeline._default_creative_mode`` is producer-specific: its truth words
-    map onto producer-named search modes (``ramone_vocal_truth`` vs
+    map onto the profile's own authored search modes (``vocal_truth`` vs
     ``dramatic_contrast``). The profile captures the intimate-truth words and the
     two modes; assert it reproduces the function's behavior on both branches."""
     from logic_mix_os import pipeline

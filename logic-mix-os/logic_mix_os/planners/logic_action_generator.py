@@ -98,7 +98,7 @@ def _vocal_actions(actions, automation, metrics):
     automation.append({
         "parameter": "gain (clip gain + fader)",
         "move": "Ride phrase endings +0.5 to +1 dB where the lyric drops, before adding compression.",
-        "reason": "Ramone-style vocal belief: performance rides before brute-force compression.",
+        "reason": "Vocal belief: performance rides before brute-force compression.",
         "risk_class": 2,
     })
     eq = "High-pass ~80 Hz."
@@ -127,7 +127,7 @@ def _drum_actions(actions, ident, metrics):
     if ident in {"overhead", "drum_room", "cymbal", "hi_hat"} and metrics.get("harshness_indicator", 0) > 0.45:
         actions.append(_action("Channel EQ", "Tame 2-4 kHz harshness gently; high-shelf control if brittle.", "Smooth cymbal/room harshness.", 2))
     else:
-        actions.append(_action("Channel EQ", "Light tonal shaping only; preserve transient detail and room realism.", "Halee naturalism: keep the kit believable.", 2))
+        actions.append(_action("Channel EQ", "Light tonal shaping only; preserve transient detail and room realism.", "Naturalistic space: keep the kit believable.", 2))
 
 
 def _harmonic_actions(actions, ident, metrics, masks_vocal):

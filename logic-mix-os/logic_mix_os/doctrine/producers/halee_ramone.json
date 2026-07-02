@@ -51,8 +51,8 @@
 
   "search_modes": {
     "conservative": {"allowed_risk": "low", "bias": "preserve identity, subtle improvements, vocal belief"},
-    "halee_depth": {"allowed_risk": "medium", "bias": "physical room/chamber/plate depth, space as storytelling"},
-    "ramone_vocal_truth": {"allowed_risk": "low", "bias": "vocal rides, phrase emotion, clarity, restraint"},
+    "spatial_depth": {"allowed_risk": "medium", "bias": "physical room/chamber/plate depth, space as storytelling"},
+    "vocal_truth": {"allowed_risk": "low", "bias": "vocal rides, phrase emotion, clarity, restraint"},
     "dramatic_contrast": {"allowed_risk": "medium", "bias": "push verse/chorus/bridge contrast harder"},
     "deconstructive": {"allowed_risk": "medium", "bias": "remove, mute, chop, filter, simplify"},
     "experimental": {"allowed_risk": "high", "bias": "unusual transforms, reverses, extreme depth shifts"}
@@ -236,7 +236,7 @@
 
   "default_creative_mode": {
     "intimate_truth_words": ["intimate", "vulnerable", "conflicted", "ache", "quiet", "restrained", "composed"],
-    "intimate_mode": "ramone_vocal_truth",
+    "intimate_mode": "vocal_truth",
     "default_mode": "dramatic_contrast"
   },
 
@@ -261,7 +261,7 @@
     {
       "area": "vocal blend interpretation",
       "level": "limited",
-      "reason": "the masking analyzer reads the vocal band against non-lead vocals when either side of the pair is forward, and this profile's clarity protection (acceptable_blend: false) is live and measured on real exported-stem data — a masked vocal chop reads 65.0 on vocal_role_fit; coverage stays bounded: events arise only from the masker-instrument set, info-tier events are emitted but not consumed, and vocal-band events carry no per-track masking risk"
+      "reason": "the masking analyzer reads the vocal band against non-lead vocals when either side of the pair is forward (the vocal stem itself, or a heard masker standing forward in front of it), and this profile's clarity protection (acceptable_blend: false) is live and measured on real exported-stem data — a masked vocal chop and stack read 65.0 on vocal_role_fit (the chop and the stack each draw the masked penalty once); coverage stays bounded: events arise only from the masker-instrument set, info-tier events are emitted but not consumed, and vocal-band events carry no per-track masking risk"
     },
     {
       "area": "cultural loop recognizability",

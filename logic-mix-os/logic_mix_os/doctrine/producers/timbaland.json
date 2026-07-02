@@ -279,7 +279,7 @@
     {
       "area": "vocal blend interpretation",
       "level": "limited",
-      "reason": "the masking analyzer reads the vocal band against non-lead vocals when either side of the pair is forward; the acceptable-blend policy this profile opts into is live and measured on real exported-stem data — a qualified vocal chop under masking reads 85.0 on vocal_role_fit against the reference's 65.0, worth +0.7 overall at the authored 0.4 weight; coverage stays bounded: events arise only from the masker-instrument set, info-tier events are emitted but not consumed, and vocal-band events carry no per-track masking risk"
+      "reason": "the masking analyzer reads the vocal band against non-lead vocals when either side of the pair is forward (the vocal stem itself, or a heard masker standing forward in front of it); the acceptable-blend policy this profile opts into is live and measured on real exported-stem data — a qualified vocal chop under masking reads 85.0 on vocal_role_fit against the reference's 65.0 (the reference draws the masked penalty once for the chop and once for the stack; the accepted blend waives both), worth +0.7 overall at the authored 0.4 weight; coverage stays bounded: events arise only from the masker-instrument set, info-tier events are emitted but not consumed, and vocal-band events carry no per-track masking risk"
     },
     {
       "area": "cultural loop recognizability",

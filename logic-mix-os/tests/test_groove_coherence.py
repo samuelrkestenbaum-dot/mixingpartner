@@ -25,7 +25,7 @@ Five guards, mirroring the packet:
 1. **Byte-identical** — for all 3 fixtures, ``analyze()`` (default halee_ramone)
    leaves every PRE-EXISTING component score (now 9) AND
    ``overall_mix_readiness_score`` unchanged vs the pinned base, and the golden
-   regression still reports 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture). AND ``result.expanded["groove"]`` is
+   regression still reports 93/93 (the P-035 corpus — see conftest.py). AND ``result.expanded["groove"]`` is
    byte-unchanged vs the pinned base (the relocation is behavior-preserving).
 2. **No-re-run live-wire (THE P-016 GUARD)** — during a full ``analyze()``,
    ``analyze_groove`` is called EXACTLY ONCE (spy/patch a call counter) — proving
@@ -210,7 +210,7 @@ def test_expanded_groove_is_behavior_preserving(analyzed):
 
 def test_regression_still_green_full_corpus():
     """The golden corpus regression — which pins ``doctrine_score`` — still passes
-    93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture) with the new axis wired in at weight 0."""
+    93/93 (the P-035 corpus — see conftest.py) with the new axis wired in at weight 0."""
     from pathlib import Path
 
     from logic_mix_os.regression import run_regression_suite

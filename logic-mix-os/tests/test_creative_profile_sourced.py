@@ -154,9 +154,12 @@ def test_promotion_table_value_pins():
 
 
 def test_search_modes_value_pins():
+    # P-038 (conscious flip): the reference renamed its producer-named modes
+    # (halee_depth -> spatial_depth, ramone_vocal_truth -> vocal_truth);
+    # risks and biases are the untouched authored values.
     sm = creative.SEARCH_MODES
     assert set(sm) == {
-        "conservative", "halee_depth", "ramone_vocal_truth",
+        "conservative", "spatial_depth", "vocal_truth",
         "dramatic_contrast", "deconstructive", "experimental",
     }
     assert sm["conservative"] == {

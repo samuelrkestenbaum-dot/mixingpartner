@@ -236,8 +236,11 @@ def _emotional_hierarchy(records: List[Dict], lead: Optional[Dict], events: List
         score -= c["no_lead"]
         ev.append("No identified lead vocal — the emotional centre is undefined.")
         warnings.append({
+            # P-038: aesthetic-descriptive tag (was producer-named
+            # "phil_ramone_vocal_centrality") — engine-emitted values carry
+            # no producer names; vocal_centrality is the P-030 vocabulary.
             "warning": "No lead vocal identified. Confirm the emotional centre before mixing.",
-            "doctrine": ["phil_ramone_vocal_centrality"],
+            "doctrine": ["vocal_centrality"],
         })
     else:
         bad_vocal = [e for e in events if lead["name"] in e["elements"] and e["classification"] == "bad_masking"]
@@ -253,8 +256,11 @@ def _emotional_hierarchy(records: List[Dict], lead: Optional[Dict], events: List
         score -= c["decorative_penalty"]
         ev.append(f"{len(decorative)} decorative/expendable element(s); risk of overmixing.")
         warnings.append({
+            # P-038: aesthetic-descriptive tag (was producer-named
+            # "phil_ramone_restraint") — joins the bare-aesthetic tag family
+            # (sacred_vs_expendable / section_contrast / felt_vs_heard).
             "warning": "Many decorative elements relative to core. Consider subtraction before processing.",
-            "doctrine": ["phil_ramone_restraint", "sacred_vs_expendable"],
+            "doctrine": ["restraint", "sacred_vs_expendable"],
         })
     return _clamp(score), ev
 

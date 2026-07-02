@@ -362,7 +362,7 @@ def test_no_aliasing_between_runs():
 
 
 # --------------------------------------------------------------------------- #
-# 2. BYTE-IDENTITY — 3 fixtures x both producers, every surface, 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture).
+# 2. BYTE-IDENTITY — 3 fixtures x both producers, every surface, 93/93 (the P-035 corpus — see conftest.py).
 # --------------------------------------------------------------------------- #
 def test_no_new_events_on_any_fixture_under_either_producer(analyzed, tim_analyzed):
     """The fixture-inert guarantee, at the masking_report surface: zero
@@ -420,7 +420,7 @@ def test_plan_surfaces_carry_no_new_vocabulary(analyzed, tim_analyzed):
 
 
 def test_regression_still_green_full_corpus():
-    """The golden corpus — fixture-inert packet: 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture), goldens unchanged."""
+    """The golden corpus — fixture-inert packet: 93/93 (the P-035 corpus — see conftest.py), goldens unchanged."""
     from logic_mix_os.regression import run_regression_suite
 
     report = run_regression_suite(ROOT / "fixtures")

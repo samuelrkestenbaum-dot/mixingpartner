@@ -44,6 +44,13 @@ FIXTURE_NAMES = [
 # that makes the vocal_band_masking capacity and the blend policy LIVE.
 VOCAL_CHOP_FIXTURE = "vocal_chop_groove"
 
+# THE REGRESSION CORPUS COUNT — the canonical explanation, pointed to by every
+# "93/93 (the P-035 corpus — see conftest.py)" pin across the suite: P-035
+# moved the golden corpus count CONSCIOUSLY from 68 to 93 — +25 checks from
+# the vocal_chop_groove fixture (its golden snapshot comparisons + doctrine
+# invariants). Any future fixture moves this count again only as a conscious,
+# documented decision — never a silent widening (the P-035 convention note).
+
 
 @pytest.fixture(scope="session")
 def analyzed(_ensure_fixtures):

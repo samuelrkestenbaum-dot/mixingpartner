@@ -14,7 +14,8 @@ The LEAD is NEVER in these events; lead-inclusive vocal masking stays the
 ``bad_masking`` pathway, untouched. The design decisions, made honest and
 explicit:
 
-* **The pair is read when either side is forward (P-035)** — P-034 shipped
+* **The pair is read when either side is forward — the vocal stem itself,
+  or a heard masker standing forward in front of it (P-035)** — P-034 shipped
   a forward-only gate on the vocal stem and deferred the buried-vocal
   reading to the fixture that makes it real. The ``vocal_chop_groove``
   fixture made it real and exposed a structural fact: the depth planner

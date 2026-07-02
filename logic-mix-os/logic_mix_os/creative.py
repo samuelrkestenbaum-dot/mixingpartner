@@ -386,7 +386,7 @@ def generate_variants(problem: Dict, result, mode: Optional[str] = None) -> List
             _variant("chorus_lift_D", pid, "drum_room_bloom", "Drum Room Bloom",
                      "Use physical room/overheads rather than plugin hype to lift the chorus.",
                      ["Increase drum room/overhead energy at chorus entry"], drum_target,
-                     "Drums may overpower the vocal.", ["Halee-style physical lift", "vocal still on top"], "physical lift"),
+                     "Drums may overpower the vocal.", ["physical room lift", "vocal still on top"], "physical lift"),
         ]
     elif pid == "density":
         variants += [
@@ -595,13 +595,25 @@ def run_creative_engine(result, mode: Optional[str] = None,
     # P-033: observational fallback evidence — present ONLY when a requested
     # mode was substituted (never on the ``mode=None`` default resolution, and
     # never when the requested mode exists in the profile's table).
+    # P-038: the reason states WHICH resolution branch fired — the profile's
+    # declared default, or (when that is absent from ``search_modes`` too)
+    # the first authored mode. The old wording said "the profile's own
+    # default" on both branches, inaccurately on the second.
     if requested is not None and requested != mode:
+        if mode == prof.default_creative_mode.get("default_mode"):
+            resolved_how = f"resolved to the profile's declared default {mode!r}"
+        else:
+            resolved_how = (
+                f"resolved to the first mode in the profile's own "
+                f"search_modes, {mode!r} (its declared default is not "
+                f"authored there either)"
+            )
         out["search_mode_fallback"] = {
             "requested_mode": requested,
             "resolved_mode": mode,
             "reason": (
                 f"requested mode {requested!r} is not one of this profile's "
-                f"search_modes; resolved to the profile's own default {mode!r}"
+                f"search_modes; {resolved_how}"
             ),
         }
     return out

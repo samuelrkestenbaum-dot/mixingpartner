@@ -32,7 +32,7 @@ Guard groups, mirroring the packet:
 2. **Additive record fields** — every record carries ``vocal_type`` +
    ``vocal_type_confidence``; non-vocal stems carry EXPLICIT None.
 3. **Byte-identity, BOTH surfaces** — doctrine pins + the full creative base
-   capture + regression 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture).
+   capture + regression 93/93 (the P-035 corpus — see conftest.py).
 4. **Axis value-discrimination** (unit) — lead forward/clear high; lead
    masked low; non-lead vocal masking read observationally; the masked-lead
    pathway counted ONCE (through the lead reading, never re-read through the
@@ -462,7 +462,7 @@ def test_overall_is_byte_identical_to_thirteen_term_weighted_mean(analyzed):
 
 def test_regression_still_green_full_corpus():
     """The golden corpus regression — which pins ``doctrine_score`` — still
-    passes 93/93 (P-035 moved the corpus count consciously: +25 checks from the vocal_chop_groove fixture) with the new axis wired in at weight 0."""
+    passes 93/93 (the P-035 corpus — see conftest.py) with the new axis wired in at weight 0."""
     from pathlib import Path
 
     from logic_mix_os.regression import run_regression_suite
@@ -751,8 +751,11 @@ def test_nonzero_weight_moves_the_overall(analyzed):
 
 def test_liveness_direction_tracks_the_vocal_role_fit_score(analyzed):
     """The sharper sabotage guard: the overall must move in the direction of
-    vocal_role_fit's value relative to the reference overall. A hardcoded
-    term would not track the real score."""
+    vocal_role_fit's value relative to the reference overall. This catches
+    DROP/THREADING sabotage in the weighted mean; a term hardcoded to a
+    constant would still pass here (the check reads the score from the same
+    dict a constant poisons) — hardcoding is caught by the
+    value-discrimination guards."""
     res = analyzed["dense_chorus_with_loops"]
     base_args = (res.records, res.section_analysis, res.masking_report, res.mix_metrics, res.project.intent)
     groove = res.expanded["groove"]

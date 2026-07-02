@@ -63,3 +63,26 @@ def test_masking_report_json_validates(analyzed):
     report = analyzed["dense_chorus_with_loops"].masking_report
     schema = load_schema("masking_report.schema.json")
     assert validate_instance(report, schema) == []
+
+
+def test_warning_doctrine_tags_are_aesthetic_never_producer_named():
+    """P-038 (the P-030 reviewer judgment call, resolved): the ``doctrine``
+    tags on engine-emitted warnings name the AESTHETIC — ``vocal_centrality``
+    and ``restraint``, joining the existing bare-aesthetic tag family
+    (``sacred_vs_expendable`` / ``section_contrast`` / ``felt_vs_heard``) and
+    the P-030 contract vocabulary — never a producer. Producer names are
+    profile vocabulary; the engine's emitted values are producer-agnostic.
+    Both warnings fire in one call: no lead vocal + an all-decorative record
+    set. (No fixture emits these two warnings, so this synthetic pin is the
+    only guard on the tag values.)"""
+    from logic_mix_os.doctrine import doctrine_engine
+
+    warnings: list = []
+    records = [{"sacredness": "decorative"}]
+    doctrine_engine._emotional_hierarchy(records, None, [], warnings)
+
+    tags = [t for w in warnings for t in w["doctrine"]]
+    assert tags == ["vocal_centrality", "restraint", "sacred_vs_expendable"]
+    for tag in tags:
+        for producer in ("phil", "ramone", "roy", "halee", "timbaland"):
+            assert producer not in tag, f"producer-named tag survives: {tag}"

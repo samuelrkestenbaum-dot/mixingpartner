@@ -444,8 +444,10 @@ def build_parser() -> argparse.ArgumentParser:
     cv = sub.add_parser("creative", help="Creative experimentation engine (variants + governance)")
     add_common(cv)
     cv.add_argument("--bounce", help="Optional stereo bounce")
-    cv.add_argument("--mode", help="Search mode (conservative, halee_depth, ramone_vocal_truth, "
-                                   "dramatic_contrast, deconstructive, experimental)")
+    cv.add_argument("--mode", help="A search mode from the selected producer profile's "
+                                   "search_modes; defaults to the profile's declared default. "
+                                   "A mode the profile does not carry resolves to that default, "
+                                   "reported observationally as search_mode_fallback.")
     cv.set_defaults(func=_run_creative)
 
     gv = sub.add_parser("governance", help="Taste protection: truth lock, listener panel, stop conditions")
