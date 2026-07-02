@@ -1,0 +1,271 @@
+"""ProducerProfile — the swappable producer-specific judgment (P-025 foundation).
+
+The producer-agnostic *physics* (analyzers, safety kill-switches, the
+bounded-nudge mechanism, determinism/evidence contract, the move-kind vocabulary)
+stays fixed in the pipeline. The producer-specific *judgment* — today 100%
+hardcoded across ``creative.py`` / ``governance.py`` / ``doctrine_engine.py`` /
+``pipeline.py`` — becomes a swappable ``ProducerProfile`` loaded from JSON.
+
+**P-025 is data + loader + tests ONLY.** Nothing in the runtime path imports
+``load_profile`` yet — the modules above keep using their hardcoded dicts. The
+byte-identical round-trip test (``tests/test_producer_profile.py``) is the guard
+that the extracted ``halee_ramone.json`` reconstructs today's judgment exactly;
+P-026→P-029 will wire consumers against that guard.
+
+The loader is pure, deterministic, and reads a local JSON file only. The returned
+``ProducerProfile`` is a frozen dataclass; its collection fields are freshly
+parsed from JSON on every load, so a caller can never mutate the live module
+dicts (or a previous load) through it.
+"""
+
+from __future__ import annotations
+
+import json
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any, Dict, List
+
+_DIR = Path(__file__).parent
+_PRODUCERS_DIR = _DIR / "producers"
+
+# P-031: the closed per-area honesty vocabulary. Exactly three levels — a
+# profile labels each interpretation AREA of its judgment ``high`` (live,
+# weighted, curated), ``limited`` (mechanically live but constrained on
+# today's data — the constraint stated in the reason), or ``deferred`` (not
+# measurable at doctrine time — the boundary stated in the reason).
+CONFIDENCE_LEVELS = ("high", "limited", "deferred")
+
+# The producer-specific structures a profile must carry (extraction-completeness
+# is asserted against this in the tests). Metadata is validated separately.
+_REQUIRED_DATA_FIELDS = (
+    "kind_scores",
+    "nudge_table",
+    "promotion_table",
+    "creative_nudge_cap",
+    "creative_promotion_cap",
+    "risk_penalty",
+    "search_modes",
+    "philosophy",
+    "truth_alignment",
+    "taste_kind_bias",
+    "taste_max_delta",
+    "aesthetic_kill_switches",
+    "taste_triangle",
+    "veto_thresholds",
+    "doctrine",
+    "default_creative_mode",
+    "protect_iconic_loops",
+    "vocal_blend_policy",
+    "confidence_map",
+)
+
+_REQUIRED_METADATA_FIELDS = (
+    "name",
+    "display_name",
+    "provenance",
+    "confidence",
+    "risk_class",
+)
+
+
+@dataclass(frozen=True)
+class ProducerProfile:
+    """An immutable view of one producer's judgment, loaded from JSON.
+
+    Field names mirror the source structures verbatim so the round-trip guard is
+    a direct ``==`` against the still-hardcoded module dicts (or, for the values
+    computed inline in functions, an indirect drive-the-function comparison).
+    """
+
+    # metadata (honesty scaffolding — set up now, enforced in P-031)
+    metadata: Dict[str, Any]
+
+    # creative.py
+    kind_scores: Dict[str, Dict[str, Any]]
+    nudge_table: List[Dict[str, Any]]
+    promotion_table: List[Dict[str, Any]]
+    creative_nudge_cap: float
+    creative_promotion_cap: float
+    risk_penalty: Dict[str, int]
+    search_modes: Dict[str, Dict[str, str]]
+    philosophy: str
+
+    # governance.py
+    truth_alignment: Dict[str, Dict[str, int]]
+    taste_kind_bias: Dict[str, Dict[str, int]]
+    taste_max_delta: int
+    aesthetic_kill_switches: List[str]
+    # governance.py — secondary constants (P-027 Finding A): the taste-triangle
+    # rules (intimate-width penalty + the emotion-blend dims) and the veto
+    # thresholds, previously inline literals in taste_triangle/govern_variant.
+    taste_triangle: Dict[str, Any]
+    veto_thresholds: Dict[str, int]
+
+    # doctrine_engine.py — weights / baselines / _halee+_ramone penalty coeffs
+    # (P-025), plus (P-028 Finding A) the widened ``scorers`` group holding the
+    # per-function aesthetic constants for the five remaining scorers
+    # (vocal_centrality / depth_hierarchy / section_contrast / static_mix /
+    # dynamic_mix): baselines, bonuses, penalties, coefficients and thresholds.
+    doctrine: Dict[str, Any]
+
+    # pipeline.py (_default_creative_mode truth -> mode map)
+    default_creative_mode: Dict[str, Any]
+
+    # creative.py — P-032g: the first profile-DECIDED creative gate. The
+    # engine's ``loop_context`` axis DETECTS static-vs-iconic observationally;
+    # this flag is the profile DECIDING what to do with an iconic reading:
+    # True => the ``loop_deconstruct`` promotion does not fire on an
+    # iconic-functioning loop (the profile protects the loop as the record's
+    # identity); False (halee_ramone) => current behavior, byte-identical —
+    # the reference profile deconstructs. A masked lead vocal always overrides
+    # protection (the Ramone gate lives in creative.py).
+    protect_iconic_loops: bool
+
+    # doctrine_engine.py — P-032f: the profile-AUTHORED masking philosophy for
+    # non-lead vocal roles (the P-032g pattern: a REQUIRED top-level field so
+    # every producer's decision is explicit in its JSON, never defaulted).
+    # Shape: {"acceptable_blend": bool, "confidence_floor": float in [0, 1]}.
+    # ``acceptable_blend: true`` lets masking of a QUALIFIED vocal_percussive /
+    # vocal_stack stem (classifier confidence >= confidence_floor, never the
+    # lead, never on an event that includes the lead) read as accepted blend
+    # in the ``vocal_role_fit`` axis. ``false`` (halee_ramone) => the gated
+    # path is unreachable and every vocal keeps full lead-grade clarity
+    # protection. Uncertain and hook_candidate vocals and the masked-lead
+    # pathway are NEVER blend-eligible whatever this field says (the
+    # fail-closed gates live in ``accepted_blend_under_policy``).
+    vocal_blend_policy: Dict[str, Any]
+
+    # P-031: the per-interpretation-AREA honesty map — a REQUIRED top-level
+    # field (the P-032g/P-032f required-field discipline: every producer's
+    # honesty labeling is explicit in its JSON, never defaulted). Shape: an
+    # ordered, non-empty list of ``{"area": str, "level": one of
+    # CONFIDENCE_LEVELS, "reason": str}`` entries; authoring order is
+    # preserved and IS the rendering order. This is LABELING, never judgment:
+    # no scorer reads it — the pipeline copies it verbatim onto the report
+    # surface so a human or Cowork reads which parts of the judgment to
+    # trust, at what strength, and WHY. It complements (never replaces) the
+    # profile-level ``metadata`` stamp from P-025: metadata carries the
+    # GLOBAL provenance/confidence/risk_class; this map carries per-area
+    # trust.
+    confidence_map: List[Dict[str, Any]]
+
+
+def _normalize_kinds_sets(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """JSON has no set type: the nudge/promotion rows store ``kinds`` as a list.
+    Rehydrate it to a ``set`` so the round-trip ``==`` against the source rows
+    (which use sets) is honest rather than loosened to compare lists."""
+    out: List[Dict[str, Any]] = []
+    for row in rows:
+        row = dict(row)
+        if "kinds" in row and not isinstance(row["kinds"], set):
+            row["kinds"] = set(row["kinds"])
+        out.append(row)
+    return out
+
+
+def _validate(raw: Dict[str, Any], name: str) -> None:
+    if "metadata" not in raw:
+        raise ValueError(f"profile {name!r}: missing 'metadata'")
+    meta = raw["metadata"]
+    for f in _REQUIRED_METADATA_FIELDS:
+        if f not in meta:
+            raise ValueError(f"profile {name!r}: metadata missing {f!r}")
+    if not isinstance(meta["risk_class"], int) or isinstance(meta["risk_class"], bool):
+        raise ValueError(f"profile {name!r}: metadata.risk_class must be an int")
+    for key in ("name", "display_name", "provenance", "confidence"):
+        if not isinstance(meta[key], str):
+            raise ValueError(f"profile {name!r}: metadata.{key} must be a str")
+    for f in _REQUIRED_DATA_FIELDS:
+        if f not in raw:
+            raise ValueError(f"profile {name!r}: missing data field {f!r}")
+    doctrine = raw["doctrine"]
+    for key in ("weights", "baselines", "penalty_coeffs", "scorers"):
+        if key not in doctrine:
+            raise ValueError(f"profile {name!r}: doctrine missing {key!r}")
+    for fn in ("vocal_centrality", "depth_hierarchy", "section_contrast",
+               "static_mix", "dynamic_mix", "beat_identity", "negative_space",
+               "groove_coherence", "rhythmic_surprise", "low_end_motion",
+               "loop_context", "vocal_role_fit"):
+        if fn not in doctrine["scorers"]:
+            raise ValueError(f"profile {name!r}: doctrine.scorers missing {fn!r}")
+    # P-032f: the vocal blend policy must be structurally sound — an explicit
+    # bool opt-in plus a real confidence floor in [0, 1]. No silent defaults.
+    policy = raw["vocal_blend_policy"]
+    if not isinstance(policy, dict):
+        raise ValueError(f"profile {name!r}: vocal_blend_policy must be an object")
+    for key in ("acceptable_blend", "confidence_floor"):
+        if key not in policy:
+            raise ValueError(f"profile {name!r}: vocal_blend_policy missing {key!r}")
+    if not isinstance(policy["acceptable_blend"], bool):
+        raise ValueError(f"profile {name!r}: vocal_blend_policy.acceptable_blend must be a bool")
+    floor = policy["confidence_floor"]
+    if isinstance(floor, bool) or not isinstance(floor, (int, float)) or not 0.0 <= floor <= 1.0:
+        raise ValueError(
+            f"profile {name!r}: vocal_blend_policy.confidence_floor must be a number in [0, 1]"
+        )
+    # P-031: the per-area honesty map must be structurally sound — a NON-EMPTY
+    # list of {area, level, reason} entries, level from the closed vocabulary,
+    # area/reason non-empty strings. No silent defaults (the P-032f attack-4
+    # discipline), and an EMPTY map is rejected too: an honesty layer with
+    # zero entries is not honest.
+    cmap = raw["confidence_map"]
+    if not isinstance(cmap, list):
+        raise ValueError(f"profile {name!r}: confidence_map must be a list")
+    if not cmap:
+        raise ValueError(f"profile {name!r}: confidence_map must not be empty")
+    for i, entry in enumerate(cmap):
+        if not isinstance(entry, dict):
+            raise ValueError(f"profile {name!r}: confidence_map[{i}] must be an object")
+        for key in ("area", "level", "reason"):
+            if key not in entry:
+                raise ValueError(f"profile {name!r}: confidence_map[{i}] missing {key!r}")
+        for key in ("area", "reason"):
+            if not isinstance(entry[key], str) or not entry[key].strip():
+                raise ValueError(
+                    f"profile {name!r}: confidence_map[{i}].{key} must be a non-empty string"
+                )
+        if entry["level"] not in CONFIDENCE_LEVELS:
+            raise ValueError(
+                f"profile {name!r}: confidence_map[{i}].level must be one of "
+                f"{CONFIDENCE_LEVELS}, got {entry['level']!r}"
+            )
+
+
+def load_profile(name: str = "halee_ramone") -> ProducerProfile:
+    """Read ``producers/<name>.json``, validate it, and return a frozen profile.
+
+    Pure and deterministic: a local JSON read plus structural validation, no I/O
+    beyond the file, no time/randomness/network. Every collection is freshly
+    parsed, so the returned profile never aliases the live module dicts.
+    """
+    path = _PRODUCERS_DIR / f"{name}.json"
+    if not path.exists():
+        raise FileNotFoundError(f"no producer profile named {name!r} at {path}")
+    with open(path, "r", encoding="utf-8") as fh:
+        raw = json.load(fh)
+    _validate(raw, name)
+    return ProducerProfile(
+        metadata=raw["metadata"],
+        kind_scores=raw["kind_scores"],
+        nudge_table=_normalize_kinds_sets(raw["nudge_table"]),
+        promotion_table=_normalize_kinds_sets(raw["promotion_table"]),
+        creative_nudge_cap=raw["creative_nudge_cap"],
+        creative_promotion_cap=raw["creative_promotion_cap"],
+        risk_penalty=raw["risk_penalty"],
+        search_modes=raw["search_modes"],
+        philosophy=raw["philosophy"],
+        truth_alignment=raw["truth_alignment"],
+        taste_kind_bias=raw["taste_kind_bias"],
+        taste_max_delta=raw["taste_max_delta"],
+        aesthetic_kill_switches=raw["aesthetic_kill_switches"],
+        taste_triangle=raw["taste_triangle"],
+        veto_thresholds=raw["veto_thresholds"],
+        doctrine=raw["doctrine"],
+        default_creative_mode=raw["default_creative_mode"],
+        protect_iconic_loops=raw["protect_iconic_loops"],
+        vocal_blend_policy=raw["vocal_blend_policy"],
+        confidence_map=raw["confidence_map"],
+    )
+
+
+__all__ = ["CONFIDENCE_LEVELS", "ProducerProfile", "load_profile"]

@@ -32,10 +32,12 @@ from .analyzers.track_identity_detector import detect_track_identity
 from .analyzers.transition_quality_analyzer import analyze_transitions
 from .analyzers.translation_analyzer import analyze_translation
 from .analyzers.vocal_performance_analyzer import analyze_vocal
+from .analyzers.vocal_type_classifier import classify_vocal_type
 from .bridge.applescript_bridge import generate_applescript
 from .bridge.exporter import export_actions
 from .creative import run_creative_engine
 from .doctrine.doctrine_engine import score_doctrine
+from .doctrine.producer_profile import ProducerProfile, load_profile
 from .governance import run_governance
 from .memory import ProjectMemory
 from .planners.depth_planner import plan_depth
@@ -81,7 +83,18 @@ def analyze(
     creative_mode: Optional[str] = None,
     memory_dir: Optional[str | Path] = None,
     album_context: Optional[Dict] = None,
+    producer: str | ProducerProfile = "halee_ramone",
 ) -> ProjectAnalysis:
+    # P-029 — THE PIVOT: ``producer`` SELECTS which ProducerProfile drives the
+    # judgment. It accepts a profile NAME (loaded once here) or a ready
+    # ``ProducerProfile`` object (convenient for tests / callers holding one). The
+    # loaded profile is threaded to the three judgment entry points below
+    # (``score_doctrine`` / ``run_creative_engine`` / ``run_governance``); each
+    # defaults to its module ``_DEFAULT_PROFILE`` when passed ``None``, so the
+    # default ``producer="halee_ramone"`` is byte-identical to the reference. The
+    # physics/analyzers and the safety kill-switches are producer-AGNOSTIC and
+    # untouched by this selection.
+    profile = producer if isinstance(producer, ProducerProfile) else load_profile(producer)
     project = Project.from_inputs(stems_dir, manifest)
     result = ProjectAnalysis(project=project)
 
@@ -111,7 +124,7 @@ def analyze(
         result.depth_map.append(depth)
         if metrics is not None:
             result.track_analysis.append({"track_id": track.track_id, "name": track.name, "metrics": metrics})
-            records.append({
+            record = {
                 "track_id": track.track_id,
                 "name": track.name,
                 "instrument_identity": ident["instrument_identity"],
@@ -127,7 +140,19 @@ def analyze(
                 "brightness": metrics["brightness"],
                 "metrics": metrics,
                 "source_warnings": sm.get("warnings", []),
-            })
+            }
+            # P-032f: ADDITIVE vocal-role fields. The engine DETECTS vocal
+            # function observationally (lead / hook_candidate / percussive /
+            # stack / uncertain, each with a confidence in [0,1]); profiles
+            # decide what the reading is worth. Computed ONCE here, before any
+            # producer profile applies, so every consumer shares ONE detection
+            # basis. Non-vocal stems carry EXPLICIT None in both fields (the
+            # keys are always present — documented contract). No existing
+            # record key changes.
+            vocal_type = classify_vocal_type(record)
+            record["vocal_type"] = vocal_type["vocal_type"] if vocal_type else None
+            record["vocal_type_confidence"] = vocal_type["confidence"] if vocal_type else None
+            records.append(record)
 
     result.records = records
 
@@ -150,9 +175,27 @@ def analyze(
     for entry in result.track_analysis:
         entry["metrics"]["masking_risk"] = risk.get(entry["track_id"])
 
+    # P-032b live wire: the groove signal (``analyze_groove`` →
+    # ``overall_regularity``) is a doctrine input for the ``groove_coherence`` axis,
+    # so it must be computed BEFORE ``score_doctrine`` (the P-016 lesson: an
+    # evidence-gated signal is only live if computed before its consumer, and
+    # computed ONCE). Its inputs — ``result.track_identity`` + ``loaded_by_id`` —
+    # are already filled by the per-track loop above, so this is a pure relocation
+    # of the ``rhythm_tracks``/``analyze_groove`` pair that used to live in the
+    # expanded suite below. The exact same ``groove`` object is REUSED in
+    # ``result.expanded["groove"]`` (never re-run), keeping that value
+    # byte-identical.
+    rhythm_tracks = [
+        {"name": ident["name"], "identity": ident["instrument_identity"], "loaded": loaded_by_id[ident["track_id"]]}
+        for ident in result.track_identity
+        if ident["instrument_identity"] in RHYTHM_IDENTITIES and ident["track_id"] in loaded_by_id
+    ]
+    groove = analyze_groove(rhythm_tracks)
+
     # Doctrine scoring.
     result.doctrine_score = score_doctrine(
-        records, result.section_analysis, result.masking_report, result.mix_metrics, project.intent
+        records, result.section_analysis, result.masking_report, result.mix_metrics,
+        project.intent, profile=profile, groove=groove,
     )
 
     # Reference delta.
@@ -166,18 +209,16 @@ def analyze(
     # Expanded analysis suite (translation, mono, density, narrative, etc.).
     lead_record = next((r for r in records if r["instrument_identity"] == "lead_vocal"), None)
     lead_present = lead_record is not None
-    rhythm_tracks = [
-        {"name": ident["name"], "identity": ident["instrument_identity"], "loaded": loaded_by_id[ident["track_id"]]}
-        for ident in result.track_identity
-        if ident["instrument_identity"] in RHYTHM_IDENTITIES and ident["track_id"] in loaded_by_id
-    ]
     result.expanded = {
         "translation": analyze_translation(result.mix_metrics, records),
         "mono_compatibility": analyze_mono(records, result.mix_metrics),
         "arrangement_density": map_density(records, result.section_analysis),
         "listener_experience": map_experience(result.section_analysis, lead_present),
         "transitions": analyze_transitions(mixdown, project.sections),
-        "groove": analyze_groove(rhythm_tracks),
+        # P-032b: REUSE the exact ``groove`` computed above (before doctrine) —
+        # never re-run ``analyze_groove`` here. This keeps the value byte-identical
+        # and honours the compute-once discipline (the no-re-run guard).
+        "groove": groove,
         "harmonic": analyze_harmony(mixdown, project.key),
         "vocal_performance": analyze_vocal(lead_vocal_loaded, lead_record["metrics"] if lead_record else None),
         "lyrics": analyze_lyrics(manifest, result.section_analysis, lead_present),
@@ -231,8 +272,8 @@ def analyze(
 
     # Creative experimentation engine + governance / taste protection.
     mode = creative_mode or _default_creative_mode(project.intent)
-    result.creative = run_creative_engine(result, mode)
-    result.governance = run_governance(result, result.creative, taste_profile=_taste)
+    result.creative = run_creative_engine(result, mode, profile=profile)
+    result.governance = run_governance(result, result.creative, taste_profile=_taste, profile=profile)
 
     # Session intelligence: render graph, plugin availability.
     result.render_graph = build_render_graph(project)

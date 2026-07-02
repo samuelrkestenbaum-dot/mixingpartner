@@ -12,6 +12,19 @@ from __future__ import annotations
 from typing import Dict, List, Optional
 
 from .constants import LOOP_SAMPLE_KINDS, RISK_CLASSES
+from .doctrine.producer_profile import ProducerProfile, load_profile
+
+# --- Producer-specific judgment: sourced from the reference ProducerProfile --
+# (P-027, third wiring step of the producer-agnostic epic — after creative.py in
+# P-026). The producer-specific values below are no longer hardcoded literals
+# here — they are SOURCED from the reference profile's JSON
+# (``doctrine/producers/halee_ramone.json``), which is now their single source of
+# truth. The loader returns fresh, JSON-parsed collections on every load, so these
+# globals keep the exact names/shapes/types the old literals had and downstream
+# code is untouched. Per-call producer selection is NOT threaded here (that is
+# P-029). NO-ALIASING contract: consumers never mutate a sourced global in place
+# (``_apply_taste`` mutates a LOCAL ``triangle`` dict, not the profile).
+_DEFAULT_PROFILE = load_profile("halee_ramone")
 
 # Section 76: decision review modes.
 REVIEW_MODES = [
@@ -20,18 +33,20 @@ REVIEW_MODES = [
 ]
 DEFAULT_REVIEW_MODE = "approve_before_apply"
 
-# Section 78: kill-switch rules (never auto-applied / blocked).
-KILL_SWITCHES = [
+# Section 78: kill-switch rules (never auto-applied / blocked). The five SAFETY
+# switches (non-destructive/Class-5) are producer-AGNOSTIC and STAY hardcoded here
+# — a swapped producer profile must never be able to weaken them. The four
+# AESTHETIC switches (items 6-9) are producer-specific and sourced from the
+# reference profile (the JSON is now their home); they are appended verbatim, in
+# order, so the composed list is byte-identical to the pre-P-027 literal.
+_SAFETY_KILL_SWITCHES = [
     "Never overwrite original audio.",
     "Never destructively tune or time-stretch source recordings.",
     "Never delete tracks without backup.",
     "Never flatten comped vocals without a duplicate.",
     "Never apply creative source edits without a versioned duplicate.",
-    "Never chase reference loudness at the mix stage.",
-    "Never widen the full mix to solve chorus lift.",
-    "Never make the lead vocal less intelligible unless explicitly approved.",
-    "Never allow a stock loop to dominate the song identity by accident.",
 ]
+KILL_SWITCHES = _SAFETY_KILL_SWITCHES + _DEFAULT_PROFILE.aesthetic_kill_switches
 _DESTRUCTIVE_PATTERNS = ["overwrite", "delete", "destructive", "flatten", "bounce in place", "render in place"]
 
 _INTIMATE_WORDS = {"intimate", "intimacy", "vulnerable", "vulnerability", "conflicted", "ache",
@@ -49,19 +64,20 @@ _BIG_WORDS = {"triumphant", "anthemic", "huge", "massive", "stadium", "euphoric"
 # Hard bound: total identity adjustment is clamped to ±TASTE_MAX_DELTA, strictly
 # below the existing intimate-truth -30 nudge, so taste can never out-pull
 # doctrine. Re-clamped to [0, 100] afterward.
-TASTE_MAX_DELTA = 15
+# Sourced from the reference profile (was a hardcoded literal; the JSON is now home).
+TASTE_MAX_DELTA = _DEFAULT_PROFILE.taste_max_delta
 
 # profile statement (verbatim from memory._TASTE_MAP) -> {variant kind: signed
 # identity delta}. Statements not listed here map to no governance kind in this
 # pass (creative/EQ surfaces, out of scope). Applied in a fixed order; pure.
-_TASTE_KIND_BIAS = {
-    "tends to prefer narrower stereo images": {"width_bloom": -TASTE_MAX_DELTA,
-                                               "drum_room_bloom": -TASTE_MAX_DELTA},
-    "prefers wider images": {"width_bloom": TASTE_MAX_DELTA},
-}
+# Sourced from the reference profile (was a hardcoded literal resolving
+# ``±TASTE_MAX_DELTA`` to ±15; the JSON is now home). Read as the profile object
+# (single source of truth) — never mutated in place (see NO-ALIASING contract).
+_TASTE_KIND_BIAS = _DEFAULT_PROFILE.taste_kind_bias
 
 
-def _apply_taste(kind: str, identity: int, statements: Optional[List[str]]):
+def _apply_taste(kind: str, identity: int, statements: Optional[List[str]],
+                 profile: Optional[ProducerProfile] = None):
     """Pure, deterministic taste bias on a variant's identity.
 
     Returns ``(new_identity, evidence_lines)``. Sums the signed deltas for every
@@ -69,20 +85,27 @@ def _apply_taste(kind: str, identity: int, statements: Optional[List[str]]):
     clamps the *total* adjustment to ±TASTE_MAX_DELTA, then re-clamps the result
     to [0, 100]. No time / I/O / randomness. ``evidence_lines`` is empty when no
     statement applies — callers omit the ``taste_adjustments`` key entirely then.
+
+    The taste-kind-bias table and the max delta are read from the PASSED
+    ``profile`` (default = the reference), so producer selection reaches the taste
+    layer.
     """
     if not statements:
         return identity, []
+    prof = profile or _DEFAULT_PROFILE
+    taste_kind_bias = prof.taste_kind_bias
+    taste_max_delta = prof.taste_max_delta
     delta = 0
     matched: List[str] = []
     for statement in statements:
-        bias = _TASTE_KIND_BIAS.get(statement)
+        bias = taste_kind_bias.get(statement)
         if not bias or kind not in bias:
             continue
         delta += bias[kind]
         matched.append(statement)
     if not matched:
         return identity, []
-    delta = max(-TASTE_MAX_DELTA, min(TASTE_MAX_DELTA, delta))
+    delta = max(-taste_max_delta, min(taste_max_delta, delta))
     new_identity = max(0, min(100, identity + delta))
     if new_identity == identity:
         return identity, []
@@ -93,14 +116,19 @@ def _apply_taste(kind: str, identity: int, statements: Optional[List[str]]):
     return new_identity, [line]
 
 # emotional-truth alignment (0-100) by variant kind, per truth lean.
-_TRUTH_ALIGNMENT = {
-    "intimate": {"vocal_ride": 88, "intimacy_pass": 90, "subtractive_drop": 84, "depth_cleanup": 82,
-                 "loop_deconstruct": 83, "drum_room_bloom": 58, "width_bloom": 45},
-    "big": {"width_bloom": 86, "drum_room_bloom": 86, "vocal_ride": 78, "subtractive_drop": 76,
-            "depth_cleanup": 76, "loop_deconstruct": 78, "intimacy_pass": 70},
-    "neutral": {"width_bloom": 72, "drum_room_bloom": 78, "vocal_ride": 84, "subtractive_drop": 82,
-                "depth_cleanup": 82, "loop_deconstruct": 80, "intimacy_pass": 82},
-}
+# Sourced from the reference profile (was a hardcoded literal; the JSON is now
+# home). Read as the profile object (single source of truth) — govern_variant
+# does ``.get(...).get(...)`` reads only, never mutates it.
+_TRUTH_ALIGNMENT = _DEFAULT_PROFILE.truth_alignment
+
+# Secondary governance constants (P-027 Part B / Finding A), sourced from the
+# reference profile. ``taste_triangle`` = the intimate-width identity penalty
+# (30) and the emotion-blend dims (mean of ramone/listener_excitement/vocal_belief
+# scores). ``veto_thresholds`` = the keep/reject line (45), the align veto line
+# (50), and the align fallback for an unknown kind (75). Read-only in the
+# consumers; the JSON is now their single source of truth.
+_TASTE_TRIANGLE = _DEFAULT_PROFILE.taste_triangle
+_VETO_THRESHOLDS = _DEFAULT_PROFILE.veto_thresholds
 
 
 # --------------------------------------------------------------------------- #
@@ -171,15 +199,25 @@ def _violates_constraints(variant: Dict, constraints: List[Dict]) -> List[Dict]:
     return violations
 
 
-def taste_triangle(variant: Dict, truth_lean: str) -> Dict:
+def taste_triangle(variant: Dict, truth_lean: str,
+                   profile: Optional[ProducerProfile] = None) -> Dict:
     s = variant["scores"]
-    emotion = round((s["ramone_score"] + s["listener_excitement_score"] + s["vocal_belief_score"]) / 3)
+    # Emotion blend + the intimate-width penalty + the reject threshold are read
+    # from the PASSED ``profile`` (default = the reference; P-027 sourced them, and
+    # P-029 threads per-call selection here). The blend reproduces
+    # ``round(mean of the three emotion_dims)`` byte-for-byte — same fixed order,
+    # same round().
+    prof = profile or _DEFAULT_PROFILE
+    taste_triangle_cfg = prof.taste_triangle
+    dims = taste_triangle_cfg["emotion_dims"]
+    emotion = round(sum(s[d] for d in dims) / len(dims))
     craft = s["technical_score"]
     identity = s["taste_alignment_score"]
     if variant["kind"] == "width_bloom" and truth_lean == "intimate":
-        identity -= 30
+        identity -= taste_triangle_cfg["intimate_width_penalty"]
     identity = max(0, identity)
-    verdict = "reject" if (identity < 45 or emotion < 45) else "keep"
+    reject_below = prof.veto_thresholds["reject_below"]
+    verdict = "reject" if (identity < reject_below or emotion < reject_below) else "keep"
     return {"emotion": emotion, "craft": craft, "identity": identity, "verdict": verdict}
 
 
@@ -203,24 +241,36 @@ def emotional_overfit(variant: Dict, truth_lean: str) -> Optional[Dict]:
 
 
 def govern_variant(variant: Dict, constraints: List[Dict], truth_lean: str,
-                   taste_profile: Optional[List[str]] = None) -> Dict:
-    align = _TRUTH_ALIGNMENT.get(truth_lean, _TRUTH_ALIGNMENT["neutral"]).get(variant["kind"], 75)
-    triangle = taste_triangle(variant, truth_lean)
+                   taste_profile: Optional[List[str]] = None,
+                   profile: Optional[ProducerProfile] = None) -> Dict:
+    # The truth-alignment table and veto thresholds are read from the PASSED
+    # ``profile`` (default = the reference; P-027 sourced them, P-029 threads
+    # per-call selection): the align fallback for an unknown kind, the align veto
+    # line, and the reject line used to recompute the verdict after a taste nudge.
+    prof = profile or _DEFAULT_PROFILE
+    truth_alignment = prof.truth_alignment
+    veto_thresholds = prof.veto_thresholds
+    reject_below = veto_thresholds["reject_below"]
+    align = truth_alignment.get(truth_lean, truth_alignment["neutral"]).get(
+        variant["kind"], veto_thresholds["align_fallback"])
+    triangle = taste_triangle(variant, truth_lean, prof)
     taste_adjustments: List[str] = []
     if taste_profile:
         new_identity, taste_adjustments = _apply_taste(
-            variant["kind"], triangle["identity"], taste_profile)
+            variant["kind"], triangle["identity"], taste_profile, prof)
         if taste_adjustments:
             triangle["identity"] = new_identity
             # Recompute the keep/reject verdict the same way taste_triangle does.
             triangle["verdict"] = (
-                "reject" if (triangle["identity"] < 45 or triangle["emotion"] < 45)
+                "reject" if (triangle["identity"] < reject_below
+                             or triangle["emotion"] < reject_below)
                 else "keep")
     violations = _violates_constraints(variant, constraints)
     fp = false_progress(variant)
     overfit = emotional_overfit(variant, truth_lean)
     high_violation = any(v["severity"] == "high" for v in violations)
-    vetoed = high_violation or align < 50 or triangle["verdict"] == "reject"
+    vetoed = (high_violation or align < veto_thresholds["align_veto_below"]
+              or triangle["verdict"] == "reject")
     out = {
         "emotional_truth_alignment": align,
         "taste_triangle": triangle,
@@ -236,14 +286,16 @@ def govern_variant(variant: Dict, constraints: List[Dict], truth_lean: str,
 
 
 def govern_branches(branches: List[Dict], intent: Dict, truth_lean: str,
-                    taste_profile: Optional[List[str]] = None) -> List[Dict]:
+                    taste_profile: Optional[List[str]] = None,
+                    profile: Optional[ProducerProfile] = None) -> List[Dict]:
     constraints = negative_constraints(intent)
     out = []
     for branch in branches:
         ranked = sorted(branch["variants"], key=lambda v: v["scores"]["overall_score"], reverse=True)
         chosen, gov = None, None
         for v in ranked:
-            g = govern_variant(v, constraints, truth_lean, taste_profile=taste_profile)
+            g = govern_variant(v, constraints, truth_lean,
+                               taste_profile=taste_profile, profile=profile)
             v["governance"] = g
             if chosen is None and not g["vetoed"]:
                 chosen, gov = v, g
@@ -353,11 +405,20 @@ def mixer_communication(result, tone: str = "collaborative") -> str:
     return (f"I think we're getting close. The one thing I'd love to chase next is: {top['detail'].lower()}")
 
 
-def run_governance(result, creative: Dict, taste_profile: Optional[List[str]] = None) -> Dict:
+def run_governance(result, creative: Dict, taste_profile: Optional[List[str]] = None,
+                   profile: Optional[ProducerProfile] = None) -> Dict:
+    # P-029: per-call producer selection. The passed ``profile`` (default = the
+    # reference) drives the truth-alignment / taste / veto reads inside
+    # ``govern_branches``, and supplies the AESTHETIC kill-switches. The five
+    # SAFETY kill-switches are producer-AGNOSTIC and stay hardcoded — a swapped
+    # producer can never weaken them — appended-verbatim order preserved so the
+    # default composed list is byte-identical.
+    prof = profile or _DEFAULT_PROFILE
     intent = result.project.intent
     truth = emotional_truth_lock(intent)
     governed = govern_branches(creative.get("branches", []), intent, truth["lean"],
-                               taste_profile=taste_profile)
+                               taste_profile=taste_profile, profile=prof)
+    kill_switches = _SAFETY_KILL_SWITCHES + prof.aesthetic_kill_switches
     return {
         "emotional_truth_lock": truth,
         "reference_sanity": reference_sanity(result.reference_delta, intent),
@@ -366,7 +427,7 @@ def run_governance(result, creative: Dict, taste_profile: Optional[List[str]] = 
         "anti_template": anti_template(creative.get("branches", [])),
         "listener_panel": listener_panel(result),
         "stop_conditions": stop_conditions(result),
-        "kill_switches": KILL_SWITCHES,
+        "kill_switches": kill_switches,
         "review_modes": REVIEW_MODES,
         "default_review_mode": DEFAULT_REVIEW_MODE,
         "mixer_feedback": {

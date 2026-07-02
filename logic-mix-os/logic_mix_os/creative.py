@@ -13,6 +13,18 @@ from __future__ import annotations
 from typing import Dict, List, Optional
 
 from .constants import LOOP_SAMPLE_KINDS
+from .doctrine.doctrine_engine import read_loop_context
+from .doctrine.producer_profile import ProducerProfile, load_profile
+
+# --- Producer-specific judgment: sourced from the reference ProducerProfile --
+# (P-026, first wiring step of the producer-agnostic epic). The producer-specific
+# values below are no longer hardcoded literals here — they are SOURCED from the
+# reference profile's JSON (``doctrine/producers/halee_ramone.json``), which is now
+# their single source of truth. The loader returns fresh, JSON-parsed collections
+# on every load (nudge/promotion ``kinds`` rehydrated to sets), so these globals
+# keep the exact names/shapes/types the old literals had and downstream code is
+# untouched. Per-call producer selection is NOT threaded here (that is P-029).
+_DEFAULT_PROFILE = load_profile("halee_ramone")
 
 # --- Section 58: creative adjustment library --------------------------------
 ADJUSTMENT_LIBRARY = {
@@ -39,34 +51,21 @@ ADJUSTMENT_LIBRARY = {
 }
 
 # --- Section 60: creative search modes --------------------------------------
-SEARCH_MODES = {
-    "conservative": {"allowed_risk": "low", "bias": "preserve identity, subtle improvements, vocal belief"},
-    "halee_depth": {"allowed_risk": "medium", "bias": "physical room/chamber/plate depth, space as storytelling"},
-    "ramone_vocal_truth": {"allowed_risk": "low", "bias": "vocal rides, phrase emotion, clarity, restraint"},
-    "dramatic_contrast": {"allowed_risk": "medium", "bias": "push verse/chorus/bridge contrast harder"},
-    "deconstructive": {"allowed_risk": "medium", "bias": "remove, mute, chop, filter, simplify"},
-    "experimental": {"allowed_risk": "high", "bias": "unusual transforms, reverses, extreme depth shifts"},
-}
+# Sourced from the reference profile (was a hardcoded literal; the JSON is now home).
+SEARCH_MODES = _DEFAULT_PROFILE.search_modes
 
-PHILOSOPHY = (
-    "A mix is not finished when it is balanced. It is finished when the static balance "
-    "supports the song and the dynamic movement makes the song feel inevitable. The best "
-    "mix is the version where the song feels most inevitable, not the most processed."
-)
+# Sourced from the reference profile (was a hardcoded literal; the JSON is now home).
+PHILOSOPHY = _DEFAULT_PROFILE.philosophy
 
 # Per-variant-kind scoring profile (build packet section 59). Numeric dims are
-# 0-100; risk fields are categorical.
-_KIND_SCORES = {
-    "width_bloom":      dict(technical=82, halee=78, ramone=79, contrast=91, vocal_belief=74, excitement=88, taste=80, translation="medium", mono="medium"),
-    "subtractive_drop": dict(technical=85, halee=88, ramone=86, contrast=88, vocal_belief=86, excitement=78, taste=86, translation="low", mono="low"),
-    "vocal_ride":       dict(technical=84, halee=84, ramone=92, contrast=70, vocal_belief=92, excitement=70, taste=88, translation="low", mono="low"),
-    "drum_room_bloom":  dict(technical=80, halee=89, ramone=78, contrast=82, vocal_belief=76, excitement=83, taste=82, translation="low", mono="low"),
-    "loop_deconstruct": dict(technical=83, halee=87, ramone=84, contrast=78, vocal_belief=85, excitement=72, taste=84, translation="low", mono="low"),
-    "depth_cleanup":    dict(technical=84, halee=90, ramone=85, contrast=72, vocal_belief=86, excitement=66, taste=85, translation="low", mono="low"),
-    "intimacy_pass":    dict(technical=82, halee=85, ramone=88, contrast=72, vocal_belief=90, excitement=64, taste=87, translation="low", mono="low"),
-}
+# 0-100; risk fields are categorical. Sourced from the reference profile (was a
+# hardcoded literal; the JSON is now home). ``score_variant`` copies each row
+# (``dict(_KIND_SCORES.get(...))``) before mutating, so this dict is never mutated
+# in place — the fresh JSON-parsed collection stays pristine.
+_KIND_SCORES = _DEFAULT_PROFILE.kind_scores
 
-_RISK_PENALTY = {"low": 0, "medium": 6, "high": 14}
+# Sourced from the reference profile (was a hardcoded literal; the JSON is now home).
+_RISK_PENALTY = _DEFAULT_PROFILE.risk_penalty
 
 # --- P-012: creative-scoring evidence-nudge layer (option B, PENALTY-ONLY) ---
 # Context nudges that lower a variant's score when the diagnostic evidence makes
@@ -75,36 +74,21 @@ _RISK_PENALTY = {"low": 0, "medium": 6, "high": 14}
 # on the overall axis governance ranks on), transparent (each fired nudge emits a
 # verbatim evidence line into ``score_nudges``), and deterministic (fixed table
 # order; pure helper). The curated ``_KIND_SCORES`` base is untouched.
-CREATIVE_NUDGE_CAP = 2.0  # max summed overall-score movement, in overall points
+# Sourced from the reference profile (was a hardcoded literal; the JSON is now home).
+CREATIVE_NUDGE_CAP = _DEFAULT_PROFILE.creative_nudge_cap  # max summed overall-score movement, in overall points
 
-# Each row: kinds it applies to, the exact predicate over result.masking_report
-# events, the dim it moves, the (negative) delta, and the verbatim evidence line.
-_NUDGE_TABLE = [
-    {
-        # P-015: intimacy_pass is EXEMPT here. An intimacy pass is the CORRECT
-        # response to a masked lead vocal — it brings the vocal into focused
-        # proximity (lower verse sends, keep it close) rather than shoving it
-        # forward by brute level/width — so it must NOT be penalized as a risky
-        # vocal-forward move. Only the genuinely vocal-forward moves
-        # (width_bloom, vocal_ride) are penalized. The delta is -14 so the
-        # single vocal_belief dim moves -14/7 = -2.0 overall = exactly
-        # CREATIVE_NUDGE_CAP (the cap is unchanged; it now also binds vocal_ride).
-        "kinds": {"width_bloom", "vocal_ride"},
-        "evidence": "lead_masked",
-        "dim": "vocal_belief",
-        "delta": -14,
-        "reason": ("vocal_belief -14: lead vocal is masked (bad_masking) — "
-                   "pushing the vocal forward by level/width is risky here; "
-                   "bring it into intimate focus instead"),
-    },
-    {
-        "kinds": {"width_bloom"},
-        "evidence": "width_crowding",
-        "dim": "vocal_belief",
-        "delta": -6,
-        "reason": "vocal_belief -6: stereo image is already width-crowded",
-    },
-]
+# Sourced from the reference profile (was a hardcoded literal; the JSON is now
+# home). Each row: kinds it applies to (a SET — the loader rehydrates the JSON
+# list back to a set, so ``_apply_nudges``'s ``kind in row['kinds']`` is unchanged),
+# the exact predicate over result.masking_report events, the dim it moves, the
+# (negative) delta, and the verbatim evidence line.
+#
+# P-015 doctrine preserved in the JSON: intimacy_pass is EXEMPT — an intimacy pass
+# is the CORRECT response to a masked lead vocal (it brings the vocal into focused
+# proximity rather than shoving it forward), so it is not penalized as a risky
+# vocal-forward move. Only width_bloom / vocal_ride are penalized. The -14 delta
+# moves the single vocal_belief dim -14/7 = -2.0 overall = exactly CREATIVE_NUDGE_CAP.
+_NUDGE_TABLE = _DEFAULT_PROFILE.nudge_table
 
 
 def _lead_masked(result) -> bool:
@@ -126,15 +110,18 @@ def _width_crowded(result) -> bool:
 _NUDGE_EVIDENCE = {"lead_masked": _lead_masked, "width_crowding": _width_crowded}
 
 
-def _apply_nudges(kind: str, result) -> List[tuple]:
+def _apply_nudges(kind: str, result, profile: Optional[ProducerProfile] = None) -> List[tuple]:
     """Pure: the ordered ``(dim, delta, reason)`` for each FIRED nudge.
 
     A row fires when ``kind`` is in its ``kinds`` set AND its evidence predicate
     is true on ``result``. Rows are evaluated in table order, so the emitted
-    evidence lines are deterministic.
+    evidence lines are deterministic. The nudge table is read from the PASSED
+    ``profile`` (default = the reference), so per-call producer selection reaches
+    the penalty layer.
     """
+    nudge_table = (profile or _DEFAULT_PROFILE).nudge_table
     fired: List[tuple] = []
-    for row in _NUDGE_TABLE:
+    for row in nudge_table:
         if kind in row["kinds"] and _NUDGE_EVIDENCE[row["evidence"]](result):
             fired.append((row["dim"], row["delta"], row["reason"]))
     return fired
@@ -157,23 +144,16 @@ def _apply_nudges(kind: str, result) -> List[tuple]:
 # GENUINELY foregrounded, promoting the loop-specific ``loop_deconstruct`` so it
 # wins the ``loop`` problem honors ``loops_not_foregrounded`` and "never let a
 # stock loop dominate the song identity."
-CREATIVE_PROMOTION_CAP = 4.0  # max summed overall-score PROMOTION, in overall points
+# Sourced from the reference profile (was a hardcoded literal; the JSON is now home).
+CREATIVE_PROMOTION_CAP = _DEFAULT_PROFILE.creative_promotion_cap  # max summed overall-score PROMOTION, in overall points
 
-# Each row: kinds it applies to, the evidence predicate key, the dim it moves,
-# the (positive) delta, and the verbatim evidence line. The delta is +35 on the
-# (low) excitement dim: +35/7 = +5.0 raw overall, which the cap clamps down to
-# exactly +CREATIVE_PROMOTION_CAP (+4.0) — so the cap genuinely BINDS, mirroring
-# the way the -14 penalty binds the -2.0 penalty cap.
-_PROMOTION_TABLE = [
-    {
-        "kinds": {"loop_deconstruct"},
-        "evidence": "foregrounded_loop",
-        "dim": "excitement",
-        "delta": 35,
-        "reason": ("loop_promotion +4.0: a foregrounded/dominating loop — "
-                   "deconstruct it (source material respected), don't just accent it"),
-    },
-]
+# Sourced from the reference profile (was a hardcoded literal; the JSON is now
+# home). Each row: kinds it applies to (a SET — rehydrated by the loader), the
+# evidence predicate key, the dim it moves, the (positive) delta, and the verbatim
+# evidence line. The +35 delta on the (low) excitement dim is +35/7 = +5.0 raw
+# overall, which the cap clamps down to exactly +CREATIVE_PROMOTION_CAP (+4.0) — so
+# the cap genuinely BINDS, mirroring the way the -14 penalty binds the -2.0 cap.
+_PROMOTION_TABLE = _DEFAULT_PROFILE.promotion_table
 
 
 def _foregrounded_loop(result) -> bool:
@@ -196,16 +176,61 @@ def _foregrounded_loop(result) -> bool:
 _PROMOTION_EVIDENCE = {"foregrounded_loop": _foregrounded_loop}
 
 
-def _apply_promotions(kind: str, result) -> List[tuple]:
+def _protected_iconic_loop(result, prof: ProducerProfile) -> bool:
+    """P-032g — the first profile-DECIDED creative gate (pure, read-only).
+
+    THE DOCTRINE PIN made operational: the engine DETECTS agnostically (the
+    ``loop_context`` doctrine axis reads static-vs-iconic, observationally);
+    the PROFILE decides. This predicate is True — and the ``loop_deconstruct``
+    promotion is withheld — ONLY when ALL of:
+
+      * the profile OPTS IN: ``protect_iconic_loops`` is True. The reference
+        ``halee_ramone`` sets it False, so the default path short-circuits
+        here and current behavior is byte-identical (Halee/Ramone still
+        deconstructs a dominating loop).
+      * the lead vocal is NOT bad-masked (the RAMONE GATE): iconic must not
+        override a masked lead. Even a protecting profile lets the
+        deconstruct pressure through when the loop context includes a buried
+        vocal — checked FIRST, so protection can never shadow the vocal.
+      * the loop READS iconic on the SAME shared detection basis as the
+        doctrine axis (``read_loop_context`` with the profile's own
+        ``loop_context`` constants — one basis, never forked): dominant +
+        groove-carrying function while the mix evolves around it. A STATIC
+        or ambiguous reading earns no protection.
+    """
+    if not prof.protect_iconic_loops:
+        return False
+    if _lead_masked(result):
+        return False
+    c = prof.doctrine["scorers"]["loop_context"]
+    status, _ = read_loop_context(
+        result.records, result.section_analysis,
+        result.masking_report.get("events", []), c,
+    )
+    return status == "iconic"
+
+
+def _apply_promotions(kind: str, result, profile: Optional[ProducerProfile] = None) -> List[tuple]:
     """Pure: the ordered ``(dim, delta, reason)`` for each FIRED promotion.
 
     A row fires when ``kind`` is in its ``kinds`` set AND its evidence predicate
     is true on ``result``. Rows are evaluated in table order, so the emitted
-    evidence lines are deterministic. Mirrors ``_apply_nudges`` exactly.
+    evidence lines are deterministic. Mirrors ``_apply_nudges`` exactly, reading
+    the promotion table from the PASSED ``profile`` (default = the reference).
+
+    P-032g: the ``loop_deconstruct`` promotion additionally passes the
+    profile-decided ``protect_iconic_loops`` gate — a profile that protects
+    iconic-functioning loops withholds the promotion (unless the lead vocal is
+    masked). With the reference default (False) the gate is inert and the
+    firing behavior is byte-identical to the pre-gate engine.
     """
+    prof = profile or _DEFAULT_PROFILE
+    promotion_table = prof.promotion_table
     fired: List[tuple] = []
-    for row in _PROMOTION_TABLE:
+    for row in promotion_table:
         if kind in row["kinds"] and _PROMOTION_EVIDENCE[row["evidence"]](result):
+            if kind == "loop_deconstruct" and _protected_iconic_loop(result, prof):
+                continue  # the profile protects the iconic-functioning loop
             fired.append((row["dim"], row["delta"], row["reason"]))
     return fired
 
@@ -386,32 +411,42 @@ def generate_variants(problem: Dict, result, mode: str = "dramatic_contrast") ->
     return variants
 
 
-def score_variant(variant: Dict, result) -> Dict:
-    base = dict(_KIND_SCORES.get(variant["kind"], _KIND_SCORES["depth_cleanup"]))
+def score_variant(variant: Dict, result, profile: Optional[ProducerProfile] = None) -> Dict:
+    # P-029: per-call producer selection. The curated kind-score table, the risk
+    # penalty, and the two caps are read from the PASSED ``profile`` (default = the
+    # reference), and the same profile is threaded to the nudge/promotion layers —
+    # so ``analyze(producer=…)`` steers variant scoring end to end.
+    prof = profile or _DEFAULT_PROFILE
+    kind_scores = prof.kind_scores
+    risk_penalty = prof.risk_penalty
+    nudge_cap = prof.creative_nudge_cap
+    promotion_cap = prof.creative_promotion_cap
+
+    base = dict(kind_scores.get(variant["kind"], kind_scores["depth_cleanup"]))
     numeric = ["technical", "halee", "ramone", "contrast", "vocal_belief", "excitement", "taste"]
 
     # Base overall on the curated dims, before any context nudge — this is the
     # axis governance ranks on, and the axis the cap binds.
-    base_overall = sum(base[k] for k in numeric) / len(numeric) - _RISK_PENALTY[base["translation"]]
+    base_overall = sum(base[k] for k in numeric) / len(numeric) - risk_penalty[base["translation"]]
 
     # --- P-012: evidence-nudge layer (penalty-only, bounded, transparent) ----
     # Each fired nudge lowers a curated dim and emits an evidence line. The dims
     # carry the honest move; the *overall* effect is clamped to ±CREATIVE_NUDGE_CAP.
-    fired = _apply_nudges(variant["kind"], result)
+    fired = _apply_nudges(variant["kind"], result, prof)
     nudges: List[str] = []
     for dim, delta, reason in fired:
         base[dim] += delta
         nudges.append(reason)
 
-    nudged_overall = sum(base[k] for k in numeric) / len(numeric) - _RISK_PENALTY[base["translation"]]
+    nudged_overall = sum(base[k] for k in numeric) / len(numeric) - risk_penalty[base["translation"]]
     # Clamp the SUMMED overall delta to ±CREATIVE_NUDGE_CAP. Worst case is
     # width_bloom under BOTH rows = -20 raw = -2.86 overall, clamped to -2.0;
     # vocal_ride under row-0 alone = -14 raw = -2.0 overall = exactly the cap.
     overall_delta = nudged_overall - base_overall
-    if overall_delta < -CREATIVE_NUDGE_CAP:
-        overall_delta = -CREATIVE_NUDGE_CAP
-    elif overall_delta > CREATIVE_NUDGE_CAP:
-        overall_delta = CREATIVE_NUDGE_CAP
+    if overall_delta < -nudge_cap:
+        overall_delta = -nudge_cap
+    elif overall_delta > nudge_cap:
+        overall_delta = nudge_cap
 
     # --- P-016: evidence-PROMOTION layer (reward-only, bounded, transparent) --
     # Independent of the penalty path: each fired promotion raises a curated dim
@@ -419,15 +454,15 @@ def score_variant(variant: Dict, result) -> Dict:
     # +CREATIVE_PROMOTION_CAP, exactly as the penalty path clamps to
     # -CREATIVE_NUDGE_CAP. Measured from the SAME curated base_overall so the two
     # bounded effects are additive and each independently bounded.
-    promoted = _apply_promotions(variant["kind"], result)
+    promoted = _apply_promotions(variant["kind"], result, prof)
     for dim, delta, reason in promoted:
         base[dim] += delta
         nudges.append(reason)
     if promoted:
-        promoted_overall = sum(base[k] for k in numeric) / len(numeric) - _RISK_PENALTY[base["translation"]]
+        promoted_overall = sum(base[k] for k in numeric) / len(numeric) - risk_penalty[base["translation"]]
         promotion_delta = (promoted_overall - base_overall) - overall_delta
-        if promotion_delta > CREATIVE_PROMOTION_CAP:
-            promotion_delta = CREATIVE_PROMOTION_CAP
+        if promotion_delta > promotion_cap:
+            promotion_delta = promotion_cap
         overall_delta += promotion_delta
 
     overall = base_overall + overall_delta
@@ -470,15 +505,22 @@ def winning_variant(scored_variants: List[Dict]) -> Optional[Dict]:
     }
 
 
-def run_creative_engine(result, mode: str = "dramatic_contrast") -> Dict:
-    if mode not in SEARCH_MODES:
+def run_creative_engine(result, mode: str = "dramatic_contrast",
+                        profile: Optional[ProducerProfile] = None) -> Dict:
+    # P-029: per-call producer selection. Search modes, the per-variant scoring
+    # profile, and the philosophy line are read from the PASSED ``profile``
+    # (default = the reference), so ``analyze(producer=…)`` drives the creative
+    # engine. Passing ``profile is None`` reproduces the reference byte-for-byte.
+    prof = profile or _DEFAULT_PROFILE
+    search_modes = prof.search_modes
+    if mode not in search_modes:
         mode = "dramatic_contrast"
     problems = detect_creative_problems(result)
     branches: List[Dict] = []
     for problem in problems:
         variants = generate_variants(problem, result, mode)
         for v in variants:
-            v["scores"] = score_variant(v, result)
+            v["scores"] = score_variant(v, result, prof)
         branches.append({
             "problem": problem["problem"],
             "problem_id": problem["id"],
@@ -487,7 +529,7 @@ def run_creative_engine(result, mode: str = "dramatic_contrast") -> Dict:
         })
     return {
         "search_mode": mode,
-        "search_mode_bias": SEARCH_MODES[mode]["bias"],
+        "search_mode_bias": search_modes[mode]["bias"],
         "static_baseline": static_baseline(result),
         "static_vs_dynamic": static_vs_dynamic(result),
         "adjustment_library": ADJUSTMENT_LIBRARY,
@@ -499,5 +541,5 @@ def run_creative_engine(result, mode: str = "dramatic_contrast") -> Dict:
             "Never let novelty override vocal belief.",
             "Always compare creative variants to the song's emotional truth.",
         ],
-        "philosophy": PHILOSOPHY,
+        "philosophy": prof.philosophy,
     }

@@ -42,6 +42,434 @@
 
 ## Deferred (follow-up packets)
 
+- **★★ THE TIMBALAND SUB-ARC (P-032.x) IS ✓ COMPLETE (2026-07-02 — formally
+  closed by P-032i, the differential proof; TEN packets: P-032e → P-032a →
+  P-032b → P-032d → P-032c → P-032g → P-032f → P-031 → P-032h → P-032i)** —
+  **P-032e ✓ (beat_identity —
+  the front-loaded CRUX) + P-032a ✓ (negative_space) + P-032b ✓
+  (groove_coherence LIVE-WIRE — the RISKIEST packet so far, triple-verified) +
+  P-032d ✓ (rhythmic_surprise, weak form) + P-032c ✓ (low_end_motion — the
+  low-end POCKET, dual-green vs the USER'S explicit acceptance invariant;
+  reviewer AST + 20k-configuration adversarial proof) + P-032g ✓
+  (loop_context + protect_iconic_loops — THE HINGE: sixth axis + the FIRST
+  profile-decided creative gate, DUAL byte-identical — doctrine AND creative,
+  the USER-MANDATED surface; the status→score map lives in the profile JSON —
+  even the axis's polarity is profile-authored) + P-032f ✓ (vocal_role_fit +
+  the NEW agnostic `vocal_type_classifier.py` + `vocal_blend_policy` — the
+  LAST of the seven weight-up axes, 14th component, + the SECOND
+  profile-decided gate; the USER-GATED packet, cleared: Decision 1 = B +
+  Decision 2 = conservative default + explicit confidence floor;
+  misclassification fails CLOSED; DUAL byte-identical — doctrine AND
+  creative; ALL SIX user-mandated adversarial attacks defeated by BOTH gates
+  independently) LANDED — THE MEASUREMENT PHASE OF THE SUB-ARC IS
+  COMPLETE.** All seven add a
+  new producer-agnostic doctrine axis weight-0 for halee_ramone →
+  byte-identical, proving the P-029 architecture is EXTENSIBLE. **The engine
+  now carries 14 component axes** (7 original + beat_identity + negative_space
+  + groove_coherence + rhythmic_surprise + low_end_motion + loop_context +
+  vocal_role_fit) —
+  ALL 7 of the 7 Timbaland "weight up" axes landed, all
+  append-last/weight-0/profile-sourced, zero plumbing debt; the onset/IOI
+  signal is LIVE at doctrine time (`analyze_groove` relocated BEFORE
+  `score_doctrine`, computed exactly ONCE, same object reused in
+  `expanded["groove"]`); the reusable profile-decided-creative-gate pattern is
+  established AND now REUSED (P-032g → P-032f; P-032h authors BOTH flags —
+  `protect_iconic_loops` AND `vocal_blend_policy`, REQUIRED). Receipts:
+  `build-os/receipts/P-032e-beat-identity.md`,
+  `build-os/receipts/P-032a-negative-space.md`,
+  `build-os/receipts/P-032b-groove-coherence-livewire.md`,
+  `build-os/receipts/P-032d-rhythmic-surprise.md`,
+  `build-os/receipts/P-032c-low-end-motion.md`,
+  `build-os/receipts/P-032g-loop-context-hinge.md`,
+  `build-os/receipts/P-032f-vocal-role-blend-policy.md`,
+  `build-os/receipts/P-031-confidence-framework.md`,
+  `build-os/receipts/P-032h-author-timbaland-json.md`,
+  `build-os/receipts/P-032i-differential-proof.md`.
+  **Carry-forwards — NOW THE POST-SUB-ARC BACKLOG (the sub-arc is ✓
+  COMPLETE; every item below is future-packet backlog, none active, no
+  order dependency):**
+  - **★ ORDER — ✓ ALL TEN CLOSED (final at P-032i close):**
+    **P-032d ✓ → P-032c ✓ → P-032g ✓ → P-032f ✓ → P-031 ✓ → P-032h ✓ (AUTHOR
+    `timbaland.json` — THE PAYOFF PACKET, DONE: the second live producer
+    profile, the FIRST non-byte-identical output of the epic — same stems,
+    two judgments: 68.4 / 52.6 / 49.7 vs 73.8 / 70.7 / 74.3, fully
+    attributable [zero component divergence on simple; exactly
+    `loop_context_score` 15.0→10.0 on the loop fixtures; the rest pure
+    reweighting]; BOTH gates + the 11-entry confidence_map declared in
+    writing, TIM_AUTHORED_MAP verbatim-pinned; ZERO RELAXATION adversarially
+    verified; default path moved ZERO bytes; single commit `70a0b69`, 2 NEW
+    files, zero engine code, pushed NOT merged — receipt
+    `build-os/receipts/P-032h-author-timbaland-json.md`)** →
+    **P-032i ✓ (the Timbaland-vs-Halee/Ramone DIFFERENTIAL PROOF — DONE
+    2026-07-02, the formal close of the sub-arc):** same stems, both profiles — prove (a)
+    recognizably-different-but-COHERENT judgment AND plan surfaces (doctrine
+    + creative + the mix_plan/checklist/verdict artifacts, not just scores),
+    (b) full component-level attributability, (c) safety invariance
+    (kill-switches, risk classes, non-destructive, masked-lead) across both,
+    (d) the binding expectations — deltas from
+    groove/space/low-end/loop/surprise; NO vocal-blend delta (the inert
+    corollary below); NO intimate-mode-selection claim (the NEW
+    `default_creative_mode` inertness finding below), (e) the confidence
+    maps render correctly per-profile; byte-identical discipline for the
+    reference throughout — ALL PROVEN AND LANDED as the permanent 21-test
+    `tests/test_differential_proof.py` (single commit `010734d`, 772+/0−,
+    ZERO product code, pushed NOT merged); qa 639 → **660** + 68/68,
+    obligations (a)–(e) re-derived independently LIVE (60/60 checks),
+    proof-liveness sabotage bites (a SAFETY-switch reorder fails the
+    verbatim pin); reviewer PASS (no must-fix). Receipt:
+    `build-os/receipts/P-032i-differential-proof.md`. P-030 (rename dims —
+    now touches TWO producer JSONs + `tests/test_differential_proof.py`,
+    still orthogonal, slightly wider) moves to the post-sub-arc backlog.
+  - **★ P-032g STAGING NOTES — ✓ DISCHARGED IN FULL (P-032g close):** the
+    USER-MANDATED dual byte-identity surface was PROVEN — (a) doctrine 0
+    mismatches × 3 fixtures AND (b) creative full `result.creative` sorted-key
+    JSON base vs HEAD → EMPTY diff / `cmp` byte-identical; engine language
+    OBSERVATIONAL (zero judgment words across all 7 reachable statuses);
+    `protect_iconic_loops` is a REQUIRED profile field with halee_ramone=false
+    = current behavior; the `_halee` loop_foregrounded coefficient UNTOUCHED
+    (=6, promotion table verbatim, `test_packet_cautions_untouched`); iconic
+    structurally cannot override a masked lead (the Ramone gate fires FIRST).
+  - **★ P-032f STAGING NOTES — ✓ DISCHARGED IN FULL (P-032f close):** the
+    user gate was presented and CLEARED (Decision 1 = B — acceptable blend,
+    profile-gated only, via the REQUIRED `vocal_blend_policy` field;
+    Decision 2 = conservative default + explicit confidence threshold). The
+    rule table landed VERBATIM (lead or uncertain → protect clarity;
+    hook_candidate → protect unless profile-authored LATER; chop/stack +
+    opt-in + confidence ≥ floor → blend may apply); misclassification fails
+    CLOSED (MIN_STRENGTH 0.6 + top-two tie → uncertain → protect-as-lead).
+    NEW `vocal_type_classifier.py` (`role_classifier.py` untouched in place);
+    additive record fields; hook capped at `vocal_hook_candidate`; the 3
+    interacting live scorers (`_ramone` / `_vocal_centrality` /
+    `_static_mix`) proven byte-identical for halee_ramone (flag-lever delta =
+    exactly `masked_penalty`). The reusable P-032g gate pattern was REUSED as
+    designed.
+  - **★ SCOPING-WORKFLOW FINDINGS for the remaining axes (evidence-backed):**
+    P-032c ✓ CONFIRMED in practice (ZERO new plumbing; kick/sub temporal
+    interlock + low-end motif + per-section true-sub movement landed as
+    DEFERRED honest docstring boundaries; physics primary — `identity_family`
+    a corroborating tie-break only, `instrument_identity` never read);
+    P-032g ✓ CONFIRMED in practice (the `creative.py` gate defaults to
+    current behavior — halee_ramone declares protect_iconic_loops=false and
+    the promotion fires exactly as today — and the creative-scores
+    byte-identity surface was proven EMPTY-diff/`cmp`-identical;
+    cultural/recognizability iconic-ness + per-loop bar-level variation +
+    onset-sequence needs landed as DEFERRED honest boundaries, test-guarded
+    out of evidence); P-032f ✓ CONFIRMED in practice (NEW
+    `vocal_type_classifier.py`, `role_classifier.py` untouched in place;
+    additive record fields; capped at `hook_candidate`; protect-as-lead when
+    uncertain — fail-closed at MIN_STRENGTH 0.6 + top-two tie; the blend gate
+    unreachable under halee_ramone defaults; the inert-on-real-data corollary
+    recorded below).
+  - **★ NEW (P-032b adversarial skeptic — cosmetic): shared mutable groove
+    dict.** `result.expanded["groove"]` IS the same dict passed to
+    `score_doctrine` (shared mutable state); nothing mutates it today
+    (deepcopy-proven), but a FUTURE doctrine change mutating its `groove` arg
+    would silently corrupt the expanded artifact. Consider a defensive copy or
+    a read-only test pin in a future doctrine-touching packet.
+  - **★ NEW (P-032d reviewer — cosmetic): non-adjacent swing under a missing
+    middle metric.** In `_rhythmic_surprise`, None-filtering happens BEFORE the
+    adjacency zip, so a missing middle `transient_density` would make the
+    "largest adjacent swing" compute across NON-adjacent sections.
+    Defensive-only — the pipeline always emits the metric — same
+    future-doctrine-packet ride-along as the docstring sweep below.
+  - **★ NEW (P-032c — cosmetic ride-alongs):** (1) `_low_end_motion`'s
+    theoretical score ceiling is **84** (40 baseline + 20 reserved bonus + 24
+    headroom), never 100 — fine by design, but RELEVANT when authoring
+    `timbaland.json` weights (P-032h). (2) the defensive `r.get("metrics",{})`
+    None edge in the scorer — defensive-only; same future-doctrine-packet
+    ride-along.
+  - **★ NEW (P-032g — cosmetic ride-alongs):** (1) the creative gate keys on
+    the literal promotion kind `"loop_deconstruct"` (`creative.py:232`) — if
+    promotion kinds ever generalize, move the gating into the table row; (2)
+    the `dominant_unassessed` docstring is slightly loose (per-metric, not
+    per-section); (3) `read_loop_context` shares the defensive None-value edge
+    family. All defensive/cosmetic — same future-doctrine-packet ride-along
+    bucket.
+  - **★★ NEW (P-032f reviewer COROLLARY — an HONEST BOUNDARY, not a defect;
+    BINDING on P-032h/P-032i expectations):** the blend gate is INERT on real
+    pipeline data — today's masking analyzer emits vocal-band `bad_masking`
+    ONLY via `_vocal_conflict`, whose elements are always [lead, other], so
+    the new axis is the ONLY surface where non-lead vocal masking manifests
+    and the gate is exercised only via SYNTHETIC events. **Flipping
+    Timbaland's `acceptable_blend` will produce ZERO real-data delta through
+    this axis on current fixtures — P-032i's differential proof must NOT
+    expect a vocal-blend delta** (the Timbaland delta comes from the other
+    axes). A future ANALYZER-EXTENSION packet could emit non-lead vocal-band
+    events to make the gate live on real data — when that packet opens, note
+    that `creative.py:98`'s name-based "vocal" match is a LATENT MISFIRE
+    RISK there.
+  - **★ NEW (P-032f — cosmetic ride-alongs):** (1) NaN-floor self-guard — add
+    `0.0 <= floor <= 1.0` (qa suggested `math.isfinite`) in the raw
+    `accepted_blend_under_policy` gate (the loader validates; the raw gate
+    trusts its caller); (2) `lead_names` in `_vocal_role_fit` derives from
+    `vocal_type` rather than `instrument_identity` — identity-derived would
+    be sturdier; (3) `_validate` accepts EXTRA keys inside
+    `vocal_blend_policy` (only the two required keys are checked); (4) the
+    `_vocal_role_fit` score ceiling is **85**, never 100 — joins lem's 84 as
+    a `timbaland.json` weight-authoring consideration (P-032h). All
+    defensive/cosmetic — same future-doctrine-packet ride-along bucket.
+  - **★ NEW (P-031 reviewer — judgment notes, non-blocking):**
+    `confidence_map` validation accepts DUPLICATE `area` values and EXTRA
+    keys inside entries (only area/level/reason are checked) — the verbatim
+    pins catch this for AUTHORED profiles, so P-032h should verbatim-pin
+    `timbaland.json`'s map exactly like halee_ramone's; consider tightening
+    (uniqueness + entry key-set check) in a future validation packet.
+  - **★ NEW (P-031 — process precedent, standing):** the fix-then-pass
+    conscious-edit path through a verbatim pin WORKS AS DESIGNED (`b869ebd`:
+    the reviewer's fact-check caught ONE inexact reason — per-section
+    true-sub belongs to the band-resolution boundary, not onset timing; the
+    fix edited the profile AND mirrored the pin in the same commit; counts
+    identical; the pins came out STRONGER — five deferred entries
+    verbatim-pinned vs four). Record this as the STANDARD route for
+    pin-guarded content changes.
+  - **★★ NEW (P-032h reviewer TRAJECTORY FINDING, P-016-family —
+    non-blocking, recorded prominently): `default_creative_mode` is
+    pipeline-INERT.** `pipeline._default_creative_mode` (pipeline.py:285-290)
+    hardcodes the REFERENCE's mode names, so timbaland's authored
+    `intimate_mode: "conservative"` is UNREACHABLE — intimate material under
+    timbaland falls back to `dramatic_contrast` (creative.py:516). Invisible
+    until the second producer existed. **Right fix: a FUTURE ENGINE PACKET
+    wires `_default_creative_mode` to the profile (byte-identical for the
+    reference) — NOT an in-JSON change.** Ride-along: the hardcoded
+    `"dramatic_contrast"` fallback would KeyError for a future profile
+    lacking that mode name. **BINDING on P-032i: must NOT claim
+    intimate-mode selection as a live profile lever.**
+  - **★ NEW (P-032h — scope note):** P-030 (rename the halee/ramone dims off
+    the producer names) now touches TWO producer JSONs (`halee_ramone.json`
+    + `timbaland.json`) — still orthogonal, slightly wider.
+  - **★ NEW (P-032i reviewer — scope note):** P-030's expected-touch list
+    now ALSO includes `tests/test_differential_proof.py` (the differential
+    pins reference the halee/ramone dimension names) — THREE files: two
+    producer JSONs + the differential-proof test file.
+  - **★ NEW (P-032i — cosmetic):** two truthiness asserts in
+    `tests/test_differential_proof.py` (`v["risk"] and v["validation"]`;
+    `0 <= len(nxt)`) — tighten opportunistically on the next touch of that
+    file.
+  - **★ NEW (P-032i — cosmetic):** the `tim_analyzed` fixture duplicates
+    `test_timbaland_profile`'s module fixture (~3 extra analyses per full
+    run) — promote to a session conftest fixture ONLY if a third consumer
+    appears.
+  - **★ NEW (P-032i builder observation — cosmetic, reported NOT patched
+    per the mandated stop-and-report behavior):** the verdict filename is
+    producer-independent — the legitimizing change is a future
+    verdict-filename cosmetic packet.
+  - **★ LIVENESS-DOCSTRING OVERCLAIM (non-blocking — reviewer; NOW
+    POTENTIALLY AN EIGHT-FILE FAMILY, fold ONE sweep):** the `liveness` test docstrings OVERCLAIM — a
+    general hardcoded-constant sabotage is actually caught by the
+    *discrimination* tests, not the liveness tests themselves (the direction
+    test reads the score from the SAME reference dict a constant poisons; a
+    hardcoded constant still moves the mean directionally). Known instances:
+    `tests/test_negative_space.py` (~lines 536-540, 553-557, from P-032a);
+    `tests/test_beat_identity.py` (same imprecision); **NEW from P-032d:**
+    `tests/test_rhythmic_surprise.py::test_liveness_direction_tracks_the_rhythmic_surprise_score`;
+    **NEW from P-032c:** `tests/test_low_end_motion.py:518-526`; **NEW from
+    P-032g:** `tests/test_loop_context.py:566-570` — and CHECK
+    `tests/test_groove_coherence.py` PLUS the two NEW P-032f files
+    (`tests/test_vocal_type.py`, `tests/test_vocal_blend_policy.py`) AND the
+    NEW P-031 file (`tests/test_confidence_map.py`) AND the NEW P-032h file
+    (`tests/test_timbaland_profile.py`) for the
+    same pattern when folding the fix. **Cosmetic only** (the guard SET as a whole is sound) —
+    fold ONE docstring sweep across ALL affected files (up to eight) into a
+    future doctrine-touching packet.
+  - **★ DOCSTRING DRIFT (non-blocking, from P-032e):** `_beat_identity`'s docstring
+    says candidacy is "optionally corroborated by crest/spectral_flatness" but the
+    body reads only `crest_factor_db`, never `spectral_flatness`. The spec made
+    flatness OPTIONAL, so this is HARMLESS — **fold a one-line docstring fix into a
+    future doctrine-touching packet** rather than spending a commit now. Not a bug.
+  - **★ HONEST DEFERRALS baked into the sub-arc (documented in-code as P-014-style
+    boundaries, NOT faked — do NOT let a later packet quietly claim them):** from
+    P-032e — (1) fingerprint TYPING (mouth-sound/tabla/synth-knock), not measurable
+    on exported stems; (2) onset REGULARITY / IOI — **✓ RESOLVED by P-032b** (the
+    groove live-wire landed; the signal now reaches doctrine via
+    `groove_coherence`); (3) "more undeniable after a move" — needs a before/after
+    render, plan-only v1 out of scope. From P-032a — sample-level **inter-onset
+    silence gaps**: the groove object is now visible at doctrine time (P-032b),
+    but `negative_space` itself still works at the section-aggregate grain only.
+    From P-032g — cultural/recognizability iconic-ness (needs
+    provenance/manifest — the acoustic proxy is what ships); per-loop
+    bar-level variation; onset-sequence needs — all test-guarded out of
+    evidence.
+
+- **★★ THE ACTIVE ROADMAP IS THE PRODUCER-AGNOSTIC EPIC — P-025 ✓ (foundation) +
+  P-026 ✓ (creative sourced) + P-027 ✓ (governance sourced + WIDENED) + P-028 ✓
+  (doctrine sourced + WIDENED — the EXTRACTION PHASE is COMPLETE) + P-029 ✓
+  (THE PIVOT — `analyze(producer=…)` selects the profile; it is now a LIVE,
+  SELECTABLE LEVER end-to-end; architecture complete & validated).** Make the
+  engine select any producer's judgment as a
+  swappable `ProducerProfile` (the physics stays fixed). **P-025 ✓** extracted
+  today's 100%-hardcoded Halee/Ramone judgment into a frozen `ProducerProfile` + a
+  pure `load_profile()` + the VERBATIM `halee_ramone.json` reference, byte-identical
+  round-trip-guarded, honesty-metadata-stamped, **COMPLETELY UNWIRED**. **P-026 ✓**
+  made `creative.py` the FIRST consumer: it now SOURCES its 8 producer-specific
+  globals (`_KIND_SCORES`, `_NUDGE_TABLE`, `_PROMOTION_TABLE`, `CREATIVE_NUDGE_CAP`,
+  `CREATIVE_PROMOTION_CAP`, `_RISK_PENALTY`, `SEARCH_MODES`, `PHILOSOPHY`) FROM
+  `load_profile("halee_ramone")` — the hardcoded literals DELETED, so
+  `halee_ramone.json` is now their single source of truth. Byte-identical (the
+  P-012/13/15/16 creative tests pass UNEDITED, 69 combined; regression 68/68
+  UNCHANGED), no-aliasing-proven (copy-before-mutate; profile byte-unchanged after a
+  nudge + promotion fire). Single commit `c4a092d`; suite 319 → 331 (+12). **P-027 ✓**
+  sourced `governance.py` from the profile (`_TRUTH_ALIGNMENT` / `_TASTE_KIND_BIAS` /
+  `TASTE_MAX_DELTA` + the 4 AESTHETIC kill-switches) AND WIDENED the profile
+  (Finding A) with `taste_triangle` (`intimate_width_penalty: 30` + `emotion_dims`) +
+  `veto_thresholds` (`reject_below: 45` / `align_veto_below: 50` / `align_fallback:
+  75`), now sourced too. The 5 SAFETY kill-switches STAY hardcoded
+  (`_SAFETY_KILL_SWITCHES`) — producer-AGNOSTIC. Byte-identical (existing
+  governance/taste tests pass UNEDITED; emotion-blend round() proven byte-identical
+  across all 1,030,301 integer triples; regression 68/68 UNCHANGED), no-aliasing
+  DISCHARGED (mutation local-only; shared profile byte-unchanged). Two commits
+  `e4786ca` (green in isolation = 343) + `7b1c26d`; suite 331 → 351 (+20). **P-028 ✓**
+  sourced `doctrine_engine.py` from the profile (all 8 scorers: Part A the
+  P-025-captured `weights` + `_halee`/`_ramone` baselines/coeffs; Part B WIDENED the
+  profile with `doctrine.scorers` — 5 function groups — and sourced them) while the
+  PHYSICS/measurement code + presentation thresholds (`stereo_width > 0.6`,
+  `distinct <= 1`, `score < 55`) STAY hardcoded (producer-AGNOSTIC). Byte-identical
+  (existing doctrine tests UNEDITED; regression 68/68 UNCHANGED; reviewer confirmed
+  live `doctrine_score` byte-matches the golden on all 3 fixtures incl.
+  `overall_mix_readiness_score`), round-trip NON-VACUOUS (18→17 flip fails +
+  shifts `_section_contrast` 64→66), no-aliasing DISCHARGED. Two commits `29b9dfe`
+  (green in isolation = 364) + `72e98a7`; suite 351 → 370 (+19). **P-028 COMPLETES the
+  EXTRACTION PHASE — the whole judgment layer is now profile-driven, byte-identical,
+  physics chassis separate.** Receipts:
+  `build-os/receipts/P-025-producer-profile-schema-loader-halee-ramone-extraction.md`,
+  `build-os/receipts/P-026-creative-sources-values-from-reference-profile.md`,
+  `build-os/receipts/P-027-governance-sources-values-from-reference-profile.md`,
+  `build-os/receipts/P-028-doctrine-sources-values-from-reference-profile.md`.
+  **The epic arc (next steps):**
+  - **P-027 — governance extraction (WIDENED per Finding A + ALIASING-PROOF) — ✓
+    DONE.** `governance.py` sources `_TRUTH_ALIGNMENT` / `_TASTE_KIND_BIAS` /
+    `TASTE_MAX_DELTA` + the 4 AESTHETIC kill-switches from the profile; the profile
+    widened with `taste_triangle` + `veto_thresholds`, now sourced; the 5 SAFETY
+    kill-switches STAY hardcoded (producer-agnostic). Aliasing-proof DISCHARGED.
+  - **P-028 — doctrine extraction (WIDENED per Finding A + ALIASING-PROOF) — ✓
+    DONE.** `doctrine_engine.py` sources ALL 8 scorers' aesthetic constants from the
+    profile — Part A the P-025-captured `weights` + `_halee`/`_ramone` baselines
+    (86.0) + penalty coeffs; Part B WIDENED the profile with a `doctrine.scorers`
+    group (5 function groups: `_vocal_centrality` / `_depth_hierarchy` /
+    `_section_contrast` / `_static_mix` / `_dynamic_mix`) captured VERBATIM and
+    sourced. The PHYSICS/measurement code + presentation thresholds STAY hardcoded.
+    Byte-identical (regression 68/68 UNCHANGED + `doctrine_score` byte-match),
+    round-trip non-vacuous, aliasing-proof DISCHARGED. **Extraction phase COMPLETE.**
+  - **P-029 — parameterize the pipeline by a per-call producer (THE PIVOT) — ✓ DONE.**
+    `pipeline.analyze(..., producer="halee_ramone")` accepts a NAME or a
+    `ProducerProfile` object (isinstance dispatch), loads ONCE per call, and threads
+    `profile=` to `score_doctrine` / `run_creative_engine` / `run_governance`, which
+    thread it to ALL leaf scorers; each reads its producer-specific values from the
+    PASSED profile, defaulting to `_DEFAULT_PROFILE` when `None`. KILL_SWITCHES
+    recomposed per call = 5 hardcoded SAFETY + profile aesthetic (a producer can never
+    drop a safety guarantee). Byte-identical default (reviewer independently
+    byte-diffed all 3 layers × 3 fixtures → IDENTICAL; regression 68/68 UNCHANGED);
+    selection GENUINELY LIVE + load-bearing across doctrine (baseline −20 → halee_score
+    delta 20), creative (kind_score boost → overall 100), governance
+    (truth_alignment 88→60 → governed 60), all through the REAL analyze() path, proven
+    both ways (sabotage fails the liveness test while byte-identical stays green — the
+    P-016 lesson). Two commits `42d6ebd` (green in isolation = 383) + `ea1aaa9`; suite
+    370 → 384 (+14). Codex NOT available — single-reviewer. **P-029 does NOT remove the
+    `_DEFAULT_PROFILE` singleton** — it stays as the `None`-default fallback in all 3
+    modules, so the per-module aliasing discipline still carries on the default path
+    (carry-forward for P-032). Receipt:
+    `build-os/receipts/P-029-parameterize-pipeline-by-per-call-producer-profile.md`.
+  - **P-030 — rename** the `halee` / `ramone` dimension names off the producer
+    names (they were kept verbatim in P-025 per the byte-identical-first decision).
+  - **P-031 — confidence framework: ✓ DONE (2026-07-02; scope USER-UPGRADED
+    to PER-AREA at P-032f close):** the REQUIRED `confidence_map` (area /
+    level ∈ {high, limited, deferred} / reason) is structurally validated (no
+    silent defaults), authored for halee_ramone (8 entries: 2 high / 1
+    limited / 5 deferred; verbatim-pinned; machine-checked against the
+    weights), and rendered per-call (additive `confidence` key in
+    doctrine_score + the verdict "## Confidence" section). The P-025 metadata
+    stamp stays as the global complement. Receipt:
+    `build-os/receipts/P-031-confidence-framework.md`.
+  - **P-032 — second producer: ✓ PROFILE LANDED (P-032h, 2026-07-02).**
+    `timbaland.json` is live — the first test of true producer-agnosticism
+    PASSED at the profile level (different / fully attributable /
+    safety-invariant; honesty policy obeyed: hand-curated-documented →
+    HIGH, reviewer-ENDORSED). The REMAINING step is P-032i (the formal
+    differential proof). Receipt:
+    `build-os/receipts/P-032h-author-timbaland-json.md`.
+  - **P-033 — expose producer selection** (the user-facing selection surface).
+
+- **★ FINDING A — SECONDARY PRODUCER-AESTHETIC CONSTANTS (reviewer, from P-025;
+  deferred by design, NOT drift). ✓ NOW FULLY RESOLVED (governance ✓ P-027; doctrine
+  ✓ P-028).** P-025 captured what its scope declared; the remaining producer-specific
+  constants have now ALL been captured:
+  - **→ P-027 (governance): ✓ RESOLVED.** The profile holds `taste_triangle`
+    (`intimate_width_penalty: 30` + `emotion_dims: [ramone_score,
+    listener_excitement_score, vocal_belief_score]`) + `veto_thresholds`
+    (`reject_below: 45` / `align_veto_below: 50` / `align_fallback: 75`), all sourced +
+    round-trip-guarded, byte-identical.
+  - **→ P-028 (doctrine): ✓ RESOLVED.** The profile's new `doctrine.scorers` group
+    holds ALL 5 remaining scoring functions' constants — `_vocal_centrality`
+    (no_lead 35.0 / baseline 70.0 / bonuses 10,10 / masked_coeff 6), `_depth_hierarchy`
+    (baseline 40 / per_distinct 12 / forward_threshold 0.6 / forward_occupancy 60),
+    `_section_contrast` (baseline 100 / lift_fail_penalty 18), `_static_mix` (baseline
+    80.0 / peak_ceiling -0.1 / peak_penalty 10 / dominant_band_threshold 0.55 /
+    dominant_band_penalty 10 / crit_low_coeff 8 / no_lead_penalty 8), `_dynamic_mix`
+    (insufficient_sections_score 40.0 / baseline 30 / rms_coeff 8 / width_coeff 140 /
+    bright_coeff 140 / lift_fail_penalty 10), captured VERBATIM and sourced,
+    byte-identical.
+  **Finding A carries NO remaining deferred capture** — the reference profile now
+  fully drives creative + governance + doctrine.
+
+- **★ ALIASING-PROOF REQUIREMENT — ✓ DISCHARGED for ALL THREE consumer modules
+  (creative P-026, governance P-027, doctrine P-028); a PER-MODULE invariant, NOT a
+  structural guarantee (reviewer, from P-026).** P-026 proved `creative.py`
+  copy-before-mutate (`kind_scores` byte-unchanged after a nudge + promotion fire).
+  **P-027 DISCHARGED it for governance** (mutation local to `triangle`; shared
+  `_DEFAULT_PROFILE` byte-unchanged after a fixture run). **P-028 DISCHARGED it for
+  doctrine:** grep confirmed no in-place mutation of the sourced structures; the
+  no-aliasing test runs `score_doctrine` on a fixture (+ crafted multi-penalty inputs)
+  and asserts the shared `_DEFAULT_PROFILE` structures are byte-unchanged afterward;
+  determinism holds. **So all three per-module proofs are in.** **★ UPDATE (P-029):
+  P-029 threaded a per-call profile BUT DID NOT remove the module `_DEFAULT_PROFILE`
+  singleton** — it remains the `None`-default fallback in all 3 consumer modules, so
+  the shared-mutable-global still exists on the DEFAULT path and the per-module
+  copy-before-mutate discipline STILL CARRIES. **CARRY-FORWARD for P-032:** when a
+  SECOND live profile is loaded per call, keep the aliasing discipline in mind — do
+  NOT mutate a loaded profile's structures in place. The full structural removal of
+  the singleton is not yet done. **★ REINFORCED by
+  P-032e, P-032a AND P-032b:** all three new scorers (`_beat_identity`,
+  `_negative_space`, `_groove_coherence`) only READ `doctrine[...]` /
+  `groove[...]` and never mutate the profile, each guarded by a no-aliasing
+  test — so the per-module copy-before-mutate discipline still holds. When a SECOND
+  live profile is loaded per call (P-032h authors `timbaland.json`), do NOT mutate a
+  loaded profile's structures in place. **★ UPDATE (P-032h close): the SECOND live
+  profile IS now real (`timbaland.json`) and the discipline HELD — the
+  packet touched ZERO engine code and mutates nothing; the structural
+  `_DEFAULT_PROFILE` singleton removal is STILL outstanding — carry
+  forward.**
+
+- **★ TRAILER-SPEC STANDING NOTE — DROP the "NO model identifier" line from FUTURE
+  packet specs (from P-027; reconciled).** The reviewer repeatedly re-flags the
+  mandated `Co-Authored-By: Claude Opus 4.8` trailer as a "model identifier,"
+  conflicting with packet-spec lines that say "NO model identifier in any commit
+  message/artifact." **RECONCILED — there is NO violation:** the harness / `CLAUDE.md`
+  MANDATE that exact trailer session-wide; "Claude Opus 4.8" is the SANCTIONED trailer
+  form, DISTINCT from the exact model ID the identity rule bars. **Action for P-028+
+  spec authors:** OMIT the "NO model identifier" constraint line — it conflicts with
+  the mandated trailer and keeps tripping the reviewer. The required trailers
+  (`Co-Authored-By: Claude Opus 4.8` + `Claude-Session: …`) are correct and expected.
+
+- **★ WATCH-ITEM — `emotion_dims` couples the profile to `scores` dict keys (reviewer,
+  from P-027; mild).** P-027's widened `taste_triangle.emotion_dims`
+  (`["ramone_score", "listener_excitement_score", "vocal_belief_score"]`) couples the
+  profile to the exact key names in the runtime `scores` dict. Byte-identical and
+  correct today, but **watch this coupling when P-028 generalizes scoring and when
+  P-029 threads the profile per-call** — any rename/restructure of the score keys must
+  stay in lockstep with `emotion_dims`.
+
+- **★ CONFIRMED HONESTY / SOURCING POLICY — a STANDING product decision governing
+  P-031 / P-032 (confirmed by the user).** hand-curated → high-confidence;
+  derived → low-confidence (labeled); LLM → draft-only, NEVER high-confidence. The
+  `halee_ramone` reference is `hand-curated-documented` → `high` / `risk_class 0`,
+  consistent with the policy. The profile metadata stamp exists now (P-025) but is
+  not enforced / propagated until P-031; authoring a SECOND profile (P-032) must
+  obey this policy (no LLM-authored profile may claim `high` confidence).
+  **★ UPDATE (P-031 close): the per-area enforcement is LIVE** — every
+  profile now REQUIRES a validated `confidence_map` (no silent defaults),
+  rendered per-call; P-032h's `timbaland.json` must author its OWN map under
+  this policy (hand-curated-documented → HIGH), and should verbatim-pin it
+  like halee_ramone's.
+
 - **★ THE ARC IS DOWN TO ITS LAST STEP — P-024 (MCP SERVER, option C step 2).**
   Canonical target: Logic Mix OS as a tool Claude Cowork can drive END-TO-END in a
   Logic Pro mixing session (plan-only v1). **P-019 ✓** closed the learning loop
@@ -290,6 +718,296 @@
 - Net-new **event-logging** producers remain behind the product decision.
 
 ## Done (resolved)
+
+- **★★★ P-032h DONE — THE PAYOFF PACKET: `timbaland.json`, the second live
+  producer profile, the FIRST non-byte-identical output of the epic
+  (`build-os/receipts/P-032h-author-timbaland-json.md`).** Same stems, two
+  judgments — 68.4 / 52.6 / 49.7 (timbaland) vs 73.8 / 70.7 / 74.3
+  (reference), fully attributable (zero component divergence on simple;
+  exactly `loop_context_score` 15.0→10.0 on the loop fixtures; the rest pure
+  reweighting of shared measurements); default path moved ZERO bytes; gates
+  flip live (protect_iconic_loops=true WITHHOLDS loop_deconstruct on iconic
+  while the reference fires; static still fires; masked-lead fires under
+  BOTH); ZERO RELAXATION adversarially verified; the 11-entry confidence_map
+  verbatim-pinned (5 high / 1 limited / 5 deferred), provenance
+  hand-curated-documented → HIGH (reviewer-ENDORSED). Single commit
+  `70a0b69` (2 NEW files, 1044+/0−, zero engine code; pushed, NOT merged).
+  Suite 600 → **639** (+39); regression 68/68 UNCHANGED. qa GREEN; reviewer
+  PASS (no must-fix); Codex NOT available — single-model review.
+
+- **★★ P-032d DONE — the FOURTH new producer-agnostic doctrine axis
+  `rhythmic_surprise` (weak, section-aggregate form: cross-section
+  transient-density variation — pstdev spread + largest adjacent swing) lands
+  byte-identically for halee_ramone; first of the RESEQUENCED remaining order
+  (d → c → g → f), the smallest/safest lift confirmed in practice (one input,
+  zero new plumbing)** (`build-os/receipts/P-032d-rhythmic-surprise.md`). New
+  agnostic scorer `_rhythmic_surprise(sections_analysis, doctrine)` in
+  `doctrine_engine.py` — the 11th doctrine component, appended LAST to
+  `component_scores` (after `groove_coherence_score`; 10-term summation order
+  preserved) with `weights["rhythmic_surprise_score"] = 0` in
+  `halee_ramone.json` + a `doctrine.scorers.rhythmic_surprise` constants block;
+  `producer_profile._validate` now requires `rhythmic_surprise`;
+  `doctrine_score.schema.json` documents the optional `rhythmic_surprise_score`.
+  Constants: `insufficient_sections_score 40.0 / baseline 20.0 / spread_coeff
+  160 / swing_coeff 60`; live fixture scores (weight-0, informational) 51.1
+  (simple — some sectional variation) / 20.0 (dense — the real-world
+  high-mean/ZERO-variance constant bed) / 27.8 (splice). **Byte-identical
+  INDEPENDENT capture:** 33/33 pre-existing values × 3 fixtures unchanged
+  (overalls 73.8 / 70.7 / 74.3); regression 68/68, 0 warnings — UNCHANGED.
+  **All 4 distinctness guards pass AND independently recomputed by qa**
+  (high-mean/zero-var bed → 20.0; mean-invisibility 20.0 == 20.0;
+  negative_space-opposite ns 78.0 vs rs 20.0; dynamic_mix-distinct dyn 100.0
+  vs rs 20.0). **Liveness load-bearing:** drop-axis monkeypatch sabotage →
+  liveness 2 FAILED / byte-identical 5 passed. **Honest scope verified**
+  (AST/grep: sections + doctrine only; evidence says "weak, section-aggregate
+  form"; fill detection / unexpected-hit detection / per-onset IOI deviation
+  deferred in the docstring; does NOT read `overall_regularity` — that is
+  `_groove_coherence`'s input — ENFORCED). Single commit `8a81516` (HEAD IS
+  Commit-1 → green in isolation by construction = 451; base independently
+  verified at set-active `8c03f14` = 433 in a throwaway worktree); suite
+  433 → 451 (+18); safety grep NONE FOUND (535 insertions / 6 deletions, 8
+  in-packet files); 3 pre-existing pins updated (`test_producer_profile.py`
+  scorers-set, `test_doctrine_profile_sourced.py` `_WEIGHTS` value-pin,
+  `test_groove_coherence.py` groove_coherence now index 9). qa **GREEN**;
+  reviewer **PASS (no must-fix)** — ran THREE own sabotages, ALL caught
+  (hardcode the scorer → 7 discrimination/fallback/evidence tests fail; drop
+  from `component_scores` → 3 fail incl. BOTH liveness; flip the halee weight
+  0→2 → 8 fail across three guard files); constants sanity: smooth mid-range
+  discrimination (swing 0.1 → 34, 0.3 → 62, 0.5 → 90), clamps at 100 for
+  swings ≳0.57 — sibling-idiom-consistent, not degenerate. **Codex NOT
+  available — single-model review.** **★★ MILESTONE — 11 component axes; 4 of
+  the 7 Timbaland "weight up" axes landed** (beat_identity, negative_space,
+  groove_coherence, rhythmic_surprise), all
+  append-last/weight-0/profile-sourced, zero plumbing debt. **P-032d
+  local-only** (`8a81516` atop set-active `8c03f14` on the dev branch), not
+  pushed/merged (merge base still `e79426a` = PR #16). NEW cosmetic residue
+  carried to Deferred: the rhythmic_surprise liveness-docstring overclaim
+  (fold ONE sweep across all four axis test files) + the None-filtering /
+  non-adjacent-swing note. Next per the resequenced order: **P-032c
+  (low_end_motion)**.
+
+- **★★ P-032b DONE — the THIRD new producer-agnostic doctrine axis
+  `groove_coherence` + the `analyze_groove` LIVE-WIRE relocation land
+  byte-identically for halee_ramone; the RISKIEST packet of the sub-arc so far
+  (moved code, not just added), TRIPLE-VERIFIED (qa GREEN + reviewer PASS +
+  3-skeptic adversarial pass, all claims HELD)**
+  (`build-os/receipts/P-032b-groove-coherence-livewire.md`). `pipeline.py`:
+  `analyze_groove` relocated to BEFORE `score_doctrine` (pipeline.py:180 vs
+  :183), the groove threaded in via `score_doctrine(..., groove: Optional[Dict]
+  = None)` (keyword default None — every existing caller byte-identical), and
+  the SAME groove object REUSED in `result.expanded["groove"]` (:208) —
+  computed exactly ONCE (the P-016 lesson made structural; exactly one
+  `analyze_groove(` call site, spy-counted). New agnostic scorer
+  `_groove_coherence(groove, doctrine)` is the 10th doctrine component —
+  constants `neutral 45.0` (absence neither rewarded nor punished) / `baseline
+  15.0` / `regularity_scale 85.0` (linear map: regularity 0 → 15, 1.0 → 100;
+  dense fixture 0.989 → 99.1); honest naming test-guarded
+  (regularity/consistency scored as a PROXY for coherence, never "tighter is
+  better" — the agnostic layer stays neutral, the producer decides the
+  weighting). **Byte-identical INDEPENDENT proof** (qa's own capture, not
+  builder pins): all 9 pre-existing component scores + overall +
+  `expanded["groove"]`, all 3 fixtures → diff EMPTY (overalls 73.8 / 70.7 /
+  74.3); regression 68/68, 0 warnings, 0 critical. Liveness + sabotage pass
+  (gc(0.989)=99.1, neutral 45.0; `groove=None` collapses 99.1 → 45.0).
+  **Reviewer verified the relocation crux by INJECTED REGRESSIONS** in an
+  isolated worktree (a second `analyze_groove` call →
+  `test_analyze_groove_called_exactly_once` red 2==1; `groove=None` threading →
+  `test_score_doctrine_receives_the_real_groove` red 45.0 ≠ 99.1 — both guards
+  genuinely load-bearing); backward-compat + None-handling (`is None` guard — a
+  real 0.0 → 15.0, not swallowed; no KeyError path) + guard updates legitimate
+  (negative_space now index 8, `keys[:8]` anchor intact). **3-skeptic
+  adversarial pass (all claims HELD):** (1) float-determinism bit-identical,
+  `gc*0==0.0` exact, `nan*0` poisoning UNREACHABLE (`_clamp` neutralizes
+  non-finites; `analyze_groove` emits only None or float[0,1]), all 8 non-groove
+  `expanded` keys byte-identical; (2) call-count 1 across ALL branches
+  (ref-delta, creative, memory), `is`-identity of the reused groove, nothing
+  mutates it on the real path; (3) every None/empty/missing-key case → clamped
+  neutral 45.0, boundaries clamp to [0,100], out-of-contract crash inputs
+  proven UNREACHABLE from the sole producer. Single commit `e9f793f` (HEAD IS
+  Commit-1 → green in isolation by construction = 433; suite also verified
+  independently at base `bd98777` = 413 in a throwaway worktree); suite 413 →
+  433 (+20); safety grep NONE FOUND (582 insertions / 13 deletions, 9 in-packet
+  files). **Codex NOT available — single-model review.** **★★ MILESTONE — the
+  engine now carries 10 component axes; the onset/IOI signal is now LIVE at
+  doctrine time, unblocking the axes that need rhythm timing.** **P-032b
+  local-only** (`e9f793f` atop set-active `bd98777` on the dev branch), not
+  pushed/merged (merge base still `e79426a` = PR #16). NEW cosmetic residue
+  carried to Deferred: the shared mutable groove dict (`expanded["groove"]` IS
+  the doctrine arg). Next per the resequenced order: **P-032d
+  (rhythmic_surprise)**.
+
+- **★★ P-032a DONE — the SECOND new producer-agnostic doctrine axis
+  `negative_space` (absolute arrangement room/sparsity) lands byte-identically for
+  halee_ramone; the Timbaland sub-arc continues past the crux**
+  (`build-os/receipts/P-032a-negative-space.md`). New agnostic scorer
+  `_negative_space(records, sections, mix_metrics, doctrine)` in
+  `doctrine_engine.py` composes ABSOLUTE arrangement room/sparsity as a STRENGTH
+  from section-aggregate physics — low mean section spectral `density` (room), a
+  genuine dropout section (`min_section_density` / min RMS meaningfully below max —
+  "silence as arrangement"), and transient breathing room (low mean section
+  `transient_density`) — always returning a clamped float (neutral fallback 40.0).
+  Deliberately DISTINCT from `_dynamic_mix` (section-to-section movement): a
+  dense-but-moving case scores `dynamic_mix = 100.0` vs `negative_space = 15.0`
+  (85-pt gap), guarded by an explicit distinctness test. Wired into `score_doctrine`
+  as `negative_space_score` appended LAST to `component_scores` (after
+  `beat_identity_score`, summation order preserved → overall bit-identical) with
+  `weights["negative_space_score"] = 0` in `halee_ramone.json` + a
+  `doctrine.scorers.negative_space` constants block; `producer_profile._validate`
+  now requires `negative_space`; `doctrine_score.schema.json` documents the optional
+  `negative_space_score`. Constants: `neutral 40.0 / baseline 15.0 /
+  density_ceiling 1.0 / room_coeff 50 / transient_ceiling 1.0 / breathing_coeff 20 /
+  dropout_coeff 25 / dropout_floor 0.1`; live fixture scores (weight-0,
+  informational) 62.3 / 15.0 / 20.0. **Byte-identical PROVEN** (0 mismatches / 27
+  comparisons vs set-active base `836bd22`, overalls 73.8 / 70.7 / 74.3 unchanged;
+  regression 68/68, 0 critical, 0 warnings UNCHANGED). **Liveness LOAD-BEARING** (a
+  non-zero weight moves `analyze()` overall; sabotage fails liveness — drop
+  threading → FAIL/KeyError, hardcode → 8 fail + 5 err — while byte-identical stays
+  green; the P-016/P-029 lesson) + value-discrimination (incl. distinctness from
+  dynamic_mix). **Honest boundary documented in-code, NOT faked:** sample-level
+  inter-onset silence gaps need onset timing not visible at `score_doctrine` time
+  (→ P-032b groove live-wire); section-aggregate grain only. No-aliasing (scorer
+  only reads `doctrine[...]`, no-aliasing test). Single commit `3edcd9c` (green in
+  isolation = 413 — HEAD IS Commit-1); suite 396 → 413 (+17; 0
+  failed/skipped/warnings, green under `-W error`); 3 doctrine-key pins updated
+  (`test_producer_profile.py` scorers-set, `test_doctrine_profile_sourced.py`
+  `_WEIGHTS` value-pin, `test_beat_identity.py` beat_identity now index 7). Safety
+  grep clean; honest-scope confirmed; UI N/A. qa **GREEN**; reviewer **PASS** (all 8
+  scrutiny points; byte-identical empirically proven base→HEAD; distinctness
+  non-tautological; honesty gate genuine; liveness load-bearing; agnostic-first
+  (all 8 tunables in the profile); no-aliasing; guard updates legitimate
+  tightening; Product Trajectory Check pass; no must-fix). **Codex NOT available —
+  single-reviewer verdict.** **★★ MILESTONE — the engine now carries 9 component
+  axes; the producer-agnostic architecture (P-029) continues to prove EXTENSIBLE.**
+  **P-032a local-only** (`3edcd9c` on the dev branch atop the `6d34c30` P-029-close
+  base), not pushed/merged. Non-blocking reviewer note carried to Deferred: the two
+  `liveness` docstrings in `test_negative_space.py` (and the same in
+  `test_beat_identity.py`) overclaim — cosmetic, fold a one-line fix into a future
+  doctrine touch. Recommended next: **P-032b (groove_coherence live-wire)**.
+
+- **★★ P-032e DONE — the FIRST new producer-agnostic doctrine axis `beat_identity`
+  (strength-form) lands byte-identically for halee_ramone; the Timbaland sub-arc is
+  underway with the crux front-loaded**
+  (`build-os/receipts/P-032e-beat-identity.md`). New agnostic scorer
+  `_beat_identity(records, events, doctrine)` in `doctrine_engine.py` measures the
+  STRENGTH of a central rhythmic fingerprint from transient physics alone (candidacy
+  by `transient_density`, NOT instrument label; presence vs a `no_beat` floor;
+  distinctness above the track median; definition via `crest_factor_db`;
+  foreground/unmasked bonus, buried/masked penalty). Wired into `score_doctrine` as
+  `beat_identity_score` appended LAST to `component_scores` (7-term summation order
+  preserved → overall bit-identical) with `weights["beat_identity_score"] = 0` in
+  `halee_ramone.json` + a `doctrine.scorers.beat_identity` constants block;
+  `producer_profile._validate` now requires the `beat_identity` scorer group;
+  `doctrine_score.schema.json` documents the optional `beat_identity_score`. Constants:
+  `no_beat 20.0 / transient_floor 0.35 / baseline 50.0 / dominance_coeff 40 /
+  definition_crest_db 12.0 / definition_bonus 12 / foreground_bonus 18 /
+  buried_penalty 14 / masked_penalty 12`; live fixture scores (weight-0,
+  informational) 89.1 / 52.7 / 46.0. **Byte-identical PROVEN** (0/24 mismatches vs
+  clean base `6d34c30`, overalls 73.8 / 70.7 / 74.3 unchanged; regression 68/68, 0
+  critical, 0 warnings UNCHANGED). **Liveness LOAD-BEARING** (a non-zero weight moves
+  `analyze()` overall + direction tracks the beat score; sabotage fails liveness
+  while byte-identical stays green — the P-016/P-029 lesson) + value-discrimination
+  (punchy/foregrounded/distinct → HIGH; none → `no_beat` floor). **Honest boundaries
+  documented in-code, NOT faked:** fingerprint TYPING, onset REGULARITY/IOI (→ P-032b
+  groove live-wire), and "more undeniable after a move" (before/after render) are OUT
+  OF SCOPE. No-aliasing (scorer only reads `doctrine[...]`, two no-aliasing tests).
+  Two commits `8239f42` (green in isolation = 396) + `9d6764e`; suite 384 → 396
+  (+12; 0 failed/skipped/warnings, green under `-W error`). Safety grep clean;
+  honest-scope confirmed; UI N/A. qa **GREEN**; reviewer **PASS** (all 7 scrutiny
+  points; byte-identical numerically proven over 100k trials; liveness load-bearing
+  by an in-memory sabotage; guard updates legitimate tightening; no must-fix). **Codex
+  NOT available — single-model review.** **★★ MILESTONE — the producer-agnostic
+  architecture (P-029) is proven EXTENSIBLE, not just parameterizable.** **P-032e
+  local-only** (`8239f42`, `9d6764e` on the dev branch on top of the `6d34c30`
+  P-029-close base), not pushed/merged. Recommended next: **P-032a (negative_space)**.
+
+- **★★ P-029 DONE — THE PIVOT: the producer profile is now a LIVE, SELECTABLE LEVER
+  end-to-end; `analyze(producer=…)` SELECTS which profile drives the judgment**
+  (`build-os/receipts/P-029-parameterize-pipeline-by-per-call-producer-profile.md`).
+  `pipeline.analyze(..., producer: str | ProducerProfile = "halee_ramone")` accepts a
+  NAME or a ready `ProducerProfile` (isinstance dispatch), loads ONCE per call, and
+  threads `profile=` to `score_doctrine` / `run_creative_engine` / `run_governance`,
+  which thread it to ALL leaf scorers (doctrine's 7 scorers + weights; creative's
+  `score_variant`/`_apply_nudges`/`_apply_promotions`; governance's
+  `govern_branches`/`govern_variant`/`taste_triangle`/`_apply_taste`) — each reads its
+  producer-specific values from the PASSED profile, defaulting to the module
+  `_DEFAULT_PROFILE` when `profile is None`. **KILL_SWITCHES recomposed per call = 5
+  hardcoded producer-AGNOSTIC SAFETY switches + the profile's aesthetic switches** (a
+  swapped producer can NEVER drop a safety guarantee; default composed list
+  byte-identical, no safety string in JSON). **No judgment VALUE changed;
+  physics/analyzers untouched.** **Byte-identical default PROVEN** (reviewer
+  independently byte-diffed default doctrine+creative+governance pre-P-029 vs HEAD
+  across all 3 fixtures → IDENTICAL; no-arg == `producer="halee_ramone"` == reference
+  object; regression **68/68, 0 critical, 0 warnings — UNCHANGED**). **Selection
+  GENUINELY LIVE across all 3 layers** through the REAL analyze() path (synthetic
+  one-value-mutated profiles, no monkeypatch): doctrine `baselines.halee` −20 →
+  `halee_score` delta exactly 20; creative boosted `vocal_ride` kind_score → variant
+  `overall_score` → 100; governance `truth_alignment["intimate"]["vocal_ride"]` 88→60
+  → governed `emotional_truth_alignment` 60. **LOAD-BEARING PROVEN BOTH WAYS (the
+  P-016 lesson):** sabotaging each layer's threading fails ITS liveness test while
+  byte-identical/determinism stay green. **Reviewer grep: ZERO module-global
+  producer-value reads inside any scorer body on the hot path — no leaf missed.** Two
+  commits `42d6ebd` (doctrine + creative + pipeline wiring + byte-identical +
+  doctrine/creative liveness — green in isolation = 383) + `ea1aaa9` (governance
+  threading + governance liveness). Suite **370 → 384 passed** (+14; 0
+  failed/skipped/warnings, green under `-W error`). Scope: exactly 5 files (4 product +
+  1 new test); existing tests UNEDITED; physics/analyzers/bridge/planners untouched.
+  Safety grep clean; UI N/A. qa **GREEN**; reviewer **pass**. **Codex NOT available —
+  single-reviewer verdict.** **★★ MILESTONE — THE PIVOT: the producer-agnostic
+  ARCHITECTURE is COMPLETE and VALIDATED** (reference-profile-driven judgment + a
+  producer-AGNOSTIC physics/safety chassis + per-call producer selection). **★
+  CARRY-FORWARD for P-032:** the `_DEFAULT_PROFILE` singleton STILL exists as the
+  `None`-default fallback in all 3 modules — keep the aliasing discipline when a
+  second live profile is loaded. **P-029 local-only** (`42d6ebd`, `ea1aaa9` on the dev
+  branch on top of the `e79426a` base), not pushed/merged.
+
+- **★★ P-028 DONE — doctrine sourced from the reference profile, WIDENED (the LAST
+  & LARGEST extraction); THE EXTRACTION PHASE IS COMPLETE**
+  (`build-os/receipts/P-028-doctrine-sources-values-from-reference-profile.md`).
+  `doctrine_engine.py` gains `_DEFAULT_PROFILE = load_profile("halee_ramone")`; all 8
+  scorers now read their aesthetic constants from the profile — **Part A** the
+  P-025-captured `weights` (halee 1.0 / ramone 1.2 / vocal_centrality 1.2 / depth 1.0 /
+  contrast 1.0 / static 1.0 / dynamic 0.8) + `_halee`/`_ramone` baselines (86.0) +
+  penalty coeffs; **Part B WIDENED** the profile with a new `doctrine.scorers` group (5
+  function groups: `_vocal_centrality` / `_depth_hierarchy` / `_section_contrast` /
+  `_static_mix` / `_dynamic_mix`), each constant captured VERBATIM, then sourced. **The
+  PHYSICS/measurement code (fg_frac, band max, pstdev, distinct counting, section
+  detection) + the presentation thresholds (`stereo_width > 0.6`, `distinct <= 1`,
+  `score < 55`) STAY hardcoded — producer-AGNOSTIC.** Clean literal→`c["…"]`
+  substitution; formula shape/order preserved; int/float types match. **Byte-identical:**
+  existing doctrine tests UNEDITED; regression **68/68, 0 critical, 0 warnings —
+  UNCHANGED** (the corpus proof — doctrine feeds `doctrine_score`, golden-pinned;
+  reviewer INDEPENDENTLY confirmed live `doctrine_score` byte-matches the golden on all
+  3 fixtures incl. `overall_mix_readiness_score`). **Round-trip NON-VACUOUS** (18→17
+  flip fails the test + shifts `_section_contrast` 64→66). **No-aliasing DISCHARGED**
+  (grep clean; no-aliasing test + determinism). `creative.py`/`governance.py`/
+  `pipeline.py` untouched. **Two commits `29b9dfe` (Part A + no-aliasing test — green in
+  isolation = 364) + `72e98a7` (Part B widen + source + round-trip).** Suite **351 →
+  370 passed** (+19; 0 failed/skipped/warnings, green under `-W error`). Safety grep
+  clean; UI N/A. qa **GREEN**; reviewer **pass**. **Codex NOT available — single-reviewer
+  verdict.** **★★ MILESTONE — the EXTRACTION PHASE is COMPLETE:** the entire
+  producer-specific judgment layer (creative P-026 + governance P-027 + doctrine P-028)
+  is now sourced from the reference `ProducerProfile`, BYTE-IDENTICAL, with the physics
+  chassis + safety kill-switches cleanly separated and left hardcoded; **the reference
+  profile FULLY DRIVES the judgment layer.** Finding A FULLY RESOLVED; aliasing-proof
+  DISCHARGED for all 3 modules. **★ Reviewer observation (carry into P-029):** the
+  measurement-vs-aesthetic thresholds (`stereo_width > 0.6`, `distinct <= 1`,
+  `score < 55`) are correctly left hardcoded as physics/presentation, NOT producer taste
+  — keep them OUT of the profile when P-029 threads the profile per-call. **P-028 is
+  local-only** (commits `29b9dfe`, `72e98a7` on the dev branch on top of the P-027
+  commits on top of the `e79426a` base), not pushed/merged at close.
+
+- **★ P-025 DONE — the FOUNDATION of the producer-agnostic epic: today's
+  hardcoded Halee/Ramone judgment is now a frozen, round-trip-guarded, UNWIRED
+  `ProducerProfile`** (`build-os/receipts/P-025-producer-profile-schema-loader-halee-ramone-extraction.md`).
+  `logic_mix_os/doctrine/producer_profile.py` (frozen dataclass + pure
+  `load_profile()`) + `doctrine/producers/halee_ramone.json` (VERBATIM reference +
+  honesty metadata stamp). Byte-identical round-trip guard (exact for clean
+  constants incl. `KILL_SWITCHES[5:9]` with safety items 1–5 correctly EXCLUDED;
+  indirect + non-vacuous for the inline-computed doctrine weights / 86.0 baselines
+  / penalty_coeffs / default_creative_mode). The four judgment sources
+  byte-unchanged; nothing consumes the profile; regression 68/68 UNCHANGED. Two
+  commits `195127c` + `e6cb038`; suite 293 → 319 (+26). qa GREEN; reviewer pass
+  (hand-verified every value byte-accurate); Codex unavailable (single-reviewer).
 
 - **★★ THE MILESTONE — P-021 PROVES THE COWORK SURFACE IS AGENT-DRIVABLE
   END-TO-END; the canonical target is essentially MET at the decision-system level
@@ -886,6 +1604,48 @@
 
 ## Open boundaries (awaiting explicit go)
 
+- **P-031's product commits `51a107c` + `4af24e2` are PUSHED to the dev
+  branch; the review-fix `b869ebd` is local-only as of this close** (this
+  archivist close did not push; the orchestrator owns the build-os close
+  commit + the standing dev-branch push — NO merge). They sit on the dev
+  branch `claude/logic-mix-os-hardening-12-7hbeh1` atop the set-active
+  `4d4b57d` (→ `4c6285b`, P-032f close), with the whole producer-agnostic
+  epic (P-025 → P-029 → P-032e/a/b/d/c/g/f → P-031) still un-landed on
+  default — merge base `e79426a` (PR #16). Any PR / merge into the protected
+  default needs the user's explicit go. No merge / deploy / secret action
+  taken in this close.
+
+- **P-032c's product commit `ab14ac7` is local-only as of this close** (this
+  archivist close did not push; the orchestrator owns the build-os close commit
+  + the standing dev-branch push — NO merge). It sits on the dev branch
+  `claude/logic-mix-os-hardening-12-7hbeh1` atop the build-os doctrine pin
+  `b7e116a` and the set-active `fe5f6b4`, with the whole producer-agnostic epic
+  (P-025 → P-029 → P-032e/a/b/d/c) still un-landed on default — merge base
+  `e79426a` (PR #16). Any PR / merge into the protected default needs the
+  user's explicit go. No merge / deploy / secret action taken in this close.
+  P-032f remains ★ USER-GATED (explicit go needed on the "masked chop/stack =
+  acceptable-blend" aesthetic rule + the conservative
+  protect-as-lead-when-uncertain default).
+
+- **P-032d's product commit `8a81516` is local-only as of this close** (this
+  archivist close did not push; the orchestrator owns the build-os close commit
+  + the standing dev-branch push — NO merge). It sits on the dev branch
+  `claude/logic-mix-os-hardening-12-7hbeh1` atop the set-active `8c03f14`, with
+  the whole producer-agnostic epic (P-025 → P-029 → P-032e/a/b/d) still
+  un-landed on default — merge base `e79426a` (PR #16). Any PR / merge into the
+  protected default needs the user's explicit go. No merge / deploy / secret
+  action taken in this close.
+
+- **P-029's product commits `42d6ebd`, `ea1aaa9` are local-only as of this close**
+  (this archivist close did not push). They sit on the dev branch
+  `claude/logic-mix-os-hardening-12-7hbeh1` on top of the `e79426a` (PR #16) merge
+  base — THE PIVOT: `analyze(producer=…)` selects the profile (byte-identical by
+  default). The build-os-only close commit is separate. The accumulated
+  producer-agnostic epic (P-025 → P-029) plus the earlier local-only arc remain
+  un-landed on default. Any push of the product commits — and any subsequent PR /
+  merge into the protected default — needs the user's explicit go. No push / merge /
+  deploy / secret action taken in this close.
+
 - **P-017 closed with NO product-code change (verified negative finding).** The
   ONLY committed change is the tests-only characterization guard
   (`tests/test_density_recuration.py`, commit `1b03ad3`) plus the `fecc4e5`
@@ -947,5 +1707,15 @@
   commit — and any subsequent PR / merge into the protected default — needs the
   user's explicit go. No push / merge / deploy / secret action taken in this close.
 
+- **P-025's product commits `195127c`, `e6cb038` are local-only as of this close**
+  (this archivist close did not push). They sit on the dev branch
+  `claude/logic-mix-os-hardening-12-7hbeh1` on top of the `e79426a` (PR #16) merge
+  base — the `ProducerProfile` schema + `load_profile()` + extracted
+  `halee_ramone.json` reference (data + loader + tests only; COMPLETELY UNWIRED —
+  the four judgment sources byte-unchanged, regression 68/68 UNCHANGED). The
+  build-os-only close commit is separate. Any push of the product commits — and any
+  subsequent PR / merge into the protected default — needs the user's explicit go.
+  No push / merge / deploy / secret action taken in this close.
+
 ---
-_Append-only working notes. Last advanced on P-021 close (2026-07-01) — the MILESTONE step._
+_Append-only working notes. Last advanced on P-031 close (2026-07-02) — the confidence framework lands: the REQUIRED per-area `confidence_map` is validated, authored + verbatim-pinned for halee_ramone, rendered per-call; THE HONESTY LAYER IS IN PLACE. Next: P-032h — author `timbaland.json` (THE PAYOFF PACKET), then P-032i (differential proof; NO vocal-blend delta expected)._
