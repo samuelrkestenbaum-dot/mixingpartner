@@ -4,107 +4,84 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** ACTIVE — P-031 confirmed by the orchestrator-in-chief
-  (2026-07-02), handed to builder. **Scope UPGRADED by the user at P-032f
-  close: per-interpretation-AREA confidence, not a single profile-level stamp.**
-- **Packet id:** P-031
-- **Title:** confidence framework — per-area honesty labeling
-  (high / limited / deferred, each with a stated reason), machine-readable in
-  the profile, rendered on the report surface.
-
-## Why this packet (user-stated, binding)
-
-The second producer must not ship as merely "different." It ships as:
-**different / profile-authored / confidence-stamped / honesty-labeled /
-safety-invariant.** P-031 is what lets `timbaland.json` say:
-
-```
-high confidence:     groove / space / low-end / loop interpretation
-limited confidence:  vocal blend on current fixtures — analyzer does not yet
-                     emit non-lead vocal masking events (the inert-blend
-                     corollary)
-deferred:            cultural recognizability, true hook recurrence,
-                     motif provenance
-```
-
-The honest deferrals documented in docstrings across seven packets become
-FIRST-CLASS, machine-readable profile data that a human or Cowork actually
-reads in the verdict/report artifacts — which parts of the judgment to trust,
-at what strength, and WHY.
-
-## Spec (build exactly this)
-
-1. **Profile schema — a REQUIRED `confidence_map` structure** (top-level, the
-   established required-field discipline): a list/dict of interpretation AREAS,
-   each entry carrying `area` (string), `level` (exactly one of
-   `high` / `limited` / `deferred`), and `reason` (non-empty string).
-   Structural validation in `producer_profile.py` `_validate` (reject missing
-   field, unknown levels, empty reasons, non-string areas). The existing
-   profile-level `metadata` stamp (provenance/confidence/risk_class from P-025)
-   STAYS — the map complements it (global provenance + per-area trust).
-2. **Author halee_ramone's own honest map** — e.g. high: vocal-centrality /
-   depth-hierarchy / section-contrast / static-dynamic interpretation
-   (hand-curated from documented technique, live axes); high: the seven new
-   agnostic axes exist but are weight-0 BY CHOICE (state that as the reason —
-   the reference profile deliberately does not weight them); limited/deferred
-   entries mirroring the standing honest deferrals (onset-timing strong forms,
-   fingerprint typing, cultural iconic-ness, hook recurrence, motif
-   provenance, per-section true-sub). Word reasons observationally.
-3. **Render it on the report surface** — wherever the profile's judgment is
-   presented (the verdict markdown `halee_ramone_mix_verdict.md` renderer
-   and/or the doctrine_score/report JSON): a compact "Confidence" section
-   listing the areas by level with reasons, sourced from the loaded profile's
-   map (per-call profile, P-029 threading — a passed profile's map renders,
-   not the module default's). Machine-readable copy in the JSON output
-   (additive key; schema updated — no `additionalProperties:false` conflicts).
-4. **BYTE-IDENTICAL DISCIPLINE — this is labeling, never judgment:** no score,
-   variant, promotion, or recommendation may change. The doctrine + creative
-   surfaces stay byte-identical (73.8 / 70.7 / 74.3). The ONLY output deltas
-   allowed: the new confidence section/keys (additive). If the verdict
-   markdown gains a section, the golden regression must still hold 68/68
-   (verify what the golden pins — categorical + 7 original score keys — and
-   prove the addition is invisible to it; if any pinned artifact WOULD change,
-   stop and report rather than weaken a guard).
-
-## Tests (test-first — the binding guards)
-
-1. **Byte-identical** — doctrine + creative surfaces on all 3 fixtures
-   unchanged; regression 68/68; the new keys/sections are purely additive.
-2. **Validation** — missing map / unknown level / empty reason / non-string
-   area all rejected by `load_profile` (no silent defaults — the P-032f
-   attack-4 discipline).
-3. **Rendering liveness** — a synthetic profile with a DIFFERENT map renders
-   ITS areas/levels/reasons (per-call, not module default); halee_ramone's map
-   renders its authored entries; sabotage (drop the threading / hardcode the
-   section) fails the liveness test while byte-identical stays green.
-4. **Honesty pins** — halee_ramone's map contains the inert-blend/deferred
-   entries verbatim-pinned (so a future packet can't silently delete the
-   honesty labels); observational language guard on all reasons.
-5. **No-aliasing** — the renderer reads, never mutates, the profile map.
-
-## Rigor bar (established)
-
-- `python fixtures/generate_fixtures.py` FIRST; ≤2 commits, Commit-1 green in
-  isolation; full suite green from the **572** baseline; regression 68/68;
-  observational language; commit trailers `Co-Authored-By: Claude Fable 5
-  <noreply@anthropic.com>` + the Claude-Session link; NO push/merge/remotes
-  (orchestrator pushes).
+- **Status:** NONE ACTIVE — P-031 CLOSED by the archivist (2026-07-02).
+  The next packet below is STAGED, not active — the orchestrator must
+  confirm it before any building.
 
 ## Last-closed
 
-- **P-032f ✓ CLOSED** — dual-green, six attacks defeated; ALL SEVEN Timbaland
-  weight-up axes landed (14 components); measurement phase COMPLETE. Receipt:
-  `build-os/receipts/P-032f-vocal-role-blend-policy.md`.
+- **P-031 ✓ CLOSED (2026-07-02)** — the confidence framework: the REQUIRED
+  per-area `confidence_map` (area / level ∈ {high, limited, deferred} /
+  reason) is validated (no silent defaults), authored for halee_ramone
+  (8 entries: 2 high / 1 limited / 5 deferred; machine-checked against the
+  weights; verbatim-pinned), and rendered per-call (additive `confidence`
+  key + verdict "## Confidence" section). qa GREEN (572 → 600; 68/68;
+  Commit-1 iso 591; byte-identity modulo EXACTLY the additive key/section);
+  reviewer PASS (one fix-then-pass round, fully resolved — `b869ebd`
+  corrected the per-section true-sub deferral reason to band resolution).
+  **THE HONESTY LAYER IS IN PLACE.** Commits `51a107c` + `4af24e2` (pushed)
+  + `b869ebd` (local at close; orchestrator pushes). NOT merged (merge base
+  `e79426a` = PR #16). Receipt:
+  `build-os/receipts/P-031-confidence-framework.md`.
+
+## Staged next — P-032h: AUTHOR `timbaland.json` (THE PAYOFF PACKET)
+
+The first non-byte-identical output of the producer-agnostic epic: the second
+live producer profile. Everything the seven measurement packets + P-031 built
+converges here — the second producer ships **different / profile-authored /
+confidence-stamped / honesty-labeled / safety-invariant.**
+
+### The three REQUIRED declarations (in writing, in the JSON)
+
+1. **`protect_iconic_loops`** — Timbaland's loop philosophy, declared
+   explicitly (the P-032g hinge: the engine detects static-vs-iconic; the
+   profile decides).
+2. **`vocal_blend_policy`** — `acceptable_blend` + `confidence_floor`,
+   declared explicitly (the P-032f gate).
+3. **Its OWN `confidence_map`** (P-031, REQUIRED — no silent defaults):
+   high = groove / space / low-end / loop interpretation; limited =
+   vocal blend per the inert-blend corollary (the analyzer emits no non-lead
+   vocal masking events on real data); deferred = cultural recognizability /
+   true hook recurrence / motif provenance. **Verbatim-pin the map like
+   halee_ramone's** (the reviewer judgment note: validation accepts duplicate
+   areas + extra entry keys — the pin is the guard).
+
+### Binding constraints
+
+- **Weights = the user's APPROVED Timbaland value system:** protect
+  `groove_identity` / `negative_space` / `low_end_motion` /
+  `section_contrast`; relax `vocal_centrality` / `lush_depth` /
+  `loop_deconstruct` bias — **relax ≠ remove.**
+- **Mind the axis ceilings:** `low_end_motion` tops out at **84**,
+  `vocal_role_fit` at **85** — never 100; weight-authoring must account for
+  this.
+- **`_DEFAULT_PROFILE` no-aliasing carry-forward** — this is the SECOND live
+  profile loaded per call: copy-before-mutate; never mutate a loaded
+  profile's structures in place.
+- **Provenance:** hand-curated-documented → confidence HIGH per the standing
+  honesty policy (hand-curated → high; derived → low, labeled; LLM →
+  draft-only, never high).
+- Safety invariant: the 5 SAFETY kill-switches stay hardcoded; a profile can
+  never drop a safety guarantee.
+- Rigor bar as established: `python fixtures/generate_fixtures.py` first;
+  ≤2 commits, Commit-1 green in isolation; full suite green from the **600**
+  baseline; regression 68/68; observational language; NO push/merge/remotes
+  (orchestrator pushes).
+
+### Differential expectations (binding on P-032i, which follows immediately)
+
+P-032i proves Timbaland-vs-Halee/Ramone differentially: expect deltas from
+the **groove / space / low-end / loop / surprise** axes — **NO vocal-blend
+delta** on current fixtures (the P-032f reviewer corollary: the blend gate is
+inert on real pipeline data until an analyzer-extension packet emits non-lead
+vocal-band events).
 
 ## Epic arc
 
-**e ✓ → a ✓ → b ✓ → d ✓ → c ✓ → g ✓ → f ✓ → P-031 (confidence — ACTIVE) →
-P-032h (author `timbaland.json`: declare BOTH required philosophies + its own
-confidence_map; mind ceilings lem-84/vrf-85; second-live-profile no-aliasing)
-→ P-032i (differential proof: expect deltas from groove/space/low-end/loop/
-surprise — NOT vocal blend, per the binding corollary).** P-030 orthogonal/last.
+**e ✓ → a ✓ → b ✓ → d ✓ → c ✓ → g ✓ → f ✓ → P-031 ✓ (confidence — the
+honesty layer) → P-032h (author `timbaland.json` — STAGED NEXT) → P-032i
+(differential proof).** P-030 (rename dims) orthogonal/last.
 
 ---
-_Set active by the orchestrator-in-chief (2026-07-02). One packet at a time.
-Builder implements exactly this; qa proves; reviewer judges; archivist closes
-with a receipt._
+_Cleared by the archivist on P-031 close (2026-07-02). One packet at a time.
+The orchestrator confirms the staged packet before the builder touches it._

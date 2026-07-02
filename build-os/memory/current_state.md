@@ -135,6 +135,19 @@
     branch (NOT merged)**, atop the set-active `89e792e`. P-032f's parent
     chain: `37f25ac` → `3561845` → `89e792e` (active-packet confirmation) →
     `001f36d` (P-032g close).**
+    ★ ON TOP of P-032f, the dev branch now ALSO carries P-031 (`51a107c` +
+    `4af24e2` + review-fix `b869ebd`, product — THE HONESTY LAYER: a REQUIRED
+    per-area `confidence_map` (area / level ∈ {high, limited, deferred} /
+    reason) with structural validation, halee_ramone's authored 8-entry map
+    verbatim-pinned + machine-checked against its weights, `score_doctrine`
+    additive per-call `confidence` copies + the verdict "## Confidence"
+    section grouped by the `CONFIDENCE_LEVELS` single source of truth —
+    labeling, never judgment; byte-identical for halee_ramone modulo EXACTLY
+    the additive key/section), **`51a107c` + `4af24e2` PUSHED to the dev
+    branch; `b869ebd` local at archivist close (the orchestrator pushes at
+    close); NOT merged**. P-031's parent chain: `b869ebd` → `4af24e2` →
+    `51a107c` → `4d4b57d` (active-packet confirmation) → `4c6285b` (P-032f
+    close).
     The base for MERGE decisions is still `e79426a` = PR #16 (nothing since P-025
     has been merged).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
@@ -143,25 +156,102 @@
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-02, P-032f):** suite **572 passed** (0 failed /
-  skipped); regression **68/68** (0 critical / 0 warnings) — UNCHANGED (P-032f
-  default path is DUAL byte-identical — doctrine AND creative; vocal_role_fit
-  weight-0 + vocal_blend_policy = {acceptable_blend: false, confidence_floor:
-  0.75} for halee_ramone). Commit-1 (`3561845`) green in isolation =
-  **550 passed + 68/68**, verified in REAL WORKTREES by builder, qa, AND
-  reviewer independently. (Prior baseline was 512 at P-032g; P-032f added
-  +60 = 38 (`tests/test_vocal_type.py`) + 22
-  (`tests/test_vocal_blend_policy.py`): DUAL byte-identity, independent —
-  doctrine overalls 73.8 / 70.7 / 74.3 untouched with the new
-  `vocal_role_fit` axis 85.0 × 3 at weight 0; creative EMPTY diff, zero
-  vocabulary leakage; ALL SIX user-mandated adversarial attacks defeated by
-  BOTH gates independently. Earlier: 473 → 512 at P-032g; 451 → 473
-  at P-032c; 433 → 451 at P-032d;
-  413 → 433 at P-032b; 396 → 413 at P-032a; 384 → 396 at P-032e; 370 → 384
-  at P-029; 351 → 370 at P-028; 331 → 351 at P-027; 319 → 331 at P-026;
-  293 → 319 at P-025.)
+- **Green baseline (verified 2026-07-02, P-031):** suite **600 passed** (0 failed /
+  skipped); regression **68/68** (0 critical / 0 warnings) — UNCHANGED (P-031 is
+  LABELING, never judgment: 14 doctrine components + overalls 73.8 / 70.7 /
+  74.3 untouched, creative EMPTY diff; the ONLY output deltas are the additive
+  `doctrine_score.json` `confidence` key + the verdict "## Confidence" section
+  — whole artifact-tree diff EXACTLY that, × 3 fixtures). Commit-1 (`51a107c`)
+  green in isolation = **591 passed + 68/68**, verified in REAL WORKTREES by
+  builder, qa, AND reviewer independently. (Prior baseline was 572 at P-032f;
+  P-031 added +28 = 19 Commit-1 + 9 Commit-2, all in
+  `tests/test_confidence_map.py`. Earlier: 512 → 572 at P-032f; 473 → 512 at
+  P-032g; 451 → 473 at P-032c; 433 → 451 at P-032d; 413 → 433 at P-032b;
+  396 → 413 at P-032a; 384 → 396 at P-032e; 370 → 384 at P-029; 351 → 370 at
+  P-028; 331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★ P-031 LANDS THE HONESTY LAYER — the confidence framework:
+  per-interpretation-AREA honesty labeling (`confidence_map`: area / level ∈
+  {high, limited, deferred} / reason), a REQUIRED profile field,
+  machine-readable AND rendered; qa GREEN + reviewer PASS (ONE must-fix round
+  — fix-then-pass, fully resolved). Scope was USER-UPGRADED at P-032f close:
+  not a single profile-level stamp but a per-area map, so the second producer
+  ships "different / profile-authored / confidence-stamped / honesty-labeled /
+  safety-invariant." The docstring honesty of SEVEN packets became
+  first-class, validated, rendered, and impossible to silently delete.
+  Last-closed = P-031.**
+  - **Commits (2 + 1 review-fix, on parent `4d4b57d`):** `51a107c` (Commit-1 —
+    schema + structural validation + halee_ramone's authored map + 19 tests;
+    GREEN IN ISOLATION 591 + 68/68, verified by builder, qa, AND reviewer in
+    separate worktrees) + `4af24e2` (Commit-2 — `score_doctrine` returns
+    additive per-call `confidence` copies; verdict markdown "## Confidence"
+    section grouped by the `CONFIDENCE_LEVELS` single source of truth;
+    `doctrine_score` schema property; +9 tests) + `b869ebd` (review-fix — the
+    fix-then-pass path used as designed: split "per-section true-sub
+    movement" into its own deferred entry with the ACCURATE band-resolution
+    reason [sections expose low_mid 120–500 Hz only; true-sub 20–120 Hz not
+    measurable at section grain], removed from the onset-timing composite;
+    verbatim pin mirrored; counts identical). **`51a107c` + `4af24e2` PUSHED
+    to the dev branch; `b869ebd` local at archivist close (the orchestrator
+    pushes at close); NOT merged** (merge base still `e79426a` = PR #16).
+  - **The authored halee_ramone map (8 entries: 2 high / 1 limited / 5
+    deferred):** high = the live interpretation axes (weights machine-checked
+    > 0) + the seven agnostic axes as measurement (weights machine-checked
+    == 0, "deliberately weight-0" stated); limited = vocal blend (the
+    inert-blend corollary, accurate); deferred = cultural loop
+    recognizability / true hook recurrence / motif provenance / onset-timing
+    strong forms (typing, fills, interlock) / per-section true-sub movement
+    (band resolution).
+  - **★ qa GREEN:** suite 572 → **600** (+28); regression 68/68; Commit-1 iso
+    591 + 68/68 (real worktree); byte-identity INDEPENDENT with like-for-like
+    inputs — 14 components + overalls 73.8 / 70.7 / 74.3 unchanged, creative
+    EMPTY diff, whole artifact-tree diff = EXACTLY {doctrine_score.json
+    +confidence key, verdict md +section with 0 lines removed} × 3 fixtures;
+    honesty pins LOAD-BEARING (delete-entry sabotage → 7 failures); rendering
+    liveness with qa's OWN synthetic profile (its entries render, zero
+    reference leaks); both sabotages reproduce (default-sourcing → exactly 1
+    fail; hardcoded renderer → exactly 3); validation 8/8 spot-checked shapes
+    ValueError; safety grep NONE; observational language zero hits; cowork
+    ride-along confirmed additive AND contract-aligned ("recommendations
+    carry ... a confidence" — COWORK_CONTRACT.md), no key-set pin.
+  - **★ reviewer PASS (one must-fix round, resolved):**
+    labeling-never-judgment PROVEN (only additive output deltas); the map
+    FACT-CHECKED against the code — the ONE inexactness found (true-sub
+    misattributed to onset timing vs the real band-resolution boundary) was
+    EXACTLY the kind of catch the packet exists for, fixed via the pin's
+    conscious-edit path, re-verified (8 entries, pins STRONGER: five deferred
+    entries verbatim-pinned vs four, standing-strings sweep intact, nothing
+    loosened); per-call threading sabotage-proven; 11 extra adversarial
+    validation shapes all rejected; golden blindness read STRUCTURALLY
+    (SCORE_KEYS + categorical, no map vocabulary); trajectory check:
+    `timbaland.json` can express the user's example labeling with ZERO schema
+    change (the liveness test literally exercises the second-profile path).
+    Judgment notes (non-blocking, carried to residue): duplicate areas +
+    extra entry keys accepted — verbatim pins catch for authored profiles;
+    P-032h should pin timbaland's map too. **Codex NOT available —
+    single-model review, both rounds.**
+  - **★★ THE HONESTY LAYER IS IN PLACE.** Every future profile MUST carry a
+    validated `confidence_map` (required field, no silent defaults); the
+    reference profile's own map is authored, machine-checked against its
+    weights, and pinned; the report surface renders per-call.
+  - **★ TIMBALAND SUB-ARC (P-032.x) — remaining order:** P-032e ✓ → P-032a ✓
+    → P-032b ✓ → P-032d ✓ → P-032c ✓ → P-032g ✓ → P-032f ✓ → **P-031 ✓ →
+    P-032h (AUTHOR `timbaland.json` — THE PAYOFF PACKET, NEXT: must declare
+    `protect_iconic_loops` + `vocal_blend_policy` + its OWN `confidence_map`
+    [high groove/space/low-end/loop; limited vocal-blend per the inert
+    corollary; deferred cultural/hook/motif; verbatim-pin it like
+    halee_ramone's]; mind the axis ceilings — lem 84 / vrf 85; the
+    `_DEFAULT_PROFILE` no-aliasing carry-forward — second live profile,
+    copy-before-mutate; weights = the user's approved Timbaland value system:
+    protect groove_identity / negative_space / low_end_motion /
+    section_contrast, relax vocal_centrality / lush_depth / loop_deconstruct
+    bias — relax ≠ remove; provenance hand-curated-documented → confidence
+    HIGH per the honesty policy) → P-032i (differential proof — expect deltas
+    from groove/space/low-end/loop/surprise axes, NO vocal-blend delta per
+    the binding corollary).** P-030 (rename dims) orthogonal/last. Receipt:
+    `build-os/receipts/P-031-confidence-framework.md`.
 
 - **★★ P-032f CLOSES THE MEASUREMENT PHASE OF THE TIMBALAND SUB-ARC —
   `vocal_role_fit` (the SEVENTH and LAST weight-up axis, the 14th doctrine
@@ -1660,7 +1750,12 @@
   (labeled); LLM → draft-only, NEVER high-confidence. The `halee_ramone` reference
   is `hand-curated-documented` → `high` / `risk_class 0`, consistent with the
   policy. The profile metadata stamp exists now (P-025) but is not enforced /
-  propagated until P-031.
+  propagated until P-031. **★ UPDATE (P-031 close): NOW ENFORCED AND EXTENDED
+  PER-AREA** — every profile MUST carry a validated `confidence_map`
+  (REQUIRED field, no silent defaults), rendered per-call on the report
+  surface; halee_ramone's 8-entry map is authored, machine-checked against
+  its weights, and verbatim-pinned. P-032h's `timbaland.json` must author its
+  OWN map under this policy (hand-curated-documented → HIGH).
 
 ---
-_Updated by the archivist on close. Last advanced on P-032d close (2026-07-01) — the FOURTH new producer-agnostic doctrine axis `rhythmic_surprise` (weak, section-aggregate form) lands byte-identically for halee_ramone; the engine now carries 11 component axes; 4 of the 7 Timbaland "weight up" axes landed, zero plumbing debt. Next: P-032c (low_end_motion)._
+_Updated by the archivist on close. Last advanced on P-031 close (2026-07-02) — THE HONESTY LAYER lands: the REQUIRED per-area `confidence_map` (high/limited/deferred + reason) is validated, authored + verbatim-pinned for halee_ramone, and rendered per-call; baseline 600 passed / regression 68-of-68; `51a107c`+`4af24e2` pushed, `b869ebd` local (orchestrator pushes at close); NOT merged (merge base `e79426a` = PR #16). Next: P-032h — author `timbaland.json` (THE PAYOFF PACKET), then P-032i (differential proof; no vocal-blend delta expected)._

@@ -79,19 +79,28 @@
   `build-os/receipts/P-032c-low-end-motion.md`,
   `build-os/receipts/P-032g-loop-context-hinge.md`,
   `build-os/receipts/P-032f-vocal-role-blend-policy.md`. **Carry-forwards:**
-  - **★ REMAINING ORDER (updated at P-032f close):**
-    **P-032d ✓ → P-032c ✓ → P-032g ✓ → P-032f ✓ (vocal-role +
-    vocal_blend_policy — DONE; the user gate was CLEARED — Decision 1 = B +
-    Decision 2 = conservative default + explicit confidence floor — and every
-    user-mandated attack was defeated; the measurement phase is COMPLETE)** →
-    **P-031 (confidence framework fold-in — NEXT)** → P-032h (author
-    `timbaland.json`, the first non-byte-identical output — must declare BOTH
-    `protect_iconic_loops` AND `vocal_blend_policy` in writing (REQUIRED
-    fields); mind the axis ceilings — lem 84 / vocal_role_fit 85, never 100 —
-    and the inert-blend corollary below) → P-032i (Timbaland-vs-Halee/Ramone
-    differential proof — expect deltas from the
-    groove/space/low-end/loop/surprise axes, NOT vocal-blend; see the
-    corollary below). P-030 (rename dims) orthogonal/last.
+  - **★ REMAINING ORDER (updated at P-031 close):**
+    **P-032d ✓ → P-032c ✓ → P-032g ✓ → P-032f ✓ → P-031 ✓ (confidence
+    framework — DONE; THE HONESTY LAYER IS IN PLACE: every profile MUST carry
+    a validated per-area `confidence_map` [REQUIRED field, no silent
+    defaults]; halee_ramone's 8-entry map authored + machine-checked against
+    its weights + verbatim-pinned; rendered per-call — receipt
+    `build-os/receipts/P-031-confidence-framework.md`)** →
+    **P-032h (AUTHOR `timbaland.json` — THE PAYOFF PACKET, NEXT)**: the first
+    non-byte-identical output — must declare BOTH `protect_iconic_loops` AND
+    `vocal_blend_policy` in writing (REQUIRED fields) PLUS its OWN
+    `confidence_map` (high groove/space/low-end/loop; limited vocal-blend per
+    the inert corollary; deferred cultural/hook/motif; verbatim-pin it like
+    halee_ramone's); mind the axis ceilings — lem 84 / vocal_role_fit 85,
+    never 100 — and the inert-blend corollary below; weights = the user's
+    approved Timbaland value system (protect groove_identity / negative_space
+    / low_end_motion / section_contrast; relax vocal_centrality / lush_depth
+    / loop_deconstruct bias — relax ≠ remove); provenance
+    hand-curated-documented → confidence HIGH per the honesty policy; the
+    second-live-profile no-aliasing discipline (copy-before-mutate) →
+    P-032i (Timbaland-vs-Halee/Ramone differential proof — expect deltas
+    from the groove/space/low-end/loop/surprise axes, NOT vocal-blend; see
+    the corollary below). P-030 (rename dims) orthogonal/last.
   - **★ P-032g STAGING NOTES — ✓ DISCHARGED IN FULL (P-032g close):** the
     USER-MANDATED dual byte-identity surface was PROVEN — (a) doctrine 0
     mismatches × 3 fixtures AND (b) creative full `result.creative` sorted-key
@@ -180,8 +189,22 @@
     `_vocal_role_fit` score ceiling is **85**, never 100 — joins lem's 84 as
     a `timbaland.json` weight-authoring consideration (P-032h). All
     defensive/cosmetic — same future-doctrine-packet ride-along bucket.
-  - **★ LIVENESS-DOCSTRING OVERCLAIM (non-blocking — reviewer; NOW A
-    SIX-FILE FAMILY, fold ONE sweep):** the `liveness` test docstrings OVERCLAIM — a
+  - **★ NEW (P-031 reviewer — judgment notes, non-blocking):**
+    `confidence_map` validation accepts DUPLICATE `area` values and EXTRA
+    keys inside entries (only area/level/reason are checked) — the verbatim
+    pins catch this for AUTHORED profiles, so P-032h should verbatim-pin
+    `timbaland.json`'s map exactly like halee_ramone's; consider tightening
+    (uniqueness + entry key-set check) in a future validation packet.
+  - **★ NEW (P-031 — process precedent, standing):** the fix-then-pass
+    conscious-edit path through a verbatim pin WORKS AS DESIGNED (`b869ebd`:
+    the reviewer's fact-check caught ONE inexact reason — per-section
+    true-sub belongs to the band-resolution boundary, not onset timing; the
+    fix edited the profile AND mirrored the pin in the same commit; counts
+    identical; the pins came out STRONGER — five deferred entries
+    verbatim-pinned vs four). Record this as the STANDARD route for
+    pin-guarded content changes.
+  - **★ LIVENESS-DOCSTRING OVERCLAIM (non-blocking — reviewer; NOW
+    POTENTIALLY A SEVEN-FILE FAMILY, fold ONE sweep):** the `liveness` test docstrings OVERCLAIM — a
     general hardcoded-constant sabotage is actually caught by the
     *discrimination* tests, not the liveness tests themselves (the direction
     test reads the score from the SAME reference dict a constant poisons; a
@@ -192,10 +215,11 @@
     **NEW from P-032c:** `tests/test_low_end_motion.py:518-526`; **NEW from
     P-032g:** `tests/test_loop_context.py:566-570` — and CHECK
     `tests/test_groove_coherence.py` PLUS the two NEW P-032f files
-    (`tests/test_vocal_type.py`, `tests/test_vocal_blend_policy.py`) for the
+    (`tests/test_vocal_type.py`, `tests/test_vocal_blend_policy.py`) AND the
+    NEW P-031 file (`tests/test_confidence_map.py`) for the
     same pattern when folding the fix. **Cosmetic only** (the guard SET as a whole is sound) —
-    fold ONE docstring sweep across ALL SIX files into a future
-    doctrine-touching packet.
+    fold ONE docstring sweep across ALL affected files (up to seven) into a
+    future doctrine-touching packet.
   - **★ DOCSTRING DRIFT (non-blocking, from P-032e):** `_beat_identity`'s docstring
     says candidacy is "optionally corroborated by crest/spectral_flatness" but the
     body reads only `crest_factor_db`, never `spectral_flatness`. The spec made
@@ -295,8 +319,15 @@
     `build-os/receipts/P-029-parameterize-pipeline-by-per-call-producer-profile.md`.
   - **P-030 — rename** the `halee` / `ramone` dimension names off the producer
     names (they were kept verbatim in P-025 per the byte-identical-first decision).
-  - **P-031 — confidence framework:** consume the profile metadata stamp
-    (provenance / confidence / risk_class) per the confirmed honesty policy.
+  - **P-031 — confidence framework: ✓ DONE (2026-07-02; scope USER-UPGRADED
+    to PER-AREA at P-032f close):** the REQUIRED `confidence_map` (area /
+    level ∈ {high, limited, deferred} / reason) is structurally validated (no
+    silent defaults), authored for halee_ramone (8 entries: 2 high / 1
+    limited / 5 deferred; verbatim-pinned; machine-checked against the
+    weights), and rendered per-call (additive `confidence` key in
+    doctrine_score + the verdict "## Confidence" section). The P-025 metadata
+    stamp stays as the global complement. Receipt:
+    `build-os/receipts/P-031-confidence-framework.md`.
   - **P-032 — second producer** (a real non-Halee/Ramone profile — the first test
     of true producer-agnosticism; governed by the honesty policy).
   - **P-033 — expose producer selection** (the user-facing selection surface).
@@ -373,6 +404,11 @@
   consistent with the policy. The profile metadata stamp exists now (P-025) but is
   not enforced / propagated until P-031; authoring a SECOND profile (P-032) must
   obey this policy (no LLM-authored profile may claim `high` confidence).
+  **★ UPDATE (P-031 close): the per-area enforcement is LIVE** — every
+  profile now REQUIRES a validated `confidence_map` (no silent defaults),
+  rendered per-call; P-032h's `timbaland.json` must author its OWN map under
+  this policy (hand-curated-documented → HIGH), and should verbatim-pin it
+  like halee_ramone's.
 
 - **★ THE ARC IS DOWN TO ITS LAST STEP — P-024 (MCP SERVER, option C step 2).**
   Canonical target: Logic Mix OS as a tool Claude Cowork can drive END-TO-END in a
@@ -1492,6 +1528,17 @@
 
 ## Open boundaries (awaiting explicit go)
 
+- **P-031's product commits `51a107c` + `4af24e2` are PUSHED to the dev
+  branch; the review-fix `b869ebd` is local-only as of this close** (this
+  archivist close did not push; the orchestrator owns the build-os close
+  commit + the standing dev-branch push — NO merge). They sit on the dev
+  branch `claude/logic-mix-os-hardening-12-7hbeh1` atop the set-active
+  `4d4b57d` (→ `4c6285b`, P-032f close), with the whole producer-agnostic
+  epic (P-025 → P-029 → P-032e/a/b/d/c/g/f → P-031) still un-landed on
+  default — merge base `e79426a` (PR #16). Any PR / merge into the protected
+  default needs the user's explicit go. No merge / deploy / secret action
+  taken in this close.
+
 - **P-032c's product commit `ab14ac7` is local-only as of this close** (this
   archivist close did not push; the orchestrator owns the build-os close commit
   + the standing dev-branch push — NO merge). It sits on the dev branch
@@ -1595,4 +1642,4 @@
   No push / merge / deploy / secret action taken in this close.
 
 ---
-_Append-only working notes. Last advanced on P-032d close (2026-07-01) — the FOURTH producer-agnostic doctrine axis (`rhythmic_surprise`, weak form) lands byte-identically; 11 component axes; next P-032c (low_end_motion)._
+_Append-only working notes. Last advanced on P-031 close (2026-07-02) — the confidence framework lands: the REQUIRED per-area `confidence_map` is validated, authored + verbatim-pinned for halee_ramone, rendered per-call; THE HONESTY LAYER IS IN PLACE. Next: P-032h — author `timbaland.json` (THE PAYOFF PACKET), then P-032i (differential proof; NO vocal-blend delta expected)._
