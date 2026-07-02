@@ -55,15 +55,17 @@ import argparse
 import copy
 import dataclasses
 import json
+import shutil
 import subprocess
 import sys
 
 import pytest
 
 from logic_mix_os import cli
+from logic_mix_os import cowork as cowork_module
 from logic_mix_os.cowork import build_context, run_command
 from logic_mix_os.doctrine import doctrine_engine
-from logic_mix_os.doctrine.producer_profile import load_profile
+from logic_mix_os.doctrine.producer_profile import ProducerProfile, load_profile
 from logic_mix_os.pipeline import analyze, write_artifacts
 from logic_mix_os.project import load_manifest
 from logic_mix_os.regression import build_snapshot, compare_snapshots
@@ -168,6 +170,83 @@ def test_producer_help_names_the_semantics_not_a_profile_list():
         action = _producer_action(_subcommands()[name])
         assert action.help, name
         assert "timbaland" not in action.help.lower(), name
+
+
+# =========================================================================== #
+# 1b. THE PER-CARRIER THREADING GUARD (P-039 review fix) — the resolved
+# producer provably REACHES the analysis on EVERY carrier.
+# =========================================================================== #
+def _carrier_argv(command, tmp_path):
+    """The argv that drives one carrier end-to-end through ``cli.main`` with
+    ``--producer timbaland`` (writing surfaces routed into tmp_path)."""
+    io = ["--stems", _SIMPLE_STEMS, "--manifest", _SIMPLE_MANIFEST]
+    tim = ["--producer", "timbaland"]
+    if command == "album":
+        projects = tmp_path / "projects"
+        (projects / "song_a").mkdir(parents=True)
+        shutil.copy(_SIMPLE_MANIFEST, projects / "song_a" / "project_manifest.json")
+        return ["album", "--projects", str(projects), *tim]
+    if command == "cowork":
+        return ["cowork", "--name", "intake_project", *io, *tim]
+    if command == "memory-record":
+        return ["memory-record", *io, "--memory-dir", str(tmp_path / "mem"),
+                "--name", "pass_1", *tim]
+    if command == "dashboard":
+        return ["dashboard", *io, "--out", str(tmp_path / "dash.html"), *tim]
+    if command in ("status", "mixer-feedback"):
+        return [command, *io, *tim]
+    # analyze / detect-identities / analyze-sections / generate-plan /
+    # creative / governance / audit — these write artifacts: keep --out in tmp.
+    return [command, *io, "--out", str(tmp_path / "out"), *tim]
+
+
+@pytest.mark.parametrize("command", sorted(PRODUCER_COMMANDS))
+def test_resolved_producer_reaches_every_carriers_analysis(
+    command, analyzed, tmp_path, monkeypatch, capsys
+):
+    """THE SILENT-IGNORE GUARD (the P-039 review fix): flag PRESENCE alone
+    cannot catch a handler that accepts ``--producer`` and then drops it —
+    the reviewer demonstrated exactly that sabotage (the ``producer=``
+    threading removed from ``_run_governance``'s ``analyze()`` call) shipping
+    green through the whole suite. This test closes it for EVERY carrier: a
+    spy on the ``producer`` kwarg arriving at the handler's analysis entry
+    point (``cli.analyze`` for the direct carriers; ``cowork.analyze`` behind
+    ``build_context`` for the cowork carrier) records what each handler
+    ACTUALLY passed, and every recorded value must be the RESOLVED timbaland
+    ``ProducerProfile``. Album is asserted for BOTH of its per-song passes
+    (exactly 2 recorded calls — pass 1 album-context-free, pass 2
+    album-aware); every other carrier records exactly 1.
+
+    The spy short-circuits the real analysis by returning a canned, fully
+    real ``ProjectAnalysis`` (the session ``analyzed`` fixture) so all 13
+    handlers still run their complete downstream surface logic at near-zero
+    cost — honestly a stand-in: the REAL end-to-end differential stays
+    proven by the demo / status / cowork tests in this file.
+
+    Sabotage-verified both ways before landing: with the ``producer=``
+    threading dropped from ``_run_governance``'s ``analyze()`` call (the
+    reviewer's exact cut) the governance case FAILS here (the spy sees no
+    producer kwarg); with the ``producer=producer`` threading dropped from
+    album's PASS-2 call the album case FAILS here; at HEAD all 13 pass."""
+    canned = analyzed["simple_vocal_piano_song"]
+    seen = []
+
+    def spy(*args, **kwargs):
+        seen.append(kwargs.get("producer"))
+        return canned
+
+    monkeypatch.setattr(cli, "analyze", spy)
+    monkeypatch.setattr(cowork_module, "analyze", spy)
+
+    rc = cli.main(_carrier_argv(command, tmp_path))
+    capsys.readouterr()  # drain the handler's printed surface
+    assert rc == 0
+
+    expected_calls = 2 if command == "album" else 1
+    assert len(seen) == expected_calls, (command, seen)
+    for producer in seen:
+        assert isinstance(producer, ProducerProfile), command
+        assert producer.metadata["name"] == "timbaland", command
 
 
 # =========================================================================== #
