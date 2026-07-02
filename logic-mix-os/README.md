@@ -60,7 +60,54 @@ logic-mix-os analyze \
 
 (Or without installing: `python -m logic_mix_os.cli analyze ...`.)
 
-A ready-made example of the output lives in [`examples/sample_output/`](examples/sample_output).
+Ready-made examples of the output live in `examples/`: two committed trees
+generated from the **same stems** (the seeded `vocal_chop_groove` fixture) —
+[`examples/sample_output/`](examples/sample_output) under the default
+Halee/Ramone profile and
+[`examples/sample_output_timbaland/`](examples/sample_output_timbaland) under
+`--producer timbaland`. See the next section for what to compare.
+
+## Two producers, same stems
+
+The two committed sample trees are the output of exactly this invocation pair
+(from the repo root, after `python fixtures/generate_fixtures.py`):
+
+```bash
+python -m logic_mix_os.cli analyze \
+  --stems fixtures/vocal_chop_groove/stems \
+  --manifest fixtures/vocal_chop_groove/project_manifest.json \
+  --out out_ref
+
+python -m logic_mix_os.cli analyze \
+  --stems fixtures/vocal_chop_groove/stems \
+  --manifest fixtures/vocal_chop_groove/project_manifest.json \
+  --out out_tim --producer timbaland
+```
+
+Same stems, same measurements, two judgments — the values below are the ones
+pinned in the test suite:
+
+| Reading | Halee/Ramone (reference) | Timbaland | Why they differ |
+|---|---|---|---|
+| Overall mix readiness | **76.3** | **60.9** | Each overall is its own profile's weighted mean over the shared component axes |
+| Vocal role fit | 65.0 | 85.0 | The authored blend policy: the reference reads the vocal chop/stack masking involvements under full clarity protection; Timbaland's authored opt-in accepts the same involvements as blend |
+| Loop context | 15.0 | 10.0 | Both profiles read the dominant chop loop as STATIC from the same stems; each maps that reading to its own authored polarity |
+
+On this fixture both producers search in the same mode (`dramatic_contrast`)
+and land on the same winning variants (`chorus_lift_B` / `loop_B` / `depth_A` /
+`vocal_A`) — here the divergence lives in the readings and the overall, not in
+the plan choice (the plan-level reversal needs an iconic-reading loop; see
+`tests/test_differential_proof.py`). What stays invariant under both producers:
+the safety surface (both trees' composed kill-switch lists lead with the five
+hardcoded safety switches, verbatim) and the measurements themselves (the
+shared axes — e.g. emotional hierarchy 86.0, groove coherence 99.4 — read
+identically in both trees).
+
+Start the comparison at `doctrine_score.json` (each tree names its selecting
+producer and carries its own scores) and `mix_verdict.md` (the human-readable
+verdict, producer line near the top) in
+[`examples/sample_output/`](examples/sample_output) vs
+[`examples/sample_output_timbaland/`](examples/sample_output_timbaland).
 
 ## CLI
 
@@ -189,7 +236,7 @@ logic_mix_os/
   validation/       # schema validation, confidence/evidence tagging
   schemas/          # JSON Schemas for every output
 fixtures/           # deterministic synthetic test projects (generator + manifests)
-examples/           # example manifest + committed sample output
+examples/           # example manifest + the two committed sample trees (same stems, both producers)
 tests/              # pytest suite (4 fixtures, acceptance + unit)
 ```
 
