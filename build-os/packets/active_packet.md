@@ -4,58 +4,57 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** ACTIVE — P-035 confirmed by the orchestrator-in-chief
-  (2026-07-02; packet 2 of the two-packet plan the user approved with "Do
-  it"). Handed to builder.
+- **Status:** NONE ACTIVE — P-035 closed by the archivist (2026-07-02).
+  The next packet below is STAGED, not active, until the orchestrator
+  confirms on the user's go.
 
 ## Last-closed
 
-- **P-034 ✓ CLOSED (2026-07-02)** — analyzer capacity (packet 1 of the
-  user-approved two-packet analyzer-extension plan): the masking analyzer
-  emits NON-LEAD vocal-band masking events under the NEW classification
-  `vocal_band_masking`, consumed ONLY by the vocal-role surface; plus the
-  `creative.py` `_lead_masked` identity-derived fix. Fixture-inert by
-  construction; byte-identical everywhere. qa GREEN (suite 705 → **741**;
-  regression **68/68, goldens untouched**; the P-032i pin stands) +
+- **P-035 ✓ CLOSED (2026-07-02)** — the 4th fixture (`vocal_chop_groove`) +
+  the real-data vocal-blend differential (packet 2 of 2 of the user-approved
+  analyzer-extension plan). **★★★ THE ANALYZER-EXTENSION ARC (P-034 + P-035)
+  IS COMPLETE — and with it the P-032f corollary's FULL resolution: policy
+  (P-032f, dormant) → capacity (P-034, inert) → LIVE, MEASURED, ATTRIBUTABLE
+  (P-035).** Same stems, two philosophies: vocal_role_fit 65.0 vs 85.0,
+  overalls **76.3 vs 60.9**, every point attributable (the blend gate worth
+  exactly +0.7 at timbaland's authored 0.4 weight). qa GREEN (suite 741 →
+  **754**; regression **68/68 → 93/93** — the corpus is now 4 fixtures, the
+  68/68 era ended consciously; the original 3 fixtures byte-untouched) +
   reviewer PASS (no must-fix; Codex not available — single-model review).
-  Single commit `e52bc1a` on parent `b53d51c`, **PUSHED to the dev branch,
-  NOT merged** (merge base `58d21dd` = PR #17). Receipt:
-  `build-os/receipts/P-034-vocal-band-masking-capacity.md`.
+  Two commits `0b940c7` (Commit-1 — the buried-vocal either-side-forward
+  decision, green in isolation) + `e5a12dc` (Commit-2 — the fixture) on
+  parent `916e577`, **PUSHED to the dev branch, NOT merged** (merge base
+  `58d21dd` = PR #17). Receipt:
+  `build-os/receipts/P-035-vocal-chop-groove-differential.md`.
 
-## Active packet spec (confirmed)
+## ★ OPEN USER GATE — THE MERGE DECISION
 
-- **Packet id:** P-035
-- **Title:** the 4th fixture + the real-data vocal-blend differential — the
-  arc's payoff (packet 2 of the two-packet plan).
-- **Scope:**
-  1. **The 4th fixture** (`vocal_chop_groove`-style): lead + chopped vocal +
-     backing stack + beat **+ at least one forward/heard masker-set
-     instrument (synth/keys/guitar) with vocal-presence overlap ≥ 0.1
-     against the chop — ★ the BINDING P-034 reviewer advisory: as literally
-     described WITHOUT that instrument, the fixture would emit ZERO
-     `vocal_band_masking` events (vocal-vs-vocal pairs are excluded; beat
-     identities are not in the masker set) and the blend differential stays
-     dormant** — plus its golden and the manifest/generator additions.
-  2. **The conscious pin flips:** the P-032i no-vocal-blend-delta pin + its
-     now-capacity-stale docstring; the regression count moves off 68/68
-     CONSCIOUSLY; EXPECTED_SNAPSHOT + any fixture-count pins.
-  3. **The real-data blend differential:** timbaland vs reference on the new
-     fixture — the measurable delta (the P-032f inert-blend corollary's
-     LIVE half).
-  4. **Revisit the three P-034 deferrals consciously:** the
-     `per_track_masking_risk` contribution; the `severity != "info"`
-     consumption filter (against real data); the buried-vocal reading.
-  5. **Byte-identical discipline for the EXISTING 3 fixtures** — their
-     goldens/pins must not move.
-- **Backlog order kept:** P-035 → the residue sweeps (incl. the three
-  producer-named-VALUE surfaces + `logic_action_generator.py:38`).
+- **The dev branch now carries FIVE unmerged packets — P-033, P-030, P-034,
+  P-035 + their build-os closes — atop merge base `58d21dd` (PR #17).**
+  Surface the merge/landing decision to the user at the next opportunity.
+  No merge without explicit go.
 
-## Epic arc (post-merge backlog)
+## Staged next (NOT active until confirmed)
 
-**P-033 ✓ → P-030 ✓ → P-034 ✓ → P-035 (ACTIVE) →** the residue sweeps.
+- **The STALE-CONFIDENCE-MAP FIX packet — jumps the residue queue per the
+  P-035 reviewer's recommendation.** Both profiles' "limited" vocal-blend
+  `confidence_map` entries claim a dormancy that is now FALSE on both halves
+  (P-034 delivered the capacity; P-035 made it live on real data). Contained
+  — no scorer consumes the map — but reputationally first for a product
+  whose brand is honest labeling. **Shape (small packet):** rewrite the two
+  entries' reasons to live status + re-judge levels; consciously flip the
+  verbatim map pins (TIM_AUTHORED_MAP + halee_ramone's) for exactly those
+  entries; byte-identical everywhere else.
+
+## Backlog after
+
+- The residue sweeps (the three producer-named-VALUE surfaces,
+  `logic_action_generator.py:38`, validation tightening, liveness
+  docstrings, `cli.py` `--mode` text, the P-035 count-pin parenthetical
+  tidy, etc. — see `build-os/memory/residue.md`).
 
 ---
-_Cleared by the archivist at P-034 close (2026-07-02). One packet at a time.
+_Cleared by the archivist at P-035 close (2026-07-02). One packet at a time.
 The orchestrator confirms the staged packet active on the user's go; builder
 implements exactly that; qa proves; reviewer judges; archivist closes with a
 receipt._

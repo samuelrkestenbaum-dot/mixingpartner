@@ -198,26 +198,120 @@
     the dev branch (NOT merged)**, atop the set-active `b53d51c`. P-034's
     parent chain: `e52bc1a` → `b53d51c` (active-packet confirmation)
     → `db13d08` (P-030 close).
+    ★ ON TOP of P-034, the dev branch now ALSO carries **P-035
+    (`0b940c7` + `e5a12dc`, two product commits — THE ARC'S PAYOFF,
+    packet 2 of the analyzer-extension plan: Commit-1 reads the
+    vocal-band pair when EITHER side is forward — the buried-vocal
+    decision; P-034's moderate tier was structurally unreachable on any
+    real fixture under the stem-forward-only gate — and Commit-2 lands
+    the 4th fixture `vocal_chop_groove` (6 stems, seed 1003) that makes
+    the vocal-blend differential LIVE on real data: vocal_role_fit 65.0
+    vs 85.0, overalls 76.3 vs 60.9, fully attributable; the original 3
+    fixtures byte-untouched), PUSHED to the dev branch (NOT merged)**,
+    atop the set-active `916e577`. P-035's parent chain: `e5a12dc` →
+    `0b940c7` → `916e577` (active-packet confirmation) → `4ea1717`
+    (P-034 close). **★★★ THE ANALYZER-EXTENSION ARC (P-034 + P-035) IS
+    COMPLETE. The dev branch now carries FIVE unmerged packets — P-033,
+    P-030, P-034, P-035 + closes — the MERGE decision is an OPEN USER
+    GATE.**
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-02, P-034):** suite **741 passed** (0
-  failed / skipped); regression **68/68, goldens UNTOUCHED** (zero golden
-  paths in the P-034 diff — the packet is fixture-inert by construction).
-  Single commit `e52bc1a` — HEAD IS Commit-1 → green in isolation (real
-  worktree check: 741 + 68/68). (Prior baseline was 705 at P-030; P-034
-  added +36 — the new 36-test `tests/test_vocal_band_masking.py`.
-  Earlier: 678 → 705 at P-030; 660 → 678 at P-033; 639 → 660 at P-032i;
-  600 → 639 at P-032h; 572 → 600 at P-031; 512 → 572 at P-032f;
-  473 → 512 at P-032g; 451 → 473 at P-032c; 433 → 451 at P-032d;
-  413 → 433 at P-032b; 396 → 413 at P-032a; 384 → 396 at P-032e;
-  370 → 384 at P-029; 351 → 370 at P-028; 331 → 351 at P-027;
-  319 → 331 at P-026; 293 → 319 at P-025.)
+- **Green baseline (verified 2026-07-02, P-035):** suite **754 passed** (0
+  failed / skipped); regression **93/93** — the corpus is now **4
+  fixtures** (the 68/68 era ended CONSCIOUSLY at P-035: +16 golden +9
+  invariants for `vocal_chop_groove`, the 1 inapplicable invariant
+  correctly reasoned; the original 3 fixtures' goldens/manifests/stems
+  byte-untouched, git diff EMPTY). Two commits `0b940c7` + `e5a12dc` —
+  Commit-1 green in isolation (real worktree check: 741 + 68/68,
+  fixture-inert at that tree). (Prior baseline was 741 at P-034; P-035
+  added +13 — the new 13-test `tests/test_vocal_chop_groove.py`.
+  Earlier: 705 → 741 at P-034; 678 → 705 at P-030; 660 → 678 at P-033;
+  639 → 660 at P-032i; 600 → 639 at P-032h; 572 → 600 at P-031;
+  512 → 572 at P-032f; 473 → 512 at P-032g; 451 → 473 at P-032c;
+  433 → 451 at P-032d; 413 → 433 at P-032b; 396 → 413 at P-032a;
+  384 → 396 at P-032e; 370 → 384 at P-029; 351 → 370 at P-028;
+  331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-035 LANDS THE 4TH FIXTURE + THE REAL-DATA VOCAL-BLEND
+  DIFFERENTIAL — packet 2 of 2; ★ THE ANALYZER-EXTENSION ARC (P-034 +
+  P-035) IS COMPLETE, and with it the P-032f corollary's FULL
+  resolution: policy (P-032f, dormant) → capacity (P-034, inert) →
+  LIVE, MEASURED, ATTRIBUTABLE (P-035). The last promise of the original
+  Timbaland design conversation is now a measured product claim:
+  "Timbaland can treat vocal chops/stacks rhythmically without the
+  engine becoming anti-vocal — same stems, two philosophies, 76.3 vs
+  60.9, every point attributable." qa GREEN + reviewer PASS (no
+  must-fix). Last-closed = P-035.**
+  - **Two commits on parent `916e577`** (active-packet confirmation),
+    atop `4ea1717` (P-034 close): `0b940c7` (Commit-1 — the buried-vocal
+    analyzer decision: read the vocal-band pair when EITHER side is
+    forward; green in isolation 741 + 68/68, fixture-inert at that tree)
+    + `e5a12dc` (Commit-2 — the fixture: 6 stems seed 1003, generator
+    builders `_vocal_chop`/`_vocal_stack`, manifest, targeted-script
+    golden, the 13-test `tests/test_vocal_chop_groove.py`, the conscious
+    pin flips, README). **PUSHED to the dev branch, NOT merged** (merge
+    base `58d21dd` = PR #17). **★ The dev branch now carries FIVE
+    unmerged packets — P-033, P-030, P-034, P-035 + closes — SURFACE
+    THE MERGE DECISION AS THE OPEN USER GATE.**
+  - **★ THE CENTRAL FINDING (Commit-1):** the moderate event was
+    STRUCTURALLY UNREACHABLE on any real fixture under P-034's
+    stem-forward-only gate — a non-lead vocal is necessarily
+    backing_vocal, which goes forward ONLY at high energy, exactly where
+    the depth planner steps every masker-set instrument to midground
+    (disjoint by construction; the reviewer traced it independently and
+    confirmed "literally correct"). This was the P-034 buried-vocal
+    deferral resolved in the packet that owned it: either-side-forward,
+    both-sides-buried stays silent (depth-separated fabric), strictly
+    additive (every P-034 emission preserved string-identical).
+  - **★ THE MEASURED PAYOFF:** the chop classifies `vocal_percussive`
+    0.95 (td 0.805, crest 19.25 — 3-of-3 real physics; the manifest hint
+    alone = 1-of-3 = fail-closed 0.33); the stack `vocal_stack` 0.95
+    (width 0.795); 4 lead-free `vocal_band_masking` events (2 moderate
+    verse: overlaps 0.2191/0.1655; 2 info chorus, unconsumed).
+    **vocal_role_fit 65.0 (reference protects clarity) vs 85.0
+    (timbaland accepts blend); overalls 76.3 vs 60.9; the blend gate
+    worth exactly +0.7 at tim's authored 0.4 weight; tim's overall
+    reconstructs from the reference's measurements + exactly TWO
+    authored substitutions.** Groove axes read genuinely
+    (groove_coherence 99.4, beat_identity 63.6).
+  - **★ qa GREEN:** suite 741 → **754**; regression **68/68 → 93/93**
+    (+16 golden +9 invariants; the 1 inapplicable invariant correctly
+    reasoned); determinism 21 stems sha256-identical across double
+    generation; original 3 fixtures: git diff EMPTY + all pins
+    live-verified both producers; Commit-1 iso real worktree check; the
+    either-side-forward gate probed with raw synthetics across 6 depth
+    combinations; safety grep none.
+  - **★ reviewer PASS (no must-fix):** deferral pre-authorization
+    honored; synthesis honest (the audio delivers the physics; the hint
+    is legitimate provenance idiom); differential arithmetic verified
+    independently (60.9 exact; +0.7 counterfactual; ref immovable at
+    weight 0); ALL pin flips honor their pre-registrations (the P-032i
+    flip RETAINS the no-delta guard on the original 3); pin-to-3 the
+    right call (scope-explosion avoidance; nothing load-bearing runs
+    only via shared parametrization); golden accounting verified (+25 =
+    16+9); both sabotages caught (gate-revert → 7 failures; floor-raise
+    → 6 failures). **Codex NOT available — single-model review.**
+  - **★ Deferral decisions (the three P-034 deferrals, decided against
+    real data):** (a) risk-exclusion KEPT (4 real events, all risks
+    0.0); (b) info-filter KEPT (the chorus infos are the lead-acceptable
+    controlled-overlap shape; consuming them would protect non-lead
+    vocals stricter than the lead — consumption-invariance pinned); (c)
+    buried-vocal FLIPPED (Commit-1, the packet that owned it).
+  - **★ NEXT = the STALE-CONFIDENCE-MAP FIX packet, JUMPING THE RESIDUE
+    QUEUE per the reviewer's recommendation, STAGED not active:** both
+    profiles' "limited" vocal-blend entries claim a dormancy that is now
+    FALSE on both halves — contained (no scorer consumes the map) but
+    reputationally first for a product whose brand is honest labeling.
+    Shape: rewrite the two entries' reasons to live status + re-judge
+    levels; consciously flip the verbatim map pins for exactly those
+    entries; byte-identical everywhere else. Then the residue sweeps.
+    Receipt: `build-os/receipts/P-035-vocal-chop-groove-differential.md`.
 
 - **★★★ P-034 LANDS THE ANALYZER CAPACITY — packet 1 of the
   user-approved two-packet analyzer-extension plan: the masking analyzer now
