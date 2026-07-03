@@ -27,6 +27,18 @@ requirements for the fork:
   producer are pinned byte-stable (the shipped default/intimate modes author
   NEUTRAL declarations — the packet's conscious choice, so requirement 8
   holds by construction and the fork is proven on non-default modes).
+
+P-043 (conscious deltas, enumerated): the engine vocabulary widened by the
+two REACH-GATED extended kinds (``arrangement_lift`` / ``ensemble_rebalance``
+— tests/test_move_vocabulary_expansion.py). quincy_jones authors reach on
+three modes — including his DEFAULT mode, which is literally NAMED
+``arrangement_lift`` (reach IS its meaning under his arrangement-led
+philosophy) — so HIS default-flow pin gains exactly the reached ids
+(QUINCY_DEFAULT_FLOW_IDS below) and his default artifacts carry the reach
+surface; halee_ramone/timbaland author ZERO reach and every one of their
+pins here is byte-identical. The reconstructive rule extends to
+(pool ∪ authored reach) − suppress, with the unchanged neutral-only
+fallback.
 """
 
 from __future__ import annotations
@@ -114,6 +126,33 @@ DEFAULT_FLOW_IDS = {
     },
 }
 
+# P-043 CONSCIOUS DELTA — quincy_jones only: his default mode is literally
+# NAMED ``arrangement_lift``, and under his arrangement-led philosophy the
+# authored reach for the ``arrangement_lift`` family IS that mode's meaning
+# ("each section earns its lift through parts entering and leaving"). His
+# default flow therefore gains EXACTLY the reached arrangement_lift ids
+# (appended after the neutral pool — reach admits, never reorders the
+# original seven); his intimate path (space_for_the_singer, zero reach) and
+# every other producer's default flow stay byte-identical to the shared pin
+# above.
+QUINCY_DEFAULT_FLOW_IDS = {
+    "simple_vocal_piano_song": DEFAULT_FLOW_IDS["simple_vocal_piano_song"],
+    "dense_chorus_with_loops": {
+        "chorus_lift": ["chorus_lift_A", "chorus_lift_B", "chorus_lift_C",
+                        "chorus_lift_D", "chorus_lift_E"],
+        "density": ["density_A", "density_B", "density_C"],
+        "loop": ["loop_A", "loop_B"],
+        "depth": ["depth_A"],
+        "vocal_belief": ["vocal_A", "vocal_B"],
+    },
+    "splice_loop_problem": {
+        "chorus_lift": ["chorus_lift_A", "chorus_lift_B", "chorus_lift_C",
+                        "chorus_lift_D", "chorus_lift_E"],
+        "loop": ["loop_A", "loop_B"],
+        "vocal_belief": ["vocal_A", "vocal_B"],
+    },
+}
+
 
 def _raw(producer: str) -> dict:
     """The producer's AUTHORED JSON, read directly from disk — the
@@ -138,12 +177,27 @@ def _pool_kinds(pid: str) -> list:
     return [kind for _, kind in ENGINE_POOL[pid]]
 
 
-def _expected_kind_set(pid: str, suppress_kinds) -> set:
-    """The reconstructive rule: ENGINE POOL minus the authored suppressions —
-    with the engine's documented non-empty fallback (a fully-suppressed pool
-    emits the full neutral pool)."""
+# P-043: the extended kinds' per-problem availability — which problems the
+# engine's reach-gated curated pool addresses (the full (id, kind) pin lives
+# in tests/test_move_vocabulary_expansion.py::EXTENDED_POOL; this is the
+# kind-set view the reconstructive rule needs).
+EXTENDED_POOL_KINDS = {
+    "chorus_lift": {"arrangement_lift"},
+    "density": {"arrangement_lift", "ensemble_rebalance"},
+    "loop": set(),
+    "depth": set(),
+    "vocal_belief": {"ensemble_rebalance"},
+}
+
+
+def _expected_kind_set(pid: str, suppress_kinds, reach_kinds=()) -> set:
+    """The reconstructive rule, P-043-extended: (ENGINE POOL ∪ the authored
+    reach where the extended pool holds variants) minus the authored
+    suppressions — with the engine's documented non-empty fallback (a
+    fully-suppressed pool emits the full NEUTRAL pool, never the reach)."""
     pool = set(_pool_kinds(pid))
-    expected = pool - set(suppress_kinds)
+    reached = set(reach_kinds) & EXTENDED_POOL_KINDS[pid]
+    expected = (pool | reached) - set(suppress_kinds)
     return expected if expected else pool
 
 
@@ -453,17 +507,20 @@ def test_suppression_can_never_empty_the_set(dense):
 def test_default_flow_candidate_ids_do_not_drift(producer, analyzed):
     """Each producer's own default-flow mode (its authored
     ``default_creative_mode`` resolution per fixture) emits the PINNED
-    pre-P-042 variant-id lists — order included — on all three fixtures.
-    The shipped profiles author NEUTRAL declarations on their default and
-    intimate modes (the packet's conscious choice), so the fork lives ONLY
-    on non-default modes."""
+    variant-id lists — order included — on all three fixtures. For
+    halee_ramone/timbaland that is the pre-P-042 neutral emission,
+    byte-identical (they author zero reach). For quincy_jones it is the
+    P-043 CONSCIOUS delta: his default mode's authored reach appends
+    exactly the arrangement_lift ids (see QUINCY_DEFAULT_FLOW_IDS)."""
     prof = load_profile(producer)
+    expected_flow = (QUINCY_DEFAULT_FLOW_IDS if producer == "quincy_jones"
+                     else DEFAULT_FLOW_IDS)
     for name in FIXTURE_NAMES:
         res = analyzed[name]
         mode = pipeline._default_creative_mode(res.project.intent, prof)
         out = run_creative_engine(res, mode, profile=prof)
         emitted = {b["problem_id"]: _ids(b["variants"]) for b in out["branches"]}
-        assert emitted == DEFAULT_FLOW_IDS[name], (producer, name)
+        assert emitted == expected_flow[name], (producer, name)
 
 
 @pytest.mark.parametrize("producer", PRODUCERS)
@@ -473,7 +530,10 @@ def test_every_shipped_profile_authors_the_fields_explicitly(producer):
     choices); its default-flow modes (declared default + intimate) author
     them NEUTRAL — the requirement-8 construction, visible in the JSON
     itself; and at least one NON-default mode authors a NON-neutral reach,
-    so the fork is real for every producer."""
+    so the fork is real for every producer. (P-043: ``reach_kinds`` is the
+    separate ADMISSION field — quincy's default mode consciously authors
+    one while its favor/suppress stay neutral; that delta is pinned in
+    QUINCY_DEFAULT_FLOW_IDS and tests/test_move_vocabulary_expansion.py.)"""
     raw = _raw(producer)
     for mode_name, entry in raw["search_modes"].items():
         assert "favor_kinds" in entry, (producer, mode_name)
@@ -517,24 +577,31 @@ def test_same_mode_different_producers_different_candidate_sets(dense):
         experimental[producer] = set(_ids(_branch(out, "vocal_belief")["variants"]))
     assert experimental["timbaland"] == {"vocal_A"}
     assert experimental["halee_ramone"] == {"vocal_A", "vocal_B"}
-    assert experimental["quincy_jones"] == {"vocal_A", "vocal_B"}
+    # P-043 conscious delta: quincy's experimental now REACHES for the real
+    # ensemble_rebalance family (replacing the P-042 subtractive_drop +
+    # width_bloom approximation), so his vocal_belief set gains vocal_C —
+    # three pairwise-distinct sets on this branch too.
+    assert experimental["quincy_jones"] == {"vocal_A", "vocal_B", "vocal_C"}
+    assert len({frozenset(s) for s in experimental.values()}) == 3
 
 
 @pytest.mark.parametrize("producer", PRODUCERS)
 def test_every_producers_every_mode_is_attributable_to_its_json(producer, dense):
     """The full reconstructive attribution (requirements 3 + 4 + 9), all
     three producers: for EVERY authored mode and EVERY problem, the emitted
-    kind set equals the shared ENGINE POOL minus THAT producer's authored
-    ``suppress_kinds`` for THAT mode — derived from the JSON on disk. Where
-    two producers' declarations differ, their same-mode sets differ; where
-    they are both neutral (``dramatic_contrast``), the sets agree — the
-    difference is the DATA, never a code path."""
+    kind set equals (the shared ENGINE POOL ∪ THAT mode's authored
+    ``reach_kinds`` where the extended pool holds variants) minus THAT
+    producer's authored ``suppress_kinds`` — derived from the JSON on disk.
+    Where two producers' declarations differ, their same-mode sets differ;
+    where they are both neutral (``dramatic_contrast``), the sets agree —
+    the difference is the DATA, never a code path."""
     prof = load_profile(producer)
     raw_modes = _raw(producer)["search_modes"]
     for mode_name, entry in raw_modes.items():
         for pid in PROBLEM_IDS:
             emitted = _kinds(generate_variants({"id": pid}, dense, mode_name, prof))
-            assert emitted == _expected_kind_set(pid, entry["suppress_kinds"]), \
+            assert emitted == _expected_kind_set(
+                pid, entry["suppress_kinds"], entry.get("reach_kinds", ())), \
                 (producer, mode_name, pid)
 
 
@@ -610,7 +677,12 @@ def test_artifact_explains_the_fork_requirement_10(dense):
     }
 
 
-@pytest.mark.parametrize("producer", PRODUCERS)
+# P-043: quincy's default mode now consciously authors reach, so his default
+# artifacts CARRY the declaration surface (pinned in
+# tests/test_move_vocabulary_expansion.py); the zero-byte discipline is the
+# ZERO-REACH producers' guarantee — exactly the two whose trees are committed
+# under the staleness pin.
+@pytest.mark.parametrize("producer", ("halee_ramone", "timbaland"))
 def test_artifact_keys_absent_on_default_flows(producer, analyzed):
     """The evidence-key discipline (and the committed sample trees' byte
     safety): neutral/default runs carry NEITHER additive key — zero new

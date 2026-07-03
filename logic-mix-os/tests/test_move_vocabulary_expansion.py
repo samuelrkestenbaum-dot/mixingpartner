@@ -59,12 +59,16 @@ from logic_mix_os.creative import (
 from logic_mix_os.doctrine.producer_profile import _validate, load_profile
 from logic_mix_os.renderers.creative_renderer import render_creative
 
-from conftest import FIXTURE_NAMES
+from logic_mix_os.pipeline import analyze
+from logic_mix_os.project import load_manifest
+
+from conftest import FIXTURE_NAMES, ROOT
 from test_mode_forking import (
     DENSE,
     ENGINE_POOL,
     PROBLEM_IDS,
     PRODUCERS,
+    QUINCY_DEFAULT_FLOW_IDS,
     _branch,
     _ids,
     _kinds,
@@ -580,3 +584,181 @@ def test_renderer_explains_reach_and_stays_silent_without_it(dense):
     assert "reaches for" not in md_fork and "reached for" not in md_fork
     md_neutral = render_creative(run_creative_engine(dense, "dramatic_contrast", profile=ref))
     assert "Mode reach" not in md_neutral and "reached for" not in md_neutral
+
+
+# =========================================================================== #
+# THE SHIPPED DIFFERENTIAL — Quincy authors real reach; the other two do not.
+# =========================================================================== #
+# Quincy's authored reach, pinned per mode (the packet's decision, from his
+# arrangement-led philosophy):
+# * ``arrangement_lift`` — his DEFAULT mode, literally NAMED after the
+#   family: "sectional entrances and exits, build the lift through the
+#   arrangement" IS the arrangement_lift move — reach is the mode's meaning.
+#   The default-flow drift this causes is the packet's conscious, enumerated
+#   delta (QUINCY_DEFAULT_FLOW_IDS in test_mode_forking.py).
+# * ``ensemble_balance`` — "the ensemble in layers around the lead" IS the
+#   ensemble_rebalance move; his curated low translation risk clears the
+#   mode's low posture, so the cap PROVABLY allowed this authoring.
+# * ``experimental`` — carried the P-042 subtractive_drop + width_bloom
+#   APPROXIMATION of these families; the approximation is REPLACED by the
+#   real thing (reached AND favored to the front).
+QUINCY_REACH = {
+    "conservative": [],
+    "ensemble_balance": ["ensemble_rebalance"],
+    "space_for_the_singer": [],
+    "arrangement_lift": ["arrangement_lift"],
+    "orchestral_depth": [],
+    "experimental": ["arrangement_lift", "ensemble_rebalance"],
+}
+
+EXTENDED_IDS = {vid for pool in EXTENDED_POOL.values() for vid, _ in pool}
+
+EXTENDED_KINDS_BY_PROBLEM = {
+    pid: {kind for _, kind in EXTENDED_POOL[pid]} for pid in PROBLEM_IDS
+}
+
+
+def test_quincy_authors_the_pinned_reach_and_it_validates():
+    """Quincy's ``reach_kinds`` per mode IS the pinned authoring; his
+    experimental favor no longer carries the in-vocabulary approximation;
+    and the shipped JSON passes the full loader validation — the authored
+    reach lives INSIDE the governance cap."""
+    raw = _raw("quincy_jones")
+    reach = {m: e["reach_kinds"] for m, e in raw["search_modes"].items()}
+    assert reach == QUINCY_REACH
+    exp = raw["search_modes"]["experimental"]
+    assert exp["favor_kinds"] == ["arrangement_lift", "ensemble_rebalance"]
+    assert "subtractive_drop" not in exp["favor_kinds"]
+    assert "width_bloom" not in exp["favor_kinds"]
+    _validate(raw, "quincy_jones")
+
+
+def test_same_mode_same_stems_only_quincy_emits_the_new_kinds(dense):
+    """THE HEADLINE DIFFERENTIAL: ``experimental`` exists in all three
+    profiles. Same mode name, same stems: quincy_jones emits the extended
+    families (reached AND favored to the front of each touched branch);
+    halee_ramone and timbaland emit ZERO extended ids anywhere — their gate
+    holds because reach was never authored, not because of any code path."""
+    emitted = {}
+    for producer in PRODUCERS:
+        out = run_creative_engine(dense, "experimental",
+                                  profile=load_profile(producer))
+        emitted[producer] = {b["problem_id"]: _ids(b["variants"])
+                             for b in out["branches"]}
+    q = emitted["quincy_jones"]
+    assert q["chorus_lift"] == ["chorus_lift_E", "chorus_lift_A",
+                                "chorus_lift_B", "chorus_lift_C", "chorus_lift_D"]
+    assert q["density"] == ["density_C", "density_D", "density_A", "density_B"]
+    assert q["vocal_belief"] == ["vocal_C", "vocal_A", "vocal_B"]
+    assert q["loop"] == ["loop_A", "loop_B"]
+    assert q["depth"] == ["depth_A"]
+    for producer in ("halee_ramone", "timbaland"):
+        for pid, ids in emitted[producer].items():
+            assert not set(ids) & EXTENDED_IDS, (producer, pid)
+
+
+@pytest.mark.parametrize("producer", PRODUCERS)
+def test_every_shipped_mode_reconstructs_with_the_reach_rule(producer, dense):
+    """The B-pattern attribution, P-043-extended, from the JSONs on disk:
+    for EVERY authored mode and EVERY problem the emitted kind set equals
+    (ENGINE POOL ∪ (authored reach ∩ the extended pool's kinds for that
+    problem)) − authored suppressions, with the neutral-only fallback — so
+    a code path that emitted extended kinds without reading the authored
+    reach (or vice versa) cannot pass."""
+    prof = load_profile(producer)
+    for mode_name, entry in _raw(producer)["search_modes"].items():
+        for pid in PROBLEM_IDS:
+            pool = {kind for _, kind in ENGINE_POOL[pid]}
+            reached = set(entry["reach_kinds"]) & EXTENDED_KINDS_BY_PROBLEM[pid]
+            expected = (pool | reached) - set(entry["suppress_kinds"])
+            if not expected:
+                expected = pool
+            emitted = _kinds(generate_variants({"id": pid}, dense, mode_name, prof))
+            assert emitted == expected, (producer, mode_name, pid)
+
+
+def test_quincy_experimental_through_the_full_real_chain():
+    """``analyze(producer="quincy_jones", creative_mode="experimental")`` —
+    the same chain the CLI drives: the artifact echoes the authored reach
+    verbatim, every touched branch reports what the reach actually added,
+    the extended variants carry their honest curated scores, the ensemble
+    lens WINS the vocal_belief branch (creative + governed), and governance
+    governed the widened sets end to end."""
+    manifest = load_manifest(ROOT / "fixtures" / DENSE / "project_manifest.json")
+    res = analyze(str(ROOT / "fixtures" / DENSE / "stems"), manifest,
+                  producer="quincy_jones", creative_mode="experimental")
+    cr = res.creative
+    authored = _raw("quincy_jones")["search_modes"]["experimental"]
+
+    assert cr["search_mode"] == "experimental"
+    assert cr["search_mode_declarations"] == {
+        "allowed_risk": authored["allowed_risk"],
+        "favor_kinds": authored["favor_kinds"],
+        "suppress_kinds": authored["suppress_kinds"],
+        "reach_kinds": authored["reach_kinds"],
+    }
+    assert _branch(cr, "chorus_lift")["mode_fork"] == {
+        "suppressed": [], "favored": ["arrangement_lift"], "risk_capped": [],
+        "suppression_fallback": False,
+        "reached": ["arrangement_lift"], "reach_capped": [],
+    }
+    assert _branch(cr, "density")["mode_fork"]["reached"] \
+        == ["arrangement_lift", "ensemble_rebalance"]
+    assert _branch(cr, "loop")["mode_fork"] == {
+        "suppressed": [], "favored": [], "risk_capped": [],
+        "suppression_fallback": False, "reached": [], "reach_capped": [],
+    }
+
+    vocal = _branch(cr, "vocal_belief")
+    assert vocal["mode_fork"]["reached"] == ["ensemble_rebalance"]
+    vocal_c = next(v for v in vocal["variants"] if v["variant_id"] == "vocal_C")
+    assert vocal_c["scores"]["overall_score"] \
+        == AUTHORED_OVERALLS["quincy_jones"]["ensemble_rebalance"]
+    assert vocal["winning"]["winning_variant"] == "vocal_C"
+
+    governed = {b["problem_id"]: b["governed_winner"]
+                for b in res.governance["governed_branches"]}
+    assert governed["vocal_belief"] == "vocal_C"
+
+    md = render_creative(cr)
+    assert "reaches for `arrangement_lift`, `ensemble_rebalance`" in md
+    assert "_Mode fork: favored `arrangement_lift`; reached for `arrangement_lift`._" in md
+
+
+def test_quincy_default_flow_drift_is_conscious_and_bounded(analyzed):
+    """THE DEFAULT-MODE DECISION, proven at its blast radius: quincy's
+    intimate path (space_for_the_singer, zero reach) stays byte-neutral —
+    no declaration surface at all; his default path (the mode literally
+    named ``arrangement_lift``) emits the pinned QUINCY_DEFAULT_FLOW_IDS,
+    reports exactly the arrangement_lift reach on the branches the extended
+    pool touches, and the branch WINNERS are unmoved — his economy
+    (subtractive_drop, 85.6) still outranks the lift (85.3) by his own
+    honest curated margin, so the drift is candidate-set-only."""
+    prof = load_profile("quincy_jones")
+    for name in FIXTURE_NAMES:
+        res = analyzed[name]
+        mode = pipeline._default_creative_mode(res.project.intent, prof)
+        out = run_creative_engine(res, mode, profile=prof)
+        emitted = {b["problem_id"]: _ids(b["variants"]) for b in out["branches"]}
+        assert emitted == QUINCY_DEFAULT_FLOW_IDS[name], name
+
+        if mode == "space_for_the_singer":  # the intimate path: zero reach
+            assert "search_mode_declarations" not in out, name
+            for b in out["branches"]:
+                assert "mode_fork" not in b, (name, b["problem_id"])
+            continue
+        assert mode == "arrangement_lift", name
+        assert out["search_mode_declarations"] == {
+            "allowed_risk": "medium", "favor_kinds": [], "suppress_kinds": [],
+            "reach_kinds": ["arrangement_lift"],
+        }
+        for b in out["branches"]:
+            expected = (["arrangement_lift"]
+                        if b["problem_id"] in ("chorus_lift", "density") else [])
+            assert b["mode_fork"]["reached"] == expected, (name, b["problem_id"])
+            assert b["mode_fork"]["reach_capped"] == [], (name, b["problem_id"])
+        winners = {b["problem_id"]: b["winning"]["winning_variant"]
+                   for b in out["branches"]}
+        assert winners["chorus_lift"] == "chorus_lift_B", name
+        if "density" in winners:
+            assert winners["density"] == "density_B", name
