@@ -75,7 +75,11 @@ from logic_mix_os.creative import (
     generate_variants,
     run_creative_engine,
 )
-from logic_mix_os.doctrine.producer_profile import _validate, load_profile
+from logic_mix_os.doctrine.producer_profile import (
+    _PRODUCERS_DIR,
+    _validate,
+    load_profile,
+)
 from logic_mix_os.pipeline import analyze
 from logic_mix_os.project import load_manifest
 from logic_mix_os.renderers.creative_renderer import render_creative
@@ -83,9 +87,15 @@ from logic_mix_os.renderers.creative_renderer import render_creative
 from conftest import FIXTURE_NAMES, ROOT
 
 _PACKAGE = ROOT / "logic_mix_os"
-_PRODUCERS_DIR = _PACKAGE / "doctrine" / "producers"
 
-PRODUCERS = ("halee_ramone", "timbaland", "quincy_jones")
+# P-047: the swept producers are DISCOVERED from the shipped producers
+# directory — the product's own source of truth (``cli._resolve_producer``
+# scans the same ``_PRODUCERS_DIR``; the private-name import is the accepted
+# P-039 standing note) — in stable sorted order, so every current AND future
+# profile is swept automatically. The membership guard below pins the four
+# known names as a MINIMUM, never a maximum: a fifth producer grows every
+# sweep passively instead of silently escaping it.
+PRODUCERS = tuple(sorted(p.stem for p in _PRODUCERS_DIR.glob("*.json")))
 DENSE = "dense_chorus_with_loops"
 
 # THE ENGINE POOL — the frozen curated emission per problem, (variant_id,
@@ -249,6 +259,20 @@ def _expected_kind_set(pid: str, suppress_kinds, reach_kinds=()) -> set:
 @pytest.fixture(scope="module")
 def dense(analyzed):
     return analyzed[DENSE]
+
+
+# =========================================================================== #
+# P-047 — the sweep tuple is directory-driven; the known four are a MINIMUM.
+# =========================================================================== #
+def test_producer_sweep_is_directory_driven_with_the_known_minimum():
+    """The sweep tuple IS the shipped producers directory, sorted and
+    duplicate-free. The four known profiles are pinned as a CONTAINMENT
+    minimum only — nothing here may block a fifth producer from growing
+    every PRODUCERS-keyed sweep passively."""
+    assert PRODUCERS == tuple(sorted(PRODUCERS))
+    assert len(PRODUCERS) == len(set(PRODUCERS))
+    assert {"brian_eno", "halee_ramone", "quincy_jones", "timbaland"} \
+        <= set(PRODUCERS)
 
 
 # =========================================================================== #
@@ -619,7 +643,11 @@ def test_same_mode_different_producers_different_candidate_sets(dense):
     assert conservative["halee_ramone"] == {
         "chorus_lift_B", "chorus_lift_C", "chorus_lift_D"}
     assert conservative["quincy_jones"] == {"chorus_lift_B", "chorus_lift_C"}
-    assert len({frozenset(s) for s in conservative.values()}) == 3  # pairwise distinct
+    # P-047 (the P-045 profile swept here): eno's conservative suppresses
+    # width_bloom AND vocal_ride — a fourth authored reach, distinct from
+    # all three others on the same stems.
+    assert conservative["brian_eno"] == {"chorus_lift_B", "chorus_lift_D"}
+    assert len({frozenset(s) for s in conservative.values()}) == 4  # pairwise distinct
 
     experimental = {}
     for producer in PRODUCERS:
@@ -632,6 +660,11 @@ def test_same_mode_different_producers_different_candidate_sets(dense):
     # width_bloom approximation), so his vocal_belief set gains vocal_C —
     # three pairwise-distinct sets on this branch too.
     assert experimental["quincy_jones"] == {"vocal_A", "vocal_B", "vocal_C"}
+    # P-047: eno's experimental reaches ONLY the dropout family, and the
+    # extended pool holds no dropout variant for vocal_belief — so his set
+    # is the authored-neutral pool, coinciding with halee's (a DATA fact:
+    # the distinct-set count over the four stays 3 on this branch).
+    assert experimental["brian_eno"] == {"vocal_A", "vocal_B"}
     assert len({frozenset(s) for s in experimental.values()}) == 3
 
 
