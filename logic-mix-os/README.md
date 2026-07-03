@@ -60,17 +60,21 @@ logic-mix-os analyze \
 
 (Or without installing: `python -m logic_mix_os.cli analyze ...`.)
 
-Ready-made examples of the output live in `examples/`: two committed trees
+Ready-made examples of the output live in `examples/`: four committed trees
 generated from the **same stems** (the seeded `vocal_chop_groove` fixture) —
 [`examples/sample_output/`](examples/sample_output) under the default
-Halee/Ramone profile and
-[`examples/sample_output_timbaland/`](examples/sample_output_timbaland) under
-`--producer timbaland`. See the next section for what to compare.
+Halee/Ramone profile, plus one tree per selectable producer:
+[`examples/sample_output_timbaland/`](examples/sample_output_timbaland)
+(`--producer timbaland`),
+[`examples/sample_output_quincy/`](examples/sample_output_quincy)
+(`--producer quincy_jones`) and
+[`examples/sample_output_eno/`](examples/sample_output_eno)
+(`--producer brian_eno`). See the next section for what to compare.
 
-## Two producers, same stems
+## Four producers, same stems
 
-The two committed sample trees are the output of exactly this invocation pair
-(from the repo root, after `python fixtures/generate_fixtures.py`):
+The four committed sample trees are the output of exactly these invocations
+(from the project root, after `python fixtures/generate_fixtures.py`):
 
 ```bash
 python -m logic_mix_os.cli analyze \
@@ -82,32 +86,109 @@ python -m logic_mix_os.cli analyze \
   --stems fixtures/vocal_chop_groove/stems \
   --manifest fixtures/vocal_chop_groove/project_manifest.json \
   --out out_tim --producer timbaland
+
+python -m logic_mix_os.cli analyze \
+  --stems fixtures/vocal_chop_groove/stems \
+  --manifest fixtures/vocal_chop_groove/project_manifest.json \
+  --out out_quincy --producer quincy_jones
+
+python -m logic_mix_os.cli analyze \
+  --stems fixtures/vocal_chop_groove/stems \
+  --manifest fixtures/vocal_chop_groove/project_manifest.json \
+  --out out_eno --producer brian_eno
 ```
 
-Same stems, same measurements, two judgments — the values below are the ones
+Same stems, same measurements, four judgments — the values below are the ones
 pinned in the test suite:
 
-| Reading | Halee/Ramone (reference) | Timbaland | Why they differ |
-|---|---|---|---|
-| Overall mix readiness | **76.3** | **60.9** | Each overall is its own profile's weighted mean over the shared component axes |
-| Vocal role fit | 65.0 | 85.0 | The authored blend policy: the reference reads the vocal chop/stack masking involvements under full clarity protection; Timbaland's authored opt-in accepts the same involvements as blend |
-| Loop context | 15.0 | 10.0 | Both profiles read the dominant chop loop as STATIC from the same stems; each maps that reading to its own authored polarity |
+| Reading | Halee/Ramone (reference) | Timbaland | Quincy Jones | Brian Eno |
+|---|---|---|---|---|
+| Overall mix readiness | **76.3** | **60.9** | **68.8** | **65.5** |
+| Vocal role fit | 65.0 | 85.0 | 85.0 | 85.0 |
+| Loop context | 15.0 | 10.0 | 12.0 | 35.0 |
 
-On this fixture both producers search in the same mode (`dramatic_contrast`)
-and land on the same winning variants (`chorus_lift_B` / `loop_B` / `depth_A` /
-`vocal_A`) — here the divergence lives in the readings and the overall, not in
-the plan choice (the plan-level reversal needs an iconic-reading loop; see
-`tests/test_differential_proof.py`). What stays invariant under both producers:
-the safety surface (both trees' composed kill-switch lists lead with the five
-hardcoded safety switches, verbatim) and the measurements themselves (the
-shared axes — e.g. emotional hierarchy 86.0, groove coherence 99.4 — read
-identically in both trees).
+Each overall is its own profile's weighted mean over the shared component
+axes. The two rows that move are the two authored divergence channels: the
+vocal-blend policy (the reference reads the vocal chop/stack masking
+involvements under full clarity protection at 65.0; the other three profiles'
+authored opt-ins accept the same involvements as blend at 85.0) and the
+static-loop polarity (all four profiles read the dominant chop loop as STATIC
+from the same stems; each maps that one reading to its own authored value —
+15.0 / 10.0 / 12.0 / 35.0).
+
+One sentence per producer:
+
+- **Halee/Ramone (reference)** — vocal and space: protect the lead vocal's
+  clarity and believability, and build the physical depth field around it.
+- **Timbaland** — groove and contrast: beat identity is his heaviest
+  scoring axis, and the chop stacks are accepted into the groove as blend.
+- **Quincy Jones** — orchestration and ensemble: arrangement-first lift
+  (his default search mode is literally named `arrangement_lift`) and
+  ensemble balance over any single element's heroics.
+- **Brian Eno** — atmosphere and restraint: negative space is his heaviest
+  scoring axis, a static loop is a legitimate ambient bed (his authored
+  35.0), and his winning vocal move is the intimacy pass (`vocal_B`) where
+  the other three ride the phrase (`vocal_A`).
+
+All four default runs land the same non-vocal winners (`chorus_lift_B` /
+`loop_B` / `depth_A`) — on this fixture most of the divergence lives in the
+readings, the overalls and the candidate sets, not the plan choice (the
+plan-level reversal needs an iconic-reading loop; see
+`tests/test_differential_proof.py`). What stays invariant under all four
+producers: the safety surface (every tree's composed kill-switch list leads
+with the five hardcoded safety switches, verbatim) and the measurements
+themselves (the shared axes — e.g. emotional hierarchy 86.0, groove
+coherence 99.4 — read identically in all four trees).
 
 Start the comparison at `doctrine_score.json` (each tree names its selecting
 producer and carries its own scores) and `mix_verdict.md` (the human-readable
-verdict, producer line near the top) in
-[`examples/sample_output/`](examples/sample_output) vs
-[`examples/sample_output_timbaland/`](examples/sample_output_timbaland).
+verdict, producer line near the top) across the four `examples/sample_output*`
+trees.
+
+### Modes are behavior
+
+A producer profile is not just weights — its authored **search modes** fork
+the creative candidate set. Each mode declares what it favors (reordered to
+the front of a branch), what it suppresses (removed), and what it *reaches*
+for (extended move families admitted into the search), all under a declared
+risk posture that the engine caps fail-closed: a mode whose posture sits
+below a family's authored translation risk cannot reach it, and the refusal
+is reported in `reach_capped`, never silent (`tests/test_mode_forking.py`,
+`tests/test_negative_space_dropout.py`). The committed timbaland tree
+carries this surface live: his default mode (`dramatic_contrast`) declares
+dropout reach, so
+[`examples/sample_output_timbaland/creative.json`](examples/sample_output_timbaland/creative.json)
+echoes the authored declaration
+(`"search_mode_declarations": {"allowed_risk": "medium", "favor_kinds": [],
+"suppress_kinds": [], "reach_kinds": ["negative_space_dropout"]}`), its
+chorus-lift branch reports `"reached": ["negative_space_dropout"]` with one
+extra candidate (`chorus_lift_F`, a dropout proposal targeting the BGV Chop
+bed) — and the winner is still `chorus_lift_B`: the reach widens the
+candidate set, not the verdict. The quincy tree carries the same surface for
+his `arrangement_lift` reach (admitting `chorus_lift_E`); the reference and
+eno trees carry no declaration keys at all — their default modes are
+authored-neutral, and a neutral mode is byte-silent. A mode can also be
+selected explicitly with `creative --mode <name>` (each profile's own mode
+names; a mode the profile does not carry resolves to its default, reported
+observationally as `search_mode_fallback`).
+
+### The extended move families
+
+Three move families exist beyond the engine's neutral pool, and all three
+are **reach-gated**: no variant from them ever appears unless a profile
+authors that family into a mode's `reach_kinds` (and clears the risk cap) —
+`arrangement_lift` (build the lift by adding or featuring arrangement
+elements — quincy's default reach; `chorus_lift_E`, `density_C`),
+`ensemble_rebalance` (rebalance the ensemble around the section's narrative
+— quincy's ensemble modes; `vocal_C`, `density_D`), and
+`negative_space_dropout` (propose silence: region-mute a duplicated,
+non-protected element into a section entry, the original track untouched —
+reached by timbaland's and eno's authored modes; `chorus_lift_F`,
+`density_E`). The dropout family's protection filter is engine-owned — the
+lead vocal, the groove foundation and sacred elements are never targeted,
+and no profile can reword the proposal text — and the doctrine line is
+verbatim: "dropout is an arrangement proposal, not a destructive
+operation."
 
 ## CLI
 
@@ -148,7 +229,10 @@ verdict, producer line near the top) in
 | `bridge-dryrun --plan [--review-mode]` | Simulate applying actions (never executes) |
 | `regression [--fixtures] [--update-golden]` | Golden-output + doctrine regression |
 
-Common flags: `--stems`, `--manifest`, `--out`, plus optional `--bounce` and `--reference`.
+Common flags: `--stems`, `--manifest`, `--out`, plus optional `--bounce` and
+`--reference` — and, on every analyze-family command, `--producer` (a profile
+name resolvable from the local producers directory; default `halee_ramone`,
+the reference profile).
 
 The `dashboard` command writes a single self-contained `dashboard.html` (inline
 CSS, no JS, no server, no network) realising the section-50 control room — open
@@ -236,7 +320,7 @@ logic_mix_os/
   validation/       # schema validation, confidence/evidence tagging
   schemas/          # JSON Schemas for every output
 fixtures/           # deterministic synthetic test projects (generator + manifests)
-examples/           # example manifest + the two committed sample trees (same stems, both producers)
+examples/           # example manifest + the four committed sample trees (same stems, four producers)
 tests/              # pytest suite (4 fixtures, acceptance + unit)
 ```
 
