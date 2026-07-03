@@ -378,9 +378,11 @@ EXISTING_JSON_SHA256 = {
         "20ae6824a0b0f2b7ec583047f8ad55244daf3006421170ffd4e844fe27363bd3",
 }
 
-# The committed sample trees' headline values (the README table pins),
-# re-read directly — the byte-level staleness pin lives in
-# tests/test_sample_refresh.py and stays green with the fourth profile live.
+# Two of the FOUR committed sample trees' headline values (the reference and
+# timbaland trees — the two that predate P-046's quincy/eno trees), re-read
+# directly — the byte-level staleness pin covering all four committed trees
+# lives in tests/test_sample_refresh.py and stays green with the fourth
+# profile live.
 COMMITTED_TREE_HEADLINES = {
     "sample_output": 76.3,
     "sample_output_timbaland": 60.9,
@@ -873,8 +875,9 @@ def test_existing_producers_unmoved_at_their_pinned_values(
 
 
 def test_committed_sample_tree_headlines_unmoved():
-    """The committed demo trees re-read directly: both headline overalls
-    stand (the byte-level staleness pin lives in tests/test_sample_refresh.py
+    """Two of the FOUR committed demo trees re-read directly: the reference
+    and timbaland headline overalls stand (the byte-level staleness pin
+    covering all four committed trees lives in tests/test_sample_refresh.py
     and runs against the same committed bytes)."""
     for tree, headline in COMMITTED_TREE_HEADLINES.items():
         ds = json.loads((ROOT / "examples" / tree / "doctrine_score.json")

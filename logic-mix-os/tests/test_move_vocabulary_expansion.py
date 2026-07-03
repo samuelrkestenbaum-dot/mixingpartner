@@ -113,7 +113,7 @@ EXTENDED_POOL = {
     "vocal_belief": [("vocal_C", "ensemble_rebalance")],
 }
 
-# The three shipped profiles' authored curated rows for the extended kinds —
+# Every shipped profile's authored curated rows for the extended kinds —
 # the translation risks are load-bearing (the cap validates against them).
 # P-044: dropout is the aggressive family — NEVER low (medium at minimum;
 # halee authors HIGH under her translate-everywhere lens).
@@ -124,6 +124,12 @@ AUTHORED_TRANSLATION = {
                   "negative_space_dropout": "medium"},
     "quincy_jones": {"arrangement_lift": "low", "ensemble_rebalance": "low",
                      "negative_space_dropout": "medium"},
+    # P-047 (the P-045 profile swept here): eno's honest rows — restraint
+    # translates everywhere (lift low), the ensemble-in-layers move sits
+    # against his field philosophy (medium), dropout medium like the other
+    # dropout authors (never low — the P-044 honesty floor).
+    "brian_eno": {"arrangement_lift": "low", "ensemble_rebalance": "medium",
+                  "negative_space_dropout": "medium"},
 }
 
 # Each profile's honest curated overall for the new kinds (mean of the 7
@@ -133,6 +139,9 @@ AUTHORED_OVERALLS = {
     "halee_ramone": {"arrangement_lift": 83.3, "ensemble_rebalance": 80.6},
     "timbaland": {"arrangement_lift": 83.9, "ensemble_rebalance": 67.4},
     "quincy_jones": {"arrangement_lift": 85.3, "ensemble_rebalance": 83.1},
+    # P-047: eno's curated overalls, reconstructed from his JSON exactly
+    # like the other three (also pinned in tests/test_eno_profile.py).
+    "brian_eno": {"arrangement_lift": 72.0, "ensemble_rebalance": 62.6},
 }
 
 _SCORE_DIMS = ("technical", "physical_space", "emotional_hierarchy",
@@ -505,7 +514,7 @@ def test_new_kinds_score_through_the_real_chain(producer, dense):
     kinds with NO missing-row fallback: the overall reconstructs from the
     JSON on disk (mean of the 7 authored dims minus the profile's own
     translation-risk penalty) and equals the pinned per-producer value —
-    three producers, three honest judgments of the same two families. No
+    four producers, four honest judgments of the same two families. No
     nudge/promotion row names them, so ``score_nudges`` stays absent."""
     prof = load_profile(producer)
     raw = _raw(producer)
@@ -676,13 +685,15 @@ def test_quincy_authors_the_pinned_reach_and_it_validates():
 
 
 def test_same_mode_same_stems_each_producer_emits_only_its_authored_reach(dense):
-    """THE HEADLINE DIFFERENTIAL, P-044-extended: ``experimental`` exists in
-    all three profiles. Same mode name, same stems, THREE different
-    reaches: quincy_jones emits the P-043 families (reached AND favored to
-    the front of each touched branch) and ZERO dropout ids; timbaland
-    (P-044) emits the dropout ids and ZERO P-043-family ids; halee_ramone
-    emits ZERO extended ids of any kind. Each gate holds because of what
-    was and was not AUTHORED — never a code path."""
+    """THE HEADLINE DIFFERENTIAL, P-044-extended and swept four-way since
+    P-047: ``experimental`` exists in all four shipped profiles. Same mode
+    name, same stems, FOUR different reaches: quincy_jones emits the P-043
+    families (reached AND favored to the front of each touched branch) and
+    ZERO dropout ids; timbaland (P-044) emits the dropout ids and ZERO
+    P-043-family ids; brian_eno (P-045) also reaches only the dropout
+    family — under his own favor/suppress posture; halee_ramone emits
+    ZERO extended ids of any kind. Each gate holds because of what was
+    and was not AUTHORED — never a code path."""
     emitted = {}
     for producer in PRODUCERS:
         out = run_creative_engine(dense, "experimental",
@@ -712,6 +723,21 @@ def test_same_mode_same_stems_each_producer_emits_only_its_authored_reach(dense)
     assert t["vocal_belief"] == ["vocal_A"]
     for pid, ids in t.items():
         assert not set(ids) & (EXTENDED_IDS - dropout_ids), ("timbaland", pid)
+
+    # brian_eno (P-045, swept here since P-047): his experimental favors
+    # subtractive_drop + depth_cleanup to the front, suppresses
+    # drum_room_bloom, and reaches ONLY the dropout family — the dropout
+    # ids append where the curated pool holds them and ZERO P-043-family
+    # ids appear anywhere (he never authored that reach).
+    e = emitted["brian_eno"]
+    assert e["chorus_lift"] == ["chorus_lift_B", "chorus_lift_A",
+                                "chorus_lift_C", "chorus_lift_F"]
+    assert e["density"] == ["density_B", "density_A", "density_E"]
+    assert e["loop"] == ["loop_B", "loop_A"]
+    assert e["depth"] == ["depth_A"]
+    assert e["vocal_belief"] == ["vocal_A", "vocal_B"]
+    for pid, ids in e.items():
+        assert not set(ids) & (EXTENDED_IDS - dropout_ids), ("brian_eno", pid)
 
     for pid, ids in emitted["halee_ramone"].items():
         assert not set(ids) & EXTENDED_IDS, ("halee_ramone", pid)

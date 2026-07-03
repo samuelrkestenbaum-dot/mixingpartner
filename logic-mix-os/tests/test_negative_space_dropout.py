@@ -133,7 +133,7 @@ EXECUTION_MACHINERY = (
     "delet", "eras", "overwrit", "destroy", "wipe",
 )
 
-# The three profiles' authored dropout rows — translation risks are
+# Every shipped profile's authored dropout row — translation risks are
 # load-bearing (the cap binds against them); overalls reconstruct from the
 # JSON (mean of the 7 dims minus the profile's own translation penalty).
 AUTHORED_DROPOUT = {
@@ -148,6 +148,15 @@ AUTHORED_DROPOUT = {
     "quincy_jones": {
         "translation": "medium", "mono": "low", "overall": 73.7,
         "truth": {"intimate": 52, "big": 78, "neutral": 72},
+    },
+    # P-047 (the P-045 profile swept here): eno's authored row — dropout is
+    # his highest-affinity EXTENDED kind (78.9; restraint IS his documented
+    # philosophy) at the same honest medium risk the other dropout authors
+    # carry (never low — the P-044 floor). Also pinned from his own angle
+    # in tests/test_eno_profile.py.
+    "brian_eno": {
+        "translation": "medium", "mono": "low", "overall": 78.9,
+        "truth": {"intimate": 64, "big": 82, "neutral": 78},
     },
 }
 
@@ -517,9 +526,9 @@ def test_all_three_profiles_author_honest_dropout_rows(producer):
     """Every shipped profile authors a FULL curated ``kind_scores`` row and
     all three ``truth_alignment`` leans for the dropout kind — no silent
     inheritance. The translation risks are the packet's honesty floor:
-    NEVER low (this is the aggressive family) — timbaland/quincy medium,
-    halee HIGH (her translate-everywhere lens reads a full-layer hole as
-    the riskiest move in the widened vocabulary)."""
+    NEVER low (this is the aggressive family) — timbaland/quincy/eno
+    medium, halee HIGH (her translate-everywhere lens reads a full-layer
+    hole as the riskiest move in the widened vocabulary)."""
     raw = _raw(producer)
     _validate(raw, producer)
     row = raw["kind_scores"][DROPOUT]
@@ -534,16 +543,24 @@ def test_all_three_profiles_author_honest_dropout_rows(producer):
 
 
 def test_affinity_ordering_is_the_packet_story():
-    """The three lenses rank the family the way the packet authored them:
-    timbaland (his documented philosophy) > quincy (moderate-low) > halee
-    (low-affinity) — on the curated overall AND on the big/neutral leans."""
+    """The four lenses rank the family the way the packets authored them:
+    timbaland (his documented philosophy) > eno (restraint-as-environment,
+    P-045) > quincy (moderate-low) > halee (low-affinity) — on the curated
+    overall AND on the big/neutral leans."""
     overalls = {p: AUTHORED_DROPOUT[p]["overall"] for p in PRODUCERS}
     assert overalls["timbaland"] > overalls["quincy_jones"] > overalls["halee_ramone"]
+    # P-047: eno slots between the two poles — timbaland's negative space
+    # is contrast-as-impact, eno's is restraint-as-environment (his second
+    # documented philosophy of absence), quincy moderate-low, halee low:
+    # timbaland > brian_eno > quincy_jones > halee_ramone, everywhere.
+    assert overalls["timbaland"] > overalls["brian_eno"] > overalls["quincy_jones"]
     for lean in ("big", "neutral"):
         t = AUTHORED_DROPOUT["timbaland"]["truth"][lean]
         q = AUTHORED_DROPOUT["quincy_jones"]["truth"][lean]
         h = AUTHORED_DROPOUT["halee_ramone"]["truth"][lean]
+        e = AUTHORED_DROPOUT["brian_eno"]["truth"][lean]
         assert t > q > h, lean
+        assert t > e > q, lean
 
 
 @pytest.mark.parametrize("producer", PRODUCERS)
