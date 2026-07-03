@@ -182,8 +182,13 @@ def _pool_kinds(pid: str) -> list:
 # in tests/test_move_vocabulary_expansion.py::EXTENDED_POOL; this is the
 # kind-set view the reconstructive rule needs).
 EXTENDED_POOL_KINDS = {
-    "chorus_lift": {"arrangement_lift"},
-    "density": {"arrangement_lift", "ensemble_rebalance"},
+    # P-044: the dropout family joined the extended pool for chorus_lift +
+    # density (its variants emit on the fixtures these suites run on — the
+    # protection filter finds unprotected targets there; the filter proofs
+    # live in tests/test_negative_space_dropout.py).
+    "chorus_lift": {"arrangement_lift", "negative_space_dropout"},
+    "density": {"arrangement_lift", "ensemble_rebalance",
+                "negative_space_dropout"},
     "loop": set(),
     "depth": set(),
     "vocal_belief": {"ensemble_rebalance"},

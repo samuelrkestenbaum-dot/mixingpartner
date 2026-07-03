@@ -32,6 +32,14 @@ explicit ``kind_scores`` + ``truth_alignment`` rows for both new kinds even
 where reach is absent — no silent inheritance. Halee/Timbaland author ZERO
 reach (their "only if authored" gate is proven with test-local synthetic
 profiles, never by touching their taste).
+
+P-044 (conscious extension, the user's explicit go): the vocabulary widened
+by ONE more extended kind — ``negative_space_dropout``
+(tests/test_negative_space_dropout.py carries its packet proof: the
+structural protection filter, the plan-only guard, the honest rows, the
+timbaland-only authored reach). The seam-level pins in THIS file extend to
+the third kind: EXTENDED_POOL gains the dropout variants, and the P-043
+"exactly two families / dropout excluded" pin is consciously lifted below.
 """
 
 from __future__ import annotations
@@ -86,22 +94,35 @@ ORIGINAL_KINDS = (
 # as it owns ENGINE_POOL; the difference is the gate: these emit ONLY when
 # the active mode's authored ``reach_kinds`` admit them.
 EXTENDED_POOL = {
-    "chorus_lift": [("chorus_lift_E", "arrangement_lift")],
+    "chorus_lift": [
+        ("chorus_lift_E", "arrangement_lift"),
+        # P-044: the dropout family (emits only where an unprotected target
+        # survives its ENGINE-owned protection filter — true on the dense
+        # fixture these pins run on; the filter proofs live in
+        # tests/test_negative_space_dropout.py).
+        ("chorus_lift_F", "negative_space_dropout"),
+    ],
     "density": [
         ("density_C", "arrangement_lift"),
         ("density_D", "ensemble_rebalance"),
+        ("density_E", "negative_space_dropout"),
     ],
     "loop": [],
     "depth": [],
     "vocal_belief": [("vocal_C", "ensemble_rebalance")],
 }
 
-# The three shipped profiles' authored curated rows for the two new kinds —
+# The three shipped profiles' authored curated rows for the extended kinds —
 # the translation risks are load-bearing (the cap validates against them).
+# P-044: dropout is the aggressive family — NEVER low (medium at minimum;
+# halee authors HIGH under her translate-everywhere lens).
 AUTHORED_TRANSLATION = {
-    "halee_ramone": {"arrangement_lift": "low", "ensemble_rebalance": "low"},
-    "timbaland": {"arrangement_lift": "low", "ensemble_rebalance": "medium"},
-    "quincy_jones": {"arrangement_lift": "low", "ensemble_rebalance": "low"},
+    "halee_ramone": {"arrangement_lift": "low", "ensemble_rebalance": "low",
+                     "negative_space_dropout": "high"},
+    "timbaland": {"arrangement_lift": "low", "ensemble_rebalance": "medium",
+                  "negative_space_dropout": "medium"},
+    "quincy_jones": {"arrangement_lift": "low", "ensemble_rebalance": "low",
+                     "negative_space_dropout": "medium"},
 }
 
 # Each profile's honest curated overall for the new kinds (mean of the 7
@@ -151,20 +172,20 @@ def _fork(prof, mode, pid, dense):
 
 
 # =========================================================================== #
-# The widened vocabulary — exactly the two families; dropout stays excluded.
+# The widened vocabulary — the P-043 families plus the P-044 dropout kind.
 # =========================================================================== #
-def test_vocabulary_widened_by_exactly_the_two_families():
-    """``CREATIVE_VARIANT_KINDS`` grew by EXACTLY ``arrangement_lift`` +
-    ``ensemble_rebalance``; ``CREATIVE_EXTENDED_KINDS`` names exactly those
-    two; and no negative-space/dropout family entered (the user's explicit
-    exclusion — it comes only after C proves the widened vocabulary stays
-    governed, as its own user-gated decision)."""
-    assert CREATIVE_EXTENDED_KINDS == ("arrangement_lift", "ensemble_rebalance")
+def test_vocabulary_is_the_p043_families_plus_the_p044_dropout():
+    """P-043 grew the vocabulary by EXACTLY ``arrangement_lift`` +
+    ``ensemble_rebalance`` and EXPLICITLY excluded negative-space dropout
+    until C proved the widened vocabulary stays governed. P-044 lifted that
+    exclusion on the user's own go ("Then open negative-space dropout, but
+    narrowly and conservatively"): ``negative_space_dropout`` is the third
+    — and only other — extended kind. Nothing else entered."""
+    assert CREATIVE_EXTENDED_KINDS == (
+        "arrangement_lift", "ensemble_rebalance", "negative_space_dropout")
     assert set(CREATIVE_VARIANT_KINDS) \
         == set(ORIGINAL_KINDS) | set(CREATIVE_EXTENDED_KINDS)
-    assert len(CREATIVE_VARIANT_KINDS) == 9
-    for kind in CREATIVE_VARIANT_KINDS:
-        assert "dropout" not in kind and "negative_space" not in kind
+    assert len(CREATIVE_VARIANT_KINDS) == 10
 
 
 def test_extended_pool_is_the_pinned_curated_emission(dense):
@@ -530,8 +551,9 @@ def test_artifact_surfaces_authored_reach_and_what_it_added(dense):
         "reach_kinds": list(CREATIVE_EXTENDED_KINDS),
     }
     expected_reached = {
-        "chorus_lift": ["arrangement_lift"],
-        "density": ["arrangement_lift", "ensemble_rebalance"],
+        "chorus_lift": ["arrangement_lift", "negative_space_dropout"],
+        "density": ["arrangement_lift", "ensemble_rebalance",
+                    "negative_space_dropout"],
         "loop": [],
         "depth": [],
         "vocal_belief": ["ensemble_rebalance"],
@@ -569,9 +591,11 @@ def test_renderer_explains_reach_and_stays_silent_without_it(dense):
     ZERO reach bytes."""
     prof = _with_mode("halee_ramone", _mode(reach=CREATIVE_EXTENDED_KINDS))
     md = render_creative(run_creative_engine(dense, "reach", profile=prof))
-    assert "reaches for `arrangement_lift`, `ensemble_rebalance`" in md
-    assert "_Mode fork: reached for `arrangement_lift`._" in md
-    assert "reached for `arrangement_lift`, `ensemble_rebalance`" in md
+    assert ("reaches for `arrangement_lift`, `ensemble_rebalance`, "
+            "`negative_space_dropout`") in md
+    assert "_Mode fork: reached for `arrangement_lift`, `negative_space_dropout`._" in md
+    assert ("reached for `arrangement_lift`, `ensemble_rebalance`, "
+            "`negative_space_dropout`") in md
 
     capped = _with_mode("timbaland", _mode(reach=["ensemble_rebalance"],
                                            allowed="low"))

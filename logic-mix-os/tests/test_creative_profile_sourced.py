@@ -68,15 +68,18 @@ def test_globals_equal_a_fresh_load():
 # --------------------------------------------------------------------------- #
 def test_kind_scores_value_pins():
     """The pre-P-026 curated table byte-for-byte (7 kinds × 9 dims), plus —
-    the P-043 CONSCIOUS widening — the reference's authored rows for the two
-    EXTENDED kinds (``arrangement_lift`` / ``ensemble_rebalance``): curated
-    risk rows exist even though halee_ramone authors ZERO reach over them
-    (no silent inheritance)."""
+    the P-043/P-044 CONSCIOUS widenings — the reference's authored rows for
+    the three EXTENDED kinds (``arrangement_lift`` / ``ensemble_rebalance``
+    / ``negative_space_dropout``): curated risk rows exist even though
+    halee_ramone authors ZERO reach over them (no silent inheritance). Her
+    P-044 dropout row is the honest low-affinity lens — HIGH translation
+    risk (under her translate-everywhere doctrine a full-layer hole is the
+    riskiest move in the widened vocabulary)."""
     ks = creative._KIND_SCORES
     assert set(ks) == {
         "width_bloom", "subtractive_drop", "vocal_ride", "drum_room_bloom",
         "loop_deconstruct", "depth_cleanup", "intimacy_pass",
-        "arrangement_lift", "ensemble_rebalance",
+        "arrangement_lift", "ensemble_rebalance", "negative_space_dropout",
     }
     assert ks["arrangement_lift"] == dict(
         technical=82, physical_space=80, emotional_hierarchy=85, contrast=90, vocal_belief=80,
@@ -85,6 +88,10 @@ def test_kind_scores_value_pins():
     assert ks["ensemble_rebalance"] == dict(
         technical=83, physical_space=83, emotional_hierarchy=87, contrast=72, vocal_belief=88,
         excitement=66, taste=85, translation="low", mono="low",
+    )
+    assert ks["negative_space_dropout"] == dict(
+        technical=78, physical_space=76, emotional_hierarchy=72, contrast=86, vocal_belief=70,
+        excitement=76, taste=64, translation="high", mono="low",
     )
     assert ks["width_bloom"] == dict(
         technical=82, physical_space=78, emotional_hierarchy=79, contrast=91, vocal_belief=74,
