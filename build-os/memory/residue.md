@@ -4,6 +4,73 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
+## ★★★ STATUS (P-043 close, 2026-07-03): residue = accepted standing notes only — THE MOVE VOCABULARY IS WIDENED AND GOVERNED
+
+- **P-043 (CURATED MOVE VOCABULARY EXPANSION — Shape C, opened
+  NARROWLY: arrangement_lift + ensemble_rebalance ONLY; negative-space
+  dropout EXPLICITLY EXCLUDED by the user) closed 2026-07-03:** qa
+  GREEN + reviewer PASS (no must-fix; all adapted adversarial attacks
+  defeated). Commits `ed94020` (Commit-1 — `CREATIVE_VARIANT_KINDS`
+  7→9 + `CREATIVE_EXTENDED_KINDS`; the `reach_kinds` seam
+  [extended-vocabulary-only; reached variants append after the neutral
+  pool; suppression beats reach; fallback neutral-pool-only; two-layer
+  cap incl. runtime `reach_capped`]; 4 new curated variants, all
+  `non_destructive_duplicate_track` / anti-mute; kind_scores +
+  truth_alignment rows in ALL three profiles; ZERO behavioral change —
+  GREEN IN ISOLATION at **944**) + `e382d86` (Commit-2 — Quincy's
+  authored reach [three modes; the P-042 approximation favor
+  consciously REPLACED] + the differential proof) on parent `3110126`,
+  atop merge base `17cc270` (= PR #21 — P-042 merged FIRST on the
+  user's directive). Exactly 11 files, +1184/−96; halee/timbaland
+  author `reach_kinds []` everywhere → zero extended emissions over 48
+  runs. PUSHED BEFORE qa/reviewer (standing go — both gates validated
+  the final SHAs), NOT merged. Suite **950** / regression **93/93** /
+  Commit-1 iso **944** / the 234-cell reach reconstruction 0
+  mismatches / ALL winners unchanged / sabotage 4/4 / a governed WIN
+  through full analyze() (vocal_C at 83.1). **Codex unavailable —
+  single-model review (independent worktree execution: HEAD 950 +
+  C1 944 reproduced).** Receipt:
+  `build-os/receipts/P-043-move-vocabulary-expansion.md`.
+- **★ THE P-042 APPROXIMATION NOTE IS ✓ RESOLVED** (accepted note 3 in
+  the P-042 banner below): quincy experimental's subtractive_drop +
+  width_bloom favor — the in-vocabulary approximation — is consciously
+  REPLACED by real authored reach over the true families.
+- **NEW accepted notes (P-043, recorded not fixed):**
+  1. **qa discrepancy #1 (count composition, direction safe):**
+     Commit-1 iso 944 = 907 + 29 new + 8 PASSIVE growth in the
+     untouched `tests/test_creative_nudges.py`; C2 net +6 = +7
+     new-file / −1 mode_forking consolidation. A calibration note on
+     count accounting, not a defect.
+  2. **qa discrepancy #2 (pin coverage):** quincy's chop-fixture
+     default flow ALSO gains chorus_lift_E — same authored mechanism,
+     winner unchanged, doctrine unmoved, sample trees unaffected — but
+     UNPINNED (the 4th fixture lives outside the FIXTURE_NAMES pin
+     corpus); candidate one-line pin extension in a future packet.
+  3. **Reviewer observation (1):** `fork["reached"]` on a
+     loader-BYPASSING profile reaching a NEUTRAL kind would misreport
+     it as reached (emission unaffected; the loader rejects the
+     authoring) — future tightening: intersect with admitted kinds.
+  4. **Reviewer observation (2):** the degenerate empty-neutral-pool +
+     bypass edge — unreachable on all five shipped problem ids,
+     pre-existing in shape.
+- **All prior standing notes RETAINED** (the banners below).
+- **Open boundary:** P-043's commits pushed to the dev branch BEFORE
+  qa/reviewer under the orchestrator's standing go; **the MERGE of
+  P-043 (`3110126` + `ed94020` + `e382d86` + the close commit, atop
+  `17cc270` = PR #21) is the OPEN USER GATE** — it awaits the user's
+  explicit word.
+- **NEXT — ★ USER-GATED: negative-space dropout as a move family**
+  (the user's own sequencing: "after C proves the widened vocabulary
+  can stay governed" — C has now proven exactly that; adding it = one
+  `CREATIVE_EXTENDED_KINDS` entry + curated variants + authored reach,
+  ZERO engine changes); STAGED in `build-os/packets/active_packet.md`
+  — the decision of whether/when is the USER'S; the orchestrator
+  presents scope first, does NOT open blind.
+- **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
+  comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
+  placement faith; (3) flag PRESENCE is not flag THREADING — levers
+  need reaches-the-destination guards.
+
 ## ★★★ STATUS (P-042 close, 2026-07-03): residue = accepted standing notes only — THE MODE LEVER IS LOAD-BEARING
 
 - **P-042 (PROFILE-AUTHORED MODE FORKING — Shape B) closed
@@ -48,7 +115,10 @@
   3. **Quincy experimental (subtractive_drop + width_bloom) is the
      closest IN-VOCABULARY approximation** of the user's
      "arrangement-lift / ensemble-rebalance" example — the true
-     families are STAGED C; recorded as C's motivation.
+     families are STAGED C; recorded as C's motivation. **(✓ RESOLVED
+     by P-043, 2026-07-03: the approximation favor consciously
+     REPLACED by real authored reach over the true families — see
+     the P-043 banner above.)**
   4. **winning_variant tie-break (reviewer finding 4):** max =
      first-wins; favor-reordering could flip an EXACT score tie; none
      exists today, and a favored kind winning a tie is arguably
@@ -62,13 +132,19 @@
   qa/reviewer under the orchestrator's standing go; **the MERGE of
   P-042 (`ab4914a` + `9acecfd` + `9d746e3` + the close commit, atop
   `dadda12` = PR #20) is the OPEN USER GATE** — it awaits the user's
-  explicit word.
+  explicit word. **(✓ RESOLVED at P-043 open, 2026-07-03: merged as
+  PR #21 on the user's directive — merge commit `17cc270`, the
+  current default tip and the P-043 merge base.)**
 - **NEXT per the USER = Shape C — new mode-specific move families**
   (extend `CREATIVE_VARIANT_KINDS` + the curated builders through a
   conscious packet; profiles then author reach with ZERO loader/fork
   changes); STAGED in `build-os/packets/active_packet.md` —
   ★ USER-GATED: not built until the user opens it; the orchestrator
-  presents scope first.
+  presents scope first. **(✓ DONE at P-043 close, 2026-07-03: Shape C
+  opened NARROWLY on the user's word [arrangement_lift +
+  ensemble_rebalance only; negative-space dropout EXPLICITLY
+  EXCLUDED] and CLOSED as P-043 — see the P-043 banner above; NEXT =
+  negative-space dropout, ★ USER-GATED.)**
 - **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
   comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
   placement faith; (3) flag PRESENCE is not flag THREADING — levers

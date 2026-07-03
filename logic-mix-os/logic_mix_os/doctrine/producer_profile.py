@@ -26,7 +26,11 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List
 
-from ..constants import CREATIVE_VARIANT_KINDS, TRANSLATION_RISK_LEVELS
+from ..constants import (
+    CREATIVE_EXTENDED_KINDS,
+    CREATIVE_VARIANT_KINDS,
+    TRANSLATION_RISK_LEVELS,
+)
 
 _DIR = Path(__file__).parent
 _PRODUCERS_DIR = _DIR / "producers"
@@ -95,6 +99,10 @@ class ProducerProfile:
     # ``suppress_kinds`` (lists of engine-vocabulary kind names) that fork
     # candidate generation per mode. Absent fields = neutral = the engine's
     # un-forked emission, so pre-P-042 profiles stay valid unchanged.
+    # P-043: a mode MAY additionally author ``reach_kinds`` — names from the
+    # engine's EXTENDED vocabulary (``CREATIVE_EXTENDED_KINDS``) whose
+    # curated variants the mode ADMITS into emission. Reach is the only
+    # admission path for extended kinds; ``favor_kinds`` stays order-only.
     search_modes: Dict[str, Dict[str, Any]]
     philosophy: str
 
@@ -221,7 +229,8 @@ def _validate(raw: Dict[str, Any], name: str) -> None:
             raise ValueError(
                 f"profile {name!r}: search_modes[{mode_name!r}] must be an object"
             )
-        declared = [f for f in ("favor_kinds", "suppress_kinds") if f in entry]
+        declared = [f for f in ("favor_kinds", "suppress_kinds", "reach_kinds")
+                    if f in entry]
         for field_name in declared:
             kinds = entry[field_name]
             if not isinstance(kinds, list) or not all(isinstance(k, str) for k in kinds):
@@ -229,13 +238,28 @@ def _validate(raw: Dict[str, Any], name: str) -> None:
                     f"profile {name!r}: search_modes[{mode_name!r}].{field_name} "
                     f"must be a list of strings"
                 )
-            unknown = [k for k in kinds if k not in CREATIVE_VARIANT_KINDS]
-            if unknown:
-                raise ValueError(
-                    f"profile {name!r}: search_modes[{mode_name!r}].{field_name} "
-                    f"names unknown variant kind(s) {unknown} — kinds must come "
-                    f"from the engine's move vocabulary {list(CREATIVE_VARIANT_KINDS)}"
-                )
+            # P-043: ``reach_kinds`` admits ONLY the engine's EXTENDED
+            # vocabulary — the neutral pool needs no reach (favor/suppress
+            # shape it), so naming a neutral kind here is authoring
+            # confusion, rejected loudly with its own message.
+            if field_name == "reach_kinds":
+                outside = [k for k in kinds if k not in CREATIVE_EXTENDED_KINDS]
+                if outside:
+                    raise ValueError(
+                        f"profile {name!r}: search_modes[{mode_name!r}].reach_kinds "
+                        f"names non-extended kind(s) {outside} — reach admits ONLY "
+                        f"the engine's EXTENDED vocabulary "
+                        f"{list(CREATIVE_EXTENDED_KINDS)} (the neutral pool needs "
+                        f"no reach; favor/suppress shape it)"
+                    )
+            else:
+                unknown = [k for k in kinds if k not in CREATIVE_VARIANT_KINDS]
+                if unknown:
+                    raise ValueError(
+                        f"profile {name!r}: search_modes[{mode_name!r}].{field_name} "
+                        f"names unknown variant kind(s) {unknown} — kinds must come "
+                        f"from the engine's move vocabulary {list(CREATIVE_VARIANT_KINDS)}"
+                    )
             if len(set(kinds)) != len(kinds):
                 raise ValueError(
                     f"profile {name!r}: search_modes[{mode_name!r}].{field_name} "
@@ -245,12 +269,20 @@ def _validate(raw: Dict[str, Any], name: str) -> None:
             continue
         favor = entry.get("favor_kinds", [])
         suppress = entry.get("suppress_kinds", [])
+        reach = entry.get("reach_kinds", [])
         contradiction = [k for k in favor if k in set(suppress)]
         if contradiction:
             raise ValueError(
                 f"profile {name!r}: search_modes[{mode_name!r}] both favors and "
                 f"suppresses {contradiction} — a kind cannot be reached for and "
                 f"removed at once"
+            )
+        reach_contradiction = [k for k in reach if k in set(suppress)]
+        if reach_contradiction:
+            raise ValueError(
+                f"profile {name!r}: search_modes[{mode_name!r}] both reaches for "
+                f"and suppresses {reach_contradiction} — a kind cannot be "
+                f"admitted and removed at once"
             )
         allowed = entry.get("allowed_risk")
         if allowed not in TRANSLATION_RISK_LEVELS:
@@ -271,6 +303,24 @@ def _validate(raw: Dict[str, Any], name: str) -> None:
             if rank > cap:
                 raise ValueError(
                     f"profile {name!r}: search_modes[{mode_name!r}] favors {k!r} "
+                    f"(curated translation risk {risk!r}) beyond its allowed_risk "
+                    f"{allowed!r} — the cap is governance and cannot be out-authored"
+                )
+        # P-043: the SAME governance cap binds an authored reach — admitting
+        # an extended kind whose curated translation risk ranks beyond the
+        # mode's posture is rejected at load exactly like an over-cap favor
+        # (and refused fail-closed at emission for loader-bypassing profiles).
+        for k in reach:
+            row = kind_scores.get(k, kind_scores.get("depth_cleanup", {}))
+            risk = row.get("translation") if isinstance(row, dict) else None
+            rank = (
+                TRANSLATION_RISK_LEVELS.index(risk)
+                if risk in TRANSLATION_RISK_LEVELS
+                else len(TRANSLATION_RISK_LEVELS) - 1  # unknown risk reads as highest
+            )
+            if rank > cap:
+                raise ValueError(
+                    f"profile {name!r}: search_modes[{mode_name!r}] reaches for {k!r} "
                     f"(curated translation risk {risk!r}) beyond its allowed_risk "
                     f"{allowed!r} — the cap is governance and cannot be out-authored"
                 )

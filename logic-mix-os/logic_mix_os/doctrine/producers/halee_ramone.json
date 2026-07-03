@@ -14,7 +14,9 @@
     "drum_room_bloom":  {"technical": 80, "physical_space": 89, "emotional_hierarchy": 78, "contrast": 82, "vocal_belief": 76, "excitement": 83, "taste": 82, "translation": "low", "mono": "low"},
     "loop_deconstruct": {"technical": 83, "physical_space": 87, "emotional_hierarchy": 84, "contrast": 78, "vocal_belief": 85, "excitement": 72, "taste": 84, "translation": "low", "mono": "low"},
     "depth_cleanup":    {"technical": 84, "physical_space": 90, "emotional_hierarchy": 85, "contrast": 72, "vocal_belief": 86, "excitement": 66, "taste": 85, "translation": "low", "mono": "low"},
-    "intimacy_pass":    {"technical": 82, "physical_space": 85, "emotional_hierarchy": 88, "contrast": 72, "vocal_belief": 90, "excitement": 64, "taste": 87, "translation": "low", "mono": "low"}
+    "intimacy_pass":    {"technical": 82, "physical_space": 85, "emotional_hierarchy": 88, "contrast": 72, "vocal_belief": 90, "excitement": 64, "taste": 87, "translation": "low", "mono": "low"},
+    "arrangement_lift":   {"technical": 82, "physical_space": 80, "emotional_hierarchy": 85, "contrast": 90, "vocal_belief": 80, "excitement": 84, "taste": 82, "translation": "low", "mono": "low"},
+    "ensemble_rebalance": {"technical": 83, "physical_space": 83, "emotional_hierarchy": 87, "contrast": 72, "vocal_belief": 88, "excitement": 66, "taste": 85, "translation": "low", "mono": "low"}
   },
 
   "risk_penalty": {"low": 0, "medium": 6, "high": 14},
@@ -50,20 +52,20 @@
   ],
 
   "search_modes": {
-    "conservative": {"allowed_risk": "low", "bias": "preserve identity, subtle improvements, vocal belief", "favor_kinds": ["vocal_ride", "depth_cleanup"], "suppress_kinds": ["width_bloom"]},
-    "spatial_depth": {"allowed_risk": "medium", "bias": "physical room/chamber/plate depth, space as storytelling", "favor_kinds": ["drum_room_bloom", "depth_cleanup"], "suppress_kinds": []},
-    "vocal_truth": {"allowed_risk": "low", "bias": "vocal rides, phrase emotion, clarity, restraint", "favor_kinds": [], "suppress_kinds": []},
-    "dramatic_contrast": {"allowed_risk": "medium", "bias": "push verse/chorus/bridge contrast harder", "favor_kinds": [], "suppress_kinds": []},
-    "deconstructive": {"allowed_risk": "medium", "bias": "remove, mute, chop, filter, simplify", "favor_kinds": ["subtractive_drop", "loop_deconstruct"], "suppress_kinds": ["width_bloom", "drum_room_bloom"]},
-    "experimental": {"allowed_risk": "high", "bias": "unusual transforms, reverses, extreme depth shifts", "favor_kinds": ["width_bloom", "drum_room_bloom"], "suppress_kinds": []}
+    "conservative": {"allowed_risk": "low", "bias": "preserve identity, subtle improvements, vocal belief", "favor_kinds": ["vocal_ride", "depth_cleanup"], "suppress_kinds": ["width_bloom"], "reach_kinds": []},
+    "spatial_depth": {"allowed_risk": "medium", "bias": "physical room/chamber/plate depth, space as storytelling", "favor_kinds": ["drum_room_bloom", "depth_cleanup"], "suppress_kinds": [], "reach_kinds": []},
+    "vocal_truth": {"allowed_risk": "low", "bias": "vocal rides, phrase emotion, clarity, restraint", "favor_kinds": [], "suppress_kinds": [], "reach_kinds": []},
+    "dramatic_contrast": {"allowed_risk": "medium", "bias": "push verse/chorus/bridge contrast harder", "favor_kinds": [], "suppress_kinds": [], "reach_kinds": []},
+    "deconstructive": {"allowed_risk": "medium", "bias": "remove, mute, chop, filter, simplify", "favor_kinds": ["subtractive_drop", "loop_deconstruct"], "suppress_kinds": ["width_bloom", "drum_room_bloom"], "reach_kinds": []},
+    "experimental": {"allowed_risk": "high", "bias": "unusual transforms, reverses, extreme depth shifts", "favor_kinds": ["width_bloom", "drum_room_bloom"], "suppress_kinds": [], "reach_kinds": []}
   },
 
   "philosophy": "A mix is not finished when it is balanced. It is finished when the static balance supports the song and the dynamic movement makes the song feel inevitable. The best mix is the version where the song feels most inevitable, not the most processed.",
 
   "truth_alignment": {
-    "intimate": {"vocal_ride": 88, "intimacy_pass": 90, "subtractive_drop": 84, "depth_cleanup": 82, "loop_deconstruct": 83, "drum_room_bloom": 58, "width_bloom": 45},
-    "big": {"width_bloom": 86, "drum_room_bloom": 86, "vocal_ride": 78, "subtractive_drop": 76, "depth_cleanup": 76, "loop_deconstruct": 78, "intimacy_pass": 70},
-    "neutral": {"width_bloom": 72, "drum_room_bloom": 78, "vocal_ride": 84, "subtractive_drop": 82, "depth_cleanup": 82, "loop_deconstruct": 80, "intimacy_pass": 82}
+    "intimate": {"vocal_ride": 88, "intimacy_pass": 90, "subtractive_drop": 84, "depth_cleanup": 82, "loop_deconstruct": 83, "drum_room_bloom": 58, "width_bloom": 45, "arrangement_lift": 72, "ensemble_rebalance": 84},
+    "big": {"width_bloom": 86, "drum_room_bloom": 86, "vocal_ride": 78, "subtractive_drop": 76, "depth_cleanup": 76, "loop_deconstruct": 78, "intimacy_pass": 70, "arrangement_lift": 84, "ensemble_rebalance": 74},
+    "neutral": {"width_bloom": 72, "drum_room_bloom": 78, "vocal_ride": 84, "subtractive_drop": 82, "depth_cleanup": 82, "loop_deconstruct": 80, "intimacy_pass": 82, "arrangement_lift": 78, "ensemble_rebalance": 80}
   },
 
   "taste_max_delta": 15,

@@ -23,9 +23,16 @@ def render_creative(creative: Dict) -> str:
     if decl:
         favors = ", ".join(f"`{k}`" for k in decl["favor_kinds"]) or "—"
         suppresses = ", ".join(f"`{k}`" for k in decl["suppress_kinds"]) or "—"
+        line = (f"**Mode reach (profile-authored):** favors {favors}; "
+                f"suppresses {suppresses}")
+        # P-043: the authored EXTENDED-vocabulary reach — the key is present
+        # only when the mode reaches, so runs without reach render this line
+        # byte-identically to their P-042 form.
+        if decl.get("reach_kinds"):
+            line += "; reaches for " + ", ".join(f"`{k}`" for k in decl["reach_kinds"])
+        line += f" — capped at `{decl['allowed_risk']}` risk"
         out.append("")
-        out.append(f"**Mode reach (profile-authored):** favors {favors}; "
-                   f"suppresses {suppresses} — capped at `{decl['allowed_risk']}` risk")
+        out.append(line)
     out.append("")
 
     svd = creative.get("static_vs_dynamic", {})
@@ -58,9 +65,17 @@ def render_creative(creative: Dict) -> str:
                 notes.append("suppressed " + ", ".join(f"`{k}`" for k in fork["suppressed"]))
             if fork["favored"]:
                 notes.append("favored " + ", ".join(f"`{k}`" for k in fork["favored"]))
+            # P-043: what the authored reach ACTUALLY added to this branch —
+            # the keys exist only when the mode reaches (evidence-key
+            # discipline), so non-reaching runs render zero new bytes.
+            if fork.get("reached"):
+                notes.append("reached for " + ", ".join(f"`{k}`" for k in fork["reached"]))
             if fork["risk_capped"]:
                 notes.append("favor refused by the allowed-risk cap: "
                              + ", ".join(f"`{k}`" for k in fork["risk_capped"]))
+            if fork.get("reach_capped"):
+                notes.append("reach refused by the allowed-risk cap: "
+                             + ", ".join(f"`{k}`" for k in fork["reach_capped"]))
             if fork["suppression_fallback"]:
                 notes.append("suppression would have emptied this set — "
                              "the full neutral pool was emitted (fallback)")
