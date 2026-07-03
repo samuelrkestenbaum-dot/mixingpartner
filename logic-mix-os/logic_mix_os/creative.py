@@ -13,7 +13,11 @@ from __future__ import annotations
 from typing import Dict, List, Optional
 
 from .analyzers.vocal_type_classifier import lead_vocal_names
-from .constants import LOOP_SAMPLE_KINDS, TRANSLATION_RISK_LEVELS
+from .constants import (
+    CREATIVE_EXTENDED_KINDS,
+    LOOP_SAMPLE_KINDS,
+    TRANSLATION_RISK_LEVELS,
+)
 from .doctrine.doctrine_engine import read_loop_context
 from .doctrine.producer_profile import ProducerProfile, load_profile
 
@@ -432,6 +436,70 @@ def _curated_variants(problem: Dict, result) -> List[Dict]:
     return variants
 
 
+def _extended_variants(problem: Dict, result) -> List[Dict]:
+    """The engine's EXTENDED curated emission for one problem (P-043): the
+    two reach-gated move families, ``arrangement_lift`` (section-level lift
+    built in the arrangement — parts withheld and entering across section
+    boundaries, sectional builds) and ``ensemble_rebalance`` (ensemble-aware
+    RELATIVE rebalancing that reveals arrangement roles — never mute-only
+    aggression). Curated exactly like the neutral pool above — plan-only,
+    non-destructive, real track targets via the same resolution helpers —
+    but NEVER part of the neutral emission: these variants enter a candidate
+    set ONLY when the active mode's authored ``reach_kinds`` admit them
+    (``_fork_candidates``). No profile data reaches this builder."""
+    records = result.records
+    supporting = _supporting_elements(records)
+    loops = [r["name"] for r in records if r["source_kind"] in LOOP_SAMPLE_KINDS]
+    pid = problem["id"]
+    variants: List[Dict] = []
+
+    # The ensemble target: the supporting layers first, then the same
+    # degrade-to-real-records chain the neutral pool uses (never phantom,
+    # never empty while the project has records).
+    ensemble_target = _resolve(supporting, loops, [r["name"] for r in records][:1])
+
+    if pid == "chorus_lift":
+        variants.append(
+            _variant("chorus_lift_E", pid, "arrangement_lift", "Sectional Arrangement Lift",
+                     "The chorus lifts hardest when parts are withheld before it and enter on its downbeat — build the lift in the arrangement, not the processing.",
+                     ["Duplicate 1-2 supporting tracks and region-mute their final pre-chorus bars",
+                      "Bring the withheld parts back in on the chorus downbeat",
+                      "Reserve one texture for the final chorus only"],
+                     ensemble_target, "A sparser pre-chorus may briefly read as lost energy before the payoff registers.",
+                     ["chorus entry feels larger with no new processing", "pre-chorus tension increases"],
+                     "sectional lift"))
+    elif pid == "density":
+        variants += [
+            _variant("density_C", pid, "arrangement_lift", "Staggered Entrances",
+                     "A crowded arrangement usually means everything plays everywhere — stagger entrances so each section carries fewer simultaneous parts.",
+                     ["Map which supporting parts actually play in each section",
+                      "Delay 1-2 entrances to the next section boundary (duplicate the track, region-mute the early bars)",
+                      "Let one part exit at the bridge so its return reads as an event"],
+                     ensemble_target, "Sections may feel emptier until the entrances start reading as events.",
+                     ["each section has its own arrangement identity", "the chorus reads bigger by contrast"],
+                     "arrangement clarity"),
+            _variant("density_D", pid, "ensemble_rebalance", "Ensemble Role Rebalance",
+                     "Reveal the hierarchy by rebalancing the ensemble into roles — one carrier forward, the rest tucked relative — instead of removing parts.",
+                     ["Pick ONE supporting element as the section's carrier and hold its level",
+                      "Tuck the remaining supporting elements -2 to -4 dB relative to the carrier (VCA or region gain)",
+                      "Rotate the carrier role per section so every part keeps a purpose"],
+                     ensemble_target, "Relative moves may read subtle on first listen.",
+                     ["hierarchy reads without muting anything", "every part keeps an audible role"],
+                     "ensemble hierarchy"),
+        ]
+    elif pid == "vocal_belief":
+        variants.append(
+            _variant("vocal_C", pid, "ensemble_rebalance", "Lead-in-Ensemble Rebalance",
+                     "Make the lead read more present by rebalancing the ensemble around it — tuck the competing midrange under the phrases instead of pushing the vocal fader.",
+                     ["Tuck midrange supporting elements -1.5 to -3 dB under lead phrases (VCA or region gain)",
+                      "Restore the ensemble between phrases so the track keeps its size",
+                      "Leave the lead fader untouched — the ensemble moves, not the vocal"],
+                     ensemble_target, "Over-tucking can hollow the choruses — A/B against the static baseline.",
+                     ["lead reads present at the same fader", "ensemble keeps its size between phrases"],
+                     "lead prominence"))
+    return variants
+
+
 # --- P-042: profile-authored mode forking ------------------------------------
 # The ownership split, verbatim from the packet: the ENGINE owns the shared
 # move vocabulary (the frozen curated pool above), the PROFILE owns each
@@ -452,9 +520,13 @@ def _mode_declarations(prof: ProducerProfile, mode: Optional[str]) -> Optional[D
     Neutral — meaning the engine's un-forked emission, byte-identical to the
     pre-P-042 behavior — covers: no mode requested; a mode the profile does
     not carry; a mode entry without the declaration fields (third-party
-    profiles stay valid untouched); and a mode entry that authors BOTH fields
-    explicitly EMPTY (the shipped profiles' default/intimate modes — authored
-    neutrality, equivalent to absence by construction).
+    profiles stay valid untouched); and a mode entry that authors ALL the
+    declaration fields explicitly EMPTY (the shipped profiles' neutral modes
+    — authored neutrality, equivalent to absence by construction).
+
+    P-043: ``reach_kinds`` (the authored EXTENDED-vocabulary reach) is a
+    third declaration field — a mode that authors ONLY a reach is declaring,
+    exactly like one that only favors or only suppresses.
     """
     if mode is None:
         return None
@@ -463,7 +535,8 @@ def _mode_declarations(prof: ProducerProfile, mode: Optional[str]) -> Optional[D
         return None
     favor = list(entry.get("favor_kinds") or [])
     suppress = list(entry.get("suppress_kinds") or [])
-    if not favor and not suppress:
+    reach = list(entry.get("reach_kinds") or [])
+    if not favor and not suppress and not reach:
         return None
     allowed = entry.get("allowed_risk")
     if allowed not in _RISK_RANK:
@@ -471,46 +544,84 @@ def _mode_declarations(prof: ProducerProfile, mode: Optional[str]) -> Optional[D
         # a declaring mode; a loader-bypassing profile without one is capped
         # at the most restrictive posture, never the most permissive.
         allowed = TRANSLATION_RISK_LEVELS[0]
-    return {"favor_kinds": favor, "suppress_kinds": suppress, "allowed_risk": allowed}
+    return {"favor_kinds": favor, "suppress_kinds": suppress,
+            "reach_kinds": reach, "allowed_risk": allowed}
 
 
 def _fork_candidates(variants: List[Dict], decl: Dict,
-                     prof: ProducerProfile) -> tuple:
+                     prof: ProducerProfile, extended: List[Dict] = ()) -> tuple:
     """Apply one mode's authored declarations to the neutral curated list.
 
     Pure and deterministic. Returns ``(candidates, fork)`` where ``fork`` is
     the honest per-emission report: ``{"suppressed", "favored",
-    "risk_capped", "suppression_fallback"}``. The authored semantics:
+    "risk_capped", "suppression_fallback"}`` plus — ONLY when the mode
+    authors a reach (the evidence-key discipline) — ``{"reached",
+    "reach_capped"}``. The authored semantics:
 
+    * ``reach_kinds`` (P-043) ADMIT the engine's curated EXTENDED variants
+      (``extended``, the ``_extended_variants`` pool for this problem) into
+      emission — appended after the neutral pool in authored reach order
+      (curated order within a kind). Reach is the ONLY admission path for
+      extended kinds; the neutral pool never carries them. A reached kind
+      whose curated translation risk (the profile's own ``kind_scores`` row,
+      ``depth_cleanup`` fallback row for unknown kinds — the
+      ``score_variant`` rule) ranks beyond the mode's ``allowed_risk`` is
+      REFUSED fail-closed, surfaced in ``fork["reach_capped"]`` (the loader
+      already rejects such authoring loudly; this guards loader-bypassing
+      profiles). ``fork["reached"]`` lists the kinds actually present in
+      THIS emission through reach (authored order) — [] where the extended
+      pool holds nothing for the problem, where the cap refused, or where
+      suppression removed them again.
     * ``suppress_kinds`` REMOVE their variants from emission — the
-      candidate-SET fork. ``fork["suppressed"]`` lists the kinds actually
-      removed from THIS emission (authored order).
+      candidate-SET fork, applied to the COMBINED (neutral + reached) pool,
+      so suppression beats reach. ``fork["suppressed"]`` lists the kinds
+      actually removed from THIS emission (authored order).
     * ``favor_kinds`` move their variants to the FRONT of emission (authored
       favor order; curated order within a kind) — order shaping only, never
-      set growth: favoring can never add a kind the curated pool does not
-      hold for this problem. ``fork["favored"]`` lists the kinds actually
-      moved for THIS emission.
-    * THE GOVERNANCE CAP: a favored kind whose curated translation risk
-      (the profile's own ``kind_scores`` row, ``depth_cleanup`` fallback row
-      for unknown kinds — the ``score_variant`` rule) ranks beyond the
-      mode's ``allowed_risk`` is REFUSED, never elevated. The loader already
-      rejects such authoring outright; this runtime refusal guards
-      loader-bypassing profiles and is surfaced in ``fork["risk_capped"]``.
+      set growth: favoring can never add a kind the emission does not
+      already hold (admission is ``reach_kinds``' job alone, so P-042's
+      guarantee for the original seven is intact). ``fork["favored"]`` lists
+      the kinds actually moved for THIS emission.
+    * THE GOVERNANCE CAP: a favored kind beyond the mode's ``allowed_risk``
+      is REFUSED, never elevated — surfaced in ``fork["risk_capped"]``
+      (unchanged from P-042; the reach refusal above mirrors it).
     * NON-EMPTY GUARANTEE: suppression can never empty a candidate set. If
       it would, the FULL neutral curated set is emitted instead — the
       documented, profile-agnostic fallback (the engine's own pool, no
       profile data involved) — with ``fork["suppression_fallback"] = True``
-      and ``fork["suppressed"] = []`` (nothing was actually removed).
+      and ``fork["suppressed"] = []`` (nothing was actually removed). The
+      fallback is NEUTRAL-POOL-ONLY: it never (re-)admits extended kinds,
+      so ``fork["reached"]`` is [] on a fallback emission. Reached variants
+      that SURVIVE suppression count as a non-empty set — a mode may
+      legitimately emit extended variants alone.
     """
     kind_scores = prof.kind_scores
     cap = _RISK_RANK[decl["allowed_risk"]]
-    pool_kinds = {v["kind"] for v in variants}
+
+    # --- P-043: authored EXTENDED-vocabulary reach (admission) --------------
+    reach = list(decl.get("reach_kinds") or [])
+    reach_capped: List[str] = []
+    admitted: List[Dict] = []
+    if reach:
+        by_kind: Dict[str, List[Dict]] = {}
+        for v in extended:
+            by_kind.setdefault(v["kind"], []).append(v)
+        for k in reach:
+            row = kind_scores.get(k, kind_scores.get("depth_cleanup", {}))
+            risk = row.get("translation") if isinstance(row, dict) else None
+            rank = _RISK_RANK.get(risk, len(TRANSLATION_RISK_LEVELS) - 1)
+            if rank > cap:
+                reach_capped.append(k)  # the cap wins — fail-closed refusal
+            else:
+                admitted.extend(by_kind.get(k, []))
+    pool = list(variants) + admitted
+    pool_kinds = {v["kind"] for v in pool}
 
     suppress = set(decl["suppress_kinds"])
-    kept = [v for v in variants if v["kind"] not in suppress]
-    fallback = bool(variants) and not kept
+    kept = [v for v in pool if v["kind"] not in suppress]
+    fallback = bool(pool) and not kept
     if fallback:
-        kept = list(variants)
+        kept = list(variants)  # NEUTRAL pool only — a fallback never admits extended kinds
     suppressed = ([] if fallback
                   else [k for k in decl["suppress_kinds"] if k in pool_kinds])
 
@@ -535,6 +646,10 @@ def _fork_candidates(variants: List[Dict], decl: Dict,
         "risk_capped": risk_capped,
         "suppression_fallback": fallback,
     }
+    if reach:  # evidence-key discipline: present ONLY when reach is authored
+        fork["reached"] = [k for k in reach
+                           if k not in reach_capped and k in kept_kinds]
+        fork["reach_capped"] = reach_capped
     return kept, fork
 
 
@@ -554,7 +669,12 @@ def generate_variants(problem: Dict, result, mode: Optional[str] = None,
     prof = profile or _DEFAULT_PROFILE
     decl = _mode_declarations(prof, mode)
     if decl is not None:
-        variants, _ = _fork_candidates(variants, decl, prof)
+        # P-043: the engine's extended curated pool rides along so an
+        # authored ``reach_kinds`` declaration can admit it; without a
+        # declaring mode the extended pool is never even built — the
+        # neutral path stays byte-identical.
+        variants, _ = _fork_candidates(
+            variants, decl, prof, _extended_variants(problem, result))
     return variants
 
 
@@ -718,7 +838,8 @@ def run_creative_engine(result, mode: Optional[str] = None,
             # non-empty fallback fired. Identical pure functions, identical
             # inputs: the report cannot drift from the emission.
             _, branch["mode_fork"] = _fork_candidates(
-                _curated_variants(problem, result), decl, prof)
+                _curated_variants(problem, result), decl, prof,
+                _extended_variants(problem, result))
         branches.append(branch)
     out = {
         "search_mode": mode,
@@ -746,6 +867,11 @@ def run_creative_engine(result, mode: Optional[str] = None,
             "favor_kinds": list(decl["favor_kinds"]),
             "suppress_kinds": list(decl["suppress_kinds"]),
         }
+        # P-043: the authored reach echoes ONLY when it exists (the same
+        # evidence-key discipline) — a forking-but-not-reaching mode's
+        # artifact stays byte-identical to its P-042 form.
+        if decl["reach_kinds"]:
+            out["search_mode_declarations"]["reach_kinds"] = list(decl["reach_kinds"])
     # P-033: observational fallback evidence — present ONLY when a requested
     # mode was substituted (never on the ``mode=None`` default resolution, and
     # never when the requested mode exists in the profile's table).

@@ -151,6 +151,28 @@ CREATIVE_VARIANT_KINDS = (
     "loop_deconstruct",
     "depth_cleanup",
     "intimacy_pass",
+    # P-043 (Shape C, narrow): the EXTENDED vocabulary — see below.
+    "arrangement_lift",
+    "ensemble_rebalance",
+)
+
+# P-043: the EXTENDED move vocabulary — the reach-gated subset of
+# ``CREATIVE_VARIANT_KINDS``. These kinds are NOT part of the neutral curated
+# emission pool: their curated variants (``creative._extended_variants``)
+# emit ONLY when the active search mode's authored ``reach_kinds``
+# declaration reaches for them. The ownership split is unchanged: the ENGINE
+# curates the families (their per-problem variants and risk rows), the
+# PROFILE authors whether a mode reaches them, GOVERNANCE owns the cap (an
+# over-cap reach is rejected at load and refused at emission). P-042's
+# ``favor_kinds`` stays ORDER-ONLY — favoring can still never grow a
+# candidate set; admission happens through ``reach_kinds`` alone, and the
+# non-empty suppression fallback stays neutral-pool-only (a fallback can
+# never admit extended kinds). Exactly two families by the user's decision;
+# negative-space dropout is EXPLICITLY excluded until C proves the widened
+# vocabulary stays governed.
+CREATIVE_EXTENDED_KINDS = (
+    "arrangement_lift",
+    "ensemble_rebalance",
 )
 
 # Translation-risk levels in SEVERITY ORDER (index = rank). This is the shared

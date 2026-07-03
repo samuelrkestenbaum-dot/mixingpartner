@@ -39,7 +39,11 @@ import pathlib
 import pytest
 
 from logic_mix_os import pipeline
-from logic_mix_os.constants import CREATIVE_VARIANT_KINDS, TRANSLATION_RISK_LEVELS
+from logic_mix_os.constants import (
+    CREATIVE_EXTENDED_KINDS,
+    CREATIVE_VARIANT_KINDS,
+    TRANSLATION_RISK_LEVELS,
+)
 from logic_mix_os.creative import (
     _curated_variants,
     _fork_candidates,
@@ -153,13 +157,18 @@ def dense(analyzed):
 # =========================================================================== #
 def test_engine_pool_is_the_frozen_curated_emission(dense):
     """The neutral emission per problem IS the pinned engine pool (ids, kinds
-    AND order), and the union of pool kinds IS the engine's declared move
-    vocabulary — no new move families entered with the fork."""
+    AND order), and the union of pool kinds IS the engine's NEUTRAL move
+    vocabulary. P-043 (the conscious widening): ``CREATIVE_VARIANT_KINDS``
+    now also carries the EXTENDED kinds — reach-gated, never part of the
+    neutral pool — so the union pin is vocabulary-minus-extended and the
+    extended kinds are asserted ABSENT from every neutral emission (their
+    own pins live in tests/test_move_vocabulary_expansion.py)."""
     for pid in PROBLEM_IDS:
         variants = generate_variants({"id": pid}, dense)
         assert [(v["variant_id"], v["kind"]) for v in variants] == ENGINE_POOL[pid]
     union = {kind for pool in ENGINE_POOL.values() for _, kind in pool}
-    assert union == set(CREATIVE_VARIANT_KINDS)
+    assert union == set(CREATIVE_VARIANT_KINDS) - set(CREATIVE_EXTENDED_KINDS)
+    assert union & set(CREATIVE_EXTENDED_KINDS) == set()
 
 
 # =========================================================================== #

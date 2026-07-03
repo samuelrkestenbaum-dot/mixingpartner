@@ -67,12 +67,25 @@ def test_globals_equal_a_fresh_load():
 # Value pins — the concrete pre-P-026 literals, now guarded here
 # --------------------------------------------------------------------------- #
 def test_kind_scores_value_pins():
-    """7 kinds × 9 dims, byte-for-byte the pre-P-026 curated table."""
+    """The pre-P-026 curated table byte-for-byte (7 kinds × 9 dims), plus —
+    the P-043 CONSCIOUS widening — the reference's authored rows for the two
+    EXTENDED kinds (``arrangement_lift`` / ``ensemble_rebalance``): curated
+    risk rows exist even though halee_ramone authors ZERO reach over them
+    (no silent inheritance)."""
     ks = creative._KIND_SCORES
     assert set(ks) == {
         "width_bloom", "subtractive_drop", "vocal_ride", "drum_room_bloom",
         "loop_deconstruct", "depth_cleanup", "intimacy_pass",
+        "arrangement_lift", "ensemble_rebalance",
     }
+    assert ks["arrangement_lift"] == dict(
+        technical=82, physical_space=80, emotional_hierarchy=85, contrast=90, vocal_belief=80,
+        excitement=84, taste=82, translation="low", mono="low",
+    )
+    assert ks["ensemble_rebalance"] == dict(
+        technical=83, physical_space=83, emotional_hierarchy=87, contrast=72, vocal_belief=88,
+        excitement=66, taste=85, translation="low", mono="low",
+    )
     assert ks["width_bloom"] == dict(
         technical=82, physical_space=78, emotional_hierarchy=79, contrast=91, vocal_belief=74,
         excitement=88, taste=80, translation="medium", mono="medium",
@@ -163,6 +176,10 @@ def test_search_modes_value_pins():
     # still the untouched authored values, and the default-flow modes
     # (dramatic_contrast / vocal_truth) author NEUTRAL declarations, so the
     # default candidate emission is byte-identical.
+    # P-043 (conscious flip): every mode entry now ALSO authors the
+    # EXTENDED-vocabulary ``reach_kinds`` explicitly — and the reference
+    # authors ZERO reach on every mode (its emissions stay byte-identical;
+    # the extended kinds are quincy-reached only in this packet).
     sm = creative.SEARCH_MODES
     assert set(sm) == {
         "conservative", "spatial_depth", "vocal_truth",
@@ -173,9 +190,12 @@ def test_search_modes_value_pins():
         "bias": "preserve identity, subtle improvements, vocal belief",
         "favor_kinds": ["vocal_ride", "depth_cleanup"],
         "suppress_kinds": ["width_bloom"],
+        "reach_kinds": [],
     }
     assert sm["experimental"]["allowed_risk"] == "high"
     assert sm["dramatic_contrast"]["allowed_risk"] == "medium"
+    for mode in sm.values():
+        assert mode["reach_kinds"] == []
     # The two default-flow modes: explicitly authored NEUTRAL reach.
     for default_flow in ("dramatic_contrast", "vocal_truth"):
         assert sm[default_flow]["favor_kinds"] == []
