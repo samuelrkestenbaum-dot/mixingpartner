@@ -394,23 +394,52 @@
     user gate**, atop the set-active `6df37b3`. P-045's parent
     chain: `c3fa783` → `47aace7` → `6df37b3` (active-packet
     confirmation) → `fe8d947` (PR #23 merge).
+    ★★ P-045 IS MERGED — **PR #24 (P-045 — the fourth producer,
+    Brian Eno + closes) is MERGED to default on the user's
+    directive — merge commit `0a53bb5`, the CURRENT default-branch
+    tip. The base for MERGE/landing decisions is now `0a53bb5`.**
+    The dev branch now carries **P-046 (`c94f2fe` + `95f65bf`,
+    docs/demo — PRODUCT-SURFACE REFRESH: THE FOUR-PRODUCER DEMO —
+    the P-040 pattern extended to the four-producer world: the two
+    NEW committed 30-artifact trees `examples/sample_output_quincy/`
+    [68.8 — his LIVE default-mode reach surface: declarations
+    {medium, reach [arrangement_lift]}, chorus_lift_E among
+    candidates, winner unmoved] + `examples/sample_output_eno/`
+    [65.5 — authored-neutral byte-silence, zero declaration/fork
+    keys; winner vocal_B vs the others' vocal_A], real-CLI renders
+    from `vocal_chop_groove` with relative paths, + the staleness
+    pin extended to FOUR at full P-040 strength + the NEW
+    mode-surface pin ×4 + test-9 2→4 + the README "Four producers,
+    same stems" four-way with modes-are-behavior and the extended
+    families [the dropout safety line VERBATIM]; exactly 63 files,
+    ZERO .py under logic_mix_os/, the two EXISTING trees
+    byte-untouched — NO staleness bug found), PUSHED to the dev
+    branch BEFORE qa/reviewer under the orchestrator's standing go
+    (both gates validated the final SHAs), NOT merged — the P-046
+    merge is a user gate**, atop the set-active `8674a97`. P-046's
+    parent chain: `95f65bf` → `c94f2fe` → `8674a97` (active-packet
+    confirmation) → `0a53bb5` (PR #24 merge).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-03, P-045 — the
-  four-producer baseline):** suite **1100 passed** (0 failed /
+- **Green baseline (verified 2026-07-03, P-046 — the
+  four-producer DEMO baseline):** suite **1110 passed** (0 failed /
   skipped); regression **93/93** (tests_run 93 / passed 93 /
   failed 0) — the corpus is **4 fixtures** (the 68/68 era ended
-  CONSCIOUSLY at P-035). Commits `47aace7` (brian_eno.json — the
-  fourth producer [atmosphere + texture + restraint + generative
-  space] + its 36-test guard suite) + `c3fa783` (the permanent
-  64-test FOUR-WAY differential) on parent `6df37b3` (active-packet
-  confirmation), atop merge base `fe8d947` (= the PR #23 merge) —
-  `47aace7` IS Commit-1 → green in isolation (throwaway worktree:
-  **1036 passed**). (History: 1000 → **1100** at P-045 — +100: the
+  CONSCIOUSLY at P-035). Commits `c94f2fe` (the two NEW demo trees
+  [quincy 68.8 + eno 65.5] + the staleness pin extended to four +
+  the NEW mode-surface pin + test-9 2→4) + `95f65bf` (README only)
+  on parent `8674a97` (active-packet confirmation), atop merge base
+  `0a53bb5` (= the PR #24 merge) — `c94f2fe` IS Commit-1 → green in
+  isolation (throwaway worktree: **1110 passed** — no test depends
+  on README bytes). (History: 1100 → **1110** at P-046 — +10: +2
+  staleness params + +2 headline params + +4 mode-surface pin
+  [`test_committed_sample_mode_surface_is_the_authored_reach` ×4] +
+  +2 contract-migration [test-9 2→4] — Commit-1 iso **1110**;
+  1000 → **1100** at P-045 — +100: the
   NEW `tests/test_eno_profile.py` [36 tests] + the NEW
   `tests/test_four_way_differential.py` [64 tests], ZERO passive
   growth — the existing sweeps parametrize hardcoded three-producer
@@ -448,6 +477,105 @@
   331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-046 MAKES THE PRODUCT SURFACE MATCH THE PRODUCT — THE
+  FOUR-PRODUCER DEMO (docs/demo only; opened on the user's "go",
+  2026-07-03, after the P-045 merge [PR #24 → default tip
+  `0a53bb5`], down the orchestrator's presented recommendation —
+  the P-040 pattern extended to the four-producer world). The
+  samples/README still showed a TWO-producer surface while the
+  product had grown to FOUR producers, behavioral modes, and three
+  governed extended families; now the demo is committed: **FOUR
+  sample trees, same stems** — halee 76.3 · timbaland 60.9 ·
+  quincy 68.8 · eno 65.5 — the README four-way with
+  modes-are-behavior and the governed families, ALL machine-checked
+  against committed bytes. qa GREEN (12/12) + reviewer PASS (no
+  must-fix). Last-closed = P-046.**
+  - **Two commits** on parent `8674a97` (active-packet
+    confirmation), atop merge base `0a53bb5` (= the PR #24 merge —
+    P-045 landed FIRST): `c94f2fe` (Commit-1 — the two NEW
+    30-artifact trees [`examples/sample_output_quincy/` +
+    `examples/sample_output_eno/`, real-CLI renders from
+    `vocal_chop_groove`, relative paths] + the staleness pin
+    extended to four at full P-040 strength + the NEW mode-surface
+    pin [`test_committed_sample_mode_surface_is_the_authored_reach`
+    ×4 — the README's modes-are-behavior claims machine-checked] +
+    test-9 2→4; 62 files, +7029/−17; GREEN IN ISOLATION at
+    **1110** — no test depends on README bytes) + `95f65bf`
+    (Commit-2 — README only: the "Four producers, same stems"
+    four-way table + modes-are-behavior anchored on committed bytes
+    + the extended-families paragraph with the dropout safety line
+    VERBATIM + 8 stale-wording fixes with a clean post-sweep grep;
+    +112/−28). Exactly **63 files**; ZERO .py under
+    `logic_mix_os/`; zero profiles/fixtures/goldens; the two
+    EXISTING trees byte-untouched (empty diff on their paths) —
+    **NO staleness bug found** (fresh renders of the existing trees
+    byte-identical). **PUSHED to the dev branch BEFORE qa/reviewer
+    under the standing go (both gates validated the final SHAs;
+    builder note recorded: the commits were recut once locally
+    before pushing to fix a docstring inaccuracy — the gates judged
+    the final tree); NOT merged — the P-046 merge is the OPEN USER
+    GATE.**
+  - **★ The two new trees (the key surfaces):** quincy 68.8 carries
+    his LIVE default-mode reach surface — declarations {medium,
+    reach [arrangement_lift]}, `chorus_lift_E` among candidates,
+    winner unmoved; eno 65.5 is authored-neutral BYTE-SILENCE —
+    zero declaration/fork keys — and his winner is `vocal_B` vs the
+    others' `vocal_A` (the README's "same winners" honestly became
+    "same non-vocal winners").
+  - **★ qa GREEN (12/12):** suite 1100 → **1110 passed, 0 failed**
+    (+2 staleness params, +2 headline params, +4 mode-surface pin,
+    +2 contract-migration); regression **93/93**; Commit-1 iso
+    **1110**; freshness INDEPENDENT — isolated worktree, fixtures
+    regenerated, the four VERBATIM README invocations →
+    **byte-identical 30/30 × 4** with NO normalization needed;
+    headlines 76.3/60.9/68.8/65.5, vocal_role_fit 65/85/85/85,
+    loop_context 15/10/12/35; the README accuracy sweep traced
+    EVERY number and claim to a committed byte or pinned test (the
+    timbaland declaration quote token-for-token; invariance
+    86.0/99.4 read from all four trees; the extended-family ids
+    exact vs the engine pools; the safety line word-for-word; the
+    `--producer` default — "unpinned claims found: none material");
+    sabotage — a flipped byte in each new tree → exactly the right
+    staleness pin fails; quincy reach_kinds removed → the
+    mode-surface pin + the staleness pin fail; README 68.8→68.9 →
+    nothing fails = the documented P-040 ACCEPTED GAP, unchanged in
+    posture; safety grep clean (only the pre-existing
+    renderer-emitted applescript TODO lines; no absolute paths, no
+    model identifiers).
+  - **★ reviewer PASS (no must-fix; Codex unavailable —
+    single-model):** demo faithfulness PROVEN independently — the
+    reviewer re-rendered ALL FOUR trees itself → raw byte-identical,
+    zero normalization (the trees are REAL renders, not curated;
+    quincy's surface is exactly the live default; eno's byte-silence
+    exactly authored-neutral); pin extension FULL-STRENGTH, nothing
+    weakened (byte-for-byte the same assertions extended to four);
+    the mode-surface pin load-bearing BOTH directions; README
+    honesty PRESERVED and extended from P-040; the pin decisions all
+    judged right calls (DEMO_OVERALLS left as the P-039 in-test
+    demo; COMMITTED_TREE_HEADLINES left as the P-045 historical
+    artifact; the module-scoped sample_analyses fixture respecting
+    the conftest's no-silent-widening convention); the absence of a
+    non-default-mode committed tree judged CORRECT RESTRAINT (the
+    README tells users how to run `--mode` themselves); trajectory —
+    the product surface now MATCHES the product and the pin maps
+    extend naturally for a fifth producer. Two non-blocking reviewer
+    residues + one qa observation → residue (README:46 pre-existing
+    fixture-count staleness; the four-way docstring wording;
+    test-internal era docstrings).
+  - **★ NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open
+    directions to the user (ALL user-gated): the P-046 merge · the
+    directory-driven `PRODUCERS`-tuple sweeps hardening (P-045
+    residue, now joined by the small P-046 docs residues — a natural
+    pairing for one hardening/docs packet) · quincy/halee authored
+    dropout reach · the future-analyzer candidates from Eno's honest
+    deferrals (textural coherence · generative process · ambient
+    patience) · a fifth producer · anything else the user calls. Do
+    NOT open anything blind. Execution/apply semantics NEVER without
+    explicit user re-gating. **THE OPEN USER GATE: the merge of
+    P-046 (`8674a97` + `c94f2fe` + `95f65bf` + the close commit)
+    atop `0a53bb5` (= PR #24).** Receipt:
+    `build-os/receipts/P-046-four-producer-demo.md`.
 
 - **★★★ P-045 WIDENS THE AESTHETIC MAP — THE FOURTH PRODUCER: BRIAN
   ENO (profile-only; the user's pick, verbatim 2026-07-03: "Yes —
@@ -575,7 +703,13 @@
     NEVER without explicit user re-gating. **THE OPEN USER GATE: the
     merge of P-045 (`6df37b3` + `47aace7` + `c3fa783` + the close
     commit) atop `fe8d947` (= PR #23).** Receipt:
-    `build-os/receipts/P-045-brian-eno.md`.
+    `build-os/receipts/P-045-brian-eno.md`. **(✓ RESOLVED at
+    P-046 open, 2026-07-03: merged as PR #24 on the user's
+    directive — merge commit `0a53bb5`, the current default tip and
+    the P-046 merge base; the user then called the PRODUCT-SURFACE
+    REFRESH — opened and CLOSED as P-046, see the banner above;
+    NEXT = NOTHING STAGED again, the orchestrator presents the open
+    directions.)**
 
 - **★★★ P-044 LANDS THE DROPOUT FAMILY — NEGATIVE-SPACE DROPOUT MOVE
   FAMILY (opened NARROWLY AND CONSERVATIVELY on the user's call,
