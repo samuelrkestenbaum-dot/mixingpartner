@@ -1,0 +1,320 @@
+{
+  "metadata": {
+    "name": "quincy_jones",
+    "display_name": "Quincy Jones",
+    "provenance": "hand-curated-documented",
+    "confidence": "high",
+    "risk_class": 0
+  },
+
+  "kind_scores": {
+    "width_bloom":      {"technical": 80, "physical_space": 74, "emotional_hierarchy": 76, "contrast": 85, "vocal_belief": 73, "excitement": 85, "taste": 74, "translation": "medium", "mono": "medium"},
+    "subtractive_drop": {"technical": 86, "physical_space": 85, "emotional_hierarchy": 85, "contrast": 89, "vocal_belief": 86, "excitement": 80, "taste": 88, "translation": "low", "mono": "low"},
+    "vocal_ride":       {"technical": 84, "physical_space": 80, "emotional_hierarchy": 90, "contrast": 72, "vocal_belief": 91, "excitement": 71, "taste": 87, "translation": "low", "mono": "low"},
+    "drum_room_bloom":  {"technical": 82, "physical_space": 85, "emotional_hierarchy": 80, "contrast": 84, "vocal_belief": 78, "excitement": 84, "taste": 81, "translation": "low", "mono": "low"},
+    "loop_deconstruct": {"technical": 84, "physical_space": 84, "emotional_hierarchy": 83, "contrast": 80, "vocal_belief": 84, "excitement": 75, "taste": 83, "translation": "low", "mono": "low"},
+    "depth_cleanup":    {"technical": 86, "physical_space": 89, "emotional_hierarchy": 87, "contrast": 75, "vocal_belief": 88, "excitement": 70, "taste": 89, "translation": "low", "mono": "low"},
+    "intimacy_pass":    {"technical": 81, "physical_space": 82, "emotional_hierarchy": 89, "contrast": 70, "vocal_belief": 90, "excitement": 63, "taste": 85, "translation": "low", "mono": "low"}
+  },
+
+  "risk_penalty": {"low": 0, "medium": 6, "high": 14},
+
+  "creative_nudge_cap": 2.0,
+  "creative_promotion_cap": 4.0,
+
+  "nudge_table": [
+    {
+      "kinds": ["width_bloom", "vocal_ride"],
+      "evidence": "lead_masked",
+      "dim": "vocal_belief",
+      "delta": -14,
+      "reason": "vocal_belief -14: lead vocal is masked — hold the level/width pushes and open the arrangement around the singer first; space for the singer comes before size"
+    },
+    {
+      "kinds": ["width_bloom"],
+      "evidence": "width_crowding",
+      "dim": "vocal_belief",
+      "delta": -6,
+      "reason": "vocal_belief -6: stereo image is already width-crowded — widening now trades ensemble separation for size"
+    }
+  ],
+
+  "promotion_table": [
+    {
+      "kinds": ["loop_deconstruct"],
+      "evidence": "foregrounded_loop",
+      "dim": "excitement",
+      "delta": 35,
+      "reason": "loop_promotion +4.0: a foregrounded/dominating loop — rework it into arranged section gestures (source material respected) so the arrangement carries the record's identity"
+    }
+  ],
+
+  "search_modes": {
+    "conservative": {"allowed_risk": "low", "bias": "preserve the arrangement's intent, subtle balance moves, protect the lead"},
+    "ensemble_balance": {"allowed_risk": "low", "bias": "section hierarchy, the ensemble in layers around the lead"},
+    "space_for_the_singer": {"allowed_risk": "low", "bias": "carve space around the lead vocal, restraint, clarity"},
+    "arrangement_lift": {"allowed_risk": "medium", "bias": "sectional entrances and exits, build the lift through the arrangement"},
+    "orchestral_depth": {"allowed_risk": "medium", "bias": "front-to-back staging, separation between sections, layered depth"},
+    "experimental": {"allowed_risk": "high", "bias": "unusual re-voicings, extreme section flips, re-arranged gestures"}
+  },
+
+  "philosophy": "A mix is finished when the arrangement carries the song: the lead vocal sits prominent inside an arranged ensemble, each section earns its lift through parts entering and leaving, and the space between layers lets every role read. The groove holds the floor steady while the orchestration tells the story — the record moves because the arrangement moves.",
+
+  "truth_alignment": {
+    "intimate": {"vocal_ride": 90, "intimacy_pass": 88, "subtractive_drop": 85, "depth_cleanup": 84, "loop_deconstruct": 80, "drum_room_bloom": 60, "width_bloom": 45},
+    "big": {"width_bloom": 82, "drum_room_bloom": 84, "vocal_ride": 80, "subtractive_drop": 80, "depth_cleanup": 78, "loop_deconstruct": 78, "intimacy_pass": 68},
+    "neutral": {"width_bloom": 70, "drum_room_bloom": 80, "vocal_ride": 82, "subtractive_drop": 84, "depth_cleanup": 84, "loop_deconstruct": 78, "intimacy_pass": 78}
+  },
+
+  "taste_max_delta": 15,
+
+  "taste_kind_bias": {
+    "tends to prefer narrower stereo images": {"width_bloom": -15, "drum_room_bloom": -15},
+    "prefers wider images": {"width_bloom": 15}
+  },
+
+  "aesthetic_kill_switches": [
+    "Never chase reference loudness at the mix stage.",
+    "Never widen the full mix to solve chorus lift.",
+    "Never make the lead vocal less intelligible unless explicitly approved.",
+    "Never allow a stock loop to dominate the song identity by accident.",
+    "Never let density erase the arrangement — every part keeps a readable role.",
+    "Never flatten sectional dynamics; the record earns its lift section by section.",
+    "Never bury the ensemble's layers into one undifferentiated wall."
+  ],
+
+  "taste_triangle": {
+    "intimate_width_penalty": 30,
+    "emotion_dims": ["emotional_hierarchy_score", "section_contrast_score", "vocal_belief_score"]
+  },
+
+  "veto_thresholds": {
+    "reject_below": 45,
+    "align_veto_below": 50,
+    "align_fallback": 75
+  },
+
+  "doctrine": {
+    "weights": {
+      "physical_space_score": 0.8,
+      "emotional_hierarchy_score": 1.1,
+      "vocal_centrality_score": 1.0,
+      "depth_hierarchy_score": 1.4,
+      "section_contrast_score": 1.3,
+      "static_mix_score": 1.0,
+      "dynamic_mix_score": 1.1,
+      "beat_identity_score": 0.6,
+      "negative_space_score": 0.6,
+      "groove_coherence_score": 0.6,
+      "rhythmic_surprise_score": 0.4,
+      "low_end_motion_score": 0.5,
+      "loop_context_score": 0.3,
+      "vocal_role_fit_score": 0.7
+    },
+    "baselines": {
+      "physical_space": 86.0,
+      "emotional_hierarchy": 86.0
+    },
+    "penalty_coeffs": {
+      "physical_space": {
+        "forward_threshold": 0.6,
+        "forward_occupancy": 70,
+        "felt_forward": 4,
+        "width_crowding": 6,
+        "loop_foregrounded": 6
+      },
+      "emotional_hierarchy": {
+        "no_lead": 35,
+        "vocal_masked": 6,
+        "decorative_threshold": 0.4,
+        "decorative_penalty": 10
+      }
+    },
+    "scorers": {
+      "vocal_centrality": {
+        "no_lead_score": 35.0,
+        "baseline": 70.0,
+        "sacred_bonus": 10,
+        "forward_bonus": 10,
+        "masked_coeff": 6
+      },
+      "depth_hierarchy": {
+        "baseline": 40,
+        "per_distinct": 12,
+        "forward_threshold": 0.6,
+        "forward_occupancy": 60
+      },
+      "section_contrast": {
+        "baseline": 100,
+        "lift_fail_penalty": 18
+      },
+      "static_mix": {
+        "baseline": 80.0,
+        "peak_ceiling": -0.1,
+        "peak_penalty": 10,
+        "dominant_band_threshold": 0.55,
+        "dominant_band_penalty": 10,
+        "crit_low_coeff": 8,
+        "no_lead_penalty": 8
+      },
+      "dynamic_mix": {
+        "insufficient_sections_score": 40.0,
+        "baseline": 30,
+        "rms_coeff": 8,
+        "width_coeff": 140,
+        "bright_coeff": 140,
+        "lift_fail_penalty": 10
+      },
+      "beat_identity": {
+        "no_beat": 20.0,
+        "transient_floor": 0.35,
+        "baseline": 50.0,
+        "dominance_coeff": 40,
+        "definition_crest_db": 12.0,
+        "definition_bonus": 12,
+        "foreground_bonus": 18,
+        "buried_penalty": 14,
+        "masked_penalty": 12
+      },
+      "negative_space": {
+        "neutral": 40.0,
+        "baseline": 15.0,
+        "density_ceiling": 1.0,
+        "room_coeff": 50,
+        "transient_ceiling": 1.0,
+        "breathing_coeff": 20,
+        "dropout_coeff": 25,
+        "dropout_floor": 0.1
+      },
+      "groove_coherence": {
+        "neutral": 45.0,
+        "baseline": 15.0,
+        "regularity_scale": 85.0
+      },
+      "rhythmic_surprise": {
+        "insufficient_sections_score": 40.0,
+        "baseline": 20.0,
+        "spread_coeff": 160,
+        "swing_coeff": 60
+      },
+      "low_end_motion": {
+        "neutral": 40.0,
+        "no_low_end": 25.0,
+        "baseline": 40.0,
+        "low_floor": 0.2,
+        "stack_floor": 0.2,
+        "reserved_max": 2,
+        "reserved_bonus": 20,
+        "defined_crest_db": 10.0,
+        "blob_penalty": 12,
+        "stack_penalty": 12,
+        "critical_conflict_penalty": 14,
+        "moderate_conflict_penalty": 6,
+        "complement_coeff": 2.0,
+        "complement_cap_db": 12.0
+      },
+      "loop_context": {
+        "no_loop": 50.0,
+        "not_dominant": 50.0,
+        "dominant_unassessed": 45.0,
+        "dominant_evolving": 60.0,
+        "static": 12.0,
+        "iconic": 85.0,
+        "width_floor": 0.6,
+        "transient_lift_floor": 0.15,
+        "groove_transient_floor": 0.35,
+        "definition_crest_db": 12.0,
+        "evolution_rms_floor_db": 1.0,
+        "evolution_width_floor": 0.05,
+        "evolution_brightness_floor": 0.05
+      },
+      "vocal_role_fit": {
+        "no_vocals": 50.0,
+        "baseline": 70.0,
+        "lead_forward_bonus": 15,
+        "masked_penalty": 10
+      }
+    }
+  },
+
+  "default_creative_mode": {
+    "intimate_truth_words": ["intimate", "vulnerable", "conflicted", "ache", "quiet", "restrained", "composed"],
+    "intimate_mode": "space_for_the_singer",
+    "default_mode": "arrangement_lift"
+  },
+
+  "protect_iconic_loops": false,
+
+  "vocal_blend_policy": {
+    "acceptable_blend": true,
+    "confidence_floor": 0.8
+  },
+
+  "confidence_map": [
+    {
+      "area": "ensemble depth and layering interpretation (depth hierarchy)",
+      "level": "high",
+      "reason": "hand-curated from documented Quincy Jones technique — big-band and orchestral arranging practice from the Basie/Sinatra-era chairs and his own published writing on arranging: the ensemble sits in named layers around the lead; this axis is live and weighted above both existing profiles as this profile's center of gravity"
+    },
+    {
+      "area": "sectional architecture and arranged-lift interpretation (section contrast, dynamic movement)",
+      "level": "high",
+      "reason": "hand-curated from documented Quincy Jones technique — the sectional builds documented across the Off the Wall/Thriller-era production literature: parts enter and exit so each section lifts the record; these axes are live and weighted above both existing profiles"
+    },
+    {
+      "area": "vocal prominence inside the ensemble (vocal centrality, emotional hierarchy)",
+      "level": "high",
+      "reason": "hand-curated from documented Quincy Jones technique — the serve-the-song, leave-space-for-the-singer ethos documented in his autobiography Q and in producer interviews: the lead stays prominent inside an arranged ensemble, so these axes sit deliberately between the two existing poles"
+    },
+    {
+      "area": "groove as support (beat identity, groove coherence, rhythmic surprise, low-end motion as retained measurement)",
+      "level": "high",
+      "reason": "hand-curated from documented Quincy Jones technique — the rhythm section holds the floor for the song rather than centering the record's identity; these axes stay live at deliberately moderated weights below the groove-first profile: support, never dominance"
+    },
+    {
+      "area": "space and balance hygiene as retained measurement (physical space, negative space, static balance)",
+      "level": "high",
+      "reason": "hand-curated from documented Quincy Jones technique — space is kept where it reveals an arrangement role (leave space for the singer), not composed as silence; these axes stay live at moderate weight"
+    },
+    {
+      "area": "loop context interpretation (static vs iconic)",
+      "level": "high",
+      "reason": "hand-curated from documented Quincy Jones production philosophy — an arrangement-led practice, not a loop-based one: a static dominant loop reads as arrested arrangement (authored 12.0), and even an iconic-functioning loop reads as material for the arrangement rather than the record's identity (authored 85.0, protect_iconic_loops: false); the status-to-score polarity is authored in this profile while every detection floor stays on the shared basis"
+    },
+    {
+      "area": "vocal blend interpretation",
+      "level": "limited",
+      "reason": "the opt-in is authored from documented technique — Bruce Swedien's stacked background-vocal ensembles in the documented Jones/Swedien engineering partnership (the Acusonic recording process: a prominent lead atop an arranged vocal ensemble) — and the gate is live and measured on real exported-stem data: a qualified vocal chop and stack under masking read 85.0 on vocal_role_fit against the reference's 65.0 at this profile's authored 0.8 confidence floor; the level stays limited because coverage is bounded: events arise only from the masker-instrument set, info-tier events are emitted but not consumed, and vocal-band events carry no per-track masking risk"
+    },
+    {
+      "area": "harmonic and instrumental conversation (voicing, counterlines, call-and-response)",
+      "level": "deferred",
+      "reason": "voicing and counterline interplay are central to the documented arranging practice yet not measurable on exported stems at doctrine time — the engine carries no harmonic analysis; the depth and section axes are the closest shipped proxies"
+    },
+    {
+      "area": "cultural loop recognizability",
+      "level": "deferred",
+      "reason": "iconic-ness as cultural recognition needs provenance/manifest signals not measurable on exported stems at doctrine time; the acoustic loop-context proxy is what ships"
+    },
+    {
+      "area": "true hook recurrence",
+      "level": "deferred",
+      "reason": "a proven hook needs a recurrence signal that does not exist at doctrine time; the strongest claim ships as vocal_hook_candidate"
+    },
+    {
+      "area": "motif provenance",
+      "level": "deferred",
+      "reason": "motif lineage across sources is not measurable on exported stems at doctrine time"
+    },
+    {
+      "area": "onset-timing strong forms (fingerprint typing, fills/unexpected-hit detection, kick/sub temporal interlock)",
+      "level": "deferred",
+      "reason": "these need per-onset timing and typing signals not measurable on exported stems at doctrine time; the section-aggregate weak forms are what ship"
+    },
+    {
+      "area": "per-section true-sub movement",
+      "level": "deferred",
+      "reason": "section analysis exposes low_mid_energy (120-500 Hz) only, so the true-sub band (20-120 Hz) is not measurable at section grain on exported stems; the low_mid section grain is what ships"
+    }
+  ]
+}
