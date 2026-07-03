@@ -4,42 +4,44 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** NONE ACTIVE — P-040 (the SAMPLE REFRESH — the two-producer
-  demo output) CLOSED 2026-07-02: qa GREEN + reviewer PASS (no must-fix).
-  Receipt: `build-os/receipts/P-040-sample-refresh.md`.
-- **Last-closed:** P-040 — commits `33cf10d` (the two 30-artifact trees
-  from `vocal_chop_groove` + test-9 over both + the FULL-strength
-  staleness pin) + `9e58e9b` (README only) on parent `1783683`, atop
-  merge base `2c09428`; PUSHED after close (orchestrator standing go),
-  NOT merged. Suite **806** / regression **93/93**. The P-038
-  stale-samples standing note ✓ CLEARED.
+- **Status:** **NONE ACTIVE** — P-041 CLOSED 2026-07-03 (qa GREEN + reviewer
+  PASS, no must-fix). Receipt: `build-os/receipts/P-041-quincy-jones.md`.
 
-## STAGED (next per the USER'S SEQUENCE — NOT active until confirmed)
+## Last closed — P-041: The Third Producer: Quincy Jones (profile-only)
 
-**THE THIRD PRODUCER — ★ USER-GATED: the orchestrator PRESENTS the
-decision; do NOT open blind.**
+- **Commits:** `f2614f9` (quincy_jones.json + its own guards — 27 tests +
+  the conscious `test_producer_cli.py` delta) + `dfe8c54` (the PERMANENT
+  40-test three-way differential proof) on parent `ece2b5c` (active-packet
+  confirmation), atop merge base `61582b5` (= PR #19 merge — the
+  P-039+P-040 pair, merged FIRST on the user's directive). Both commits are
+  TREE-IDENTICAL identity re-stamps of the builder's originals
+  (`3acd53f`/`f517e0b`) — metadata-only.
+- **Counts:** suite 806 → **873** / regression **93/93**; Commit-1 green in
+  isolation (throwaway worktree at `f2614f9`: 833 passed).
+- **Shape:** exactly 4 files, +1673/−4; **ZERO .py under `logic_mix_os/`**;
+  existing profiles blob-identical.
+- **Push state:** PUSHED to the dev branch
+  `claude/logic-mix-os-hardening-12-7hbeh1` under the orchestrator's
+  standing go BEFORE qa/reviewer (both gates validated the final SHAs).
+  **NOT merged.**
+- The producer roster is now THREE: halee_ramone (reference) · timbaland ·
+  quincy_jones — the framework proven at N=3 with zero code.
 
-Two decisions belong to the user before this packet opens:
+## ★★ OPEN USER GATE
 
-1. **WHICH producer.**
-2. **The grounding**, per the standing honesty policy:
-   hand-curated-documented → `high`; derived → `low`, labeled;
-   LLM-synthesized → draft-only, NEVER `high`.
+- **The merge of P-041** — `ece2b5c` + `f2614f9` + `dfe8c54` (+ the close
+  commit) atop `61582b5` (= PR #19) — awaits the user's explicit word.
 
-**What the third producer costs now (the P-025 → P-039 substrate makes
-this authoring, not engineering):** a JSON file
-(`doctrine/producers/<name>.json`) + the three REQUIRED declarations
-(`protect_iconic_loops`, `vocal_blend_policy`, `confidence_map`) + its
-own verbatim map pin + a differential test + a sample tree/README column
-if desired — **ZERO code changes** (the P-039 surfaces scan the
-producers dir).
+## STAGED next (NOT active — do NOT open blind)
 
-## The arc after (user-sequenced)
-
-**P-040 ✓ (sample refresh) → the third producer (staged, user-gated) →
-deeper mode-forking.**
+- **Deeper mode-forking in variant generation** — per the USER'S SEQUENCE.
+  `search_mode` is a THIN lever today: it steers the reported mode/bias
+  surface, but `generate_variants` does NOT fork on it (the P-033 reviewer
+  calibration note — "do NOT over-claim behavioral steering"). The packet
+  would make modes reshape variant generation/scoring. **★ USER-GATED: the
+  orchestrator presents the shape/scope decision first.**
 
 ---
-_Cleared by the archivist at P-040 close (2026-07-02). One packet at a
-time. The orchestrator confirms the next packet with the user before it
-goes active._
+_Cleared by the archivist at P-041 close (2026-07-03). One packet at a time:
+the orchestrator confirms the next packet with the user before it goes
+active._

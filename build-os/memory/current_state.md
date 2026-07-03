@@ -279,21 +279,42 @@
     merged**, atop the set-active `1783683`. P-040's parent chain:
     `9e58e9b` → `33cf10d` → `1783683` (active-packet confirmation) →
     `fc23d95` (P-039 close).
+    ★★ THE P-039+P-040 PAIR IS MERGED — **PR #19 (P-039 producer-CLI
+    exposure + P-040 sample refresh + closes) is MERGED to default on
+    the user's directive — merge commit `61582b5`, the CURRENT
+    default-branch tip. The base for MERGE/landing decisions is now
+    `61582b5`.** The dev branch was fast-forwarded to `61582b5` and now
+    carries **P-041 (`f2614f9` + `dfe8c54`, product — THE THIRD
+    PRODUCER: `quincy_jones.json`, hand-curated from documented
+    technique → high, + 27 profile-guard tests
+    [`tests/test_quincy_profile.py`] + the PERMANENT 40-test three-way
+    differential proof [`tests/test_three_way_differential.py`] + one
+    conscious enumerated delta in `tests/test_producer_cli.py`; exactly
+    4 files, +1673/−4, ZERO .py under logic_mix_os/; both commits are
+    TREE-IDENTICAL identity re-stamps of `3acd53f`/`f517e0b` —
+    metadata-only), PUSHED to the dev branch BEFORE qa/reviewer under
+    the orchestrator's standing go (both gates validated the final
+    SHAs), NOT merged**, atop the set-active `ece2b5c`. P-041's parent
+    chain: `dfe8c54` → `f2614f9` → `ece2b5c` (active-packet
+    confirmation) → `61582b5` (PR #19 merge).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-02, P-040 — the sample-refresh
-  baseline):** suite **806 passed** (0 failed / skipped); regression
-  **93/93** (samples are NOT goldens — non-interaction verified two
-  ways) — the corpus is **4 fixtures** (the 68/68 era ended
-  CONSCIOUSLY at P-035). Commits `33cf10d` (the two trees + the
-  staleness pins) + `9e58e9b` (README only) on parent `1783683`
-  (active-packet confirmation), atop merge base `2c09428` (the
-  post-backlog batch merge) — `33cf10d` IS Commit-1 → green in
-  isolation (real worktree check: 806 + 93/93). (History: 801 →
+- **Green baseline (verified 2026-07-03, P-041 — the third-producer
+  baseline):** suite **873 passed** (0 failed / skipped; `873 passed
+  in 66.77s`); regression **93/93** (tests_run 93 / passed 93 /
+  failed 0) — the corpus is **4 fixtures** (the 68/68 era ended
+  CONSCIOUSLY at P-035). Commits `f2614f9` (quincy_jones.json + its
+  own guards) + `dfe8c54` (the three-way differential proof) on
+  parent `ece2b5c` (active-packet confirmation), atop merge base
+  `61582b5` (= the PR #19 merge) — `f2614f9` IS Commit-1 → green in
+  isolation (throwaway worktree: **833 passed** — the three-way file
+  absent, the 27 quincy tests collected). (History: 806 → **873** at
+  P-041 — +67: the NEW 27-test `tests/test_quincy_profile.py` + the
+  NEW 40-test `tests/test_three_way_differential.py`; 801 →
   **806** at P-040 — +5: the NEW `tests/test_sample_refresh.py`
   staleness pins + test-9 parametrized over both trees;
   768 → 788 at P-039 qa on `b111a18` — +20 the producer-CLI tests —
@@ -311,6 +332,107 @@
   331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-041 LANDS THE THIRD PRODUCER — QUINCY JONES (profile-only,
+  packet 3 of the user's sequence): the framework is proven NOT a
+  two-pole switch. `logic_mix_os/doctrine/producers/quincy_jones.json`
+  (hand-curated from documented technique → high; never
+  LLM-synthesized-as-high; reference-derived only if labeled
+  low/experimental — the user's grounding standard, verbatim) +
+  `tests/test_quincy_profile.py` (27) + the PERMANENT three-way
+  differential proof `tests/test_three_way_differential.py` (40) —
+  Halee/Ramone vs Timbaland vs Quincy Jones, same stems. ZERO .py
+  under logic_mix_os/; existing profiles blob-identical at both ends.
+  ★ THE STANDING ARCHITECTURE DOCTRINE (axes = shared substrate /
+  taste = weighting layer / safety invariant) IS NOW PROVEN AT N=3
+  WITH ZERO CODE — the producer roster is THREE (halee_ramone
+  reference · timbaland · quincy_jones). Both user gates answered in
+  ONE directive (2026-07-03): the P-039+P-040 pair merged FIRST as
+  PR #19 → default tip `61582b5`; then this packet as its own packet.
+  qa GREEN + reviewer PASS (no must-fix). Last-closed = P-041.**
+  - **Two commits** on parent `ece2b5c` (active-packet confirmation),
+    atop merge base `61582b5` (= PR #19 merge): `f2614f9`
+    (quincy_jones.json + its own guards — 3 files, +930/−4) +
+    `dfe8c54` (the three-way differential proof — 1 file, +743). Both
+    are IDENTITY RE-STAMPS of the builder's originals
+    (`3acd53f`/`f517e0b`) after a stop-hook committer-identity
+    request — TREE HASHES VERIFIED IDENTICAL, metadata-only. Exactly
+    4 files, +1673/−4 — the one existing-file touch is a CONSCIOUS
+    ENUMERATED DELTA in `tests/test_producer_cli.py` (the old
+    unknown-producer probe literally used "quincy_jones" as its
+    unknown name → renamed "nonexistent_producer"; the scanned-listing
+    assertion now REQUIRES quincy_jones — dynamic discovery proven at
+    the process boundary). **PUSHED to the dev branch under the
+    orchestrator's standing go BEFORE qa/reviewer ran (both gates
+    validated the final SHAs); NOT merged — the P-041 merge is the
+    OPEN USER GATE.**
+  - **★ qa GREEN:** suite 806 → **873** (+67; `873 passed in 66.77s`;
+    arithmetic closes 806+27+40); regression **93/93**; Commit-1 GREEN
+    IN ISOLATION (throwaway worktree at `f2614f9` → **833 passed** —
+    the three-way file absent, 27 quincy tests collected); headlines
+    INDEPENDENTLY reproduced (qa's own script, all 4 fixtures × 3
+    producers): quincy **70.0 / 62.1 / 61.9 / 68.8** vs halee 73.8 /
+    70.7 / 74.3 / 76.3 vs timbaland 68.4 / 52.6 / 49.7 / 60.9 —
+    PAIRWISE DISTINCT on every fixture, existing profiles unchanged;
+    sabotage bites 3/3 (weight 1.4→1.0 → 16 failed; one
+    confidence-map word → 3 failed incl. the verbatim pin;
+    acceptable_blend→false → 7 failed on exactly the blend-gated
+    fixture); safety grep all exact ZEROS (the judgment-word guard
+    independently rerun → empty); process boundary — real CLI
+    `--producer quincy_jones` → rc=0, 68.8 verdict, producer block
+    {quincy_jones, hand-curated-documented, high}, 30 artifacts;
+    unknown probe → rc=2, listing `halee_ramone, quincy_jones,
+    timbaland`, no traceback.
+  - **★ reviewer PASS (no must-fix; Codex NOT available —
+    single-model review):** grounding HONEST — all 6 `high` entries
+    tied to NAMED documented technique (the arranger chairs,
+    production literature, the autobiography Q, the Swedien
+    partnership); "groove-as-support" flagged the SOFTEST defensible
+    high — FIRST to re-examine if the user tightens the standard; the
+    one measured-data claim lives in the `limited` entry; 6 deferred
+    honest (5 standing engine boundaries + his own:
+    harmonic/instrumental conversation not measurable). NO SILENT
+    INHERITANCE — all four load-bearing declarations authored +
+    tested (protect_iconic_loops false; loop polarity static 12.0 /
+    iconic 85.0 — iconic BELOW both, the "arrangement material"
+    stance judged coherent; blend {true, 0.8} STRICTER than
+    timbaland's 0.75; own-named modes space_for_the_singer /
+    arrangement_lift etc.; veto byte-identical). NOT AVERAGED MUSH —
+    4 poles above BOTH (depth_hierarchy 1.4 = an argmax neither
+    profile has, section_contrast 1.3, dynamic_mix 1.1,
+    vocal_role_fit 0.7); the taste_triangle swaps listener_excitement
+    for section_contrast + emotional_hierarchy — lift through
+    arrangement. Safety invariance verified STRUCTURALLY key-by-key
+    (the only key-set difference anywhere = the six mode names). The
+    differential proof judged LOAD-BEARING, esp.
+    `test_quincy_reconstructs_from_the_references_measurements`
+    (rebuilds Quincy's pinned overall from the REFERENCE's components
+    + only the two authored deltas — independently based, not
+    builder-favored). Nits accepted, no fix cycle (→ residue): an int
+    among float pins (`"section_contrast_score": 82`);
+    QUINCY_ONLY_STRINGS misses one stamp variant (leakage impossible
+    via the per-producer equality asserts anyway).
+  - **★ THE USER'S ACCEPTANCE BAR — every clause met:** dynamically
+    discovered ✓ (process boundary + in-process) · no code changes ✓
+    (zero .py) · existing outputs stable ✓ (blob-identical profiles,
+    pins re-asserted, 93/93) · recognizably distinct ✓ (pairwise
+    distinct on all 4 fixtures + own argmax) · confidence map honest ✓
+    (6 high documented / 1 limited measured / 6 deferred) ·
+    safety/governance unchanged ✓ (structural three-way comparison) ·
+    differential proof permanent ✓ (in testpaths, always-run).
+  - **★ qa environment note (not a defect, → residue):** the local
+    `origin/main` ref is STALE; the true default is
+    `claude/dreamy-turing-z0oxll` at `61582b5`, confirmed via the
+    branch chain — FETCH before any landing decision.
+  - **★ NEXT per the USER'S SEQUENCE = DEEPER MODE-FORKING in variant
+    generation (STAGED, not active):** `search_mode` is a THIN lever
+    today — it steers the reported mode/bias surface, but
+    `generate_variants` does NOT fork on it (the P-033 reviewer
+    calibration note). ★ USER-GATED: the orchestrator presents the
+    shape/scope decision; do NOT open blind. **THE OPEN USER GATE: the
+    merge of P-041 (`ece2b5c` + `f2614f9` + `dfe8c54` + the close
+    commit) atop `61582b5` (= PR #19).** Receipt:
+    `build-os/receipts/P-041-quincy-jones.md`.
 
 - **★★★ P-040 COMMITS THE TWO-PRODUCER DEMO — the SAMPLE REFRESH
   (packet 2 of the user's sequence): `examples/sample_output/` (the
@@ -381,7 +503,12 @@
     tree/README column if desired — ZERO code changes (the P-039
     surfaces scan the producers dir). Then deeper mode-forking. The
     orchestrator presents the decision; do NOT open blind. Receipt:
-    `build-os/receipts/P-040-sample-refresh.md`.
+    `build-os/receipts/P-040-sample-refresh.md`. **(✓ UPDATE
+    P-041 close, 2026-07-03: ✓ DONE — both gates answered in one
+    directive [producer = Quincy Jones;
+    hand-curated-from-documented-technique → high; PR #19 merged
+    FIRST → `61582b5`]; CLOSED as P-041; NEXT = deeper mode-forking,
+    ★ USER-GATED on shape/scope.)**
 
 - **★★★ P-039 PUTS THE PRODUCER LEVER ON THE PRODUCT SURFACE — the FIRST
   post-substrate PRODUCT packet (the user's sequence; the P-029 lever

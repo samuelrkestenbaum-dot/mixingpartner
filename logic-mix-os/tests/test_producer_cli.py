@@ -338,22 +338,27 @@ def test_unknown_producer_friendly_error_at_the_process_boundary(tmp_path):
     friendly one-line error naming the available profiles (scanned from the
     producers directory) — NO traceback, and nothing written."""
     out = tmp_path / "out"
+    # P-041 conscious delta: the unknown name used to be "quincy_jones" —
+    # that profile now EXISTS (the third producer), so the probe name moved
+    # to one that stays unknown, and the listing assertion gained the newly
+    # discovered profile (dynamic discovery, proven at the process boundary).
     proc = subprocess.run(
         [
             sys.executable, "-m", "logic_mix_os.cli", "analyze",
             "--stems", _DEMO_STEMS, "--manifest", _DEMO_MANIFEST,
-            "--out", str(out), "--producer", "quincy_jones",
+            "--out", str(out), "--producer", "nonexistent_producer",
         ],
         capture_output=True, text=True, cwd=str(ROOT),
     )
     assert proc.returncode == 2
     assert "Traceback" not in proc.stderr
     assert "Traceback" not in proc.stdout
-    assert "quincy_jones" in proc.stderr
-    # The available profiles are LISTED (scanned, not hardcoded) — both
-    # authored profiles appear without pinning the directory's full future.
+    assert "nonexistent_producer" in proc.stderr
+    # The available profiles are LISTED (scanned, not hardcoded) — every
+    # authored profile appears without pinning the directory's full future.
     assert "halee_ramone" in proc.stderr
     assert "timbaland" in proc.stderr
+    assert "quincy_jones" in proc.stderr
     assert not out.exists()
 
 

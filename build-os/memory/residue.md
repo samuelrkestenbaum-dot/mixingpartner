@@ -4,6 +4,53 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
+## ★★★ STATUS (P-041 close, 2026-07-03): residue = accepted standing notes only — THE PRODUCER ROSTER IS THREE
+
+- **P-041 (THE THIRD PRODUCER — Quincy Jones, profile-only) closed
+  2026-07-03:** qa GREEN + reviewer PASS (no must-fix). Commits
+  `f2614f9` (quincy_jones.json + its own guards, 27 tests + the
+  conscious `test_producer_cli.py` delta) + `dfe8c54` (the PERMANENT
+  40-test three-way differential proof) on parent `ece2b5c`, atop
+  merge base `61582b5` (= PR #19 — the P-039+P-040 pair merged FIRST
+  on the user's directive; both P-041 commits are TREE-IDENTICAL
+  identity re-stamps of the builder's originals `3acd53f`/`f517e0b`,
+  metadata-only). Exactly 4 files, +1673/−4, ZERO .py under
+  logic_mix_os/; existing profiles blob-identical. PUSHED BEFORE
+  qa/reviewer (orchestrator standing go — both gates validated the
+  final SHAs), NOT merged. Suite **873** / regression **93/93**.
+  **Codex NOT available — single-model review.** Receipt:
+  `build-os/receipts/P-041-quincy-jones.md`.
+- **NEW accepted notes (P-041, recorded not fixed):**
+  1. **Reviewer nit:** an int among float pins in the quincy guards
+     (`"section_contrast_score": 82`) — cosmetic, fold on next touch
+     of `tests/test_quincy_profile.py`.
+  2. **Reviewer nit:** `QUINCY_ONLY_STRINGS` doesn't include one stamp
+     variant — leakage is impossible anyway via the per-producer
+     equality asserts; fold on next touch.
+  3. **"groove-as-support" is the SOFTEST defensible `high`** in
+     quincy's confidence map — FIRST to re-examine if the user ever
+     tightens the grounding standard.
+  4. **The stale local `origin/main` ref (qa environment note, not a
+     defect):** the true default is `claude/dreamy-turing-z0oxll` at
+     `61582b5`, confirmed via the branch chain — FETCH before any
+     landing decision.
+- **All prior standing notes RETAINED** (the banners below).
+- **Open boundary:** P-041's commits pushed to the dev branch BEFORE
+  qa/reviewer under the orchestrator's standing go; **the MERGE of
+  P-041 (`ece2b5c` + `f2614f9` + `dfe8c54` + the close commit, atop
+  `61582b5` = PR #19) is the OPEN USER GATE** — it awaits the user's
+  explicit word.
+- **NEXT per the USER'S SEQUENCE = DEEPER MODE-FORKING in variant
+  generation** (`search_mode` is a THIN lever today —
+  `generate_variants` does not fork on it; the P-033 reviewer
+  calibration note); STAGED in `build-os/packets/active_packet.md` —
+  ★ USER-GATED: the orchestrator presents the shape/scope decision;
+  do NOT open blind.
+- **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
+  comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
+  placement faith; (3) flag PRESENCE is not flag THREADING — levers
+  need reaches-the-destination guards.
+
 ## ★★★ STATUS (P-040 close, 2026-07-02): residue = accepted standing notes only — the DEMO IS COMMITTED AND STALENESS-PINNED
 
 - **P-040 (the SAMPLE REFRESH — the two-producer demo output) closed
@@ -45,7 +92,11 @@
   high; derived → low, labeled; LLM-synthesized → draft-only, never
   high); STAGED in `build-os/packets/active_packet.md` — the
   orchestrator presents the decision; do NOT open blind. Then deeper
-  mode-forking.
+  mode-forking. **(✓ DONE at P-041 close, 2026-07-03: both gates
+  answered in one directive — producer = Quincy Jones, grounding =
+  hand-curated-from-documented-technique → high, PR #19 merged FIRST →
+  `61582b5`; CLOSED as P-041 — see the P-041 banner above; NEXT =
+  deeper mode-forking, ★ USER-GATED on shape/scope.)**
 - **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
   comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
   placement faith; (3) flag PRESENCE is not flag THREADING — levers
