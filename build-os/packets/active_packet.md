@@ -4,50 +4,123 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** NONE ACTIVE — **P-043 CLOSED** (2026-07-03; qa GREEN +
-  reviewer PASS, no must-fix; all adapted adversarial attacks
-  defeated). Receipt:
-  `build-os/receipts/P-043-move-vocabulary-expansion.md`.
+- **Status:** ACTIVE — confirmed by the USER 2026-07-03 ("My call: Merge
+  P-043 now. Then open negative-space dropout, but narrowly and
+  conservatively."). P-043 merged FIRST as PR #22 → default tip `80e9bd5`,
+  per the user's sequencing.
+- **ID / Title:** **P-044 — Negative-Space Dropout Move Family** (the
+  user's title, verbatim)
+- **Branch:** `claude/logic-mix-os-hardening-12-7hbeh1` atop merge base
+  `80e9bd5` (= PR #22 merge; verify with `git merge-base`).
+- **Baseline to protect:** suite **950** / regression **93/93** / the
+  halee committed sample tree byte-stable / halee + quincy flows
+  byte-stable everywhere.
 
-## Last closed — P-043 — Curated Move Vocabulary Expansion: Arrangement Lift + Ensemble Rebalance
+## The user's decision (verbatim authority)
 
-- **Commits:** `ed94020` (Commit-1 — the widened, reach-gated
-  vocabulary: `CREATIVE_VARIANT_KINDS` 7→9, the `reach_kinds` seam,
-  4 curated anti-mute variants, rows in ALL three profiles, ZERO
-  behavioral change; GREEN IN ISOLATION at **944**) + `e382d86`
-  (Commit-2 — Quincy's authored reach [three modes; the P-042
-  approximation favor consciously REPLACED] + the differential proof)
-  on parent `3110126` (active-packet confirmation), atop merge base
-  `17cc270` (= PR #21 — P-042 merged FIRST on the user's directive).
-  Exactly **11 files, +1184/−96**.
-- **Proof:** suite 907 → **950** / regression **93/93** / Commit-1
-  iso **944** / the 234-cell reach reconstruction 0 mismatches / ALL
-  winners unchanged / sabotage 4/4 / safety grep 0 / a governed WIN
-  through full analyze() (vocal_C at 83.1).
-- **Push state:** PUSHED to the dev branch BEFORE qa/reviewer under
-  the orchestrator's standing go (both gates validated the final
-  SHAs); **NOT merged.**
+**"This family is higher-risk because it sounds like 'mute/drop
+something,' so the first implementation must be candidate-planning only,
+not execution semantics."**
 
-## ★★ OPEN USER GATE
+**THE DOCTRINE (the user's safety line, verbatim): "dropout is an
+arrangement proposal, not a destructive operation."**
 
-- **The MERGE of P-043** — `3110126` + `ed94020` + `e382d86` (+ the
-  close commit) atop `17cc270` (= PR #21) — awaits the user's
-  explicit word. Never merge without go.
+- **Scope decision:** build EXACTLY ONE new extended kind:
+  `negative_space_dropout`.
+- **What it MAY address (the user's list — nothing else):** supporting
+  clutter · non-lead decorative layers · sectional over-density ·
+  rhythmic contrast opportunities · background texture reduction.
+- **What it MUST NOT touch — never target or imply dropping:** lead
+  vocal · hook_candidate · masked lead protection · core groove carrier ·
+  main kick/sub foundation · primary emotional-hierarchy element · source
+  integrity.
+- **Who reaches it (initial authored reach):** **Timbaland: yes —
+  experimental / contrast / negative-space modes** (his mode names:
+  `experimental`, `dramatic_contrast`, `negative_space`).
+  **Halee/Ramone: no by default. Quincy: no by default**, unless
+  explicitly authored later. "This keeps it from becoming a general
+  'remove stuff' move."
 
-## STAGED next — ★ USER-GATED: negative-space dropout as a move family
+## Acceptance bar (the user's, verbatim)
 
-- **The user's own sequencing (stated at P-043 open):** negative-space
-  dropout is "higher risk… smells more Timbaland-specific. It should
-  come after C proves the widened vocabulary can stay governed." —
-  **C has now proven exactly that** (reach-gated, cap-bound, zero
-  unauthorized drift, all winners unchanged, a governed win through
-  full analyze()).
-- **Shape if opened:** one `CREATIVE_EXTENDED_KINDS` entry + curated
-  variants + authored reach — ZERO engine changes (the P-043 seam
-  carries it).
-- **The decision of whether/when is the USER'S** — the orchestrator
-  PRESENTS scope first; it does NOT open blind.
+- `negative_space_dropout` exists as an extended curated kind
+- reach-gated admission works
+- Timbaland can reach it only where authored
+- Halee/Ramone and Quincy do not drift
+- risk caps bind
+- lead/hook/core-groove protections override it
+- no execution/mute/apply semantics are introduced
+- sample-tree drift is conscious
+- differential proof attributes changes to authored reach
+
+## Orchestrator implementation notes (recon, binding on the builder)
+
+- **The P-043 seam carries this**: one `CREATIVE_EXTENDED_KINDS` entry +
+  curated variants + authored reach. Engine code changes should be
+  limited to the curated variant content and any TARGET-PROTECTION
+  helper the protections require — no seam/loader redesign.
+- **Protections are structural, not prose.** The curated dropout
+  variants must resolve targets through a protection filter that
+  EXCLUDES: lead-vocal tracks, hook candidates, core groove carriers
+  (kick/sub/main beat foundation), and the primary emotional-hierarchy
+  element. If no legitimate target survives the filter, the variant does
+  NOT emit (no phantom targets — existing house discipline). This must
+  be provable: a test where only protected elements exist → zero dropout
+  emission. The protection is ENGINE-owned (profile-agnostic) — no
+  profile may author it away.
+- **Plan-only semantics**: the changes text stays at the existing
+  recommendation level (the plan-text vocabulary already used by the
+  curated pool), reversibility-tagged like every variant
+  (`non_destructive_duplicate_track` pattern); NO new apply/execute/mute
+  machinery, no new artifact semantics beyond the established
+  reach/fork surface.
+- **Risk honesty**: this is the aggressive family — curate the
+  translation/mono risks honestly (medium at minimum where honest); the
+  cap must bind against the authored rows (the P-043 two-layer pattern).
+  All THREE profiles author kind_scores + truth_alignment rows (rows
+  everywhere, no silent inheritance); ONLY Timbaland authors reach.
+- **Conscious drift, precisely bounded**: `dramatic_contrast` is
+  Timbaland's DEFAULT mode, and the user explicitly authorized reach on
+  it — so Timbaland's default flow and his committed sample tree
+  (`examples/sample_output_timbaland/`) WILL drift. That drift is
+  CONSCIOUS: regenerate his tree via the VERBATIM README invocation,
+  keep the staleness pin at FULL strength, enumerate every changed
+  artifact; doctrine scores must NOT move (creative layer only — the
+  60.9 headline stays); if a dropout variant WINS a branch in his flow,
+  that is his authored taste — enumerate the winner change honestly.
+  The HALEE tree stays byte-identical; halee + quincy flows stay
+  byte-identical EVERYWHERE (their acceptance clause).
+- **Differential proof shape (the P-043 pattern):** same mode name +
+  same stems → timbaland (authored) emits dropout candidates,
+  halee/quincy do NOT on any mode; reconstruction from the JSONs on
+  disk extends to the third extended kind; synthetic profiles prove
+  data-not-producer; suppression beats reach; the cap refuses over-cap
+  reach; the protection filter overrides reach (reached-but-protected →
+  not emitted, surfaced honestly).
+
+## Non-scope (binding)
+
+Exactly one new kind — no other families, no second dropout variant
+family. No execution/apply/mute machinery. No new analyzers. No
+doctrine/scoring changes (doctrine_engine untouched; doctrine scores
+byte-stable). No safety/governance/veto changes; never weaken the caps,
+the P-042/P-043 guarantees, or the vocal/lead protections. No
+per-producer engine branches. No authored reach for halee/quincy (their
+gate is proven synthetically). No merge until qa + reviewer dual-green
+(the merge stays a user gate).
+
+## Commit shape (≤2, Commit-1 green in isolation)
+
+- **Commit-1:** the extended kind + curated dropout variants WITH the
+  structural protection filter + rows in all three profiles + guards —
+  ZERO behavioral change (no shipped profile reaches), full suite green
+  in isolation, both sample trees untouched.
+- **Commit-2:** Timbaland's authored reach (experimental /
+  dramatic_contrast / negative_space) + the differential proof + the
+  conscious enumerated deltas (his tree regeneration, default-flow pin
+  updates, any winner changes).
 
 ---
-_Cleared by the archivist at P-043 close (2026-07-03). One packet at a
-time: builder → qa + reviewer → archivist → receipt._
+_Set active by the orchestrator on the user's explicit go (2026-07-03),
+after the P-043 merge report. One packet at a time: builder → qa +
+reviewer → archivist → receipt._
