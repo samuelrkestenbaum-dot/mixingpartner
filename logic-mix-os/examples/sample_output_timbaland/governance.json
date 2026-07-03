@@ -25,11 +25,11 @@
       "problem": "Chorus does not lift enough emotionally.",
       "governed_winner": "chorus_lift_B",
       "governance": {
-        "emotional_truth_alignment": 82,
+        "emotional_truth_alignment": 88,
         "taste_triangle": {
-          "emotion": 83,
-          "craft": 85,
-          "identity": 86,
+          "emotion": 88,
+          "craft": 88,
+          "identity": 90,
           "verdict": "keep"
         },
         "constraint_violations": [],
@@ -38,18 +38,18 @@
         "vetoed": false,
         "verdict": "keep"
       },
-      "reason": "'Subtractive Drop' survives governance (truth alignment 82, taste keep)."
+      "reason": "'Subtractive Drop' survives governance (truth alignment 88, taste keep)."
     },
     {
       "problem_id": "loop",
       "problem": "An imported loop behaves like a finished record inside the record.",
       "governed_winner": "loop_B",
       "governance": {
-        "emotional_truth_alignment": 82,
+        "emotional_truth_alignment": 88,
         "taste_triangle": {
-          "emotion": 83,
-          "craft": 85,
-          "identity": 86,
+          "emotion": 88,
+          "craft": 88,
+          "identity": 90,
           "verdict": "keep"
         },
         "constraint_violations": [],
@@ -58,18 +58,18 @@
         "vetoed": false,
         "verdict": "keep"
       },
-      "reason": "'Loop as Accent' survives governance (truth alignment 82, taste keep)."
+      "reason": "'Loop as Accent' survives governance (truth alignment 88, taste keep)."
     },
     {
       "problem_id": "depth",
       "problem": "Too many elements occupy the foreground.",
       "governed_winner": "depth_A",
       "governance": {
-        "emotional_truth_alignment": 82,
+        "emotional_truth_alignment": 80,
         "taste_triangle": {
-          "emotion": 79,
+          "emotion": 76,
           "craft": 84,
-          "identity": 85,
+          "identity": 80,
           "verdict": "keep"
         },
         "constraint_violations": [],
@@ -78,18 +78,18 @@
         "vetoed": false,
         "verdict": "keep"
       },
-      "reason": "'Depth Cleanup' survives governance (truth alignment 82, taste keep)."
+      "reason": "'Depth Cleanup' survives governance (truth alignment 80, taste keep)."
     },
     {
       "problem_id": "vocal_belief",
       "problem": "Vocal could feel more believable and present.",
       "governed_winner": "vocal_A",
       "governance": {
-        "emotional_truth_alignment": 84,
+        "emotional_truth_alignment": 78,
         "taste_triangle": {
-          "emotion": 85,
-          "craft": 84,
-          "identity": 88,
+          "emotion": 77,
+          "craft": 82,
+          "identity": 78,
           "verdict": "keep"
         },
         "constraint_violations": [],
@@ -98,7 +98,7 @@
         "vetoed": false,
         "verdict": "keep"
       },
-      "reason": "'Phrase Rides' survives governance (truth alignment 84, taste keep)."
+      "reason": "'Phrase Rides' survives governance (truth alignment 78, taste keep)."
     }
   ],
   "anti_template": null,
@@ -125,7 +125,10 @@
     "Never chase reference loudness at the mix stage.",
     "Never widen the full mix to solve chorus lift.",
     "Never make the lead vocal less intelligible unless explicitly approved.",
-    "Never allow a stock loop to dominate the song identity by accident."
+    "Never allow a stock loop to dominate the song identity by accident.",
+    "Never fill every bar — negative space is part of the arrangement.",
+    "Never blur the low end into one sustained mass; the kick/sub relationship stays articulated.",
+    "Never smooth away the beat's transient identity in pursuit of polish."
   ],
   "review_modes": [
     "observe_only",

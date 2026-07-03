@@ -7,10 +7,10 @@
 
 ## Governed Variant Selection
 
-- **Chorus does not lift enough emotionally.** → winner `chorus_lift_B` (truth 82, taste emotion/craft/identity 83/85/86)
-- **An imported loop behaves like a finished record inside the record.** → winner `loop_B` (truth 82, taste emotion/craft/identity 83/85/86)
-- **Too many elements occupy the foreground.** → winner `depth_A` (truth 82, taste emotion/craft/identity 79/84/85)
-- **Vocal could feel more believable and present.** → winner `vocal_A` (truth 84, taste emotion/craft/identity 85/84/88)
+- **Chorus does not lift enough emotionally.** → winner `chorus_lift_B` (truth 88, taste emotion/craft/identity 88/88/90)
+- **An imported loop behaves like a finished record inside the record.** → winner `loop_B` (truth 88, taste emotion/craft/identity 88/88/90)
+- **Too many elements occupy the foreground.** → winner `depth_A` (truth 80, taste emotion/craft/identity 76/84/80)
+- **Vocal could feel more believable and present.** → winner `vocal_A` (truth 78, taste emotion/craft/identity 77/82/78)
 
 ## Listener Panel
 
@@ -45,3 +45,6 @@
 - Never widen the full mix to solve chorus lift.
 - Never make the lead vocal less intelligible unless explicitly approved.
 - Never allow a stock loop to dominate the song identity by accident.
+- Never fill every bar — negative space is part of the arrangement.
+- Never blur the low end into one sustained mass; the kick/sub relationship stays articulated.
+- Never smooth away the beat's transient identity in pursuit of polish.

@@ -4,6 +4,99 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
+## ★★★ STATUS (P-040 close, 2026-07-02): residue = accepted standing notes only — the DEMO IS COMMITTED AND STALENESS-PINNED
+
+- **P-040 (the SAMPLE REFRESH — the two-producer demo output) closed
+  2026-07-02:** qa GREEN + reviewer PASS (no must-fix). Commits
+  `33cf10d` (the two 30-artifact trees from `vocal_chop_groove` +
+  test-9 over both trees + the FULL-strength staleness pin,
+  62 files, +4240/−1744) + `9e58e9b` (README only, +49/−2) on parent
+  `1783683`, atop merge base `2c09428`; PUSHED after close
+  (orchestrator standing go), NOT merged. Suite **806** / regression
+  **93/93**. Docs/demo only — ZERO product code. **Codex NOT
+  available — single-model review.** Receipt:
+  `build-os/receipts/P-040-sample-refresh.md`.
+- **★ THE P-038 STANDING NOTE 1 IS ✓ CLEARED**
+  (`examples/sample_output/` shipped stale pre-P-036/P-038 prose): the
+  old dense_chorus-era tree replaced WHOLESALE; qa confirmed the stale
+  strings EXISTED at base and are ABSENT now; the staleness pin
+  (30-file byte equality per tree against a fresh render) makes silent
+  rot IMPOSSIBLE going forward.
+- **NEW accepted notes (P-040, recorded not fixed):**
+  1. **The accepted README-drift gap:** a README-side number edit is
+     not machine-caught (the reviewer ran the sabotage — a README flip
+     stays green); accepted because the values are triple-pinned at the
+     FILE level (the headline pin machine-checks the README numbers
+     from the artifact side) and a markdown-parsing test would be
+     brittle for marginal value.
+  2. **A future echo-semantics tightening on the staleness pin:**
+     assert the FRESH tree carries the abs path in exactly the two
+     expected files — closes the narrow blind spot where an
+     "absolutizes-the-echo" regression would stay green.
+  3. **The reviewer nit:** "repo root" vs "project root" wording in
+     the vendored arrangement — cosmetic, fold on next touch.
+- **All P-039 + P-038 standing notes RETAINED** (the banners below),
+  with the P-038 note-1 trajectory ✓ RESOLVED as above.
+- **Open boundary:** P-040's commits pushed to the dev branch AFTER
+  close under the orchestrator's standing go; the MERGE remains a user
+  gate (the branch carries P-039 + P-040 + closes atop `2c09428`).
+- **NEXT = THE THIRD PRODUCER — ★ USER-GATED on WHICH producer + the
+  grounding** (the standing honesty policy: hand-curated-documented →
+  high; derived → low, labeled; LLM-synthesized → draft-only, never
+  high); STAGED in `build-os/packets/active_packet.md` — the
+  orchestrator presents the decision; do NOT open blind. Then deeper
+  mode-forking.
+- **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
+  comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
+  placement faith; (3) flag PRESENCE is not flag THREADING — levers
+  need reaches-the-destination guards.
+
+## ★★★ STATUS (P-039 close, 2026-07-02): residue = accepted standing notes only — the PRODUCT ARC is running
+
+- **P-039 (Producer Selection CLI Exposure + Demo-Safe Invocation — THE
+  FIRST POST-SUBSTRATE PRODUCT PACKET) closed 2026-07-02:** qa GREEN +
+  reviewer fix-then-pass → PASS (one fix round, fully resolved). Commits
+  `b111a18` (the feature) + review-fix `a56cb96` (TEST-ONLY) on parent
+  `73a134e`, atop merge base `2c09428` (the post-backlog batch merge —
+  the P-038-era open user gate ✓ RESOLVED on the user's word); PUSHED
+  after close (orchestrator standing go), NOT merged. Suite **801** /
+  regression **93/93**. Receipt:
+  `build-os/receipts/P-039-producer-cli-exposure.md`.
+- **★★ NEW (P-039 — NAMED LESSON, standing; the THIRD of the family):
+  flag PRESENCE is not flag THREADING — levers need
+  REACHES-THE-DESTINATION guards.** The reviewer's live sabotage dropped
+  the threading at ONE analyze site and the FULL suite stayed green (10
+  of 13 carriers were flag-presence-pinned only); the fix (`a56cb96`)
+  spies the producer kwarg at cli.analyze / cowork.analyze through the
+  REAL cli.main at all 13 carriers — a dropped threading arrives as None
+  and fails the isinstance-ProducerProfile pin on every path. Joins the
+  two P-037 lessons — the same family: prove the lever REACHES its
+  destination, never just that the flag exists.
+- **NEW accepted notes (P-039, recorded not fixed):**
+  1. **The success-path subprocess nuance:** the ERROR path is
+     subprocess-proven; the success path runs the same `cli.main`
+     in-process — a success-path subprocess run is a possible future
+     hardening, not debt.
+  2. **The `_PRODUCERS_DIR` private-name import in `cli.py`** — a public
+     accessor is a possible follow-up API nicety; fold on next touch.
+- **All P-038 standing notes RETAINED** (the banner below), with ONE
+  trajectory update: standing note 1 (`examples/sample_output/` ships
+  stale pre-P-036/P-038 prose) is set to be CLEARED by the STAGED sample
+  refresh — the next packet per the USER'S SEQUENCE (sample refresh →
+  third producer → deeper mode-forking); see
+  `build-os/packets/active_packet.md` (conscious test-9 OLD_KEYS
+  interaction check noted there). NOT active until confirmed. **(✓ DONE
+  at P-040 close, 2026-07-02: the sample refresh CLOSED as P-040 and
+  standing note 1 is ✓ CLEARED — see the P-040 banner above.)**
+- **Open boundary:** P-039's commits pushed to the dev branch AFTER
+  close under the orchestrator's standing go; the MERGE remains a user
+  gate.
+- **THE THREE NAMED LESSONS (standing, retained for posterity):** (1)
+  raw-dict NaN comparisons FAIL OPEN (`x < nan` is False) — audit future
+  raw-comparison gates for the same shape; (2) defense claims need
+  MUTATION TESTS, not placement faith; (3) flag PRESENCE is not flag
+  THREADING — levers need reaches-the-destination guards.
+
 ## ★★★ RESIDUE: ZERO — accepted standing notes only (P-038 close, 2026-07-02)
 
 - **★★★ THE ENTIRE POST-MERGE BACKLOG IS COMPLETE.** P-038 (residue sweep
@@ -13,13 +106,19 @@
   place), a named lesson retained for posterity, or an opportunistic
   fold-on-next-touch cosmetic. **THE OPEN USER GATE is the batch merge —
   P-036 + P-037 + P-038 (+ closes) onto merge base `dc921ec` (= PR #18) —
-  on the user's explicit word.**
+  on the user's explicit word.** **(✓ RESOLVED before P-039, 2026-07-02:
+  merged git-natively as `2c09428` on the user's word — the current
+  merge base.)**
 - **ACCEPTED STANDING NOTES (user-level, recorded not fixed):**
   1. **`examples/sample_output/` ships pre-P-036/P-038 prose**
      (producer-named action strings, stale verdict text) — not
      test-pinned, predates P-038; a conscious doc-refresh decision for a
      future moment, NOT expanded into P-038 (the P-030 precedent
      regenerated samples for a CONTRACT change; this is prose).
+     **✓ CLEARED by P-040 (2026-07-02): the two-producer sample
+     refresh replaced the tree WHOLESALE (dense_chorus-era →
+     `vocal_chop_groove`, both producers) and the FULL-strength
+     staleness pin makes silent rot impossible.**
   2. **The duplicated trailer block in `7b9eda7`'s raw commit message**
      (cosmetic; dedup'd by tooling when displayed; judged not worth
      another force-push).

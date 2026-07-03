@@ -1,6 +1,6 @@
 {
   "search_mode": "dramatic_contrast",
-  "search_mode_bias": "push verse/chorus/bridge contrast harder",
+  "search_mode_bias": "hard section flips, beat dropouts, hook impact through contrast",
   "static_baseline": {
     "mix_state": "static_baseline",
     "status": "locked",
@@ -112,25 +112,25 @@
           ],
           "expected_strength": "emotional openness",
           "scores": {
-            "technical_score": 82,
-            "physical_space_score": 78,
-            "emotional_hierarchy_score": 79,
-            "section_contrast_score": 91,
-            "vocal_belief_score": 74,
-            "listener_excitement_score": 88,
-            "taste_alignment_score": 80,
+            "technical_score": 80,
+            "physical_space_score": 70,
+            "emotional_hierarchy_score": 74,
+            "section_contrast_score": 84,
+            "vocal_belief_score": 72,
+            "listener_excitement_score": 84,
+            "taste_alignment_score": 72,
             "translation_risk": "medium",
             "mono_compatibility": "medium",
             "reversibility": "non_destructive",
-            "overall_score": 75.7,
+            "overall_score": 70.6,
             "overall_verdict": "worth testing — check vocal wash"
           },
           "governance": {
-            "emotional_truth_alignment": 72,
+            "emotional_truth_alignment": 66,
             "taste_triangle": {
               "emotion": 80,
-              "craft": 82,
-              "identity": 80,
+              "craft": 80,
+              "identity": 72,
               "verdict": "keep"
             },
             "constraint_violations": [],
@@ -162,25 +162,25 @@
           ],
           "expected_strength": "impact through contrast",
           "scores": {
-            "technical_score": 85,
-            "physical_space_score": 88,
-            "emotional_hierarchy_score": 86,
-            "section_contrast_score": 88,
-            "vocal_belief_score": 86,
-            "listener_excitement_score": 78,
-            "taste_alignment_score": 86,
+            "technical_score": 88,
+            "physical_space_score": 84,
+            "emotional_hierarchy_score": 82,
+            "section_contrast_score": 92,
+            "vocal_belief_score": 85,
+            "listener_excitement_score": 86,
+            "taste_alignment_score": 90,
             "translation_risk": "low",
             "mono_compatibility": "low",
             "reversibility": "non_destructive",
-            "overall_score": 85.3,
+            "overall_score": 86.7,
             "overall_verdict": "promising"
           },
           "governance": {
-            "emotional_truth_alignment": 82,
+            "emotional_truth_alignment": 88,
             "taste_triangle": {
-              "emotion": 83,
-              "craft": 85,
-              "identity": 86,
+              "emotion": 88,
+              "craft": 88,
+              "identity": 90,
               "verdict": "keep"
             },
             "constraint_violations": [],
@@ -210,25 +210,25 @@
           ],
           "expected_strength": "emotional belief",
           "scores": {
-            "technical_score": 84,
-            "physical_space_score": 84,
-            "emotional_hierarchy_score": 92,
-            "section_contrast_score": 70,
-            "vocal_belief_score": 92,
-            "listener_excitement_score": 70,
-            "taste_alignment_score": 88,
+            "technical_score": 82,
+            "physical_space_score": 76,
+            "emotional_hierarchy_score": 86,
+            "section_contrast_score": 72,
+            "vocal_belief_score": 88,
+            "listener_excitement_score": 72,
+            "taste_alignment_score": 78,
             "translation_risk": "low",
             "mono_compatibility": "low",
             "reversibility": "non_destructive",
-            "overall_score": 82.9,
-            "overall_verdict": "promising"
+            "overall_score": 79.1,
+            "overall_verdict": "worth testing"
           },
           "governance": {
-            "emotional_truth_alignment": 84,
+            "emotional_truth_alignment": 78,
             "taste_triangle": {
-              "emotion": 85,
-              "craft": 84,
-              "identity": 88,
+              "emotion": 77,
+              "craft": 82,
+              "identity": 78,
               "verdict": "keep"
             },
             "constraint_violations": [],
@@ -259,25 +259,25 @@
           ],
           "expected_strength": "physical lift",
           "scores": {
-            "technical_score": 80,
-            "physical_space_score": 89,
-            "emotional_hierarchy_score": 78,
-            "section_contrast_score": 82,
-            "vocal_belief_score": 76,
-            "listener_excitement_score": 83,
-            "taste_alignment_score": 82,
+            "technical_score": 84,
+            "physical_space_score": 82,
+            "emotional_hierarchy_score": 76,
+            "section_contrast_score": 86,
+            "vocal_belief_score": 75,
+            "listener_excitement_score": 88,
+            "taste_alignment_score": 84,
             "translation_risk": "low",
             "mono_compatibility": "low",
             "reversibility": "non_destructive",
-            "overall_score": 81.4,
+            "overall_score": 82.1,
             "overall_verdict": "promising"
           },
           "governance": {
-            "emotional_truth_alignment": 78,
+            "emotional_truth_alignment": 82,
             "taste_triangle": {
-              "emotion": 79,
-              "craft": 80,
-              "identity": 82,
+              "emotion": 83,
+              "craft": 84,
+              "identity": 84,
               "verdict": "keep"
             },
             "constraint_violations": [],
@@ -300,7 +300,7 @@
           "Delay throw on last pre-chorus phrase",
           "Increase drum room/overhead energy at chorus entry"
         ],
-        "reason": "'Subtractive Drop' scored 85.3 (promising); strongest on its intended axis without breaking vocal belief."
+        "reason": "'Subtractive Drop' scored 86.7 (promising); strongest on its intended axis without breaking vocal belief."
       }
     },
     {
@@ -331,24 +331,24 @@
           "expected_strength": "hierarchy",
           "scores": {
             "technical_score": 83,
-            "physical_space_score": 87,
-            "emotional_hierarchy_score": 84,
-            "section_contrast_score": 78,
-            "vocal_belief_score": 85,
-            "listener_excitement_score": 72,
-            "taste_alignment_score": 84,
+            "physical_space_score": 80,
+            "emotional_hierarchy_score": 80,
+            "section_contrast_score": 82,
+            "vocal_belief_score": 82,
+            "listener_excitement_score": 78,
+            "taste_alignment_score": 80,
             "translation_risk": "low",
             "mono_compatibility": "low",
             "reversibility": "non_destructive",
-            "overall_score": 81.9,
+            "overall_score": 80.7,
             "overall_verdict": "promising"
           },
           "governance": {
-            "emotional_truth_alignment": 80,
+            "emotional_truth_alignment": 82,
             "taste_triangle": {
-              "emotion": 80,
+              "emotion": 81,
               "craft": 83,
-              "identity": 84,
+              "identity": 80,
               "verdict": "keep"
             },
             "constraint_violations": [],
@@ -378,25 +378,25 @@
           ],
           "expected_strength": "identity protection",
           "scores": {
-            "technical_score": 85,
-            "physical_space_score": 88,
-            "emotional_hierarchy_score": 86,
-            "section_contrast_score": 88,
-            "vocal_belief_score": 86,
-            "listener_excitement_score": 78,
-            "taste_alignment_score": 86,
+            "technical_score": 88,
+            "physical_space_score": 84,
+            "emotional_hierarchy_score": 82,
+            "section_contrast_score": 92,
+            "vocal_belief_score": 85,
+            "listener_excitement_score": 86,
+            "taste_alignment_score": 90,
             "translation_risk": "low",
             "mono_compatibility": "low",
             "reversibility": "non_destructive",
-            "overall_score": 85.3,
+            "overall_score": 86.7,
             "overall_verdict": "promising"
           },
           "governance": {
-            "emotional_truth_alignment": 82,
+            "emotional_truth_alignment": 88,
             "taste_triangle": {
-              "emotion": 83,
-              "craft": 85,
-              "identity": 86,
+              "emotion": 88,
+              "craft": 88,
+              "identity": 90,
               "verdict": "keep"
             },
             "constraint_violations": [],
@@ -419,7 +419,7 @@
           "Narrow to ~35%",
           "Push to background except bridge"
         ],
-        "reason": "'Loop as Accent' scored 85.3 (promising); strongest on its intended axis without breaking vocal belief."
+        "reason": "'Loop as Accent' scored 86.7 (promising); strongest on its intended axis without breaking vocal belief."
       }
     },
     {
@@ -450,24 +450,24 @@
           "expected_strength": "depth realism",
           "scores": {
             "technical_score": 84,
-            "physical_space_score": 90,
-            "emotional_hierarchy_score": 85,
-            "section_contrast_score": 72,
-            "vocal_belief_score": 86,
-            "listener_excitement_score": 66,
-            "taste_alignment_score": 85,
+            "physical_space_score": 82,
+            "emotional_hierarchy_score": 80,
+            "section_contrast_score": 74,
+            "vocal_belief_score": 84,
+            "listener_excitement_score": 70,
+            "taste_alignment_score": 80,
             "translation_risk": "low",
             "mono_compatibility": "low",
             "reversibility": "non_destructive",
-            "overall_score": 81.1,
-            "overall_verdict": "promising"
+            "overall_score": 79.1,
+            "overall_verdict": "worth testing"
           },
           "governance": {
-            "emotional_truth_alignment": 82,
+            "emotional_truth_alignment": 80,
             "taste_triangle": {
-              "emotion": 79,
+              "emotion": 76,
               "craft": 84,
-              "identity": 85,
+              "identity": 80,
               "verdict": "keep"
             },
             "constraint_violations": [],
@@ -485,7 +485,7 @@
           "Keep vocal + hook forward"
         ],
         "reject_moves": [],
-        "reason": "'Depth Cleanup' scored 81.1 (promising); strongest on its intended axis without breaking vocal belief."
+        "reason": "'Depth Cleanup' scored 79.1 (worth testing); strongest on its intended axis without breaking vocal belief."
       }
     },
     {
@@ -511,25 +511,25 @@
           ],
           "expected_strength": "vocal belief",
           "scores": {
-            "technical_score": 84,
-            "physical_space_score": 84,
-            "emotional_hierarchy_score": 92,
-            "section_contrast_score": 70,
-            "vocal_belief_score": 92,
-            "listener_excitement_score": 70,
-            "taste_alignment_score": 88,
+            "technical_score": 82,
+            "physical_space_score": 76,
+            "emotional_hierarchy_score": 86,
+            "section_contrast_score": 72,
+            "vocal_belief_score": 88,
+            "listener_excitement_score": 72,
+            "taste_alignment_score": 78,
             "translation_risk": "low",
             "mono_compatibility": "low",
             "reversibility": "non_destructive",
-            "overall_score": 82.9,
-            "overall_verdict": "promising"
+            "overall_score": 79.1,
+            "overall_verdict": "worth testing"
           },
           "governance": {
-            "emotional_truth_alignment": 84,
+            "emotional_truth_alignment": 78,
             "taste_triangle": {
-              "emotion": 85,
-              "craft": 84,
-              "identity": 88,
+              "emotion": 77,
+              "craft": 82,
+              "identity": 78,
               "verdict": "keep"
             },
             "constraint_violations": [],
@@ -559,25 +559,25 @@
           ],
           "expected_strength": "intimacy",
           "scores": {
-            "technical_score": 82,
-            "physical_space_score": 85,
-            "emotional_hierarchy_score": 88,
-            "section_contrast_score": 72,
-            "vocal_belief_score": 90,
-            "listener_excitement_score": 64,
-            "taste_alignment_score": 87,
+            "technical_score": 80,
+            "physical_space_score": 76,
+            "emotional_hierarchy_score": 84,
+            "section_contrast_score": 68,
+            "vocal_belief_score": 88,
+            "listener_excitement_score": 62,
+            "taste_alignment_score": 76,
             "translation_risk": "low",
             "mono_compatibility": "low",
             "reversibility": "non_destructive",
-            "overall_score": 81.1,
-            "overall_verdict": "promising"
+            "overall_score": 76.3,
+            "overall_verdict": "worth testing"
           },
           "governance": {
-            "emotional_truth_alignment": 82,
+            "emotional_truth_alignment": 74,
             "taste_triangle": {
-              "emotion": 81,
-              "craft": 82,
-              "identity": 87,
+              "emotion": 73,
+              "craft": 80,
+              "identity": 76,
               "verdict": "keep"
             },
             "constraint_violations": [],
@@ -597,7 +597,7 @@
           "Lower verse vocal sends",
           "Bloom sends at chorus"
         ],
-        "reason": "'Phrase Rides' scored 82.9 (promising); strongest on its intended axis without breaking vocal belief."
+        "reason": "'Phrase Rides' scored 79.1 (worth testing); strongest on its intended axis without breaking vocal belief."
       }
     }
   ],
@@ -608,5 +608,5 @@
     "Never let novelty override vocal belief.",
     "Always compare creative variants to the song's emotional truth."
   ],
-  "philosophy": "A mix is not finished when it is balanced. It is finished when the static balance supports the song and the dynamic movement makes the song feel inevitable. The best mix is the version where the song feels most inevitable, not the most processed."
+  "philosophy": "A mix is finished when the groove is undeniable: the beat carries an identity you can name in one bar, the low end moves as one articulated pocket, and the arrangement leaves space — the silence is as composed as the sound. Sections flip hard enough to feel, and the record breathes between the hits."
 }

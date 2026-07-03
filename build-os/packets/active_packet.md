@@ -4,45 +4,42 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** NONE ACTIVE — P-038 closed by the archivist (2026-07-02).
-  **★★★ THE ENTIRE POST-MERGE BACKLOG IS COMPLETE — THE RESIDUE LIST IS
-  ZERO** (everything remaining is an accepted standing note in
-  `build-os/memory/residue.md`). No packet staged.
+- **Status:** NONE ACTIVE — P-040 (the SAMPLE REFRESH — the two-producer
+  demo output) CLOSED 2026-07-02: qa GREEN + reviewer PASS (no must-fix).
+  Receipt: `build-os/receipts/P-040-sample-refresh.md`.
+- **Last-closed:** P-040 — commits `33cf10d` (the two 30-artifact trees
+  from `vocal_chop_groove` + test-9 over both + the FULL-strength
+  staleness pin) + `9e58e9b` (README only) on parent `1783683`, atop
+  merge base `2c09428`; PUSHED after close (orchestrator standing go),
+  NOT merged. Suite **806** / regression **93/93**. The P-038
+  stale-samples standing note ✓ CLEARED.
 
-## Last-closed / context
+## STAGED (next per the USER'S SEQUENCE — NOT active until confirmed)
 
-- **P-038 ✓ CLOSED** — residue sweep 2 of 2 (NAMING/PROSE), **THE LAST
-  BACKLOG PACKET**: six items — producer names off engine-emitted VALUES
-  + the honesty/precision tidies; ZERO behavior change AST-verified (only
-  string literals moved). Single product commit `7b9eda7` (**AMENDED
-  TREE-NEUTRALLY** from `e1ddfbf` — message-only, the mandated trailers;
-  tree `b49c4b2d…` identical, parent `6f7fd99`). qa GREEN (767 →
-  **768**; regression **93/93, goldens untouched**; artifact deltas
-  enumerated TO THE LINE — 76 changed lines, all 1-for-1, 0
-  unenumerated, 0 producer leaks) + reviewer **fix-then-pass → PASS**
-  (the one must-fix was commit METADATA — the missing trailers; Codex
-  NOT available, single-model review both rounds). Pushed, NOT merged.
-  Receipt: `build-os/receipts/P-038-naming-prose-sweep.md`.
+**THE THIRD PRODUCER — ★ USER-GATED: the orchestrator PRESENTS the
+decision; do NOT open blind.**
 
-## ★★ THE open boundary — the batch-merge USER GATE
+Two decisions belong to the user before this packet opens:
 
-- **The batch merge — P-036 + P-037 + P-038 (+ closes) onto merge base
-  `dc921ec` (= PR #18) — awaits the user's EXPLICIT word. No merge
-  without go.** The dev branch `claude/logic-mix-os-hardening-12-7hbeh1`
-  carries the complete batch, pushed under the orchestrator's standing
-  dev-branch go. Nothing else is pending: no deploy, no publish, no
-  secrets touched.
+1. **WHICH producer.**
+2. **The grounding**, per the standing honesty policy:
+   hand-curated-documented → `high`; derived → `low`, labeled;
+   LLM-synthesized → draft-only, NEVER `high`.
 
-## Next packet (staged)
+**What the third producer costs now (the P-025 → P-039 substrate makes
+this authoring, not engineering):** a JSON file
+(`doctrine/producers/<name>.json`) + the three REQUIRED declarations
+(`protect_iconic_loops`, `vocal_blend_policy`, `confidence_map`) + its
+own verbatim map pin + a differential test + a sample tree/README column
+if desired — **ZERO code changes** (the P-039 surfaces scan the
+producers dir).
 
-- **NONE.** The system is coherent and shippable. Future arcs are
-  USER-INITIATED OPTIONS, not debt: a third producer profile; CLI
-  producer exposure; deeper mode-forking in variant generation; the
-  sample-refresh doc pass (`examples/sample_output/` — accepted
-  standing note).
+## The arc after (user-sequenced)
+
+**P-040 ✓ (sample refresh) → the third producer (staged, user-gated) →
+deeper mode-forking.**
 
 ---
-_P-038 cleared by the archivist on close (2026-07-02). Nothing in
-flight. One packet at a time. The orchestrator stages the next packet
-with the user; builder implements exactly that; qa proves; reviewer
-judges; archivist closes with a receipt._
+_Cleared by the archivist at P-040 close (2026-07-02). One packet at a
+time. The orchestrator confirms the next packet with the user before it
+goes active._

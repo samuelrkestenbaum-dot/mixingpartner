@@ -70,6 +70,16 @@ def render_track_identity_report(items: List[Dict]) -> str:
 
 def render_mix_verdict(mix_plan: Dict, doctrine_score: Dict) -> str:
     out = ["# Mix Verdict", ""]
+    # P-039: the selected-producer identity line, near the top — read from the
+    # SAME doctrine_score the scores below come from (the per-call profile's
+    # identity, the P-029 threading — never the module default's). Data-driven:
+    # no key renders no line (a pre-P-039 artifact stays renderable). Read-only.
+    producer = doctrine_score.get("producer") or {}
+    if producer:
+        out.append(
+            f"**Producer profile:** {producer['display_name']} ({producer['name']})"
+        )
+        out.append("")
     truth = mix_plan.get("singular_emotional_truth")
     if truth:
         out.append(f"> **Emotional truth:** {truth}")

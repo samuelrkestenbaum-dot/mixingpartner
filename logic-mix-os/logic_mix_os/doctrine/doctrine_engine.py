@@ -186,6 +186,21 @@ def score_doctrine(
         # snapshot (categorical + the original score keys) cannot see it.
         # Fresh dict copies, so the artifact never aliases the profile.
         "confidence": [dict(entry) for entry in prof.confidence_map],
+        # P-039: the producer IDENTITY surface — the additive ``producer`` key
+        # names WHICH profile's judgment produced this artifact, copied from
+        # the PASSED profile's metadata (per-call — the P-029 threading; the
+        # default path names the reference). Like ``confidence`` (P-031) this
+        # is LABELING, never judgment: no scorer reads it, the golden snapshot
+        # (categorical + the original score keys) cannot see it, and it
+        # differs between producers BY DESIGN (the divergence audits carry it
+        # consciously). The four identity fields only (never risk_class), in a
+        # fresh dict — the artifact never aliases the profile's metadata.
+        "producer": {
+            "name": prof.metadata["name"],
+            "display_name": prof.metadata["display_name"],
+            "provenance": prof.metadata["provenance"],
+            "confidence": prof.metadata["confidence"],
+        },
     }
 
 

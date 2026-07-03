@@ -1,18 +1,18 @@
 # Mix Verdict
 
-**Producer profile:** Roy Halee / Phil Ramone (halee_ramone)
+**Producer profile:** Timbaland (timbaland)
 
 > **Emotional truth:** A groove built from voices: the lead sings while chopped and stacked vocals lock into the beat.
 
 ## Overall Diagnosis
 
-Overall mix readiness 76.3/100. Static balance 80.0/100; dynamic movement 28.2/100. The mix is more balanced than it is alive — invest in section contrast and rides, not more EQ.
+Overall mix readiness 60.9/100. Static balance 80.0/100; dynamic movement 28.2/100. The mix is more balanced than it is alive — invest in section contrast and rides, not more EQ.
 
 ## Scores
 
 | Dimension | Score | |
 |---|---|---|
-| Overall mix readiness | 76.3/100 | `███████████████░░░░░` |
+| Overall mix readiness | 60.9/100 | `████████████░░░░░░░░` |
 | Physical space / depth | 81.3/100 | `████████████████░░░░` |
 | Emotional hierarchy / vocal belief | 86.0/100 | `█████████████████░░░` |
 | Vocal centrality | 90.0/100 | `██████████████████░░` |
@@ -30,12 +30,15 @@ _Per-area trust labels from the producer profile: which parts of this judgment c
 
 **High**
 
-- vocal centrality / depth hierarchy / section contrast / static-dynamic balance — hand-curated from documented Halee/Ramone technique; these interpretation axes are live and weighted in this profile
-- the seven producer-agnostic axes as measurement (beat identity, negative space, groove coherence, rhythmic surprise, low-end motion, loop context, vocal role fit) — measured live on every run; deliberately weight-0 in this profile — the reference judgment predates these axes and does not weight them
+- groove and beat-identity interpretation (beat identity, groove coherence, rhythmic surprise) — hand-curated from documented Timbaland technique — syncopated pocket construction and beat-first arrangement; these axes are live and weighted up in this profile
+- negative space, section contrast and dynamic-movement interpretation — hand-curated from documented Timbaland technique — syncopated negative space and hard section flips; these axes are live and weighted up in this profile
+- low-end motion interpretation — hand-curated from documented Timbaland technique — the sub-driven pocket and the kick/sub relationship; live and weighted, with the axis ceiling (84, never 100) reflected in a moderated weight
+- loop context interpretation (static vs iconic) — hand-curated from documented Timbaland technique — iconic loop identity is protected as the record's identity (protect_iconic_loops: true) while a static dominant loop reads as contrast pressure; the status-to-score polarity is authored in this profile
+- lead-vocal centrality, depth hierarchy, arrangement realism and balance hygiene as retained measurement — these axes measure lead masking, decorative clutter, depth stacking and level hygiene that stay live in this profile at reduced weight — the groove-first weighting relaxes them, never removes them
 
 **Limited**
 
-- vocal blend interpretation — the masking analyzer reads the vocal band against non-lead vocals when either side of the pair is forward (the vocal stem itself, or a heard masker standing forward in front of it), and this profile's clarity protection (acceptable_blend: false) is live and measured on real exported-stem data — a masked vocal chop and stack read 65.0 on vocal_role_fit (the chop and the stack each draw the masked penalty once); coverage stays bounded: events arise only from the masker-instrument set, info-tier events are emitted but not consumed, and vocal-band events carry no per-track masking risk
+- vocal blend interpretation — the masking analyzer reads the vocal band against non-lead vocals when either side of the pair is forward (the vocal stem itself, or a heard masker standing forward in front of it); the acceptable-blend policy this profile opts into is live and measured on real exported-stem data — a qualified vocal chop under masking reads 85.0 on vocal_role_fit against the reference's 65.0 (the reference draws the masked penalty once for the chop and once for the stack; the accepted blend waives both), worth +0.7 overall at the authored 0.4 weight; coverage stays bounded: events arise only from the masker-instrument set, info-tier events are emitted but not consumed, and vocal-band events carry no per-track masking risk
 
 **Deferred**
 

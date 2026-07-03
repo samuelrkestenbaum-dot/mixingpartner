@@ -206,11 +206,22 @@ def render_dashboard(result) -> str:
     nav = "".join(f'<a href="#{a}">{_esc(t)}</a>' for a, t in anchors)
 
     overall = ds.get("overall_mix_readiness_score")
+    # P-039: the selected producer, named in the header where the verdict is
+    # summarized (the big overall) — read off the per-call doctrine_score
+    # identity, never the score-grid card (its labels stay producer-agnostic,
+    # the P-030 contract). Data-driven: no key renders no line.
+    producer = ds.get("producer") or {}
+    producer_line = (
+        f'<div class="muted">Producer profile: {_esc(producer["display_name"])} '
+        f'({_esc(producer["name"])})</div>'
+        if producer else ""
+    )
     header = f"""<header>
       <h1>Logic Mix OS — {_esc(proj.song_title)}</h1>
       <div class="muted">Tempo {_esc(proj.tempo)} · Key {_esc(proj.key)} ·
         {len(result.track_analysis)} tracks · {len(result.section_analysis)} sections</div>
       <div class="muted">{_esc(proj.intent.get("singular_emotional_truth", ""))}</div>
+      {producer_line}
       <div class="big">{_esc(overall) if overall is not None else "—"}<span class="muted" style="font-size:16px">/100 ready</span></div>
       <nav>{nav}</nav>
     </header>"""
