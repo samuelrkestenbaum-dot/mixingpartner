@@ -1,0 +1,333 @@
+{
+  "metadata": {
+    "name": "brian_eno",
+    "display_name": "Brian Eno",
+    "provenance": "hand-curated-documented",
+    "confidence": "high",
+    "risk_class": 0
+  },
+
+  "kind_scores": {
+    "width_bloom":      {"technical": 78, "physical_space": 72, "emotional_hierarchy": 60, "contrast": 70, "vocal_belief": 62, "excitement": 66, "taste": 58, "translation": "medium", "mono": "medium"},
+    "subtractive_drop": {"technical": 88, "physical_space": 88, "emotional_hierarchy": 84, "contrast": 90, "vocal_belief": 84, "excitement": 82, "taste": 92, "translation": "low", "mono": "low"},
+    "vocal_ride":       {"technical": 80, "physical_space": 74, "emotional_hierarchy": 72, "contrast": 62, "vocal_belief": 76, "excitement": 58, "taste": 64, "translation": "low", "mono": "low"},
+    "drum_room_bloom":  {"technical": 78, "physical_space": 76, "emotional_hierarchy": 62, "contrast": 72, "vocal_belief": 64, "excitement": 70, "taste": 56, "translation": "low", "mono": "low"},
+    "loop_deconstruct": {"technical": 84, "physical_space": 82, "emotional_hierarchy": 74, "contrast": 78, "vocal_belief": 74, "excitement": 76, "taste": 82, "translation": "low", "mono": "low"},
+    "depth_cleanup":    {"technical": 85, "physical_space": 90, "emotional_hierarchy": 78, "contrast": 70, "vocal_belief": 78, "excitement": 64, "taste": 86, "translation": "low", "mono": "low"},
+    "intimacy_pass":    {"technical": 80, "physical_space": 78, "emotional_hierarchy": 76, "contrast": 64, "vocal_belief": 78, "excitement": 56, "taste": 70, "translation": "low", "mono": "low"},
+    "arrangement_lift":   {"technical": 80, "physical_space": 74, "emotional_hierarchy": 68, "contrast": 80, "vocal_belief": 70, "excitement": 74, "taste": 58, "translation": "low", "mono": "low"},
+    "ensemble_rebalance": {"technical": 80, "physical_space": 76, "emotional_hierarchy": 70, "contrast": 62, "vocal_belief": 74, "excitement": 58, "taste": 60, "translation": "medium", "mono": "low"},
+    "negative_space_dropout": {"technical": 86, "physical_space": 84, "emotional_hierarchy": 78, "contrast": 92, "vocal_belief": 78, "excitement": 84, "taste": 92, "translation": "medium", "mono": "low"}
+  },
+
+  "risk_penalty": {"low": 0, "medium": 6, "high": 14},
+
+  "creative_nudge_cap": 2.0,
+  "creative_promotion_cap": 4.0,
+
+  "nudge_table": [
+    {
+      "kinds": ["width_bloom", "vocal_ride"],
+      "evidence": "lead_masked",
+      "dim": "vocal_belief",
+      "delta": -14,
+      "reason": "vocal_belief -14: lead vocal is masked — withhold the level/width pushes and clear the field around the voice first; space in the environment comes before emphasis"
+    },
+    {
+      "kinds": ["width_bloom"],
+      "evidence": "width_crowding",
+      "dim": "vocal_belief",
+      "delta": -6,
+      "reason": "vocal_belief -6: stereo image is already width-crowded — more width dissolves the field into wash"
+    }
+  ],
+
+  "promotion_table": [
+    {
+      "kinds": ["loop_deconstruct"],
+      "evidence": "foregrounded_loop",
+      "dim": "excitement",
+      "delta": 35,
+      "reason": "loop_promotion +4.0: a foregrounded/dominating loop — treat it as generative material (source material respected) and let it evolve instead of standing still"
+    }
+  ],
+
+  "search_modes": {
+    "conservative": {"allowed_risk": "low", "bias": "preserve the environment, subtle balance moves, nothing pushed forward", "favor_kinds": ["depth_cleanup"], "suppress_kinds": ["width_bloom", "vocal_ride"], "reach_kinds": []},
+    "ambient_field": {"allowed_risk": "low", "bias": "the record as an environment — depth, air, space around every element; the voice sits inside the field", "favor_kinds": [], "suppress_kinds": [], "reach_kinds": []},
+    "texture_bed": {"allowed_risk": "low", "bias": "texture as composition — weave the beds into one surface; remove what the weave does not need", "favor_kinds": ["subtractive_drop"], "suppress_kinds": ["drum_room_bloom"], "reach_kinds": []},
+    "horizontal_time": {"allowed_risk": "medium", "bias": "slow evolution over sectional drama — let change arrive gradually, on the record's own time scale", "favor_kinds": [], "suppress_kinds": [], "reach_kinds": []},
+    "generative_drift": {"allowed_risk": "medium", "bias": "treat the material as a system — loops and beds evolve, transform, thin out; absence is a legitimate move", "favor_kinds": ["loop_deconstruct"], "suppress_kinds": ["width_bloom"], "reach_kinds": ["negative_space_dropout"]},
+    "experimental": {"allowed_risk": "high", "bias": "exploration rather than aggression — unfamiliar treatments, reversed space, extreme depth, structural absence", "favor_kinds": ["subtractive_drop", "depth_cleanup"], "suppress_kinds": ["drum_room_bloom"], "reach_kinds": ["negative_space_dropout"]}
+  },
+
+  "philosophy": "A mix is finished when it becomes a place: an environment the listener can stay inside, where texture carries the composition, the space between sounds is composed, and change arrives slowly enough to live with. The record works as an atmosphere first — as ignorable as it is interesting — and every element belongs to the landscape rather than standing in front of it.",
+
+  "truth_alignment": {
+    "intimate": {"vocal_ride": 78, "intimacy_pass": 84, "subtractive_drop": 88, "depth_cleanup": 84, "loop_deconstruct": 78, "drum_room_bloom": 54, "width_bloom": 42, "arrangement_lift": 62, "ensemble_rebalance": 70, "negative_space_dropout": 64},
+    "big": {"width_bloom": 60, "drum_room_bloom": 62, "vocal_ride": 64, "subtractive_drop": 84, "depth_cleanup": 78, "loop_deconstruct": 74, "intimacy_pass": 66, "arrangement_lift": 68, "ensemble_rebalance": 62, "negative_space_dropout": 82},
+    "neutral": {"width_bloom": 54, "drum_room_bloom": 60, "vocal_ride": 70, "subtractive_drop": 90, "depth_cleanup": 84, "loop_deconstruct": 76, "intimacy_pass": 72, "arrangement_lift": 64, "ensemble_rebalance": 64, "negative_space_dropout": 78}
+  },
+
+  "taste_max_delta": 15,
+
+  "taste_kind_bias": {
+    "tends to prefer narrower stereo images": {"width_bloom": -15, "drum_room_bloom": -15},
+    "prefers wider images": {"width_bloom": 15}
+  },
+
+  "aesthetic_kill_switches": [
+    "Never chase reference loudness at the mix stage.",
+    "Never widen the full mix to solve chorus lift.",
+    "Never make the lead vocal less intelligible unless explicitly approved.",
+    "Never allow a stock loop to dominate the song identity by accident.",
+    "Never fill the space an element needs to decay into — the environment is part of the instrument.",
+    "Never trade the slow evolution of the record for a section-by-section jolt.",
+    "Never push a texture into the foreground to prove it is there — a field reads as a whole."
+  ],
+
+  "taste_triangle": {
+    "intimate_width_penalty": 30,
+    "emotion_dims": ["physical_space_score", "listener_excitement_score", "vocal_belief_score"]
+  },
+
+  "veto_thresholds": {
+    "reject_below": 45,
+    "align_veto_below": 50,
+    "align_fallback": 75
+  },
+
+  "doctrine": {
+    "weights": {
+      "physical_space_score": 1.3,
+      "emotional_hierarchy_score": 0.6,
+      "vocal_centrality_score": 0.5,
+      "depth_hierarchy_score": 1.1,
+      "section_contrast_score": 0.3,
+      "static_mix_score": 1.2,
+      "dynamic_mix_score": 0.5,
+      "beat_identity_score": 0.2,
+      "negative_space_score": 1.4,
+      "groove_coherence_score": 0.5,
+      "rhythmic_surprise_score": 0.2,
+      "low_end_motion_score": 0.3,
+      "loop_context_score": 0.4,
+      "vocal_role_fit_score": 0.6
+    },
+    "baselines": {
+      "physical_space": 86.0,
+      "emotional_hierarchy": 86.0
+    },
+    "penalty_coeffs": {
+      "physical_space": {
+        "forward_threshold": 0.6,
+        "forward_occupancy": 70,
+        "felt_forward": 4,
+        "width_crowding": 6,
+        "loop_foregrounded": 6
+      },
+      "emotional_hierarchy": {
+        "no_lead": 35,
+        "vocal_masked": 6,
+        "decorative_threshold": 0.4,
+        "decorative_penalty": 10
+      }
+    },
+    "scorers": {
+      "vocal_centrality": {
+        "no_lead_score": 35.0,
+        "baseline": 70.0,
+        "sacred_bonus": 10,
+        "forward_bonus": 10,
+        "masked_coeff": 6
+      },
+      "depth_hierarchy": {
+        "baseline": 40,
+        "per_distinct": 12,
+        "forward_threshold": 0.6,
+        "forward_occupancy": 60
+      },
+      "section_contrast": {
+        "baseline": 100,
+        "lift_fail_penalty": 18
+      },
+      "static_mix": {
+        "baseline": 80.0,
+        "peak_ceiling": -0.1,
+        "peak_penalty": 10,
+        "dominant_band_threshold": 0.55,
+        "dominant_band_penalty": 10,
+        "crit_low_coeff": 8,
+        "no_lead_penalty": 8
+      },
+      "dynamic_mix": {
+        "insufficient_sections_score": 40.0,
+        "baseline": 30,
+        "rms_coeff": 8,
+        "width_coeff": 140,
+        "bright_coeff": 140,
+        "lift_fail_penalty": 10
+      },
+      "beat_identity": {
+        "no_beat": 20.0,
+        "transient_floor": 0.35,
+        "baseline": 50.0,
+        "dominance_coeff": 40,
+        "definition_crest_db": 12.0,
+        "definition_bonus": 12,
+        "foreground_bonus": 18,
+        "buried_penalty": 14,
+        "masked_penalty": 12
+      },
+      "negative_space": {
+        "neutral": 40.0,
+        "baseline": 15.0,
+        "density_ceiling": 1.0,
+        "room_coeff": 50,
+        "transient_ceiling": 1.0,
+        "breathing_coeff": 20,
+        "dropout_coeff": 25,
+        "dropout_floor": 0.1
+      },
+      "groove_coherence": {
+        "neutral": 45.0,
+        "baseline": 15.0,
+        "regularity_scale": 85.0
+      },
+      "rhythmic_surprise": {
+        "insufficient_sections_score": 40.0,
+        "baseline": 20.0,
+        "spread_coeff": 160,
+        "swing_coeff": 60
+      },
+      "low_end_motion": {
+        "neutral": 40.0,
+        "no_low_end": 25.0,
+        "baseline": 40.0,
+        "low_floor": 0.2,
+        "stack_floor": 0.2,
+        "reserved_max": 2,
+        "reserved_bonus": 20,
+        "defined_crest_db": 10.0,
+        "blob_penalty": 12,
+        "stack_penalty": 12,
+        "critical_conflict_penalty": 14,
+        "moderate_conflict_penalty": 6,
+        "complement_coeff": 2.0,
+        "complement_cap_db": 12.0
+      },
+      "loop_context": {
+        "no_loop": 50.0,
+        "not_dominant": 50.0,
+        "dominant_unassessed": 45.0,
+        "dominant_evolving": 60.0,
+        "static": 35.0,
+        "iconic": 88.0,
+        "width_floor": 0.6,
+        "transient_lift_floor": 0.15,
+        "groove_transient_floor": 0.35,
+        "definition_crest_db": 12.0,
+        "evolution_rms_floor_db": 1.0,
+        "evolution_width_floor": 0.05,
+        "evolution_brightness_floor": 0.05
+      },
+      "vocal_role_fit": {
+        "no_vocals": 50.0,
+        "baseline": 70.0,
+        "lead_forward_bonus": 15,
+        "masked_penalty": 10
+      }
+    }
+  },
+
+  "default_creative_mode": {
+    "intimate_truth_words": ["intimate", "vulnerable", "conflicted", "ache", "quiet", "restrained", "composed"],
+    "intimate_mode": "ambient_field",
+    "default_mode": "horizontal_time"
+  },
+
+  "protect_iconic_loops": true,
+
+  "vocal_blend_policy": {
+    "acceptable_blend": true,
+    "confidence_floor": 0.85
+  },
+
+  "confidence_map": [
+    {
+      "area": "negative space and restraint interpretation (negative space, static balance as textural weave)",
+      "level": "high",
+      "reason": "hand-curated from documented Brian Eno technique — the subtractive, strip-back practice documented across the Bowie Berlin-trilogy sessions and his published interviews on removing elements, and the Ambient 1: Music for Airports liner-notes manifesto (music 'as ignorable as it is interesting'): absence is composed, so these axes are live and weighted at the top of this profile — negative space above every existing profile as its center of gravity"
+    },
+    {
+      "area": "sonic environment interpretation (physical space, depth as environment)",
+      "level": "high",
+      "reason": "hand-curated from documented Brian Eno technique — the studio-as-instrument practice from his published talks and writing (the studio as a compositional tool) and the treatment-led staging documented across the Bowie and U2/Lanois production collaborations: space is the composition's material, so physical space is weighted above every existing profile and depth reads as environment rather than as ensemble layering"
+    },
+    {
+      "area": "slow evolution over sectional drama (section contrast, dynamic movement as retained measurement)",
+      "level": "high",
+      "reason": "hand-curated from documented Brian Eno technique — the generative-music writings and the Discreet Music liner notes document change that arrives gradually rather than section by section: these axes stay live at deliberately low weights, below every existing profile — the sectional-lift grammar is measured, never removed, and its de-emphasis is this profile's authored posture"
+    },
+    {
+      "area": "the voice as a texture in the field (vocal centrality, emotional hierarchy as retained measurement)",
+      "level": "high",
+      "reason": "hand-curated from documented Brian Eno technique — the treated, instrument-like vocal practice of the Another Green World-era records and the looped wordless voices of Music for Airports: the voice sits inside the environment rather than in front of it, so these axes stay live at weights below every existing profile — a taste-layer de-emphasis only, while every engine-side vocal safety protection stays intact"
+    },
+    {
+      "area": "loop context interpretation (static vs iconic)",
+      "level": "high",
+      "reason": "hand-curated from documented Brian Eno practice — the tape-loop systems of Discreet Music and the Frippertronics-era work treat a loop as generative material, and the found voices of My Life in the Bush of Ghosts function as the record's identity: a static dominant loop reads as unrealized material rather than as an arrested arrangement (authored 35.0, above every existing profile), an iconic-functioning loop is protected as identity (authored 88.0, protect_iconic_loops: true), and every detection floor stays on the shared basis"
+    },
+    {
+      "area": "groove as field texture (beat identity, groove coherence, rhythmic surprise, low-end motion as retained measurement)",
+      "level": "high",
+      "reason": "hand-curated from documented Brian Eno technique — on the ambient records and in the generative writings the pulse sits inside the environment rather than carrying the record's identity: these axes stay live at this profile's lowest weights — texture, never engine"
+    },
+    {
+      "area": "vocal blend interpretation",
+      "level": "limited",
+      "reason": "the opt-in is authored from documented technique — the voice treated as an instrument in the field (the Another Green World-era vocal treatments and the looped wordless voices of Music for Airports) — and the gate is live and measured on real exported-stem data: a qualified vocal chop and stack under masking read 85.0 on vocal_role_fit against the reference's 65.0 at this profile's authored 0.85 confidence floor (the strictest shipped); the level stays limited because coverage is bounded: events arise only from the masker-instrument set, info-tier events are emitted but not consumed, and vocal-band events carry no per-track masking risk"
+    },
+    {
+      "area": "textural coherence as its own measurement",
+      "level": "deferred",
+      "reason": "texture as composition is central to the documented practice, yet whether the beds cohere as one woven surface is not measurable as its own axis on exported stems at doctrine time — the negative-space, static-balance and depth axes are the closest shipped proxies"
+    },
+    {
+      "area": "generative process",
+      "level": "deferred",
+      "reason": "whether the material behaves as a system — rules, drift, self-variation, the Oblique Strategies working method — is a process property of the session, not measurable on exported stems at doctrine time; the loop-context evolution reading is the closest shipped proxy"
+    },
+    {
+      "area": "ambient patience (time-domain evolution beyond section grain)",
+      "level": "deferred",
+      "reason": "change on the time scale the documented practice composes for spans whole records, and section analysis is the engine's finest committed time grain — slow evolution beyond that grain is not measurable at doctrine time"
+    },
+    {
+      "area": "cultural loop recognizability",
+      "level": "deferred",
+      "reason": "iconic-ness as cultural recognition needs provenance/manifest signals not measurable on exported stems at doctrine time; the acoustic loop-context proxy is what ships"
+    },
+    {
+      "area": "true hook recurrence",
+      "level": "deferred",
+      "reason": "a proven hook needs a recurrence signal that does not exist at doctrine time; the strongest claim ships as vocal_hook_candidate"
+    },
+    {
+      "area": "motif provenance",
+      "level": "deferred",
+      "reason": "motif lineage across sources is not measurable on exported stems at doctrine time"
+    },
+    {
+      "area": "onset-timing strong forms (fingerprint typing, fills/unexpected-hit detection, kick/sub temporal interlock)",
+      "level": "deferred",
+      "reason": "these need per-onset timing and typing signals not measurable on exported stems at doctrine time; the section-aggregate weak forms are what ship"
+    },
+    {
+      "area": "per-section true-sub movement",
+      "level": "deferred",
+      "reason": "section analysis exposes low_mid_energy (120-500 Hz) only, so the true-sub band (20-120 Hz) is not measurable at section grain on exported stems; the low_mid section grain is what ships"
+    }
+  ]
+}

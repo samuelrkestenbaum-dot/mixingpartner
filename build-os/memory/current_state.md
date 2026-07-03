@@ -369,24 +369,53 @@
     the P-044 merge is a user gate**, atop the set-active `9fdb172`.
     P-044's parent chain: `f72f222` → `87635d3` → `9fdb172`
     (active-packet confirmation) → `80e9bd5` (PR #22 merge).
+    ★★ P-044 IS MERGED — **PR #23 (P-044 — negative-space dropout
+    move family + closes) is MERGED to default on the user's
+    directive — merge commit `fe8d947`, the CURRENT default-branch
+    tip. The base for MERGE/landing decisions is now `fe8d947`.** The
+    dev branch now carries **P-045 (`47aace7` + `c3fa783`, product —
+    THE FOURTH PRODUCER: `brian_eno.json`, hand-curated from
+    documented technique → high — atmosphere + texture + restraint +
+    generative space; negative_space 1.4 = his argmax [all four
+    argmaxes distinct], SEVEN axes outside the three-way envelope,
+    `protect_iconic_loops` TRUE with authored static 35.0, blend
+    floor 0.85 the strictest shipped, dropout reach on exactly
+    generative_drift + experimental, confidence map 6 high /
+    1 limited / 8 deferred [his own three no-axis concepts DEFERRED,
+    not faked]; + the 36-test guard suite
+    [`tests/test_eno_profile.py`] + the PERMANENT 64-test FOUR-WAY
+    differential proof [`tests/test_four_way_differential.py`];
+    exactly 3 NEW files, +2382/−0, ZERO .py under logic_mix_os/,
+    ZERO existing-test edits, the three shipped JSONs
+    sha256-identical to their `fe8d947` blobs — pinned permanently;
+    both sample trees untouched), PUSHED to the dev branch BEFORE
+    qa/reviewer under the orchestrator's standing go (both gates
+    validated the final SHAs), NOT merged — the P-045 merge is a
+    user gate**, atop the set-active `6df37b3`. P-045's parent
+    chain: `c3fa783` → `47aace7` → `6df37b3` (active-packet
+    confirmation) → `fe8d947` (PR #23 merge).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-03, P-044 — the
-  dropout-family baseline):** suite **1000 passed** (0 failed /
+- **Green baseline (verified 2026-07-03, P-045 — the
+  four-producer baseline):** suite **1100 passed** (0 failed /
   skipped); regression **93/93** (tests_run 93 / passed 93 /
   failed 0) — the corpus is **4 fixtures** (the 68/68 era ended
-  CONSCIOUSLY at P-035). Commits `87635d3` (negative_space_dropout —
-  the kind, the curated variants, the structural protection filter,
-  honest rows everywhere; zero behavioral change) + `f72f222`
-  (Timbaland's authored dropout reach + the differential proof + the
-  conscious enumerated drift) on parent `9fdb172` (active-packet
-  confirmation), atop merge base `80e9bd5` (= the PR #22 merge) —
-  `87635d3` IS Commit-1 → green in isolation (throwaway worktree:
-  **984 passed**). (History: 950 → **1000** at P-044 — +50 net: the
+  CONSCIOUSLY at P-035). Commits `47aace7` (brian_eno.json — the
+  fourth producer [atmosphere + texture + restraint + generative
+  space] + its 36-test guard suite) + `c3fa783` (the permanent
+  64-test FOUR-WAY differential) on parent `6df37b3` (active-packet
+  confirmation), atop merge base `fe8d947` (= the PR #23 merge) —
+  `47aace7` IS Commit-1 → green in isolation (throwaway worktree:
+  **1036 passed**). (History: 1000 → **1100** at P-045 — +100: the
+  NEW `tests/test_eno_profile.py` [36 tests] + the NEW
+  `tests/test_four_way_differential.py` [64 tests], ZERO passive
+  growth — the existing sweeps parametrize hardcoded three-producer
+  tuples [★ the directory-driven hardening note in residue] —
+  Commit-1 iso **1036**; 950 → **1000** at P-044 — +50 net: the
   NEW `tests/test_negative_space_dropout.py` [47 tests] + net pin
   growth across the 4 touched test files, Commit-1 iso **984**;
   907 → **950** at P-043 — +43 net: the
@@ -419,6 +448,134 @@
   331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-045 WIDENS THE AESTHETIC MAP — THE FOURTH PRODUCER: BRIAN
+  ENO (profile-only; the user's pick, verbatim 2026-07-03: "Yes —
+  pick another producer, but merge P-044 first… My producer pick:
+  Brian Eno" — P-044 merged FIRST as PR #23 → default tip `fe8d947`,
+  then this packet). **THE PRODUCER ROSTER IS FOUR** — halee_ramone
+  (reference: emotional hierarchy + physical space) · timbaland
+  (groove identity + negative space + contrast) · quincy_jones
+  (orchestration + ensemble lift) · brian_eno (atmosphere + texture
+  + restraint + generative space) — "he widens the aesthetic map
+  instead of just adding another point near the existing cluster";
+  the map now spans vocal/space, groove/contrast,
+  orchestration/ensemble, atmosphere/restraint, ALL as pure data
+  over the shared substrate. Grounding:
+  hand-curated-from-documented-technique → high;
+  LLM-synthesized-as-high FORBIDDEN. The standing doctrine is proven
+  at **N=4** with ZERO code changes and zero schema debt. qa GREEN
+  (12/12, zero deviations) + reviewer PASS (no must-fix).
+  Last-closed = P-045.**
+  - **Two commits** on parent `6df37b3` (active-packet
+    confirmation), atop merge base `fe8d947` (= the PR #23 merge —
+    P-044 landed FIRST): `47aace7` (Commit-1 — `brian_eno.json`
+    [333 lines] + the 36-test guard suite; GREEN IN ISOLATION at
+    **1036**) + `c3fa783` (Commit-2 — the permanent 64-test FOUR-WAY
+    differential, all 8 user requirements incl. dropout governance).
+    Exactly **3 NEW files, +2382/−0**; ZERO .py under
+    `logic_mix_os/`; ZERO existing-test edits; the three shipped
+    JSONs sha256-identical to their `fe8d947` blobs — pinned
+    PERMANENTLY in the four-way suite (halee `de171b8c…`, timbaland
+    `b8047afb…`, quincy `20ae6824…`); both sample trees untouched.
+    **PUSHED to the dev branch BEFORE qa/reviewer under the standing
+    go (both gates validated the final SHAs); NOT merged — the
+    P-045 merge is the OPEN USER GATE.**
+  - **★ The authored profile (the key decisions):** negative_space
+    **1.4 = his argmax** — all four argmaxes DISTINCT; **seven axes
+    outside the three-way envelope** (above all: negative_space 1.4,
+    physical_space 1.3, static_mix 1.2; below all: vocal_centrality
+    0.5, emotional_hierarchy 0.6, section_contrast 0.3, dynamic_mix
+    0.5); all weights > 0 — de-emphasis, never removal.
+    `protect_iconic_loops` **TRUE** (Discreet Music/Frippertronics;
+    Bush of Ghosts) with authored polarity static **35.0** — above
+    all three (a static loop = unrealized generative material, not a
+    flaw; still < dominant_evolving 60), iconic 88.0, every
+    detection floor shared four-way. Blend {acceptable_blend: true,
+    confidence_floor **0.85**} — the STRICTEST shipped, 85.0 live on
+    chop. Modes: ambient_field (intimate) / horizontal_time
+    (default) / conservative / texture_bed / generative_drift /
+    experimental — default/intimate authored NEUTRAL with zero
+    reach; dropout reach on EXACTLY generative_drift (medium) +
+    experimental (high); arrangement_lift/ensemble_rebalance
+    `reach_kinds []` everywhere (Quincy's poles, not his grammar).
+    negative_space_dropout **78.9** at honest medium — his
+    highest-affinity extended kind, and it NEVER WINS
+    (subtractive_drop 86.9 outranks on every reaching branch);
+    bloom kinds at his taste floor (58/56 — "not just more reverb");
+    intimate width 42, stricter than the reference's 45. Safety
+    IDENTICAL four-way (veto {45,50,75}; the 4 reference kill-switch
+    safety lines verbatim + 3 Eno lines; caps/penalties equal).
+    Confidence map **6 high / 1 limited / 8 deferred** — each high
+    with a NAMED documented basis; his own three no-axis concepts
+    (textural coherence · generative process/Oblique Strategies ·
+    ambient patience) DEFERRED rather than faked. Measured overalls
+    **65.4 / 57.8 / 59.3 / 65.5** — pairwise distinct from all three
+    on every fixture; his overall RECONSTRUCTS from the reference's
+    components + exactly TWO authored channels (loop 15→35, blend
+    65→85) + his weights, to the decimal.
+  - **★ qa GREEN (12/12, ZERO deviations):** suite 1000 → **1100
+    passed, 0 failed** (+36 C1 / +64 C2, ZERO passive growth — the
+    existing sweeps parametrize hardcoded three-producer tuples);
+    regression **93/93**; Commit-1 iso **1036**; all 16 headline
+    cells reproduced by qa's own script — the ONLY component deltas
+    anywhere are his two authored channels; dropout governance —
+    32/32 non-reaching cells zero, emissions match exactly with no
+    forbidden names and byte-equal P-044 prose, load cap ValueError
+    + runtime `reach_capped`, the only-protected + masked-lead
+    synthetics hold, 78.9 never wins; **sabotage 5/5** (weight
+    perturbation → 15 failed; map word → 3; honesty-stamp drop → 5;
+    reach deletion → 8; quincy +1 byte with values identical → the
+    sha256 drift pin bites on BYTES alone); CLI boundary rc=0 with
+    65.5 + the producer block, unknown → rc=2 listing all FOUR
+    alphabetically; safety grep 0 on 2382 added lines;
+    judgment-word guard 0 hits; staleness pin 4/4; the 12 standing
+    doctrine cells unchanged.
+  - **★ reviewer PASS (no must-fix; Codex unavailable —
+    single-model, independent worktree execution: 1100 + 1036
+    REPRODUCED):** grounding HOLDS (each high claim follows from its
+    named citable basis; nothing reference-derived above limited;
+    the three no-axis concepts deferred, not faked); **"not just
+    more reverb" STRUCTURALLY ENCODED** — "I would defend 'Eno' from
+    these numbers alone"; not-averaged-mush verified IN DATA
+    (argmaxes, all seven envelope exits recomputed, reconstruction
+    to the decimal, sha256 pins verified to bite); all six
+    builder-flagged decisions SANCTIONED (protect=true the honest
+    documented reading; intimate dropout alignment 64 = taste not
+    safety — his intimate flow can't even reach dropout;
+    beat_identity 0.2 faithful; dynamic_mix 0.5 sanctioned by
+    slow-evolution; leak-vocabulary retirement local, no coverage
+    loss; the 58 tie documented); loop philosophy ONE COHERENT
+    STANCE (taste changed, measurement shared); requirement 8
+    GOVERNED, NOT WIDENED (the tests import the REAL filter + the
+    P-044 helpers, no weakened copies; nothing in a profile can
+    reach the filter by construction); safety invariance verified
+    key-by-key. Three non-blocking reviewer residues → residue,
+    incl. ★ the directory-driven `PRODUCERS`-tuple hardening as a
+    named future-packet candidate.
+  - **★ THE USER'S ACCEPTANCE BAR — all clauses met:** dynamically
+    discovered ✓ (CLI rc=0/rc=2 four-way listing) · no code changes
+    ✓ (zero .py; no schema bug found) · existing producers stable ✓
+    (sha256 + all pins + trees) · recognizably distinct ✓ (pairwise
+    distinct everywhere; distinct argmax) ·
+    **texture/atmosphere/restraint-driven, not just reverb-heavy ✓**
+    (structurally encoded, reviewer-defended) · confidence labels
+    honest ✓ (6/1/8, the guards bite) · safety/governance unchanged
+    ✓ (identical four-way) · differential proof permanent ✓ (in
+    testpaths, 64 tests).
+  - **★ NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open
+    directions to the user (ALL user-gated): the P-045 merge ·
+    product-surface refresh (samples/README don't yet showcase
+    mode-forking, the new move families, or the four-producer
+    roster) · the directory-driven sweeps hardening · quincy/halee
+    authored dropout reach · the future-analyzer candidates from
+    Eno's honest deferrals (textural coherence · generative process
+    · ambient patience) · a fifth producer · anything else the user
+    calls. Do NOT open anything blind. Execution/apply semantics
+    NEVER without explicit user re-gating. **THE OPEN USER GATE: the
+    merge of P-045 (`6df37b3` + `47aace7` + `c3fa783` + the close
+    commit) atop `fe8d947` (= PR #23).** Receipt:
+    `build-os/receipts/P-045-brian-eno.md`.
 
 - **★★★ P-044 LANDS THE DROPOUT FAMILY — NEGATIVE-SPACE DROPOUT MOVE
   FAMILY (opened NARROWLY AND CONSERVATIVELY on the user's call,
@@ -548,7 +705,13 @@
     explicit user re-gating. **THE OPEN USER GATE: the merge of P-044
     (`9fdb172` + `87635d3` + `f72f222` + the close commit) atop
     `80e9bd5` (= PR #22).** Receipt:
-    `build-os/receipts/P-044-negative-space-dropout.md`.
+    `build-os/receipts/P-044-negative-space-dropout.md`. **(✓ UPDATE
+    P-045 close, 2026-07-03: BOTH resolved in the SAME user
+    directive — the P-044 merge landed as PR #23 → default tip
+    `fe8d947`, the current landing base, AND the fourth producer was
+    opened — Brian Eno — and CLOSED as P-045; see the P-045 banner
+    above; NEXT = NOTHING STAGED, the orchestrator presents the open
+    directions.)**
 
 - **★★★ P-043 WIDENS THE MOVE VOCABULARY — CURATED MOVE VOCABULARY
   EXPANSION: ARRANGEMENT LIFT + ENSEMBLE REBALANCE (Shape C, opened
