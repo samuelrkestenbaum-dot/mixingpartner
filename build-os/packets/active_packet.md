@@ -4,118 +4,44 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** ACTIVE — confirmed by the USER 2026-07-03 (both gates answered
-  in one directive: the P-039+P-040 pair merged first as PR #19 → default tip
-  `61582b5`; then this packet as its own packet).
-- **ID / Title:** **P-041 — The Third Producer: Quincy Jones (profile-only)**
-- **Branch:** `claude/logic-mix-os-hardening-12-7hbeh1` atop merge base
-  `61582b5` (= PR #19 merge commit; the dev branch was fast-forwarded to it —
-  verify with `git merge-base`).
-- **Baseline to protect:** suite **806** / regression **93/93**.
+- **Status:** **NONE ACTIVE** — P-041 CLOSED 2026-07-03 (qa GREEN + reviewer
+  PASS, no must-fix). Receipt: `build-os/receipts/P-041-quincy-jones.md`.
 
-## The user's decision (verbatim authority)
+## Last closed — P-041: The Third Producer: Quincy Jones (profile-only)
 
-- **Producer: Quincy Jones.** Working profile file: `quincy_jones.json`
-  (→ `logic-mix-os/logic_mix_os/doctrine/producers/quincy_jones.json`).
-- **Grounding standard:** *hand-curated-from-documented-technique →
-  `high` confidence*. **Do not ground this as LLM-synthesized. Do not ship
-  any claim as `high` confidence unless it is tied to documented technique /
-  documented production philosophy. Reference-track-derived judgments are
-  allowed only if labeled low/experimental.**
-- **Product intent:** Quincy proves the framework is not a two-pole switch.
-  Target center of gravity: **orchestration-first · ensemble-aware ·
-  vocal-forward but not vocal-only · space around the groove · emotional
-  lift through arrangement · sectional architecture.** He sits between and
-  beyond the first two: Halee/Ramone = physical space + emotional hierarchy;
-  Timbaland = groove identity + contrast + negative space; **Quincy =
-  orchestration + ensemble hierarchy + arranged emotional lift.**
-- **Expected scoring posture** (the user's list — author, don't copy):
-  ensemble balance; arrangement clarity; orchestration density WITH
-  separation; vocal prominence inside ensemble context; section-level lift;
-  groove support without groove dominance; harmonic/instrumental
-  conversation where measurable; space that reveals arrangement roles.
-  **He should not simply copy Halee/Ramone or Timbaland weights.**
+- **Commits:** `f2614f9` (quincy_jones.json + its own guards — 27 tests +
+  the conscious `test_producer_cli.py` delta) + `dfe8c54` (the PERMANENT
+  40-test three-way differential proof) on parent `ece2b5c` (active-packet
+  confirmation), atop merge base `61582b5` (= PR #19 merge — the
+  P-039+P-040 pair, merged FIRST on the user's directive). Both commits are
+  TREE-IDENTICAL identity re-stamps of the builder's originals
+  (`3acd53f`/`f517e0b`) — metadata-only.
+- **Counts:** suite 806 → **873** / regression **93/93**; Commit-1 green in
+  isolation (throwaway worktree at `f2614f9`: 833 passed).
+- **Shape:** exactly 4 files, +1673/−4; **ZERO .py under `logic_mix_os/`**;
+  existing profiles blob-identical.
+- **Push state:** PUSHED to the dev branch
+  `claude/logic-mix-os-hardening-12-7hbeh1` under the orchestrator's
+  standing go BEFORE qa/reviewer (both gates validated the final SHAs).
+  **NOT merged.**
+- The producer roster is now THREE: halee_ramone (reference) · timbaland ·
+  quincy_jones — the framework proven at N=3 with zero code.
 
-## Scope (profile-only if the system is behaving)
+## ★★ OPEN USER GATE
 
-Expected cost — and nothing more:
+- **The merge of P-041** — `ece2b5c` + `f2614f9` + `dfe8c54` (+ the close
+  commit) atop `61582b5` (= PR #19) — awaits the user's explicit word.
 
-1. **`quincy_jones.json`** — the complete ProducerProfile schema (metadata,
-   kind_scores 7×, risk_penalty, caps, nudge/promotion tables, search_modes
-   with Quincy's OWN mode names, philosophy, truth_alignment,
-   taste_max_delta, taste_kind_bias, aesthetic_kill_switches,
-   taste_triangle, veto_thresholds, the FULL `doctrine` block — all 14 axis
-   weights + baselines + penalty_coeffs + every scorer parameter set —
-   default_creative_mode, and the three REQUIRED declarations).
-2. **Required declarations — NO silent inheritance for load-bearing
-   aesthetic choices** (the user's list, each explicitly authored):
-   - **loop philosophy** (`protect_iconic_loops` + the loop_context
-     status→score polarity, authored);
-   - **vocal masking/blend philosophy** (`vocal_blend_policy`
-     {acceptable_blend, confidence_floor} — an explicit documented-technique
-     decision either way; lead protection is invariant regardless);
-   - **default creative mode / mode posture** (`default_creative_mode` +
-     `search_modes`);
-   - **safety / veto policy as STRICT SUPERSET OR UNCHANGED invariant**
-     (veto_thresholds not weaker than the reference's; kill switches keep
-     every safety-relevant line).
-3. **Confidence map** — per-area {high, limited, deferred} with honest
-   reasons; its own **verbatim map pin** test (the guard, like
-   timbaland's).
-4. **Differential test** — same stems (`vocal_chop_groove` + the 3 original
-   fixtures) through `halee_ramone`, `timbaland`, `quincy_jones`, proving:
-   1. Quincy differs from Halee/Ramone.
-   2. Quincy differs from Timbaland.
-   3. Quincy is coherent, not averaged mush (his own signature — e.g. axes
-      where he is NOT strictly between the other two, and an axis-emphasis
-      ordering neither profile has).
-   4. Quincy keeps safety invariant (same veto/audit surface).
-   5. Quincy's confidence labels honestly split documented technique
-      (high) from inference (low/limited/deferred).
-   6. Existing profiles do not drift (existing pinned values byte-stable;
-      regression 93/93 untouched).
-5. **ZERO code changes** unless a schema bug is discovered (a discovered
-   bug = report first; fixing it must be flagged, minimal, and covered).
+## STAGED next (NOT active — do NOT open blind)
 
-Orchestrator recon (verified before open): no test pins the producers-dir
-count or the exact error-listing string (`test_producer_cli.py:371` uses
-`in`-assertions), so the third profile is purely ADDITIVE to the existing
-806 — no existing-test edits expected. If one proves necessary, it is a
-conscious enumerated delta, reported.
-
-## Acceptance bar (the user's, verbatim)
-
-- third producer is **dynamically discovered**
-- **no code changes** required
-- **existing producer outputs remain stable**
-- Quincy output is **recognizably distinct**
-- Quincy **confidence map is honest**
-- **safety/governance unchanged**
-- **differential proof is permanent**
-
-## Safety (invariant — the standing doctrine)
-
-Do NOT relax: safety, governance, non-destructive guarantees, vetoes,
-audit behavior, rollback behavior, source integrity, approval boundaries.
-A producer profile may change taste interpretation ONLY. It may never
-weaken safety.
-
-## Non-scope (the user's, verbatim)
-
-No fourth producer. No tuning Timbaland. No tuning Halee/Ramone. No
-measurement-axis changes. No CLI changes beyond the dynamic discovery
-already landed. No new analyzers. No deeper mode-forking. **No merge until
-qa + reviewer dual-green** (merge itself stays a user gate).
-
-## Commit shape (≤2, Commit-1 green in isolation)
-
-- **Commit-1:** `quincy_jones.json` + the profile's own test file (schema
-  completeness, required declarations, verbatim confidence-map pin,
-  grounding metadata `provenance: "hand-curated-documented"` /
-  `confidence: "high"`, safety-invariance assertions) — full suite green.
-- **Commit-2:** the three-way differential proof (permanent) — full suite
-  green.
+- **Deeper mode-forking in variant generation** — per the USER'S SEQUENCE.
+  `search_mode` is a THIN lever today: it steers the reported mode/bias
+  surface, but `generate_variants` does NOT fork on it (the P-033 reviewer
+  calibration note — "do NOT over-claim behavioral steering"). The packet
+  would make modes reshape variant generation/scoring. **★ USER-GATED: the
+  orchestrator presents the shape/scope decision first.**
 
 ---
-_Set active by the orchestrator on the user's explicit go (2026-07-03).
-One packet at a time: builder → qa + reviewer → archivist → receipt._
+_Cleared by the archivist at P-041 close (2026-07-03). One packet at a time:
+the orchestrator confirms the next packet with the user before it goes
+active._
