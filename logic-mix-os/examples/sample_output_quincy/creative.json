@@ -1,0 +1,709 @@
+{
+  "search_mode": "arrangement_lift",
+  "search_mode_bias": "sectional entrances and exits, build the lift through the arrangement",
+  "static_baseline": {
+    "mix_state": "static_baseline",
+    "status": "locked",
+    "purpose": "Stable technical and musical balance before creative variants.",
+    "locked_elements": [
+      "lead vocal intelligibility",
+      "kick/bass relationship",
+      "basic tonal balance",
+      "core depth hierarchy",
+      "essential lyric audibility"
+    ]
+  },
+  "static_vs_dynamic": {
+    "static_mix_score": 80.0,
+    "dynamic_mix_score": 28.2,
+    "diagnosis": "balanced but static",
+    "recommendation": "Stop EQ-ing the static mix. Build dynamic movement: pre-chorus narrowing, chorus bloom, final-chorus width release, vocal phrase rides."
+  },
+  "adjustment_library": {
+    "space": [
+      "short chamber intimacy",
+      "plate bloom",
+      "hall tail reveal",
+      "room send lift",
+      "pre-delay expansion",
+      "dry-to-wet transition",
+      "delay throw",
+      "slapback intimacy",
+      "reverb ducking",
+      "shared-room glue"
+    ],
+    "width": [
+      "narrow verse / wide chorus",
+      "mono texture in verse / stereo in chorus",
+      "side-channel filtering",
+      "background widening",
+      "foreground narrowing",
+      "support-stack widening",
+      "stereo loop collapse",
+      "mid-side contrast"
+    ],
+    "tonal": [
+      "dark verse / bright chorus",
+      "filter opening",
+      "low-pass background textures",
+      "air lift only on emotional phrases",
+      "low-mid warmth automation",
+      "telephone bridge",
+      "thin-to-full transition"
+    ],
+    "dynamics": [
+      "vocal phrase rides",
+      "parallel compression bloom",
+      "drum room lift",
+      "bass sustain increase",
+      "chorus bus glue",
+      "bridge compression pressure",
+      "final chorus release from compression"
+    ],
+    "arrangement": [
+      "mute decorative layer",
+      "dropout before chorus",
+      "introduce texture only at transition",
+      "deconstruct full loop into gestures",
+      "remove duplicate midrange element",
+      "bring harmony forward for one line",
+      "save strongest layer for final chorus"
+    ],
+    "source_design": [
+      "shorten synth release",
+      "open synth filter by section",
+      "change oscillator brightness",
+      "reduce MIDI velocity",
+      "humanize MIDI timing",
+      "alter sampler envelope",
+      "chop Splice loop",
+      "reverse sample tail",
+      "pitch sample down an octave",
+      "formant shift vocal texture",
+      "turn full loop into one-shot accents",
+      "print alternate synth tone"
+    ]
+  },
+  "branches": [
+    {
+      "problem": "Chorus does not lift enough emotionally.",
+      "problem_id": "chorus_lift",
+      "variants": [
+        {
+          "variant_id": "chorus_lift_A",
+          "problem": "chorus_lift",
+          "kind": "width_bloom",
+          "name": "Width Bloom",
+          "creative_hypothesis": "The chorus opens if supporting elements bloom outward while the lead stays centered.",
+          "changes": [
+            "Increase backing-vocal/guitar plate send +3 to +6 dB at chorus entry",
+            "Widen supporting bus 60%->75%"
+          ],
+          "tracks_affected": [
+            "BGV Chop",
+            "Backing Vocals Stack",
+            "Electric Guitar"
+          ],
+          "risk": "May feel too modern/washed.",
+          "reversibility": "non_destructive_duplicate_track",
+          "validation": [
+            "chorus feels wider",
+            "vocal remains centered"
+          ],
+          "expected_strength": "emotional openness",
+          "scores": {
+            "technical_score": 80,
+            "physical_space_score": 74,
+            "emotional_hierarchy_score": 76,
+            "section_contrast_score": 85,
+            "vocal_belief_score": 73,
+            "listener_excitement_score": 85,
+            "taste_alignment_score": 74,
+            "translation_risk": "medium",
+            "mono_compatibility": "medium",
+            "reversibility": "non_destructive",
+            "overall_score": 72.1,
+            "overall_verdict": "worth testing — check vocal wash"
+          },
+          "governance": {
+            "emotional_truth_alignment": 70,
+            "taste_triangle": {
+              "emotion": 78,
+              "craft": 80,
+              "identity": 74,
+              "verdict": "keep"
+            },
+            "constraint_violations": [],
+            "false_progress": {
+              "type": "wider_mistaken_for_better",
+              "note": "Width can read as 'bigger' while reducing focus and mono compatibility. Verify vocal focus + a mono check."
+            },
+            "emotional_overfit": null,
+            "vetoed": false,
+            "verdict": "keep"
+          }
+        },
+        {
+          "variant_id": "chorus_lift_B",
+          "problem": "chorus_lift",
+          "kind": "subtractive_drop",
+          "name": "Subtractive Drop",
+          "creative_hypothesis": "Withhold a decorative layer before the chorus so it feels larger by contrast.",
+          "changes": [
+            "Mute decorative texture in the final pre-chorus bar"
+          ],
+          "tracks_affected": [
+            "BGV Chop"
+          ],
+          "risk": "Chorus may still feel small.",
+          "reversibility": "non_destructive_duplicate_track",
+          "validation": [
+            "chorus entrance feels more dramatic"
+          ],
+          "expected_strength": "impact through contrast",
+          "scores": {
+            "technical_score": 86,
+            "physical_space_score": 85,
+            "emotional_hierarchy_score": 85,
+            "section_contrast_score": 89,
+            "vocal_belief_score": 86,
+            "listener_excitement_score": 80,
+            "taste_alignment_score": 88,
+            "translation_risk": "low",
+            "mono_compatibility": "low",
+            "reversibility": "non_destructive",
+            "overall_score": 85.6,
+            "overall_verdict": "promising"
+          },
+          "governance": {
+            "emotional_truth_alignment": 84,
+            "taste_triangle": {
+              "emotion": 87,
+              "craft": 86,
+              "identity": 88,
+              "verdict": "keep"
+            },
+            "constraint_violations": [],
+            "false_progress": null,
+            "emotional_overfit": null,
+            "vetoed": false,
+            "verdict": "keep"
+          }
+        },
+        {
+          "variant_id": "chorus_lift_C",
+          "problem": "chorus_lift",
+          "kind": "vocal_ride",
+          "name": "Vocal-Ride Lift",
+          "creative_hypothesis": "Ride the lead vocal into the chorus with a delay throw on the last pre-chorus phrase.",
+          "changes": [
+            "Ride lead vocal +1 dB into chorus",
+            "Delay throw on last pre-chorus phrase"
+          ],
+          "tracks_affected": [
+            "Lead Vocal"
+          ],
+          "risk": "May not create enough scale.",
+          "reversibility": "non_destructive_duplicate_track",
+          "validation": [
+            "emotional belief increases"
+          ],
+          "expected_strength": "emotional belief",
+          "scores": {
+            "technical_score": 84,
+            "physical_space_score": 80,
+            "emotional_hierarchy_score": 90,
+            "section_contrast_score": 72,
+            "vocal_belief_score": 91,
+            "listener_excitement_score": 71,
+            "taste_alignment_score": 87,
+            "translation_risk": "low",
+            "mono_compatibility": "low",
+            "reversibility": "non_destructive",
+            "overall_score": 82.1,
+            "overall_verdict": "promising"
+          },
+          "governance": {
+            "emotional_truth_alignment": 82,
+            "taste_triangle": {
+              "emotion": 84,
+              "craft": 84,
+              "identity": 87,
+              "verdict": "keep"
+            },
+            "constraint_violations": [],
+            "false_progress": null,
+            "emotional_overfit": null,
+            "vetoed": false,
+            "verdict": "keep"
+          }
+        },
+        {
+          "variant_id": "chorus_lift_D",
+          "problem": "chorus_lift",
+          "kind": "drum_room_bloom",
+          "name": "Drum Room Bloom",
+          "creative_hypothesis": "Use physical room/overheads rather than plugin hype to lift the chorus.",
+          "changes": [
+            "Increase drum room/overhead energy at chorus entry"
+          ],
+          "tracks_affected": [
+            "Kick",
+            "Snare"
+          ],
+          "risk": "Drums may overpower the vocal.",
+          "reversibility": "non_destructive_duplicate_track",
+          "validation": [
+            "physical room lift",
+            "vocal still on top"
+          ],
+          "expected_strength": "physical lift",
+          "scores": {
+            "technical_score": 82,
+            "physical_space_score": 85,
+            "emotional_hierarchy_score": 80,
+            "section_contrast_score": 84,
+            "vocal_belief_score": 78,
+            "listener_excitement_score": 84,
+            "taste_alignment_score": 81,
+            "translation_risk": "low",
+            "mono_compatibility": "low",
+            "reversibility": "non_destructive",
+            "overall_score": 82.0,
+            "overall_verdict": "promising"
+          },
+          "governance": {
+            "emotional_truth_alignment": 80,
+            "taste_triangle": {
+              "emotion": 81,
+              "craft": 82,
+              "identity": 81,
+              "verdict": "keep"
+            },
+            "constraint_violations": [],
+            "false_progress": null,
+            "emotional_overfit": null,
+            "vetoed": false,
+            "verdict": "keep"
+          }
+        },
+        {
+          "variant_id": "chorus_lift_E",
+          "problem": "chorus_lift",
+          "kind": "arrangement_lift",
+          "name": "Sectional Arrangement Lift",
+          "creative_hypothesis": "The chorus lifts hardest when parts are withheld before it and enter on its downbeat — build the lift in the arrangement, not the processing.",
+          "changes": [
+            "Duplicate 1-2 supporting tracks and region-mute their final pre-chorus bars",
+            "Bring the withheld parts back in on the chorus downbeat",
+            "Reserve one texture for the final chorus only"
+          ],
+          "tracks_affected": [
+            "BGV Chop",
+            "Backing Vocals Stack",
+            "Electric Guitar"
+          ],
+          "risk": "A sparser pre-chorus may briefly read as lost energy before the payoff registers.",
+          "reversibility": "non_destructive_duplicate_track",
+          "validation": [
+            "chorus entry feels larger with no new processing",
+            "pre-chorus tension increases"
+          ],
+          "expected_strength": "sectional lift",
+          "scores": {
+            "technical_score": 84,
+            "physical_space_score": 82,
+            "emotional_hierarchy_score": 88,
+            "section_contrast_score": 92,
+            "vocal_belief_score": 79,
+            "listener_excitement_score": 84,
+            "taste_alignment_score": 88,
+            "translation_risk": "low",
+            "mono_compatibility": "low",
+            "reversibility": "non_destructive",
+            "overall_score": 85.3,
+            "overall_verdict": "promising"
+          },
+          "governance": {
+            "emotional_truth_alignment": 84,
+            "taste_triangle": {
+              "emotion": 86,
+              "craft": 84,
+              "identity": 88,
+              "verdict": "keep"
+            },
+            "constraint_violations": [],
+            "false_progress": null,
+            "emotional_overfit": null,
+            "vetoed": false,
+            "verdict": "keep"
+          }
+        }
+      ],
+      "winning": {
+        "winning_variant": "chorus_lift_B",
+        "keep_moves": [
+          "Mute decorative texture in the final pre-chorus bar"
+        ],
+        "reject_moves": [
+          "Increase backing-vocal/guitar plate send +3 to +6 dB at chorus entry",
+          "Widen supporting bus 60%->75%",
+          "Ride lead vocal +1 dB into chorus",
+          "Delay throw on last pre-chorus phrase",
+          "Increase drum room/overhead energy at chorus entry",
+          "Duplicate 1-2 supporting tracks and region-mute their final pre-chorus bars",
+          "Bring the withheld parts back in on the chorus downbeat",
+          "Reserve one texture for the final chorus only"
+        ],
+        "reason": "'Subtractive Drop' scored 85.6 (promising); strongest on its intended axis without breaking vocal belief."
+      },
+      "mode_fork": {
+        "suppressed": [],
+        "favored": [],
+        "risk_capped": [],
+        "suppression_fallback": false,
+        "reached": [
+          "arrangement_lift"
+        ],
+        "reach_capped": []
+      }
+    },
+    {
+      "problem": "An imported loop behaves like a finished record inside the record.",
+      "problem_id": "loop",
+      "variants": [
+        {
+          "variant_id": "loop_A",
+          "problem": "loop",
+          "kind": "loop_deconstruct",
+          "name": "Loop Deconstruct",
+          "creative_hypothesis": "Re-contextualise BGV Chop as movement (felt), not a stock loop (heard).",
+          "changes": [
+            "Chop BGV Chop into transition gestures",
+            "High-pass ~250 Hz",
+            "Narrow to ~35%",
+            "Push to background except bridge"
+          ],
+          "tracks_affected": [
+            "BGV Chop"
+          ],
+          "risk": "May reduce perceived chorus energy.",
+          "reversibility": "non_destructive_duplicate_track",
+          "validation": [
+            "chorus less crowded",
+            "vocal more foregrounded"
+          ],
+          "expected_strength": "hierarchy",
+          "scores": {
+            "technical_score": 84,
+            "physical_space_score": 84,
+            "emotional_hierarchy_score": 83,
+            "section_contrast_score": 80,
+            "vocal_belief_score": 84,
+            "listener_excitement_score": 75,
+            "taste_alignment_score": 83,
+            "translation_risk": "low",
+            "mono_compatibility": "low",
+            "reversibility": "non_destructive",
+            "overall_score": 81.9,
+            "overall_verdict": "promising"
+          },
+          "governance": {
+            "emotional_truth_alignment": 78,
+            "taste_triangle": {
+              "emotion": 82,
+              "craft": 84,
+              "identity": 83,
+              "verdict": "keep"
+            },
+            "constraint_violations": [],
+            "false_progress": null,
+            "emotional_overfit": null,
+            "vetoed": false,
+            "verdict": "keep"
+          }
+        },
+        {
+          "variant_id": "loop_B",
+          "problem": "loop",
+          "kind": "subtractive_drop",
+          "name": "Loop as Accent",
+          "creative_hypothesis": "Replace the continuous BGV Chop bed with one-shot accents at transitions.",
+          "changes": [
+            "Turn BGV Chop into one-shot accents",
+            "Use only at section transitions"
+          ],
+          "tracks_affected": [
+            "BGV Chop"
+          ],
+          "risk": "Less continuous texture.",
+          "reversibility": "non_destructive_duplicate_track",
+          "validation": [
+            "song identity stops being the loop"
+          ],
+          "expected_strength": "identity protection",
+          "scores": {
+            "technical_score": 86,
+            "physical_space_score": 85,
+            "emotional_hierarchy_score": 85,
+            "section_contrast_score": 89,
+            "vocal_belief_score": 86,
+            "listener_excitement_score": 80,
+            "taste_alignment_score": 88,
+            "translation_risk": "low",
+            "mono_compatibility": "low",
+            "reversibility": "non_destructive",
+            "overall_score": 85.6,
+            "overall_verdict": "promising"
+          },
+          "governance": {
+            "emotional_truth_alignment": 84,
+            "taste_triangle": {
+              "emotion": 87,
+              "craft": 86,
+              "identity": 88,
+              "verdict": "keep"
+            },
+            "constraint_violations": [],
+            "false_progress": null,
+            "emotional_overfit": null,
+            "vetoed": false,
+            "verdict": "keep"
+          }
+        }
+      ],
+      "winning": {
+        "winning_variant": "loop_B",
+        "keep_moves": [
+          "Turn BGV Chop into one-shot accents",
+          "Use only at section transitions"
+        ],
+        "reject_moves": [
+          "Chop BGV Chop into transition gestures",
+          "High-pass ~250 Hz",
+          "Narrow to ~35%",
+          "Push to background except bridge"
+        ],
+        "reason": "'Loop as Accent' scored 85.6 (promising); strongest on its intended axis without breaking vocal belief."
+      },
+      "mode_fork": {
+        "suppressed": [],
+        "favored": [],
+        "risk_capped": [],
+        "suppression_fallback": false,
+        "reached": [],
+        "reach_capped": []
+      }
+    },
+    {
+      "problem": "Too many elements occupy the foreground.",
+      "problem_id": "depth",
+      "variants": [
+        {
+          "variant_id": "depth_A",
+          "problem": "depth",
+          "kind": "depth_cleanup",
+          "name": "Depth Cleanup",
+          "creative_hypothesis": "Spread elements across the depth field instead of stacking them forward.",
+          "changes": [
+            "Move felt/decorative elements to midground/background",
+            "Keep vocal + hook forward"
+          ],
+          "tracks_affected": [
+            "BGV Chop",
+            "Backing Vocals Stack",
+            "Electric Guitar"
+          ],
+          "risk": "Initial loss of size.",
+          "reversibility": "non_destructive_duplicate_track",
+          "validation": [
+            "depth pyramid forms",
+            "vocal owns the front"
+          ],
+          "expected_strength": "depth realism",
+          "scores": {
+            "technical_score": 86,
+            "physical_space_score": 89,
+            "emotional_hierarchy_score": 87,
+            "section_contrast_score": 75,
+            "vocal_belief_score": 88,
+            "listener_excitement_score": 70,
+            "taste_alignment_score": 89,
+            "translation_risk": "low",
+            "mono_compatibility": "low",
+            "reversibility": "non_destructive",
+            "overall_score": 83.4,
+            "overall_verdict": "promising"
+          },
+          "governance": {
+            "emotional_truth_alignment": 84,
+            "taste_triangle": {
+              "emotion": 83,
+              "craft": 86,
+              "identity": 89,
+              "verdict": "keep"
+            },
+            "constraint_violations": [],
+            "false_progress": null,
+            "emotional_overfit": null,
+            "vetoed": false,
+            "verdict": "keep"
+          }
+        }
+      ],
+      "winning": {
+        "winning_variant": "depth_A",
+        "keep_moves": [
+          "Move felt/decorative elements to midground/background",
+          "Keep vocal + hook forward"
+        ],
+        "reject_moves": [],
+        "reason": "'Depth Cleanup' scored 83.4 (promising); strongest on its intended axis without breaking vocal belief."
+      },
+      "mode_fork": {
+        "suppressed": [],
+        "favored": [],
+        "risk_capped": [],
+        "suppression_fallback": false,
+        "reached": [],
+        "reach_capped": []
+      }
+    },
+    {
+      "problem": "Vocal could feel more believable and present.",
+      "problem_id": "vocal_belief",
+      "variants": [
+        {
+          "variant_id": "vocal_A",
+          "problem": "vocal_belief",
+          "kind": "vocal_ride",
+          "name": "Phrase Rides",
+          "creative_hypothesis": "Ride phrase endings before any compression so the words land.",
+          "changes": [
+            "Clip gain + fader rides on phrase ends +0.5 to +1.5 dB"
+          ],
+          "tracks_affected": [
+            "Lead Vocal"
+          ],
+          "risk": "Time-consuming.",
+          "reversibility": "non_destructive_duplicate_track",
+          "validation": [
+            "every word believable"
+          ],
+          "expected_strength": "vocal belief",
+          "scores": {
+            "technical_score": 84,
+            "physical_space_score": 80,
+            "emotional_hierarchy_score": 90,
+            "section_contrast_score": 72,
+            "vocal_belief_score": 91,
+            "listener_excitement_score": 71,
+            "taste_alignment_score": 87,
+            "translation_risk": "low",
+            "mono_compatibility": "low",
+            "reversibility": "non_destructive",
+            "overall_score": 82.1,
+            "overall_verdict": "promising"
+          },
+          "governance": {
+            "emotional_truth_alignment": 82,
+            "taste_triangle": {
+              "emotion": 84,
+              "craft": 84,
+              "identity": 87,
+              "verdict": "keep"
+            },
+            "constraint_violations": [],
+            "false_progress": null,
+            "emotional_overfit": null,
+            "vetoed": false,
+            "verdict": "keep"
+          }
+        },
+        {
+          "variant_id": "vocal_B",
+          "problem": "vocal_belief",
+          "kind": "intimacy_pass",
+          "name": "Verse Intimacy",
+          "creative_hypothesis": "Pull verse reverb sends down and keep the vocal close; bloom only at the chorus.",
+          "changes": [
+            "Lower verse vocal sends",
+            "Bloom sends at chorus"
+          ],
+          "tracks_affected": [
+            "Lead Vocal"
+          ],
+          "risk": "Verses may feel dry — A/B vs baseline.",
+          "reversibility": "non_destructive_duplicate_track",
+          "validation": [
+            "verse intimacy vs chorus openness"
+          ],
+          "expected_strength": "intimacy",
+          "scores": {
+            "technical_score": 81,
+            "physical_space_score": 82,
+            "emotional_hierarchy_score": 89,
+            "section_contrast_score": 70,
+            "vocal_belief_score": 90,
+            "listener_excitement_score": 63,
+            "taste_alignment_score": 85,
+            "translation_risk": "low",
+            "mono_compatibility": "low",
+            "reversibility": "non_destructive",
+            "overall_score": 80.0,
+            "overall_verdict": "promising"
+          },
+          "governance": {
+            "emotional_truth_alignment": 78,
+            "taste_triangle": {
+              "emotion": 83,
+              "craft": 81,
+              "identity": 85,
+              "verdict": "keep"
+            },
+            "constraint_violations": [],
+            "false_progress": null,
+            "emotional_overfit": null,
+            "vetoed": false,
+            "verdict": "keep"
+          }
+        }
+      ],
+      "winning": {
+        "winning_variant": "vocal_A",
+        "keep_moves": [
+          "Clip gain + fader rides on phrase ends +0.5 to +1.5 dB"
+        ],
+        "reject_moves": [
+          "Lower verse vocal sends",
+          "Bloom sends at chorus"
+        ],
+        "reason": "'Phrase Rides' scored 82.1 (promising); strongest on its intended axis without breaking vocal belief."
+      },
+      "mode_fork": {
+        "suppressed": [],
+        "favored": [],
+        "risk_capped": [],
+        "suppression_fallback": false,
+        "reached": [],
+        "reach_capped": []
+      }
+    }
+  ],
+  "guardrails": [
+    "Always preserve a static baseline.",
+    "Never destructively alter source tracks.",
+    "Never judge creative variants only by loudness.",
+    "Never let novelty override vocal belief.",
+    "Always compare creative variants to the song's emotional truth."
+  ],
+  "philosophy": "A mix is finished when the arrangement carries the song: the lead vocal sits prominent inside an arranged ensemble, each section earns its lift through parts entering and leaving, and the space between layers lets every role read. The groove holds the floor steady while the orchestration tells the story — the record moves because the arrangement moves.",
+  "search_mode_declarations": {
+    "allowed_risk": "medium",
+    "favor_kinds": [],
+    "suppress_kinds": [],
+    "reach_kinds": [
+      "arrangement_lift"
+    ]
+  }
+}

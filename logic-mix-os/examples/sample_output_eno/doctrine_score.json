@@ -1,0 +1,165 @@
+{
+  "physical_space_score": 81.3,
+  "emotional_hierarchy_score": 86.0,
+  "vocal_centrality_score": 90.0,
+  "depth_hierarchy_score": 72.0,
+  "section_contrast_score": 82,
+  "static_mix_score": 80.0,
+  "dynamic_mix_score": 28.2,
+  "beat_identity_score": 63.6,
+  "negative_space_score": 19.4,
+  "groove_coherence_score": 99.4,
+  "rhythmic_surprise_score": 35.6,
+  "low_end_motion_score": 60.0,
+  "loop_context_score": 35.0,
+  "vocal_role_fit_score": 85.0,
+  "overall_mix_readiness_score": 65.5,
+  "evidence": {
+    "physical_space": [
+      "67% of elements sit in forward layers; depth is collapsing."
+    ],
+    "emotional_hierarchy": [
+      "Vocal is not critically masked by forward elements."
+    ],
+    "vocal_centrality": [
+      "Lead vocal 'Lead Vocal' identified.",
+      "Vocal correctly marked sacred.",
+      "Vocal sits in the intimate layer."
+    ],
+    "depth_hierarchy": [
+      "3 of 4 depth layers used; 67% forward."
+    ],
+    "section_contrast": [
+      "1 section(s) fail to lift relative to the previous section."
+    ],
+    "static_mix": [
+      "Broad tonal balance is reasonable."
+    ],
+    "dynamic_mix": [
+      "Section RMS spread 0.7 dB, width spread 0.02, brightness spread 0.00.",
+      "Sections are too similar — the mix is balanced but emotionally static."
+    ],
+    "beat_identity": [
+      "Rhythmic fingerprint present: 'BGV Chop' punches hardest (transient_density 0.81).",
+      "It stands out from the bed (+0.39 over the track median).",
+      "Hits are well-defined (crest 19.2 dB).",
+      "The fingerprint is buried (felt/background) — present but not undeniable."
+    ],
+    "negative_space": [
+      "Mean section occupancy 1.00 → absolute room 0.0.",
+      "Transient breathing room (mean transient density 0.78) → +4.4.",
+      "No section genuinely drops out — the arrangement stays uniformly filled."
+    ],
+    "groove_coherence": [
+      "Groove regularity/consistency 0.993 across 2 rhythm track(s) — scored as a proxy for coherence (not 'tighter is good')."
+    ],
+    "rhythmic_surprise": [
+      "Cross-section transient-density spread 0.056, largest adjacent-section swing 0.111 — the weak, section-aggregate form of rhythmic surprise (fill/unexpected-hit/per-onset detection deferred)."
+    ],
+    "low_end_motion": [
+      "Sub band reserved: 1 stem(s) carry it (Kick), clean and with envelope definition (best crest 16.1 dB) — the arrangement makes room for the low end.",
+      "No kick/bass collision — the pocket is clean.",
+      "A single reserved low carrier ('Kick') — punch-vs-sustain complementarity is not applicable."
+    ],
+    "loop_context": [
+      "Dominant loop 'BGV Chop' (transient lift above the bed) with no sectional evolution around it (RMS spread 0.70 dB, width spread 0.015, brightness spread 0.003; 1 section(s) do not lift vs the previous) — the loop reads STATIC: dominant while the mix around it does not move."
+    ],
+    "vocal_role_fit": [
+      "Vocal roles read: 'Lead Vocal' reads vocal_lead (confidence 0.95), 'BGV Chop' reads vocal_percussive (confidence 0.95), 'Backing Vocals Stack' reads vocal_stack (confidence 0.95).",
+      "Lead vocal 'Lead Vocal' sits forward and clear of masking conflicts — the lead owns the presence band.",
+      "'BGV Chop' (vocal_percussive, confidence 0.95): 1 masking involvement(s) accepted as blend under profile policy.",
+      "'Backing Vocals Stack' (vocal_stack, confidence 0.95): 1 masking involvement(s) accepted as blend under profile policy."
+    ]
+  },
+  "warnings": [
+    {
+      "warning": "Chorus 1 may not lift enough relative to the previous section (only +1.4 dB and -0.03 width). Target roughly +3 to +5 dB and +0.05 to +0.10 width via supporting elements and automation, not master level.",
+      "doctrine": [
+        "section_contrast"
+      ]
+    }
+  ],
+  "confidence": [
+    {
+      "area": "negative space and restraint interpretation (negative space, static balance as textural weave)",
+      "level": "high",
+      "reason": "hand-curated from documented Brian Eno technique — the subtractive, strip-back practice documented across the Bowie Berlin-trilogy sessions and his published interviews on removing elements, and the Ambient 1: Music for Airports liner-notes manifesto (music 'as ignorable as it is interesting'): absence is composed, so these axes are live and weighted at the top of this profile — negative space above every existing profile as its center of gravity"
+    },
+    {
+      "area": "sonic environment interpretation (physical space, depth as environment)",
+      "level": "high",
+      "reason": "hand-curated from documented Brian Eno technique — the studio-as-instrument practice from his published talks and writing (the studio as a compositional tool) and the treatment-led staging documented across the Bowie and U2/Lanois production collaborations: space is the composition's material, so physical space is weighted above every existing profile and depth reads as environment rather than as ensemble layering"
+    },
+    {
+      "area": "slow evolution over sectional drama (section contrast, dynamic movement as retained measurement)",
+      "level": "high",
+      "reason": "hand-curated from documented Brian Eno technique — the generative-music writings and the Discreet Music liner notes document change that arrives gradually rather than section by section: these axes stay live at deliberately low weights, below every existing profile — the sectional-lift grammar is measured, never removed, and its de-emphasis is this profile's authored posture"
+    },
+    {
+      "area": "the voice as a texture in the field (vocal centrality, emotional hierarchy as retained measurement)",
+      "level": "high",
+      "reason": "hand-curated from documented Brian Eno technique — the treated, instrument-like vocal practice of the Another Green World-era records and the looped wordless voices of Music for Airports: the voice sits inside the environment rather than in front of it, so these axes stay live at weights below every existing profile — a taste-layer de-emphasis only, while every engine-side vocal safety protection stays intact"
+    },
+    {
+      "area": "loop context interpretation (static vs iconic)",
+      "level": "high",
+      "reason": "hand-curated from documented Brian Eno practice — the tape-loop systems of Discreet Music and the Frippertronics-era work treat a loop as generative material, and the found voices of My Life in the Bush of Ghosts function as the record's identity: a static dominant loop reads as unrealized material rather than as an arrested arrangement (authored 35.0, above every existing profile), an iconic-functioning loop is protected as identity (authored 88.0, protect_iconic_loops: true), and every detection floor stays on the shared basis"
+    },
+    {
+      "area": "groove as field texture (beat identity, groove coherence, rhythmic surprise, low-end motion as retained measurement)",
+      "level": "high",
+      "reason": "hand-curated from documented Brian Eno technique — on the ambient records and in the generative writings the pulse sits inside the environment rather than carrying the record's identity: these axes stay live at this profile's lowest weights — texture, never engine"
+    },
+    {
+      "area": "vocal blend interpretation",
+      "level": "limited",
+      "reason": "the opt-in is authored from documented technique — the voice treated as an instrument in the field (the Another Green World-era vocal treatments and the looped wordless voices of Music for Airports) — and the gate is live and measured on real exported-stem data: a qualified vocal chop and stack under masking read 85.0 on vocal_role_fit against the reference's 65.0 at this profile's authored 0.85 confidence floor (the strictest shipped); the level stays limited because coverage is bounded: events arise only from the masker-instrument set, info-tier events are emitted but not consumed, and vocal-band events carry no per-track masking risk"
+    },
+    {
+      "area": "textural coherence as its own measurement",
+      "level": "deferred",
+      "reason": "texture as composition is central to the documented practice, yet whether the beds cohere as one woven surface is not measurable as its own axis on exported stems at doctrine time — the negative-space, static-balance and depth axes are the closest shipped proxies"
+    },
+    {
+      "area": "generative process",
+      "level": "deferred",
+      "reason": "whether the material behaves as a system — rules, drift, self-variation, the Oblique Strategies working method — is a process property of the session, not measurable on exported stems at doctrine time; the loop-context evolution reading is the closest shipped proxy"
+    },
+    {
+      "area": "ambient patience (time-domain evolution beyond section grain)",
+      "level": "deferred",
+      "reason": "change on the time scale the documented practice composes for spans whole records, and section analysis is the engine's finest committed time grain — slow evolution beyond that grain is not measurable at doctrine time"
+    },
+    {
+      "area": "cultural loop recognizability",
+      "level": "deferred",
+      "reason": "iconic-ness as cultural recognition needs provenance/manifest signals not measurable on exported stems at doctrine time; the acoustic loop-context proxy is what ships"
+    },
+    {
+      "area": "true hook recurrence",
+      "level": "deferred",
+      "reason": "a proven hook needs a recurrence signal that does not exist at doctrine time; the strongest claim ships as vocal_hook_candidate"
+    },
+    {
+      "area": "motif provenance",
+      "level": "deferred",
+      "reason": "motif lineage across sources is not measurable on exported stems at doctrine time"
+    },
+    {
+      "area": "onset-timing strong forms (fingerprint typing, fills/unexpected-hit detection, kick/sub temporal interlock)",
+      "level": "deferred",
+      "reason": "these need per-onset timing and typing signals not measurable on exported stems at doctrine time; the section-aggregate weak forms are what ship"
+    },
+    {
+      "area": "per-section true-sub movement",
+      "level": "deferred",
+      "reason": "section analysis exposes low_mid_energy (120-500 Hz) only, so the true-sub band (20-120 Hz) is not measurable at section grain on exported stems; the low_mid section grain is what ships"
+    }
+  ],
+  "producer": {
+    "name": "brian_eno",
+    "display_name": "Brian Eno",
+    "provenance": "hand-curated-documented",
+    "confidence": "high"
+  }
+}

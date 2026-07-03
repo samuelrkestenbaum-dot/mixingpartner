@@ -1,0 +1,142 @@
+[
+  {
+    "id": "lead_vocal:send",
+    "track": "Lead Vocal",
+    "type": "set_send",
+    "plugin": "Aux Send",
+    "settings": "Short room or slapback only, very low send (~-24 dB). Keep it close.",
+    "risk_class": 2,
+    "reason": "Place 'Lead Vocal' in the intimate depth layer.",
+    "validation": "Check depth/space after bounce."
+  },
+  {
+    "id": "lead_vocal:plugin:0",
+    "track": "Lead Vocal",
+    "type": "insert_plugin",
+    "plugin": "Channel EQ",
+    "settings": "High-pass ~80 Hz. Cut ~250 Hz by 1-2 dB (mud). Avoid large 12 kHz+ air boosts (keeps the vocal human, not glossy).",
+    "risk_class": 2,
+    "reason": "Clean low-end build-up and keep believable presence without hype.",
+    "validation": "A/B against the static baseline."
+  },
+  {
+    "id": "lead_vocal:plugin:1",
+    "track": "Lead Vocal",
+    "type": "insert_plugin",
+    "plugin": "Compressor",
+    "settings": "Vintage Opto, target 2-3 dB gain reduction, slow-ish attack.",
+    "risk_class": 2,
+    "reason": "Stabilise the vocal while preserving the performance (invisible compression).",
+    "validation": "A/B against the static baseline."
+  },
+  {
+    "id": "lead_vocal:automation:0",
+    "track": "Lead Vocal",
+    "type": "automation",
+    "plugin": "gain (clip gain + fader)",
+    "settings": "Ride phrase endings +0.5 to +1 dB where the lyric drops, before adding compression.",
+    "risk_class": 2,
+    "reason": "Vocal belief: performance rides before brute-force compression.",
+    "validation": "Check the gesture lands across the section boundary."
+  },
+  {
+    "id": "bgv_chop:send",
+    "track": "BGV Chop",
+    "type": "set_send",
+    "plugin": "Aux Send",
+    "settings": "Shared plate/chamber, moderate send (~-14 dB).",
+    "risk_class": 2,
+    "reason": "Place 'BGV Chop' in the midground depth layer.",
+    "validation": "Check depth/space after bounce."
+  },
+  {
+    "id": "bgv_chop:plugin:0",
+    "track": "BGV Chop",
+    "type": "insert_plugin",
+    "plugin": "Channel EQ",
+    "settings": "Cut 250-400 Hz by 1-2 dB.",
+    "risk_class": 2,
+    "reason": "Reduce low-mid mud build-up.",
+    "validation": "A/B against the static baseline."
+  },
+  {
+    "id": "backing_vocals_stack:send",
+    "track": "Backing Vocals Stack",
+    "type": "set_send",
+    "plugin": "Aux Send",
+    "settings": "Shared plate/chamber, moderate send (~-14 dB).",
+    "risk_class": 2,
+    "reason": "Place 'Backing Vocals Stack' in the midground depth layer.",
+    "validation": "Check depth/space after bounce."
+  },
+  {
+    "id": "backing_vocals_stack:plugin:0",
+    "track": "Backing Vocals Stack",
+    "type": "insert_plugin",
+    "plugin": "Channel EQ",
+    "settings": "Cut 250-400 Hz by 1-2 dB.",
+    "risk_class": 2,
+    "reason": "Reduce low-mid mud build-up.",
+    "validation": "A/B against the static baseline."
+  },
+  {
+    "id": "electric_guitar:send",
+    "track": "Electric Guitar",
+    "type": "set_send",
+    "plugin": "Aux Send",
+    "settings": "Short chamber, low send (~-18 dB).",
+    "risk_class": 2,
+    "reason": "Place 'Electric Guitar' in the foreground depth layer.",
+    "validation": "Check depth/space after bounce."
+  },
+  {
+    "id": "electric_guitar:plugin:0",
+    "track": "Electric Guitar",
+    "type": "insert_plugin",
+    "plugin": "Channel EQ",
+    "settings": "Light shaping; high-pass below the instrument's body.",
+    "risk_class": 2,
+    "reason": "Make room without thinning.",
+    "validation": "A/B against the static baseline."
+  },
+  {
+    "id": "kick:send",
+    "track": "Kick",
+    "type": "set_send",
+    "plugin": "Aux Send",
+    "settings": "Short chamber, low send (~-18 dB).",
+    "risk_class": 2,
+    "reason": "Place 'Kick' in the foreground depth layer.",
+    "validation": "Check depth/space after bounce."
+  },
+  {
+    "id": "kick:plugin:0",
+    "track": "Kick",
+    "type": "insert_plugin",
+    "plugin": "Channel EQ",
+    "settings": "Shape sub (~50-70 Hz) vs beater (~3-5 kHz); leave room for bass.",
+    "risk_class": 2,
+    "reason": "Define the kick without masking the bass.",
+    "validation": "A/B against the static baseline."
+  },
+  {
+    "id": "snare:send",
+    "track": "Snare",
+    "type": "set_send",
+    "plugin": "Aux Send",
+    "settings": "Short chamber, low send (~-18 dB).",
+    "risk_class": 2,
+    "reason": "Place 'Snare' in the foreground depth layer.",
+    "validation": "Check depth/space after bounce."
+  },
+  {
+    "id": "snare:plugin:0",
+    "track": "Snare",
+    "type": "insert_plugin",
+    "plugin": "Channel EQ",
+    "settings": "Light tonal shaping only; preserve transient detail and room realism.",
+    "risk_class": 2,
+    "reason": "Naturalistic space: keep the kit believable.",
+    "validation": "A/B against the static baseline."
+  }
+]

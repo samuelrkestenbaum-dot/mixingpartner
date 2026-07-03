@@ -1,0 +1,149 @@
+{
+  "emotional_truth_lock": {
+    "statement": "A groove built from voices: the lead sings while chopped and stacked vocals lock into the beat.",
+    "lean": "neutral",
+    "locked": true,
+    "implications": []
+  },
+  "reference_sanity": {
+    "available": false,
+    "note": "No reference supplied."
+  },
+  "negative_constraints": [
+    {
+      "constraint": "Do not bury the lead vocal.",
+      "severity": "high"
+    },
+    {
+      "constraint": "Do not let the chopped vocals lose their rhythmic identity.",
+      "severity": "high"
+    }
+  ],
+  "governed_branches": [
+    {
+      "problem_id": "chorus_lift",
+      "problem": "Chorus does not lift enough emotionally.",
+      "governed_winner": "chorus_lift_B",
+      "governance": {
+        "emotional_truth_alignment": 90,
+        "taste_triangle": {
+          "emotion": 85,
+          "craft": 88,
+          "identity": 92,
+          "verdict": "keep"
+        },
+        "constraint_violations": [],
+        "false_progress": null,
+        "emotional_overfit": null,
+        "vetoed": false,
+        "verdict": "keep"
+      },
+      "reason": "'Subtractive Drop' survives governance (truth alignment 90, taste keep)."
+    },
+    {
+      "problem_id": "loop",
+      "problem": "An imported loop behaves like a finished record inside the record.",
+      "governed_winner": "loop_B",
+      "governance": {
+        "emotional_truth_alignment": 90,
+        "taste_triangle": {
+          "emotion": 85,
+          "craft": 88,
+          "identity": 92,
+          "verdict": "keep"
+        },
+        "constraint_violations": [],
+        "false_progress": null,
+        "emotional_overfit": null,
+        "vetoed": false,
+        "verdict": "keep"
+      },
+      "reason": "'Loop as Accent' survives governance (truth alignment 90, taste keep)."
+    },
+    {
+      "problem_id": "depth",
+      "problem": "Too many elements occupy the foreground.",
+      "governed_winner": "depth_A",
+      "governance": {
+        "emotional_truth_alignment": 84,
+        "taste_triangle": {
+          "emotion": 77,
+          "craft": 85,
+          "identity": 86,
+          "verdict": "keep"
+        },
+        "constraint_violations": [],
+        "false_progress": null,
+        "emotional_overfit": null,
+        "vetoed": false,
+        "verdict": "keep"
+      },
+      "reason": "'Depth Cleanup' survives governance (truth alignment 84, taste keep)."
+    },
+    {
+      "problem_id": "vocal_belief",
+      "problem": "Vocal could feel more believable and present.",
+      "governed_winner": "vocal_B",
+      "governance": {
+        "emotional_truth_alignment": 72,
+        "taste_triangle": {
+          "emotion": 71,
+          "craft": 80,
+          "identity": 70,
+          "verdict": "keep"
+        },
+        "constraint_violations": [],
+        "false_progress": null,
+        "emotional_overfit": null,
+        "vetoed": false,
+        "verdict": "keep"
+      },
+      "reason": "'Verse Intimacy' survives governance (truth alignment 72, taste keep)."
+    }
+  ],
+  "anti_template": null,
+  "listener_panel": {
+    "first_time_fan": "The chorus does not yet feel earned — contrast into it is weak.",
+    "producer": "The BGV Chop is exciting but too identifiable as a loop.",
+    "mixer": "0 critical masking conflict(s); low-mid/foreground sharing to resolve.",
+    "artist": "Make sure the bridge/chorus still serves: 'A groove built from voices: the lead sings while chopped and stacked vocals lock into the beat.'.",
+    "playlist_listener": "Hook/chorus should land within the first 30s and feel distinct from the verse."
+  },
+  "stop_conditions": {
+    "should_stop": false,
+    "reasons": [
+      "not yet: dynamic movement working"
+    ],
+    "warning": null
+  },
+  "kill_switches": [
+    "Never overwrite original audio.",
+    "Never destructively tune or time-stretch source recordings.",
+    "Never delete tracks without backup.",
+    "Never flatten comped vocals without a duplicate.",
+    "Never apply creative source edits without a versioned duplicate.",
+    "Never chase reference loudness at the mix stage.",
+    "Never widen the full mix to solve chorus lift.",
+    "Never make the lead vocal less intelligible unless explicitly approved.",
+    "Never allow a stock loop to dominate the song identity by accident.",
+    "Never fill the space an element needs to decay into — the environment is part of the instrument.",
+    "Never trade the slow evolution of the record for a section-by-section jolt.",
+    "Never push a texture into the foreground to prove it is there — a field reads as a whole."
+  ],
+  "review_modes": [
+    "observe_only",
+    "recommend_only",
+    "checklist_only",
+    "approve_before_apply",
+    "safe_auto_apply",
+    "manual_only"
+  ],
+  "default_review_mode": "approve_before_apply",
+  "mixer_feedback": {
+    "collaborative": "I think we're getting close. The one thing I'd love to chase next is: ride the lead vocal phrase-by-phrase before adding compression.",
+    "producer": "Balance is close. The main thing I'm still missing is the chorus opening up emotionally vs the verse — maybe a little more bloom around the supporting elements without washing the vocal?",
+    "direct": "The chorus needs more section lift — it gets denser, not more open. Try widening the supporting elements and BGVs slightly while keeping the lead centered.",
+    "technical": "Verse-to-chorus RMS delta is only 1.4 dB and width barely changes. Target +3 to +5 dB perceived lift via support-stack automation, not master level.",
+    "do_not": "Please don't fix this with master level or by widening the lead vocal — use supporting-element automation and depth."
+  }
+}

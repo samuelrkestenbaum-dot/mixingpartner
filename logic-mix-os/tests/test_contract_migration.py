@@ -204,10 +204,13 @@ def test_8_renderers_display_producer_agnostic_labels(analyzed):
 # 9. Committed samples use the new keys only. P-040 extended the pin
 #    CONSCIOUSLY from the single reference tree to BOTH committed trees
 #    (the two-producer demo: examples/sample_output regenerated on the
-#    vocal_chop_groove fixture + examples/sample_output_timbaland).
+#    vocal_chop_groove fixture + examples/sample_output_timbaland); P-046
+#    extended it again to the four-producer demo (+ sample_output_quincy,
+#    + sample_output_eno) — the pin's intent is EVERY committed sample tree.
 # =========================================================================== #
 @pytest.mark.parametrize(
-    "tree", ["sample_output", "sample_output_timbaland"]
+    "tree", ["sample_output", "sample_output_timbaland",
+             "sample_output_quincy", "sample_output_eno"]
 )
 def test_9_committed_samples_use_new_keys_only(tree):
     sample_dir = _ROOT / "examples" / tree

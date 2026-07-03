@@ -1,0 +1,203 @@
+{
+  "translation": {
+    "profiles": [
+      {
+        "profile": "headphones",
+        "risks": [],
+        "severity": "low"
+      },
+      {
+        "profile": "airpods_earbuds",
+        "risks": [],
+        "severity": "low"
+      },
+      {
+        "profile": "car",
+        "risks": [
+          "Low-mid buildup can boom in a car."
+        ],
+        "severity": "moderate"
+      },
+      {
+        "profile": "phone_speaker",
+        "risks": [
+          "Thin presence band: the vocal/lyric may get lost on a phone speaker."
+        ],
+        "severity": "high"
+      },
+      {
+        "profile": "laptop_speakers",
+        "risks": [
+          "Low-mid heavy mixes sound congested on laptop speakers."
+        ],
+        "severity": "moderate"
+      },
+      {
+        "profile": "studio_monitors",
+        "risks": [],
+        "severity": "low"
+      },
+      {
+        "profile": "mono_bluetooth_speaker",
+        "risks": [],
+        "severity": "low"
+      },
+      {
+        "profile": "club_pa",
+        "risks": [],
+        "severity": "low"
+      }
+    ],
+    "checks": {
+      "stereo_width": 0.1672,
+      "mono_collapse_loss_db": -0.265,
+      "sub_energy": 0.212,
+      "low_mid_energy": 0.5015,
+      "harshness": 0.0,
+      "sibilance": 0.0
+    },
+    "translation_score": 68.0,
+    "warnings": [
+      "[phone_speaker] Thin presence band: the vocal/lyric may get lost on a phone speaker."
+    ]
+  },
+  "mono_compatibility": {
+    "mix_mono_collapse_loss_db": -0.265,
+    "mix_phase_correlation": 0.8816,
+    "events": [
+      {
+        "track": "Backing Vocals Stack",
+        "issue": "Low L/R correlation (-0.17) risks partial cancellation in mono.",
+        "phase_correlation": -0.1747,
+        "severity": "moderate",
+        "recommendation": "Check polarity/timing between channels; consider mid-side control."
+      },
+      {
+        "track": "Electric Guitar",
+        "issue": "Low L/R correlation (0.02) risks partial cancellation in mono.",
+        "phase_correlation": 0.0175,
+        "severity": "moderate",
+        "recommendation": "Check polarity/timing between channels; consider mid-side control."
+      }
+    ],
+    "mono_score": 92.0,
+    "summary": {
+      "tracks_at_risk": 2,
+      "high_severity": 0
+    }
+  },
+  "arrangement_density": {
+    "per_section": [
+      {
+        "section_id": "verse_1",
+        "layer_counts": {
+          "intimate": 1,
+          "foreground": 3,
+          "midground": 0,
+          "background": 2
+        },
+        "forward_count": 4,
+        "density_metric": 1.0,
+        "warning": null
+      },
+      {
+        "section_id": "chorus_1",
+        "layer_counts": {
+          "intimate": 0,
+          "foreground": 5,
+          "midground": 1,
+          "background": 0
+        },
+        "forward_count": 5,
+        "density_metric": 1.0,
+        "warning": null
+      }
+    ],
+    "crowded_sections": [],
+    "summary": {
+      "total_sections": 2,
+      "crowded": 0
+    }
+  },
+  "listener_experience": {
+    "journey": [
+      {
+        "section_id": "verse_1",
+        "name": "Verse 1",
+        "emotional_goal": "intimacy",
+        "what_a_fan_hears": "sets the scene; dense — lots happening at once",
+        "engagement": "neutral"
+      },
+      {
+        "section_id": "chorus_1",
+        "name": "Chorus 1",
+        "emotional_goal": "release",
+        "what_a_fan_hears": "expected to lift but feels similar to the previous section; dense — lots happening at once",
+        "engagement": "may zone out"
+      }
+    ],
+    "fatigue_points": [
+      "Verse 1: density is high without a clear focal point.",
+      "Chorus 1: density is high without a clear focal point."
+    ],
+    "chorus_feels_earned": false,
+    "summary": "The chorus does not yet feel earned — contrast into it is weak."
+  },
+  "transitions": {
+    "transitions": [
+      {
+        "from": "verse_1",
+        "to": "chorus_1",
+        "boundary_sec": 3.0,
+        "rms_jump_db": 2.8,
+        "is_lift_target": true,
+        "quality": "smooth",
+        "note": "Energy changes naturally into the section."
+      }
+    ],
+    "weak_transitions": [],
+    "summary": "Transitions read intentionally."
+  },
+  "groove": {
+    "per_track": [
+      {
+        "track": "Kick",
+        "onsets": 9,
+        "regularity": 0.992,
+        "feel": "machine-tight"
+      },
+      {
+        "track": "Snare",
+        "onsets": 5,
+        "regularity": 0.994,
+        "feel": "machine-tight"
+      }
+    ],
+    "overall_regularity": 0.993,
+    "summary": "Overall groove regularity 0.993 (tight)."
+  },
+  "harmonic": {
+    "available": true,
+    "detected_key": "B major",
+    "detected_confidence": 0.844,
+    "manifest_key": "A minor",
+    "matches_manifest": false,
+    "summary": "Detected key ~B major (confidence 0.844). Manifest says A minor. Detected key differs from the manifest — verify tuning/voicing or the manifest."
+  },
+  "vocal_performance": {
+    "available": true,
+    "dynamic_range_db": 8.55,
+    "phrase_energy_variation_db": 2.67,
+    "push_moment_sec": 5.88,
+    "pull_back_moment_sec": 0.84,
+    "sibilance_indicator": 0.0,
+    "recommendations": [
+      "Balanced delivery: light stabilisation and phrase rides should be enough."
+    ],
+    "summary": "Vocal dynamic range ~8.55 dB; controlled."
+  },
+  "lyrics": {
+    "available": false,
+    "summary": "No lyrics provided in the manifest."
+  }
+}
