@@ -4,6 +4,114 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
+## ★★★ STATUS (P-048 close, 2026-07-03): residue = accepted standing notes only — THE PRODUCT SURFACE IS COMPLETE FOR THE CURRENT SUBSTRATE
+
+- **P-048 (PRODUCT-SURFACE REFRESH — Producer + Mode Demo Artifacts,
+  docs/samples/demo clarity only, ZERO runtime behavior changes;
+  opened on the user's go 2026-07-03, verbatim: "Merge P-047 now.
+  Then do product-surface refresh… This is the right next skate:
+  make the now-powerful system explain itself before adding more
+  depth." — P-047 merged FIRST as PR #26 → default tip `645c925`,
+  then this packet) closed 2026-07-03:** qa GREEN (11/11, zero
+  discrepancies) + reviewer PASS (no must-fix). Commits `4725169`
+  (Commit-1 — the NINE committed mode demos under
+  `examples/mode_demos/` [each the "creative pair" — creative.json
+  + creative_report.md from a real CLI `creative` run on the dense
+  fixture, the only fixture firing all five creative problems; 18
+  artifacts, 265,305 bytes; zero normalization — no path echo in
+  the pair] + the NEW `tests/test_mode_demo_refresh.py` [21 tests:
+  9 staleness + 9 surface + 3 story, expected values IMPORTED from
+  the standing pinned tables — single source of truth] + the
+  hardening touch [two honest test renames, byte-identical
+  assertions; `_PRODUCER_TOKENS` gained "brian" — bare "eno"
+  false-positives on "enough", verified]; 21 files, +7943/−4;
+  GREEN IN ISOLATION at **1143**) + `44381a8` (Commit-2 — README
+  only: the ownership doctrine line VERBATIM exactly once ["engine
+  owns move vocabulary / profile owns mode reach / governance owns
+  safety cap"] + the committed mode-demo section +
+  directory-driven discovery; +132/−2; ZERO collection changes —
+  node-id lists diffed identical C1 vs HEAD) on parent `0c47fb7`,
+  atop merge base `645c925` (= PR #26 — P-047 merged FIRST). ZERO
+  .py under logic_mix_os/, zero profiles/fixtures/goldens, the
+  FOUR existing trees byte-untouched (their pins 12/12). PUSHED
+  BEFORE qa/reviewer (standing go — both gates validated the final
+  SHAs), NOT merged. Suite **1143** / regression **93/93** /
+  Commit-1 iso **1143** / freshness INDEPENDENT — all NINE
+  verbatim README invocations via the real CLI → **9/9 creative
+  pairs byte-identical** (cmp, zero normalization) / the hardening
+  MUTATION-PROVEN load-bearing (an injected `brian_eno` engine
+  branch FAILS the code-purity guard at HEAD, passes UNDETECTED at
+  base) / sabotage EXACT (flipped byte → exactly 2; deleted demo
+  dir → exactly 3; README id edit → nothing fails — the standing
+  accepted README-drift posture, confirmed; rename reverted →
+  nothing fails — docs-hygiene, confirmed) / README sweep
+  "unpinned claims: none material" (the ownership line ONCE; the
+  dropout line ONCE README-wide; the five-problems claim verified
+  live, 1/5/3/4 branch counts) / safety grep none found. **Codex
+  unavailable — single-model review.** Receipt:
+  `build-os/receipts/P-048-mode-demo-artifacts.md`.
+- **The user's seven demos ALL served by the nine committed
+  pairs:** (1) different-producer = the four P-046 trees,
+  referenced; (2–3) halee dramatic [A,B,C,D] / conservative
+  [C,B,D] / deconstructive [B,C]; (4) the conservative four-way
+  {A,B,C,D}/{B,C,D}/{B,C}/{B,D}; (5) quincy experimental — BOTH
+  extended families live (85.3/83.1), vocal_C's governed WIN in
+  committed bytes; (6) timbaland negative_space (dropout ids at
+  80.9, F targeting [Synth Pad, Splice Texture Loop]) CONTRASTED
+  with groove_pocket (declarations present, NO reach key, zero
+  dropout ids — the only-where-authored evidence, judged STRONGER
+  than a neutral mode); (7) halee reference-safety (her committed
+  tree + her mode demos + a dedicated pin). Eno's role HONEST: a
+  conservative demo with the vocal_B-by-suppression story (the
+  builder CAUGHT AND FIXED its own overclaim pre-commit); his
+  reaching modes undemoed (the user's list names
+  quincy/timbaland/halee only).
+- **★ THE P-047 ACCEPTED NOTES 1–2 ARE ✓ RESOLVED** (this packet's
+  hardening touch: the two stale test names in
+  `test_negative_space_dropout.py` renamed honestly —
+  byte-identical assertions, count-neutral; the missing eno/brian
+  token added as "brian" — mutation-proven load-bearing). P-047
+  note 3 (the fifth-producer silent-skip margin) stands unchanged.
+- **NEW accepted notes (P-048, recorded not fixed — the four
+  reviewer residues, non-blocking):**
+  1. **★ NAMED SUITE-WIDE HARDENING CANDIDATE — the directory-set
+     guard:** nothing asserts `examples/mode_demos/` contains
+     EXACTLY the nine pinned dirs — a tenth unpinned demo dir could
+     land silently (matches the existing test_sample_refresh.py
+     convention — the same gap suite-wide).
+  2. **Hairline:** the "only shipped fixture with five problems"
+     claim is verified-live but not itself pinned.
+  3. **Ergonomic:** re-running a documented invocation verbatim
+     writes 28 extra uncommitted files into the committed demo dir,
+     which the file-set pin then flags — provenance-honest,
+     slightly rough.
+  4. **Coverage note:** eno's reaching modes are live-pinned but
+     undemoed; 15 of 24 producer×mode combos undemoed (the nine
+     cover all seven required stories) — future-surface material,
+     none owed.
+- **All prior standing notes RETAINED** (the banners below), incl.
+  the ★★ STANDING TRAJECTORY WATCH-ITEM (a REAL groove-carrier
+  signal before ANY dropout-surface widening) and the safety line
+  (execution/apply semantics NEVER without explicit user
+  re-gating).
+- **Open boundary:** P-048's commits pushed to the dev branch
+  BEFORE qa/reviewer under the orchestrator's standing go; **the
+  MERGE of P-048 (`0c47fb7` + `4725169` + `44381a8` + the close
+  commit, atop `645c925` = PR #26) is the OPEN USER GATE** — it
+  awaits the user's explicit word.
+- **NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open
+  directions to the user (ALL user-gated): the P-048 merge ·
+  quincy/halee authored dropout reach · the future-analyzer
+  candidates from Eno's honest deferrals (textural coherence ·
+  generative process · ambient patience) · a fifth producer
+  (auto-discovered, auto-swept) · the directory-set-guard
+  hardening candidate (note 1 above) · anything else the user
+  calls. Do NOT open anything blind.
+- **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
+  comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
+  placement faith; (3) flag PRESENCE is not flag THREADING — levers
+  need reaches-the-destination guards.
+
 ## ★★★ STATUS (P-047 close, 2026-07-03): residue = accepted standing notes only — THE SWEEPS ARE PRODUCER-COMPLETE AND FUTURE-PROOF
 
 - **P-047 (DIRECTORY-DRIVEN PRODUCER SWEEPS + DOCS RESIDUES — TEST +
@@ -53,12 +161,19 @@
      `test_all_three_profiles_author_honest_dropout_rows` sweeps
      four; `test_same_mode_same_stems_only_timbaland_emits_dropout`
      stale since P-045 — name-only, the assertions are true and
-     non-vacuous; rename = node-ID churn; fold into a future touch.
+     non-vacuous; rename = node-ID churn; fold into a future touch. **(✓
+     RESOLVED by P-048, 2026-07-03: both renamed honestly in the
+     hardening touch — byte-identical assertions, count-neutral;
+     see the P-048 banner above.)**
   2. **`_PRODUCER_TOKENS` at `test_mode_forking.py:873` has no
      eno/brian token** — the fork-path code-purity guard wouldn't
      flag a hypothetical eno-named engine branch (pre-existing since
      P-045; the same holds for any fifth name) — fold the token
-     list into the next hardening touch.
+     list into the next hardening touch. **(✓ RESOLVED by
+     P-048, 2026-07-03: the list gained "brian" [bare "eno"
+     false-positives on "enough"] — MUTATION-PROVEN load-bearing:
+     an injected `brian_eno` engine branch fails the guard at HEAD,
+     passed undetected at base; see the P-048 banner above.)**
   3. **`test_same_mode_same_stems_each_producer_emits_only_its_authored_reach`
      would silently skip (collect-but-not-assert) a fifth producer's
      emission** — marginal: the loud KeyErrors elsewhere force
@@ -71,7 +186,10 @@
   qa/reviewer under the orchestrator's standing go; **the MERGE of
   P-047 (`37e4120` + `3322c88` + `f9736f3` + the close commit, atop
   `24b5ca7` = PR #25) is the OPEN USER GATE** — it awaits the
-  user's explicit word.
+  user's explicit word. **(✓ RESOLVED at P-048 open,
+  2026-07-03: merged as PR #26 on the user's directive — merge
+  commit `645c925`, the current default tip and the P-048 merge
+  base.)**
 - **NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open
   directions to the user (ALL user-gated): the P-047 merge ·
   quincy/halee authored dropout reach · the future-analyzer
@@ -79,7 +197,12 @@
   generative process · ambient patience) · a fifth producer (now
   cheaper than ever — auto-swept) · the small test-name/token-list
   hardening touch (notes 1–3 above) · anything else the user calls.
-  Do NOT open anything blind.
+  Do NOT open anything blind. **(✓ UPDATE at P-048 close,
+  2026-07-03: the user called the PRODUCT-SURFACE REFRESH —
+  producer + mode demo artifacts [carrying the hardening touch;
+  notes 1–2 above ✓ RESOLVED, note 3 stands]; opened and CLOSED as
+  P-048 — see the P-048 banner above; NEXT = NOTHING STAGED again,
+  the orchestrator presents the open directions.)**
 - **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
   comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
   placement faith; (3) flag PRESENCE is not flag THREADING — levers

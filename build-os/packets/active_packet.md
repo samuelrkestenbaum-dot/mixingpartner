@@ -4,110 +4,54 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** ACTIVE — confirmed by the USER 2026-07-03 ("Merge P-047 now.
-  Then do product-surface refresh… This is the right next skate: make the
-  now-powerful system explain itself before adding more depth."). P-047
-  merged FIRST as PR #26 → default tip `645c925`, per the user's
-  sequencing.
-- **ID / Title:** **P-048 — Product-Surface Refresh: Producer + Mode Demo
-  Artifacts** (the user's title, verbatim)
-- **Branch:** `claude/logic-mix-os-hardening-12-7hbeh1` atop merge base
-  `645c925` (= PR #26 merge; verify with `git merge-base`).
-- **Baseline to protect:** suite **1122** / regression **93/93** / the
-  FOUR committed sample trees byte-stable / ZERO runtime behavior changes
-  — docs/samples/demo clarity ONLY.
+- **Status:** NONE ACTIVE — **P-048 CLOSED** (2026-07-03): qa GREEN (11/11,
+  zero discrepancies) + reviewer PASS (no must-fix; single-model — Codex
+  unavailable). Receipt: `build-os/receipts/P-048-mode-demo-artifacts.md`.
 
-## The user's intent (verbatim authority)
+## Last closed — P-048: Product-Surface Refresh — Producer + Mode Demo Artifacts
 
-"The system's substrate is now ahead of its product surface." Make the
-completed capabilities VISIBLE: dynamic producer discovery ·
-producer-specific mode behavior · profile-authored mode reach · extended
-move families · negative-space dropout · arrangement_lift /
-ensemble_rebalance · honesty/confidence labels · governed safety caps.
+- Commits `4725169` (Commit-1 — the NINE committed mode demos under
+  `examples/mode_demos/` [real-CLI creative pairs, dense fixture] + the
+  21-test staleness/surface/story pin module + the hardening touch [two
+  honest renames + the "brian" token, mutation-proven load-bearing];
+  21 files, +7943/−4; GREEN IN ISOLATION at **1143**) + `44381a8`
+  (Commit-2 — README only: the ownership doctrine line VERBATIM + the
+  committed mode-demo section + directory-driven discovery; +132/−2; ZERO
+  collection changes) on parent `0c47fb7` (active-packet confirmation),
+  atop merge base `645c925` (= the PR #26 merge — P-047 merged FIRST on
+  the user's sequencing).
+- Suite **1143 passed / 0 failed** · regression **93/93** · Commit-1 iso
+  **1143** · freshness 9/9 verbatim re-renders byte-identical · ZERO .py
+  under `logic_mix_os/` · the four existing trees byte-untouched.
+- The user's seven required demos ALL served by the nine committed pairs;
+  the ownership doctrine line on the product surface VERBATIM exactly
+  once.
+- **PUSHED to the dev branch (standing go, pre-gates); NOT merged.**
 
-**Required language on the product surface (verbatim):**
-- "engine owns move vocabulary / profile owns mode reach / governance
-  owns safety cap"
-- "dropout is an arrangement proposal, not a destructive operation"
+## ★★ OPEN USER GATE
 
-## Required demos (the user's seven, verbatim)
+- **The merge of P-048** — `0c47fb7` + `4725169` + `44381a8` + the close
+  commit, atop `645c925` (= PR #26) — awaits the user's explicit word.
 
-Add or refresh examples showing:
-1. same stems + different producer
-2. same stems + same producer + different mode
-3. same problem + different mode → different candidate variant set
-4. same mode name + different producer → profile-attributable difference
-5. Quincy reaching arrangement_lift / ensemble_rebalance
-6. Timbaland reaching negative_space_dropout only where authored
-7. Halee/Ramone remaining default/reference-safe
+## Staged next: NOTHING
 
-## Scope (docs / samples / demo clarity — NOT runtime behavior)
+The orchestrator PRESENTS the open directions to the user (ALL
+user-gated):
 
-Update: README usage examples · CLI examples · sample invocation
-commands · sample output artifacts if already committed · producer/mode
-comparison documentation · short explanations of the extended move
-families, governed dropout, and directory-driven sweeps.
+- the P-048 merge (the open gate above)
+- quincy/halee authored dropout reach (behind the ★★ standing
+  groove-carrier watch-item)
+- the future-analyzer candidates from Eno's honest deferrals (textural
+  coherence · generative process · ambient patience)
+- a fifth producer (auto-discovered, auto-swept — cheaper than ever)
+- the directory-set-guard hardening candidate (the P-048 reviewer
+  residue — suite-wide: nothing asserts a committed demo/sample dir
+  contains EXACTLY the pinned set)
+- anything else the user calls
 
-**Small hardening touch (rides along ONLY if clearly non-runtime /
-assertion-strengthening; do not let it expand the packet):** the two
-stale test names in test_negative_space_dropout.py + the missing
-eno/brian token in `_PRODUCER_TOKENS` (test_mode_forking.py ~873).
-
-## Orchestrator recon (binding on the builder)
-
-- **P-046 already landed part of this surface** — the four committed
-  default-flow trees, the "Four producers, same stems" table, the
-  "Modes are behavior" section, and the extended-families paragraph
-  with the safety line. Demo 1 is DONE (keep/reference it). P-048's
-  genuinely NEW surface is demos 2–7: MODE-LEVEL comparison artifacts
-  and their documentation — EXTEND the P-046 surface, do not duplicate
-  or rewrite what is already accurate and pinned.
-- **Recommended demo shape (builder finalizes):** the full 30-artifact
-  tree per mode would explode the committed surface — use the LIGHTEST
-  faithful unit the REAL CLI emits (e.g. the `creative` subcommand's
-  output with `--producer`/`--mode`) committed under a new
-  `examples/mode_demos/` (or similar) — one small committed artifact
-  set per demo row, rendered by verbatim documented invocations,
-  staleness-pinned byte-for-byte in the P-040 pattern, no-absolute-path
-  asserted, plus a README (or examples-local doc) comparison table of
-  the candidate-id sets that the pins guarantee. Every documented set
-  must equal pinned reality: conservative four-way {A,B,C,D}/{B,C,D}/
-  {B,C}/{B,D}; halee dramatic vs conservative vs deconstructive;
-  quincy ensemble_balance/experimental reaching his families; timbaland
-  negative_space (reaching) vs groove_pocket (not); eno untouched or
-  included as the neutral-default contrast — CAPTURE FIRST, THEN PIN.
-- **The doctrine language** goes where users will read it (the README
-  mode section header/intro), verbatim, exactly once each — no
-  aspirational prose; every claim checkable against committed bytes or
-  pinned tests (the P-046 discipline; "unpinned claims: none material"
-  is the bar).
-- The FOUR existing trees are NOT regenerated (a non-byte-identical
-  fresh render = discovered bug → STOP and report). Doctrine scores,
-  goldens, profiles, engine code untouched.
-
-## Required proof (the user's, verbatim)
-
-suite clean · regression clean · zero runtime behavior changes ·
-samples intentionally refreshed · README/examples match current CLI
-behavior · no producer outputs drift except committed sample refreshes ·
-the hardening touch, if included, is assertion-strengthening only.
-
-## Non-scope (the user's, verbatim)
-
-No fifth producer. No analyzers. No Quincy/Halee dropout reach. No new
-move families. No scoring changes. No governance changes. No safety
-changes. No CLI-semantics changes. No merge until qa + reviewer
-dual-green (the merge stays a user gate).
-
-## Commit shape (≤2, Commit-1 green in isolation)
-
-- **Commit-1:** the mode-demo artifacts (real-CLI renders) + their
-  staleness/content pins + the hardening touch (test renames +
-  token-list strengthening) — full suite green in isolation.
-- **Commit-2:** README/examples documentation only (zero collection
-  changes).
+Do NOT open anything blind. Execution/apply semantics NEVER without
+explicit user re-gating.
 
 ---
-_Set active by the orchestrator on the user's explicit go (2026-07-03),
-after the P-047 merge report. One packet at a time: builder → qa +
-reviewer → archivist → receipt._
+_Cleared by the archivist on P-048 close (2026-07-03). One packet at a
+time: builder → qa + reviewer → archivist → receipt._
