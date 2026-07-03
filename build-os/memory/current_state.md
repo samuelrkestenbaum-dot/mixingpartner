@@ -266,21 +266,36 @@
     after close (orchestrator standing go), NOT merged**, atop the
     set-active `73a134e`. P-039's parent chain: `a56cb96` → `b111a18` →
     `73a134e` (active-packet confirmation) → `2c09428` (the batch
-    merge).
+    merge). ★ ON TOP of P-039, the dev branch now ALSO carries **P-040
+    (`33cf10d` + `9e58e9b`, docs/demo — THE SAMPLE REFRESH: the
+    two-producer demo in committed form — `examples/sample_output/`
+    [reference] + `examples/sample_output_timbaland/` [SAME stems,
+    `--producer timbaland`], both generated via the REAL CLI from
+    `vocal_chop_groove`, + the "Two producers, same stems" README
+    section + the FULL-strength staleness pin
+    [`tests/test_sample_refresh.py`] + test-9 parametrized over both
+    trees; ZERO product code; CLEARS the P-038 stale-samples standing
+    note), PUSHED after close (orchestrator standing go), NOT
+    merged**, atop the set-active `1783683`. P-040's parent chain:
+    `9e58e9b` → `33cf10d` → `1783683` (active-packet confirmation) →
+    `fc23d95` (P-039 close).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-02, P-039 — the FIRST
-  POST-SUBSTRATE PRODUCT baseline):** suite **801 passed** (0 failed /
-  skipped); regression **93/93, goldens untouched** (zero goldens in
-  the diff) — the corpus is **4 fixtures** (the 68/68 era ended
-  CONSCIOUSLY at P-035). Commits `b111a18` (the feature) + review-fix
-  `a56cb96` (TEST-ONLY) on parent `73a134e` (active-packet
-  confirmation), atop merge base `2c09428` (the post-backlog batch
-  merge) — `b111a18` IS Commit-1 → green in isolation. (History:
+- **Green baseline (verified 2026-07-02, P-040 — the sample-refresh
+  baseline):** suite **806 passed** (0 failed / skipped); regression
+  **93/93** (samples are NOT goldens — non-interaction verified two
+  ways) — the corpus is **4 fixtures** (the 68/68 era ended
+  CONSCIOUSLY at P-035). Commits `33cf10d` (the two trees + the
+  staleness pins) + `9e58e9b` (README only) on parent `1783683`
+  (active-packet confirmation), atop merge base `2c09428` (the
+  post-backlog batch merge) — `33cf10d` IS Commit-1 → green in
+  isolation (real worktree check: 806 + 93/93). (History: 801 →
+  **806** at P-040 — +5: the NEW `tests/test_sample_refresh.py`
+  staleness pins + test-9 parametrized over both trees;
   768 → 788 at P-039 qa on `b111a18` — +20 the producer-CLI tests —
   then 788 → **801** at the review-fix `a56cb96` — +13 parametrized
   per-carrier threading-guard instances; 767 → 768 at P-038 — +1
@@ -296,6 +311,77 @@
   331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-040 COMMITS THE TWO-PRODUCER DEMO — the SAMPLE REFRESH
+  (packet 2 of the user's sequence): `examples/sample_output/` (the
+  REFERENCE run) + `examples/sample_output_timbaland/` (the SAME stems,
+  `--producer timbaland`), both generated via the REAL CLI from
+  `vocal_chop_groove`, + the "Two producers, same stems" README
+  section — the demo is COMMITTED, SELF-DESCRIBING, and
+  STALENESS-PINNED (silent rot is now impossible). Docs/demo only —
+  ZERO product code. ★ CLEARS the P-038 stale-samples standing note
+  (the old dense_chorus-era tree with stale producer-named prose
+  replaced WHOLESALE; qa confirmed the stale strings existed at base
+  and are absent now). qa GREEN + reviewer PASS (no must-fix).
+  Last-closed = P-040.**
+  - **Two commits** on parent `1783683` (active-packet confirmation),
+    atop merge base `2c09428`: `33cf10d` (62 files, +4240/−1744 — the
+    two 30-artifact trees + test-9 parametrized over both trees + the
+    NEW `tests/test_sample_refresh.py` with the staleness pin at FULL
+    strength: 30-file byte equality per tree against a fresh render,
+    exactly ONE documented normalization [the abs→rel stems-path
+    echo], the no-absolute-path assertion, and the headline pin
+    machine-checking the README numbers) + `9e58e9b` (README only,
+    +49/−2). `33cf10d` IS Commit-1 → green in isolation (real
+    worktree check: 806 + 93/93). **PUSHED after close (orchestrator
+    standing go), NOT merged** (merge base `2c09428`; the branch
+    carries P-039 + P-040 + closes).
+  - **★ qa GREEN:** suite 801 → **806** (+5); regression **93/93**
+    (non-interaction verified two ways); **freshness proven
+    INDEPENDENTLY** — qa regenerated both trees via the VERBATIM
+    README invocations → byte-identical 30/30 + 30/30; headlines exact
+    (76.3/65.0/15.0 ref; 60.9/85.0/10.0 tim); producer blocks +
+    verdict line 3; ZERO absolute paths; ZERO old keys / mode names /
+    producer prose (the timbaland tree carries ZERO Halee/Ramone
+    strings; the reference tree's only mentions are legitimate
+    profile-provenance); sabotage — one flipped bit in a committed
+    sample → the staleness pin FAILED for exactly the sabotaged tree;
+    safety grep clean (the applescript TODO lines are pre-existing
+    renderer output, present at base).
+  - **★ reviewer PASS (no must-fix):** the README read as a skeptical
+    newcomer — every sentence traced to artifacts, code, or receipts;
+    the same-winners honesty statement ENDORSED as strengthening the
+    demo (pre-empts "so the knob does nothing?" and points at
+    `test_differential_proof.py:417` where the plan reversal IS
+    proven); the "why they differ" column accurate at the code level;
+    the invariance sentence precise (exactly 3 of 15 score keys
+    differ — the 3 table rows); reproducibility verified under
+    INDEPENDENT execution (no timestamps anywhere — not same-day
+    luck); test-9 extended-not-weakened; the old tree's replacement
+    leaves nothing dangling; BOTH sabotage directions run (artifact
+    flip caught by both pins correctly parametrized; README flip NOT
+    caught — an ACCEPTED GAP: the values are triple-pinned at the
+    file level and a markdown-parsing test would be brittle for
+    marginal value). **Codex NOT available — single-model review.**
+  - **★ Optional recommendations recorded (→ residue, not fixes):**
+    (a) the accepted README-drift gap + why file-level pins suffice;
+    (b) a future echo-semantics tightening on the staleness pin
+    (assert the FRESH tree carries the abs path in exactly the two
+    expected files — closes the narrow blind spot where an
+    "absolutizes-the-echo" regression would stay green); (c) the
+    reviewer nit: "repo root" vs "project root" wording in the
+    vendored arrangement.
+  - **★ NEXT per the USER'S SEQUENCE = THE THIRD PRODUCER —
+    ★ USER-GATED on WHICH producer + the grounding** (the standing
+    honesty policy: hand-curated-documented → high; derived → low,
+    labeled; LLM-synthesized → draft-only, never high). What the third
+    producer costs now: a JSON file + three required declarations
+    (`protect_iconic_loops`, `vocal_blend_policy`, `confidence_map`) +
+    its own verbatim map pin + a differential test + a sample
+    tree/README column if desired — ZERO code changes (the P-039
+    surfaces scan the producers dir). Then deeper mode-forking. The
+    orchestrator presents the decision; do NOT open blind. Receipt:
+    `build-os/receipts/P-040-sample-refresh.md`.
 
 - **★★★ P-039 PUTS THE PRODUCER LEVER ON THE PRODUCT SURFACE — the FIRST
   post-substrate PRODUCT packet (the user's sequence; the P-029 lever
@@ -369,7 +455,11 @@
     (the P-039 identity surface gives the samples self-describing
     trees); conscious test-9 (OLD_KEYS) interaction check. Then the
     THIRD producer, then deeper mode-forking. Receipt:
-    `build-os/receipts/P-039-producer-cli-exposure.md`.
+    `build-os/receipts/P-039-producer-cli-exposure.md`. **(✓ UPDATE
+    P-040 close, 2026-07-02: ✓ DONE — closed as P-040, the two-tree
+    shape + the FULL-strength staleness pin; the P-038 standing note
+    ✓ CLEARED; NEXT = THE THIRD PRODUCER, ★ USER-GATED on which
+    producer + the grounding.)**
 
 - **★★★ P-038 SWEEPS THE NAMING/PROSE RESIDUE — residue sweep 2 of 2,
   THE LAST BACKLOG PACKET: six items — producer names off
