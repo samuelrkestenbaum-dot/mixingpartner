@@ -4,6 +4,77 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
+## ★★★ STATUS (P-045 close, 2026-07-03): residue = accepted standing notes only — THE PRODUCER ROSTER IS FOUR
+
+- **P-045 (THE FOURTH PRODUCER — Brian Eno, profile-only; the user's
+  pick, verbatim 2026-07-03: "Yes — pick another producer, but merge
+  P-044 first… My producer pick: Brian Eno" — P-044 merged FIRST as
+  PR #23 → default tip `fe8d947`) closed 2026-07-03:** qa GREEN
+  (12/12, ZERO deviations) + reviewer PASS (no must-fix). Commits
+  `47aace7` (Commit-1 — `brian_eno.json` [333 lines: negative_space
+  1.4 = his argmax, all four argmaxes distinct; SEVEN axes outside
+  the three-way envelope; protect_iconic_loops TRUE with authored
+  static 35.0; blend floor 0.85 the strictest shipped; dropout reach
+  on exactly generative_drift + experimental; confidence map 6 high
+  / 1 limited / 8 deferred — his own three no-axis concepts DEFERRED,
+  not faked] + the 36-test guard suite; GREEN IN ISOLATION at
+  **1036**) + `c3fa783` (Commit-2 — the permanent 64-test FOUR-WAY
+  differential, all 8 user requirements incl. dropout governance) on
+  parent `6df37b3`, atop merge base `fe8d947` (= PR #23 — P-044
+  merged FIRST on the user's directive). Exactly **3 NEW files,
+  +2382/−0**, ZERO .py under logic_mix_os/, ZERO existing-test
+  edits; the three shipped JSONs sha256-identical to their `fe8d947`
+  blobs (pinned PERMANENTLY in the four-way suite); both sample
+  trees untouched. PUSHED BEFORE qa/reviewer (standing go — both
+  gates validated the final SHAs), NOT merged. Suite **1100** /
+  regression **93/93** / Commit-1 iso **1036** / ZERO passive growth
+  / sabotage **5/5** / measured overalls 65.4 / 57.8 / 59.3 / 65.5 —
+  pairwise distinct from all three on every fixture, reconstruction
+  to the decimal. **Codex unavailable — single-model review
+  (independent worktree execution: 1100 + 1036 reproduced).**
+  Receipt: `build-os/receipts/P-045-brian-eno.md`.
+- **NEW accepted notes (P-045, recorded not fixed):**
+  1. **Reviewer residue (a):** Eno's no-mode/unknown-mode
+     zero-extended assertion covers dropout ids ONLY — the other
+     extended path is the profile-independent neutral fallback,
+     swept three-way at code level.
+  2. **Reviewer residue (b):** Eno's default-flow candidate lists
+     are kind-set/winner-pinned, not id-order-pinned like the three
+     — a one-line tightening on next touch.
+  3. **★ Reviewer residue (c) — NAMED FUTURE-PACKET CANDIDATE:** the
+     hardcoded `PRODUCERS` 3-tuples in `test_mode_forking.py`
+     (imported by two other suites) should eventually become
+     DIRECTORY-DRIVEN so a FIFTH producer grows the sweeps
+     passively — an existing-test change, correctly out of P-045's
+     scope.
+  4. **The honest future-analyzer candidates (from Eno's own
+     deferrals — ★ USER-GATED):** textural coherence · generative
+     process/Oblique Strategies · ambient patience — measurement
+     axes that don't exist yet, deferred rather than faked (exactly
+     the user's demand); the honest candidates for a future analyzer
+     packet.
+- **All prior standing notes RETAINED** (the banners below), incl.
+  the ★★ STANDING TRAJECTORY WATCH-ITEM (a REAL groove-carrier
+  signal before ANY dropout-surface widening) and the safety line
+  (execution/apply semantics NEVER without explicit user re-gating).
+- **Open boundary:** P-045's commits pushed to the dev branch BEFORE
+  qa/reviewer under the orchestrator's standing go; **the MERGE of
+  P-045 (`6df37b3` + `47aace7` + `c3fa783` + the close commit, atop
+  `fe8d947` = PR #23) is the OPEN USER GATE** — it awaits the user's
+  explicit word.
+- **NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open
+  directions to the user (ALL user-gated): the P-045 merge ·
+  product-surface refresh (samples/README don't yet showcase
+  mode-forking, the new move families, or the four-producer roster)
+  · the directory-driven sweeps hardening (note 3 above) ·
+  quincy/halee authored dropout reach · the future-analyzer
+  candidates (note 4 above) · a fifth producer · anything else the
+  user calls. Do NOT open anything blind.
+- **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
+  comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
+  placement faith; (3) flag PRESENCE is not flag THREADING — levers
+  need reaches-the-destination guards.
+
 ## ★★★ STATUS (P-044 close, 2026-07-03): residue = accepted standing notes only — THE DROPOUT FAMILY IS GOVERNED; THE SHAPE C ARC IS COMPLETE
 
 - **P-044 (NEGATIVE-SPACE DROPOUT MOVE FAMILY — opened NARROWLY AND
@@ -58,7 +129,9 @@
   qa/reviewer under the orchestrator's standing go; **the MERGE of
   P-044 (`9fdb172` + `87635d3` + `f72f222` + the close commit, atop
   `80e9bd5` = PR #22) is the OPEN USER GATE** — it awaits the user's
-  explicit word.
+  explicit word. **(✓ RESOLVED at P-045 open, 2026-07-03: merged as
+  PR #23 on the user's directive — merge commit `fe8d947`, the
+  current default tip and the P-045 merge base.)**
 - **NEXT: NOTHING STAGED — the user's sequenced arc is COMPLETE**
   (CLI ✓ samples ✓ third producer ✓ analyzer extension ✓
   mode-forking B ✓ vocabulary C narrow ✓ dropout ✓). The
@@ -67,7 +140,10 @@
   families (behind the groove-carrier watch-item where applicable) ·
   a fourth producer · product-surface work (samples/README refresh
   for the new families) · anything else the user calls. Do NOT open
-  anything blind.
+  anything blind. **(✓ UPDATE at P-045 close, 2026-07-03: the user
+  called the FOURTH PRODUCER — Brian Eno; opened and CLOSED as
+  P-045 — see the P-045 banner above; NEXT = NOTHING STAGED again,
+  the orchestrator presents the open directions.)**
 - **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
   comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
   placement faith; (3) flag PRESENCE is not flag THREADING — levers
