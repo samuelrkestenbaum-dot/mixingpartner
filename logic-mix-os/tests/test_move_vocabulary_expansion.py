@@ -113,7 +113,7 @@ EXTENDED_POOL = {
     "vocal_belief": [("vocal_C", "ensemble_rebalance")],
 }
 
-# The three shipped profiles' authored curated rows for the extended kinds —
+# Every shipped profile's authored curated rows for the extended kinds —
 # the translation risks are load-bearing (the cap validates against them).
 # P-044: dropout is the aggressive family — NEVER low (medium at minimum;
 # halee authors HIGH under her translate-everywhere lens).
@@ -514,7 +514,7 @@ def test_new_kinds_score_through_the_real_chain(producer, dense):
     kinds with NO missing-row fallback: the overall reconstructs from the
     JSON on disk (mean of the 7 authored dims minus the profile's own
     translation-risk penalty) and equals the pinned per-producer value —
-    three producers, three honest judgments of the same two families. No
+    four producers, four honest judgments of the same two families. No
     nudge/promotion row names them, so ``score_nudges`` stays absent."""
     prof = load_profile(producer)
     raw = _raw(producer)
@@ -685,13 +685,15 @@ def test_quincy_authors_the_pinned_reach_and_it_validates():
 
 
 def test_same_mode_same_stems_each_producer_emits_only_its_authored_reach(dense):
-    """THE HEADLINE DIFFERENTIAL, P-044-extended: ``experimental`` exists in
-    all three profiles. Same mode name, same stems, THREE different
-    reaches: quincy_jones emits the P-043 families (reached AND favored to
-    the front of each touched branch) and ZERO dropout ids; timbaland
-    (P-044) emits the dropout ids and ZERO P-043-family ids; halee_ramone
-    emits ZERO extended ids of any kind. Each gate holds because of what
-    was and was not AUTHORED — never a code path."""
+    """THE HEADLINE DIFFERENTIAL, P-044-extended and swept four-way since
+    P-047: ``experimental`` exists in all four shipped profiles. Same mode
+    name, same stems, FOUR different reaches: quincy_jones emits the P-043
+    families (reached AND favored to the front of each touched branch) and
+    ZERO dropout ids; timbaland (P-044) emits the dropout ids and ZERO
+    P-043-family ids; brian_eno (P-045) also reaches only the dropout
+    family — under his own favor/suppress posture; halee_ramone emits
+    ZERO extended ids of any kind. Each gate holds because of what was
+    and was not AUTHORED — never a code path."""
     emitted = {}
     for producer in PRODUCERS:
         out = run_creative_engine(dense, "experimental",

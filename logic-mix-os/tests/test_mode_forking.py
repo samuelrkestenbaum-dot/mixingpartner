@@ -129,7 +129,10 @@ PROBLEM_IDS = tuple(ENGINE_POOL)
 
 # The DEFAULT-FLOW pin (requirement 8): the per-branch variant-id lists every
 # shipped producer must emit on its own default-flow mode — identical to the
-# pre-P-042 neutral emission, order included, for all three producers.
+# pre-P-042 neutral emission, order included, for every producer WITHOUT an
+# authored conscious delta (quincy's P-043 and timbaland's P-044 deltas are
+# pinned separately below; halee_ramone and brian_eno author neutral
+# default flows and ride this shared pin).
 DEFAULT_FLOW_IDS = {
     "simple_vocal_piano_song": {
         "vocal_belief": ["vocal_A", "vocal_B"],
@@ -578,12 +581,13 @@ def test_default_flow_candidate_ids_do_not_drift(producer, analyzed):
     ``default_creative_mode`` resolution per fixture) emits the PINNED
     variant-id lists — order included — on all three fixtures. For
     halee_ramone that is the pre-P-042 neutral emission, byte-identical
-    (she authors zero reach). For quincy_jones it is the P-043 CONSCIOUS
-    delta (his default mode's authored reach appends exactly the
-    arrangement_lift ids — QUINCY_DEFAULT_FLOW_IDS); for timbaland the
-    P-044 CONSCIOUS delta (his default mode's authored dropout reach
-    appends exactly the negative_space_dropout ids —
-    TIMBALAND_DEFAULT_FLOW_IDS)."""
+    (she authors zero reach); brian_eno's authored-neutral default flow
+    (ambient_field / horizontal_time, P-045) rides the same shared pin.
+    For quincy_jones it is the P-043 CONSCIOUS delta (his default mode's
+    authored reach appends exactly the arrangement_lift ids —
+    QUINCY_DEFAULT_FLOW_IDS); for timbaland the P-044 CONSCIOUS delta
+    (his default mode's authored dropout reach appends exactly the
+    negative_space_dropout ids — TIMBALAND_DEFAULT_FLOW_IDS)."""
     prof = load_profile(producer)
     expected_flow = {
         "quincy_jones": QUINCY_DEFAULT_FLOW_IDS,
@@ -628,12 +632,13 @@ def test_every_shipped_profile_authors_the_fields_explicitly(producer):
 # Requirement 4 — SAME MODE NAME, DIFFERENT PRODUCERS, different sets.
 # =========================================================================== #
 def test_same_mode_different_producers_different_candidate_sets(dense):
-    """``conservative`` exists in all three profiles: on the same stems and
-    problem it emits THREE pairwise-distinct candidate-id sets — Timbaland's
-    authored-neutral full pool, Halee/Ramone's width-suppressed pool,
-    Quincy's width-and-drum-room-suppressed pool. And on ``experimental``,
+    """``conservative`` exists in all four shipped profiles: on the same
+    stems and problem it emits FOUR pairwise-distinct candidate-id sets —
+    Timbaland's authored-neutral full pool, Halee/Ramone's width-suppressed
+    pool, Quincy's width-and-drum-room-suppressed pool, Eno's
+    width-and-vocal-ride-suppressed pool. And on ``experimental``,
     Timbaland's authored ``intimacy_pass`` suppression splits the
-    vocal_belief set from both others. Sets, not order or labels."""
+    vocal_belief set from the others. Sets, not order or labels."""
     conservative = {}
     for producer in PRODUCERS:
         out = run_creative_engine(dense, "conservative", profile=load_profile(producer))
@@ -670,9 +675,9 @@ def test_same_mode_different_producers_different_candidate_sets(dense):
 
 @pytest.mark.parametrize("producer", PRODUCERS)
 def test_every_producers_every_mode_is_attributable_to_its_json(producer, dense):
-    """The full reconstructive attribution (requirements 3 + 4 + 9), all
-    three producers: for EVERY authored mode and EVERY problem, the emitted
-    kind set equals (the shared ENGINE POOL ∪ THAT mode's authored
+    """The full reconstructive attribution (requirements 3 + 4 + 9), every
+    discovered producer: for EVERY authored mode and EVERY problem, the
+    emitted kind set equals (the shared ENGINE POOL ∪ THAT mode's authored
     ``reach_kinds`` where the extended pool holds variants) minus THAT
     producer's authored ``suppress_kinds`` — derived from the JSON on disk.
     Where two producers' declarations differ, their same-mode sets differ;

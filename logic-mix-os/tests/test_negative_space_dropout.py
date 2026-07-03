@@ -133,7 +133,7 @@ EXECUTION_MACHINERY = (
     "delet", "eras", "overwrit", "destroy", "wipe",
 )
 
-# The three profiles' authored dropout rows — translation risks are
+# Every shipped profile's authored dropout row — translation risks are
 # load-bearing (the cap binds against them); overalls reconstruct from the
 # JSON (mean of the 7 dims minus the profile's own translation penalty).
 AUTHORED_DROPOUT = {
@@ -526,9 +526,9 @@ def test_all_three_profiles_author_honest_dropout_rows(producer):
     """Every shipped profile authors a FULL curated ``kind_scores`` row and
     all three ``truth_alignment`` leans for the dropout kind — no silent
     inheritance. The translation risks are the packet's honesty floor:
-    NEVER low (this is the aggressive family) — timbaland/quincy medium,
-    halee HIGH (her translate-everywhere lens reads a full-layer hole as
-    the riskiest move in the widened vocabulary)."""
+    NEVER low (this is the aggressive family) — timbaland/quincy/eno
+    medium, halee HIGH (her translate-everywhere lens reads a full-layer
+    hole as the riskiest move in the widened vocabulary)."""
     raw = _raw(producer)
     _validate(raw, producer)
     row = raw["kind_scores"][DROPOUT]
@@ -543,9 +543,10 @@ def test_all_three_profiles_author_honest_dropout_rows(producer):
 
 
 def test_affinity_ordering_is_the_packet_story():
-    """The three lenses rank the family the way the packet authored them:
-    timbaland (his documented philosophy) > quincy (moderate-low) > halee
-    (low-affinity) — on the curated overall AND on the big/neutral leans."""
+    """The four lenses rank the family the way the packets authored them:
+    timbaland (his documented philosophy) > eno (restraint-as-environment,
+    P-045) > quincy (moderate-low) > halee (low-affinity) — on the curated
+    overall AND on the big/neutral leans."""
     overalls = {p: AUTHORED_DROPOUT[p]["overall"] for p in PRODUCERS}
     assert overalls["timbaland"] > overalls["quincy_jones"] > overalls["halee_ramone"]
     # P-047: eno slots between the two poles — timbaland's negative space

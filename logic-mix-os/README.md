@@ -43,7 +43,7 @@ pip install -e ".[full,dev]"   # optional: soundfile, pyloudnorm, scipy, pytest
 ## Quick start
 
 The repository ships a fixture generator instead of large binary audio. Generate
-the three example projects (deterministic, seeded):
+the four example projects (deterministic, seeded):
 
 ```bash
 python fixtures/generate_fixtures.py
