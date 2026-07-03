@@ -4,6 +4,83 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
+## ★★★ STATUS (P-046 close, 2026-07-03): residue = accepted standing notes only — THE PRODUCT SURFACE MATCHES THE PRODUCT
+
+- **P-046 (PRODUCT-SURFACE REFRESH — The Four-Producer Demo,
+  docs/demo only; opened on the user's "go" 2026-07-03 after the
+  P-045 merge [PR #24 → default tip `0a53bb5`], down the
+  orchestrator's presented recommendation — the P-040 pattern
+  extended to the four-producer world) closed 2026-07-03:** qa GREEN
+  (12/12) + reviewer PASS (no must-fix). Commits `c94f2fe` (Commit-1
+  — the two NEW 30-artifact trees `examples/sample_output_quincy/`
+  [68.8; his LIVE default-mode reach surface: declarations {medium,
+  reach [arrangement_lift]}, chorus_lift_E among candidates, winner
+  unmoved] + `examples/sample_output_eno/` [65.5; authored-neutral
+  byte-silence — zero declaration/fork keys; winner vocal_B vs the
+  others' vocal_A], real-CLI renders from `vocal_chop_groove` with
+  relative paths, + the staleness pin extended to FOUR at full P-040
+  strength + the NEW mode-surface pin
+  [`test_committed_sample_mode_surface_is_the_authored_reach` ×4] +
+  test-9 2→4; 62 files, +7029/−17; GREEN IN ISOLATION at **1110**)
+  + `95f65bf` (Commit-2 — README only: the "Four producers, same
+  stems" four-way + modes-are-behavior + the extended families with
+  the dropout safety line VERBATIM + 8 stale-wording fixes;
+  +112/−28) on parent `8674a97`, atop merge base `0a53bb5` (= PR
+  #24 — P-045 merged FIRST). Exactly **63 files**, ZERO .py under
+  logic_mix_os/, zero profiles/fixtures/goldens; the two EXISTING
+  trees byte-untouched — NO staleness bug found (fresh renders
+  byte-identical). PUSHED BEFORE qa/reviewer (standing go — both
+  gates validated the final SHAs; the commits were recut once
+  locally before pushing to fix a docstring inaccuracy — the gates
+  judged the final tree), NOT merged. Suite **1110** / regression
+  **93/93** / Commit-1 iso **1110** / freshness INDEPENDENT —
+  byte-identical 30/30 × 4 with zero normalization / headlines
+  76.3/60.9/68.8/65.5 / README accuracy sweep "unpinned claims
+  found: none material" / sabotage bites on every tree-side flip.
+  **Codex unavailable — single-model review (the reviewer
+  re-rendered all four trees itself: raw byte-identical).** Receipt:
+  `build-os/receipts/P-046-four-producer-demo.md`.
+- **NEW accepted notes (P-046, recorded not fixed):**
+  1. **Reviewer residue (1):** README line 46 — "the three example
+     projects" is PRE-EXISTING fixture-count staleness (the
+     generator builds four), outside this packet's producer-roster
+     sweep — fold into a future docs touch.
+  2. **Reviewer residue (2):** the `test_four_way_differential.py`
+     docstring at ~875 now under-describes 2-of-4 committed trees —
+     wording only, fold on next touch.
+  3. **qa observation:** test-internal docstrings elsewhere say "two
+     producers"/"all three producers" — accurate statements or
+     era-comments; test-internal, not product surface.
+  4. **★ The standing README-number-drift accepted gap RE-AFFIRMED
+     (the P-040 note, unchanged in posture):** sabotage (c) — a
+     README-side number flip stays green; accepted because the
+     values are pinned at the artifact/test level and a
+     markdown-parsing test stays not worth its brittleness.
+  - Notes 1–2 pair naturally with the P-045 directory-driven
+    `PRODUCERS`-tuple sweeps hardening — one hardening/docs packet,
+    ★ USER-GATED.
+- **All prior standing notes RETAINED** (the banners below), incl.
+  the ★★ STANDING TRAJECTORY WATCH-ITEM (a REAL groove-carrier
+  signal before ANY dropout-surface widening) and the safety line
+  (execution/apply semantics NEVER without explicit user re-gating).
+- **Open boundary:** P-046's commits pushed to the dev branch BEFORE
+  qa/reviewer under the orchestrator's standing go; **the MERGE of
+  P-046 (`8674a97` + `c94f2fe` + `95f65bf` + the close commit, atop
+  `0a53bb5` = PR #24) is the OPEN USER GATE** — it awaits the
+  user's explicit word.
+- **NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open
+  directions to the user (ALL user-gated): the P-046 merge · the
+  directory-driven sweeps hardening (the P-045 named candidate, now
+  joined by P-046 notes 1–2 above) · quincy/halee authored dropout
+  reach · the future-analyzer candidates from Eno's honest deferrals
+  (textural coherence · generative process · ambient patience) · a
+  fifth producer · anything else the user calls. Do NOT open
+  anything blind.
+- **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
+  comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
+  placement faith; (3) flag PRESENCE is not flag THREADING — levers
+  need reaches-the-destination guards.
+
 ## ★★★ STATUS (P-045 close, 2026-07-03): residue = accepted standing notes only — THE PRODUCER ROSTER IS FOUR
 
 - **P-045 (THE FOURTH PRODUCER — Brian Eno, profile-only; the user's
@@ -61,7 +138,9 @@
   qa/reviewer under the orchestrator's standing go; **the MERGE of
   P-045 (`6df37b3` + `47aace7` + `c3fa783` + the close commit, atop
   `fe8d947` = PR #23) is the OPEN USER GATE** — it awaits the user's
-  explicit word.
+  explicit word. **(✓ RESOLVED at P-046 open, 2026-07-03: merged as
+  PR #24 on the user's directive — merge commit `0a53bb5`, the
+  current default tip and the P-046 merge base.)**
 - **NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open
   directions to the user (ALL user-gated): the P-045 merge ·
   product-surface refresh (samples/README don't yet showcase
@@ -69,7 +148,11 @@
   · the directory-driven sweeps hardening (note 3 above) ·
   quincy/halee authored dropout reach · the future-analyzer
   candidates (note 4 above) · a fifth producer · anything else the
-  user calls. Do NOT open anything blind.
+  user calls. Do NOT open anything blind. **(✓ UPDATE at P-046
+  close, 2026-07-03: the user called the PRODUCT-SURFACE REFRESH —
+  opened and CLOSED as P-046 — see the P-046 banner above; NEXT =
+  NOTHING STAGED again, the orchestrator presents the open
+  directions.)**
 - **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
   comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
   placement faith; (3) flag PRESENCE is not flag THREADING — levers

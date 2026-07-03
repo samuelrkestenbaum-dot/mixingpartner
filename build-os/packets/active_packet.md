@@ -4,62 +4,51 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** **NONE ACTIVE — P-045 CLOSED (2026-07-03).** qa GREEN
-  (12/12, zero deviations) + reviewer PASS (no must-fix;
-  single-model — Codex unavailable; independent worktree execution
-  reproduced 1100 + 1036). Receipt:
-  `build-os/receipts/P-045-brian-eno.md`.
+- **Status:** NONE ACTIVE — **P-046 CLOSED** (2026-07-03; qa GREEN **12/12**
+  + reviewer **PASS**, no must-fix). Receipt:
+  `build-os/receipts/P-046-four-producer-demo.md`.
 
-## Last closed — P-045: The Fourth Producer — Brian Eno (profile-only)
+## Last closed — P-046: Product-Surface Refresh — The Four-Producer Demo
 
-- **User authority (verbatim go, 2026-07-03):** "Yes — pick another
-  producer, but merge P-044 first… My producer pick: Brian Eno" —
-  P-044 merged FIRST as PR #23 → default tip `fe8d947`, then this
-  packet. Grounding: hand-curated-from-documented-technique → high;
-  LLM-synthesized-as-high FORBIDDEN.
-- **Commits:** `47aace7` (Commit-1 — `brian_eno.json` [333 lines] +
-  the 36-test guard suite `tests/test_eno_profile.py`; GREEN IN
-  ISOLATION at **1036**) + `c3fa783` (Commit-2 — the permanent
-  64-test FOUR-WAY differential
-  `tests/test_four_way_differential.py`) on parent `6df37b3`
-  (active-packet confirmation), atop merge base `fe8d947` (= the
-  PR #23 merge). Branch `claude/logic-mix-os-hardening-12-7hbeh1`.
-- **Files:** exactly **3 NEW, +2382/−0**; ZERO .py under
-  `logic_mix_os/`; ZERO existing-test edits; the three shipped JSONs
-  sha256-identical to their `fe8d947` blobs (pinned permanently in
-  the four-way suite); both sample trees untouched.
-- **Proof:** suite 1000 → **1100 passed, 0 failed** (ZERO passive
-  growth); regression **93/93**; Commit-1 iso **1036**; sabotage
-  5/5; measured overalls 65.4 / 57.8 / 59.3 / 65.5 — pairwise
-  distinct from all three on every fixture.
-- **Push state:** PUSHED to the dev branch BEFORE qa/reviewer under
-  the orchestrator's standing go (both gates validated the final
-  SHAs); **NOT merged.**
-- **THE PRODUCER ROSTER IS FOUR:** halee_ramone (reference) ·
-  timbaland · quincy_jones · brian_eno — vocal/space,
-  groove/contrast, orchestration/ensemble, atmosphere/restraint —
-  all pure data over the shared substrate.
+- **Commits:** `c94f2fe` (Commit-1 — the two NEW committed demo trees
+  [`examples/sample_output_quincy/` 68.8 — his LIVE default-mode reach
+  surface — + `examples/sample_output_eno/` 65.5 — authored-neutral
+  byte-silence, winner vocal_B], real-CLI renders from `vocal_chop_groove`
+  with relative paths, + the staleness pin extended to FOUR at full P-040
+  strength + the NEW mode-surface pin ×4 + test-9 2→4; 62 files,
+  +7029/−17; GREEN IN ISOLATION at **1110**) + `95f65bf` (Commit-2 —
+  README only: "Four producers, same stems" + modes-are-behavior + the
+  extended families with the dropout safety line VERBATIM; +112/−28) on
+  parent `8674a97` (active-packet confirmation), atop merge base `0a53bb5`
+  (= the PR #24 merge).
+- **Shape held:** exactly 63 files; ZERO .py under `logic_mix_os/`; zero
+  profiles/fixtures/goldens; the two EXISTING trees byte-untouched — NO
+  staleness bug found (fresh renders byte-identical).
+- **Counts:** suite **1110 passed, 0 failed** / regression **93/93** /
+  Commit-1 iso **1110** / freshness INDEPENDENT — byte-identical
+  30/30 × 4 with zero normalization / headlines 76.3 / 60.9 / 68.8 / 65.5.
+- **Push state:** PUSHED to the dev branch BEFORE qa/reviewer under the
+  orchestrator's standing go (both gates validated the final SHAs).
+  **NOT merged.**
 
 ## ★★ OPEN USER GATE
 
-- **The MERGE of P-045** — `6df37b3` + `47aace7` + `c3fa783` (+ the
-  close commit) atop `fe8d947` (= PR #23) — awaits the user's
-  explicit word. Never merge/push/deploy without go.
+- **The merge of P-046** — `8674a97` + `c94f2fe` + `95f65bf` (+ the close
+  commit) atop `0a53bb5` (= PR #24) — awaits the user's explicit word.
 
 ## Staged next
 
-- **NOTHING STAGED.** The orchestrator PRESENTS the open directions
-  to the user (ALL user-gated): the P-045 merge · product-surface
-  refresh (samples/README don't yet showcase mode-forking, the new
-  move families, or the four-producer roster) · the directory-driven
-  `PRODUCERS`-tuple sweeps hardening (P-045 reviewer residue c) ·
-  quincy/halee authored dropout reach · the future-analyzer
-  candidates from Eno's honest deferrals (textural coherence ·
-  generative process/Oblique Strategies · ambient patience) · a
-  fifth producer · anything else the user calls. Do NOT open
-  anything blind. Execution/apply semantics NEVER without explicit
-  user re-gating.
+- **NOTHING.** The orchestrator PRESENTS the open directions to the user
+  (ALL user-gated): the P-046 merge · the directory-driven
+  `PRODUCERS`-tuple sweeps hardening (P-045 residue, now joined by the
+  small P-046 docs residues — README:46 fixture-count staleness + the
+  four-way docstring wording — a natural pairing for one hardening/docs
+  packet) · quincy/halee authored dropout reach · the future-analyzer
+  candidates from Eno's honest deferrals (textural coherence · generative
+  process · ambient patience) · a fifth producer · anything else the user
+  calls. Do NOT open anything blind. Execution/apply semantics NEVER
+  without explicit user re-gating.
 
 ---
-_Cleared by the archivist at P-045 close (2026-07-03). One packet at
-a time: builder → qa + reviewer → archivist → receipt._
+_Cleared by the archivist at P-046 close (2026-07-03). One packet at a
+time: the orchestrator presents; the user gates._

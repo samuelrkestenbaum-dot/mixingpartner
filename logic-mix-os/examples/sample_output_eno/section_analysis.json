@@ -1,0 +1,48 @@
+[
+  {
+    "section_id": "verse_1",
+    "name": "Verse 1",
+    "start_time": 0.0,
+    "end_time": 3.0,
+    "emotional_goal": "intimacy",
+    "metrics": {
+      "rms_dbfs": -18.39,
+      "lufs": -15.98,
+      "width": 0.1841,
+      "brightness": 0.7801,
+      "density": 1.0,
+      "low_mid_energy": 0.5283,
+      "presence_energy": 0.0201,
+      "transient_density": 0.7222,
+      "vocal_presence_db": 5.35
+    },
+    "contrast_vs_previous": {
+      "note": "first analysed section; no previous section to compare."
+    }
+  },
+  {
+    "section_id": "chorus_1",
+    "name": "Chorus 1",
+    "start_time": 3.0,
+    "end_time": 6.0,
+    "emotional_goal": "release",
+    "metrics": {
+      "rms_dbfs": -16.99,
+      "lufs": -14.27,
+      "width": 0.1539,
+      "brightness": 0.7734,
+      "density": 1.0,
+      "low_mid_energy": 0.4822,
+      "presence_energy": 0.018,
+      "transient_density": 0.8333,
+      "vocal_presence_db": 6.04
+    },
+    "contrast_vs_previous": {
+      "rms_delta_db": 1.4,
+      "width_delta": -0.0302,
+      "brightness_delta": -0.0067,
+      "density_delta": 0.0,
+      "warning": "Chorus 1 may not lift enough relative to the previous section (only +1.4 dB and -0.03 width). Target roughly +3 to +5 dB and +0.05 to +0.10 width via supporting elements and automation, not master level."
+    }
+  }
+]
