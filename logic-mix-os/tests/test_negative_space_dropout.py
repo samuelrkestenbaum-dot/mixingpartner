@@ -522,7 +522,7 @@ def test_protection_filter_is_profile_blind_structurally():
 # ROWS EVERYWHERE — honest lenses, live end to end.
 # =========================================================================== #
 @pytest.mark.parametrize("producer", PRODUCERS)
-def test_all_three_profiles_author_honest_dropout_rows(producer):
+def test_every_shipped_profile_authors_honest_dropout_rows(producer):
     """Every shipped profile authors a FULL curated ``kind_scores`` row and
     all three ``truth_alignment`` leans for the dropout kind — no silent
     inheritance. The translation risks are the packet's honesty floor:
@@ -749,12 +749,20 @@ def test_halee_and_quincy_author_zero_dropout_reach():
                 (producer, mode_name)
 
 
-def test_same_mode_same_stems_only_timbaland_emits_dropout(dense, all_analyzed):
+def test_same_mode_same_stems_timbaland_reaches_dropout_halee_quincy_never(
+    dense, all_analyzed
+):
     """THE HEADLINE DIFFERENTIAL: on the same stems, timbaland emits the
     dropout ids on each of his three authored modes exactly where the
     curated pool holds a variant — while halee and quincy emit ZERO dropout
     ids on EVERY authored mode, the default resolution and an unknown mode.
-    The differential is attributable entirely to the authored reach."""
+    The differential is attributable entirely to the authored reach.
+    (The shipped roster's dropout authors are timbaland AND brian_eno —
+    P-045/P-047 grew the roster past this test's original "only timbaland"
+    framing; eno's reaching modes (``generative_drift`` / ``experimental``)
+    carry their own emission/protection pins in
+    tests/test_four_way_differential.py, so this test pins the
+    timbaland-vs-zero-reach half.)"""
     tim = load_profile("timbaland")
     for mode in TIMBALAND_REACHING_MODES:
         out = run_creative_engine(dense, mode, profile=tim)
