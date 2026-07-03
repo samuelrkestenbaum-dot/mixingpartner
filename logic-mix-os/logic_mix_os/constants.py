@@ -134,6 +134,33 @@ SACREDNESS_VALUES = [
 # --- Depth layers (where does it live?) -------------------------------------
 DEPTH_LAYERS = ["intimate", "foreground", "midground", "background"]
 
+# --- Creative move vocabulary (build packet sections 55-67; P-042) ----------
+# The ENGINE's shared creative move vocabulary: every candidate-variant
+# ``kind`` the curated builders in ``creative.generate_variants`` can emit.
+# The curated ``_variant`` pool is frozen — new kinds enter ONLY through a
+# conscious packet, never through profile data. P-042 (profile-authored mode
+# forking): producer profiles may author per-search-mode ``favor_kinds`` /
+# ``suppress_kinds`` declarations; the loader validates those declarations
+# against THIS vocabulary — the engine owns the move vocabulary, the profile
+# decides what each mode reaches for, governance owns the safety cap.
+CREATIVE_VARIANT_KINDS = (
+    "width_bloom",
+    "subtractive_drop",
+    "vocal_ride",
+    "drum_room_bloom",
+    "loop_deconstruct",
+    "depth_cleanup",
+    "intimacy_pass",
+)
+
+# Translation-risk levels in SEVERITY ORDER (index = rank). This is the shared
+# scale of a profile's curated ``kind_scores[*]["translation"]`` risk and of a
+# search mode's ``allowed_risk`` posture. P-042: a mode's authored reach is
+# capped by its own ``allowed_risk`` — favoring a kind whose curated
+# translation risk ranks beyond the mode's posture is rejected at load and
+# refused at emission (the cap is governance; it cannot be out-authored).
+TRANSLATION_RISK_LEVELS = ("low", "medium", "high")
+
 # --- Risk classes for mix actions (build packet section 77) -----------------
 RISK_CLASSES = {
     0: "observe / analyze only",

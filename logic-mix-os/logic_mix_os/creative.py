@@ -13,7 +13,7 @@ from __future__ import annotations
 from typing import Dict, List, Optional
 
 from .analyzers.vocal_type_classifier import lead_vocal_names
-from .constants import LOOP_SAMPLE_KINDS
+from .constants import LOOP_SAMPLE_KINDS, TRANSLATION_RISK_LEVELS
 from .doctrine.doctrine_engine import read_loop_context
 from .doctrine.producer_profile import ProducerProfile, load_profile
 
@@ -351,10 +351,11 @@ def _variant(vid, problem, kind, name, hypothesis, changes, tracks, risk, valida
     }
 
 
-# P-033: the ``mode`` parameter is carried for the engine's call shape but is
-# not read by the variant builders below; its old ``"dramatic_contrast"``
-# default was the last hardcoded reference-mode name in product code.
-def generate_variants(problem: Dict, result, mode: Optional[str] = None) -> List[Dict]:
+def _curated_variants(problem: Dict, result) -> List[Dict]:
+    """The engine's NEUTRAL curated candidate emission for one problem — the
+    frozen ``_variant`` pool, exactly as it emitted before P-042 (set AND
+    order). This is the shared move vocabulary every profile forks FROM; no
+    profile data reaches it."""
     records = result.records
     supporting = _supporting_elements(records)
     loops = [r["name"] for r in records if r["source_kind"] in LOOP_SAMPLE_KINDS]
@@ -428,6 +429,132 @@ def generate_variants(problem: Dict, result, mode: Optional[str] = None) -> List
                      ["Lower verse vocal sends", "Bloom sends at chorus"], lead_target,
                      "Verses may feel dry — A/B vs baseline.", ["verse intimacy vs chorus openness"], "intimacy"),
         ]
+    return variants
+
+
+# --- P-042: profile-authored mode forking ------------------------------------
+# The ownership split, verbatim from the packet: the ENGINE owns the shared
+# move vocabulary (the frozen curated pool above), the PROFILE owns each
+# mode's reach (the authored ``favor_kinds`` / ``suppress_kinds`` declarations
+# on its ``search_modes`` entries), and GOVERNANCE owns the safety cap (the
+# mode's existing ``allowed_risk`` posture, which an authored reach can never
+# exceed). No producer name appears anywhere in this fork path — the fork is
+# pure data threading.
+
+# Severity rank of each translation-risk level (shared engine scale).
+_RISK_RANK = {level: i for i, level in enumerate(TRANSLATION_RISK_LEVELS)}
+
+
+def _mode_declarations(prof: ProducerProfile, mode: Optional[str]) -> Optional[Dict]:
+    """The resolved mode's authored forking declarations, or ``None`` when the
+    mode is NEUTRAL. Pure read of the passed profile's ``search_modes``.
+
+    Neutral — meaning the engine's un-forked emission, byte-identical to the
+    pre-P-042 behavior — covers: no mode requested; a mode the profile does
+    not carry; a mode entry without the declaration fields (third-party
+    profiles stay valid untouched); and a mode entry that authors BOTH fields
+    explicitly EMPTY (the shipped profiles' default/intimate modes — authored
+    neutrality, equivalent to absence by construction).
+    """
+    if mode is None:
+        return None
+    entry = prof.search_modes.get(mode)
+    if not isinstance(entry, dict):
+        return None
+    favor = list(entry.get("favor_kinds") or [])
+    suppress = list(entry.get("suppress_kinds") or [])
+    if not favor and not suppress:
+        return None
+    allowed = entry.get("allowed_risk")
+    if allowed not in _RISK_RANK:
+        # Fail CLOSED: loader-validated profiles always carry a real level on
+        # a declaring mode; a loader-bypassing profile without one is capped
+        # at the most restrictive posture, never the most permissive.
+        allowed = TRANSLATION_RISK_LEVELS[0]
+    return {"favor_kinds": favor, "suppress_kinds": suppress, "allowed_risk": allowed}
+
+
+def _fork_candidates(variants: List[Dict], decl: Dict,
+                     prof: ProducerProfile) -> tuple:
+    """Apply one mode's authored declarations to the neutral curated list.
+
+    Pure and deterministic. Returns ``(candidates, fork)`` where ``fork`` is
+    the honest per-emission report: ``{"suppressed", "favored",
+    "risk_capped", "suppression_fallback"}``. The authored semantics:
+
+    * ``suppress_kinds`` REMOVE their variants from emission — the
+      candidate-SET fork. ``fork["suppressed"]`` lists the kinds actually
+      removed from THIS emission (authored order).
+    * ``favor_kinds`` move their variants to the FRONT of emission (authored
+      favor order; curated order within a kind) — order shaping only, never
+      set growth: favoring can never add a kind the curated pool does not
+      hold for this problem. ``fork["favored"]`` lists the kinds actually
+      moved for THIS emission.
+    * THE GOVERNANCE CAP: a favored kind whose curated translation risk
+      (the profile's own ``kind_scores`` row, ``depth_cleanup`` fallback row
+      for unknown kinds — the ``score_variant`` rule) ranks beyond the
+      mode's ``allowed_risk`` is REFUSED, never elevated. The loader already
+      rejects such authoring outright; this runtime refusal guards
+      loader-bypassing profiles and is surfaced in ``fork["risk_capped"]``.
+    * NON-EMPTY GUARANTEE: suppression can never empty a candidate set. If
+      it would, the FULL neutral curated set is emitted instead — the
+      documented, profile-agnostic fallback (the engine's own pool, no
+      profile data involved) — with ``fork["suppression_fallback"] = True``
+      and ``fork["suppressed"] = []`` (nothing was actually removed).
+    """
+    kind_scores = prof.kind_scores
+    cap = _RISK_RANK[decl["allowed_risk"]]
+    pool_kinds = {v["kind"] for v in variants}
+
+    suppress = set(decl["suppress_kinds"])
+    kept = [v for v in variants if v["kind"] not in suppress]
+    fallback = bool(variants) and not kept
+    if fallback:
+        kept = list(variants)
+    suppressed = ([] if fallback
+                  else [k for k in decl["suppress_kinds"] if k in pool_kinds])
+
+    risk_capped: List[str] = []
+    favored: List[str] = []
+    kept_kinds = {v["kind"] for v in kept}
+    for k in decl["favor_kinds"]:
+        row = kind_scores.get(k, kind_scores.get("depth_cleanup", {}))
+        risk = row.get("translation") if isinstance(row, dict) else None
+        rank = _RISK_RANK.get(risk, len(TRANSLATION_RISK_LEVELS) - 1)
+        if rank > cap:
+            risk_capped.append(k)  # the cap wins — mode-level refusal, every branch
+        elif k in kept_kinds:
+            favored.append(k)
+    if favored:
+        front = [v for k in favored for v in kept if v["kind"] == k]
+        kept = front + [v for v in kept if v["kind"] not in set(favored)]
+
+    fork = {
+        "suppressed": suppressed,
+        "favored": favored,
+        "risk_capped": risk_capped,
+        "suppression_fallback": fallback,
+    }
+    return kept, fork
+
+
+def generate_variants(problem: Dict, result, mode: Optional[str] = None,
+                      profile: Optional[ProducerProfile] = None) -> List[Dict]:
+    """Candidate variants for one problem — MODE-FORKED per profile (P-042).
+
+    The neutral curated pool (``_curated_variants``) is the engine's shared
+    move vocabulary; the active ``mode``'s authored declarations, read from
+    the PASSED ``profile`` (the additive P-029 parameter — default resolves
+    to the reference), fork the CANDIDATE SET (suppression) and its emission
+    order (favoring, capped by the mode's ``allowed_risk``). ``mode=None``,
+    an unknown mode, or a mode without authored declarations emits the
+    neutral pool byte-identically — pre-P-042 callers are unchanged.
+    """
+    variants = _curated_variants(problem, result)
+    prof = profile or _DEFAULT_PROFILE
+    decl = _mode_declarations(prof, mode)
+    if decl is not None:
+        variants, _ = _fork_candidates(variants, decl, prof)
     return variants
 
 
@@ -565,17 +692,34 @@ def run_creative_engine(result, mode: Optional[str] = None,
     if mode is None or mode not in search_modes:
         mode = _profile_default_mode(prof)
     problems = detect_creative_problems(result)
+    # P-042: the resolved mode's authored declarations — non-None ONLY when
+    # the mode forks (neutral/default modes leave every artifact byte
+    # untouched, the ``score_nudges`` evidence-key discipline).
+    decl = _mode_declarations(prof, mode)
     branches: List[Dict] = []
     for problem in problems:
-        variants = generate_variants(problem, result, mode)
+        # P-042: the profile reaches the fork seam through the REAL call
+        # chain — the resolved mode's authored declarations (this profile's,
+        # not the reference's) fork candidate generation.
+        variants = generate_variants(problem, result, mode, prof)
         for v in variants:
             v["scores"] = score_variant(v, result, prof)
-        branches.append({
+        branch = {
             "problem": problem["problem"],
             "problem_id": problem["id"],
             "variants": variants,
             "winning": winning_variant(variants),
-        })
+        }
+        if decl is not None:
+            # Requirement-10 honesty: the per-branch fork report is derived
+            # by the SAME pure helpers, on the same inputs, that produced
+            # the emission above — what was ACTUALLY suppressed/favored for
+            # this branch, any allowed-risk refusal, and whether the
+            # non-empty fallback fired. Identical pure functions, identical
+            # inputs: the report cannot drift from the emission.
+            _, branch["mode_fork"] = _fork_candidates(
+                _curated_variants(problem, result), decl, prof)
+        branches.append(branch)
     out = {
         "search_mode": mode,
         "search_mode_bias": search_modes[mode]["bias"],
@@ -592,6 +736,16 @@ def run_creative_engine(result, mode: Optional[str] = None,
         ],
         "philosophy": prof.philosophy,
     }
+    # P-042 (requirement 10): echo the resolved mode's AUTHORED declarations
+    # so a reader can explain WHY this run's candidate sets differ — present
+    # ONLY when the mode actually forks (neutral/default runs, the committed
+    # sample trees included, carry zero new bytes).
+    if decl is not None:
+        out["search_mode_declarations"] = {
+            "allowed_risk": decl["allowed_risk"],
+            "favor_kinds": list(decl["favor_kinds"]),
+            "suppress_kinds": list(decl["suppress_kinds"]),
+        }
     # P-033: observational fallback evidence — present ONLY when a requested
     # mode was substituted (never on the ``mode=None`` default resolution, and
     # never when the requested mode exists in the profile's table).

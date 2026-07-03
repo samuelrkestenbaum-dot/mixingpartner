@@ -297,22 +297,49 @@
     SHAs), NOT merged**, atop the set-active `ece2b5c`. P-041's parent
     chain: `dfe8c54` → `f2614f9` → `ece2b5c` (active-packet
     confirmation) → `61582b5` (PR #19 merge).
+    ★★ P-041 IS MERGED — **PR #20 (P-041 — the third producer, Quincy
+    Jones + closes) is MERGED to default on the user's directive —
+    merge commit `dadda12`, the CURRENT default-branch tip. The base
+    for MERGE/landing decisions is now `dadda12`.** The dev branch now
+    carries **P-042 (`9acecfd` + `9d746e3`, product — PROFILE-AUTHORED
+    MODE FORKING (Shape B): `generate_variants` READS the active mode
+    and forks candidate generation via profile-authored `search_modes`
+    declarations — `suppress_kinds` = candidate-SET fork, `favor_kinds`
+    = order-only reach, absent = byte-identical neutral; the frozen
+    `CREATIVE_VARIANT_KINDS` vocabulary + `TRANSLATION_RISK_LEVELS`
+    scale; loader validation incl. the over-cap "cannot be
+    out-authored" ValueError; runtime fail-closed cap; non-empty
+    `suppression_fallback` surfaced honestly; every mode of all three
+    producers explicitly authored, all three DEFAULT/intimate modes
+    authored-neutral; the requirement-10 artifact surface; exactly
+    9 files, +1069/−27), PUSHED to the dev branch BEFORE qa/reviewer
+    under the orchestrator's standing go (both gates validated the
+    final SHAs), NOT merged — the P-042 merge is a user gate**, atop
+    the set-active `ab4914a`. P-042's parent chain: `9d746e3` →
+    `9acecfd` → `ab4914a` (active-packet confirmation) → `dadda12`
+    (PR #20 merge).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-03, P-041 — the third-producer
-  baseline):** suite **873 passed** (0 failed / skipped; `873 passed
-  in 66.77s`); regression **93/93** (tests_run 93 / passed 93 /
+- **Green baseline (verified 2026-07-03, P-042 — the mode-forking
+  baseline):** suite **907 passed** (0 failed / skipped; `907 passed
+  in 63.05s`); regression **93/93** (tests_run 93 / passed 93 /
   failed 0) — the corpus is **4 fixtures** (the 68/68 era ended
-  CONSCIOUSLY at P-035). Commits `f2614f9` (quincy_jones.json + its
-  own guards) + `dfe8c54` (the three-way differential proof) on
-  parent `ece2b5c` (active-packet confirmation), atop merge base
-  `61582b5` (= the PR #19 merge) — `f2614f9` IS Commit-1 → green in
-  isolation (throwaway worktree: **833 passed** — the three-way file
-  absent, the 27 quincy tests collected). (History: 806 → **873** at
+  CONSCIOUSLY at P-035). Commits `9acecfd` (the mode-forking seam +
+  loader validation + the reference's explicit authored declarations)
+  + `9d746e3` (timbaland + quincy mode declarations + the three-way
+  mode differential + the requirement-10 artifact surface) on parent
+  `ab4914a` (active-packet confirmation), atop merge base `dadda12`
+  (= the PR #20 merge) — `9acecfd` IS Commit-1 → green in isolation
+  (throwaway worktree: **894 passed**). (History: 873 → **907** at
+  P-042 — +34 net: the NEW `tests/test_mode_forking.py` [21 tests at
+  Commit-1 → 34 at HEAD; one C1 test consciously subsumed into the
+  3-producer generalization] + the strictly-additive
+  `tests/test_creative_profile_sourced.py` pin updates — arithmetic
+  closes +21 at C1 / +13 net at C2; 806 → **873** at
   P-041 — +67: the NEW 27-test `tests/test_quincy_profile.py` + the
   NEW 40-test `tests/test_three_way_differential.py`; 801 →
   **806** at P-040 — +5: the NEW `tests/test_sample_refresh.py`
@@ -332,6 +359,115 @@
   331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-042 MAKES THE MODE LEVER LOAD-BEARING — PROFILE-AUTHORED
+  MODE FORKING (Shape B; the user's call, verbatim 2026-07-03: "My
+  call: B — Profile-authored mode forking. That is the right next
+  skate."): `generate_variants` now READS the active mode and FORKS
+  candidate generation via profile-authored `search_modes`
+  declarations — `suppress_kinds` = candidate-SET fork, `favor_kinds`
+  = order-only reach, absent = byte-identical neutral. ★ THE P-033
+  "THIN LEVER" CALIBRATION NOTE IS ✓ RESOLVED — search_mode now forks
+  candidate generation via profile-authored DATA, zero per-producer
+  engine code (the AST guard enforces fork-path code mentions ==
+  "halee_ramone" only). The standing doctrine extends to creative
+  reach: **engine owns move vocabulary / profile owns mode reach /
+  governance owns safety cap.** A and C were explicitly rejected for
+  this packet; C (new mode-specific move families) is STAGED for after
+  B — ★ USER-GATED. qa GREEN + reviewer PASS (no must-fix; all EIGHT
+  user-mandated adversarial attacks defeated). Last-closed = P-042.**
+  - **Two commits** on parent `ab4914a` (active-packet confirmation),
+    atop merge base `dadda12` (= the PR #20 merge — P-041 landed
+    FIRST): `9acecfd` (Commit-1 — the seam: additive `profile` param
+    threaded to generate_variants [the P-029 score_variant pattern],
+    the frozen `CREATIVE_VARIANT_KINDS` vocabulary +
+    `TRANSLATION_RISK_LEVELS` scale in constants.py, loader validation
+    [vocabulary membership, duplicates, favor∩suppress=∅, allowed_risk
+    required, over-cap favor "cannot be out-authored" ValueError],
+    the runtime fail-closed cap, the non-empty `suppression_fallback`
+    surfaced honestly, evidence-key artifact discipline, the
+    reference's explicit authored declarations; GREEN IN ISOLATION at
+    894) + `9d746e3` (Commit-2 — timbaland + quincy mode declarations,
+    the three-way mode differential, the requirement-10 artifact
+    surface: the "Mode reach" + "_Mode fork:_" renderer lines).
+    Exactly **9 files, +1069/−27**; every mode of all three producers
+    explicitly authored (no silent inheritance); all three
+    DEFAULT/intimate modes authored-neutral → defaults byte-identical.
+    **PUSHED to the dev branch BEFORE qa/reviewer under the standing
+    go (both gates validated the final SHAs); NOT merged — the P-042
+    merge is the OPEN USER GATE.**
+  - **★ qa GREEN (the user's ten required proofs, exact):** suite
+    873 → **907** (`907 passed in 63.05s`; arithmetic closes +21 C1 /
+    +13 net C2); regression **93/93**; Commit-1 iso **894**; sample
+    trees — the staleness pin 4 passed WITHOUT regeneration, qa
+    independently re-rendered BOTH trees via the verbatim README
+    invocations → byte-identical 30/30 + 30/30, headlines 76.3/60.9
+    unchanged, ZERO fork bytes in committed creative.json (grep 0);
+    engine-level default no-drift — 4 fixtures × 3 producers = 12
+    default-flow runs at `ab4914a` vs HEAD → byte-identical ordered
+    candidate-id JSON; the fork independently reproduced (halee
+    dramatic {A,B,C,D} / conservative {B,C,D} / deconstructive {B,C};
+    the conservative three-way — halee {B,C,D} · timbaland {A,B,C,D}
+    · quincy {B,C} — pairwise distinct); attribution reconstruction
+    from the JSONs on disk over **90 producer×mode×problem cells, 0
+    mismatches**; suppress∩emitted=∅ everywhere; favor = order-only
+    (halee experimental [A,D,B,C], set unchanged); sabotage 4/4 bites
+    (gutted fork → **10 failed** — builder claimed 5, the net
+    STRONGER than claimed [qa discrepancy #1, direction safe];
+    suppress-field deletion → 2; self-consistent JSON element
+    deletion → 1 via the real-call-chain pin; cap no-op → 3; fallback
+    disabled → 3); loader validation on scratch profiles through the
+    REAL load_profile (over-cap favor / favor∩suppress / unknown kind
+    → ValueError; loader-BYPASSING profiles fail CLOSED to low,
+    unknown kinds inert — tested); safety grep 0 real hits, ZERO
+    producer names ADDED to engine code (every standing pre-packet
+    hit enumerated, all pre-existing); requirement-10 surface — the
+    non-default render carries search_mode_declarations + per-branch
+    mode_fork + the renderer lines, the DEFAULT render carries ZERO
+    new keys/bytes. qa discrepancy #2: the brief's sabotage-(b) as
+    worded was impossible (timbaland conservative authors suppress
+    `[]` — its neutrality IS its differential pole); both adjacent
+    probes bite, no gap.
+  - **★ reviewer PASS (no must-fix; Codex unavailable — single-model,
+    own executed probes):** all EIGHT user-mandated attacks attempted
+    and FAILED — mode load-bearing through every product path incl.
+    cowork; set-level asserts defeat a ranking-only reimplementation;
+    attribution reconstructs from the disk JSONs; zero hidden
+    producer-specific branches; the cap binds at BOTH layers incl. the
+    reviewer's own favor-over-cap + suppress-the-rest probe; the
+    fallback honest; the reference pins strictly additive; synthetic
+    re-authoring proves data-not-code causality. Four non-blocking
+    findings (→ residue): the cap-semantics STATED DECISION
+    (`allowed_risk` caps authored ELEVATION, not pool membership — a
+    loader-legal low-posture mode can suppress everything except the
+    one medium-risk kind and concentrate emission on it; that kind was
+    always in the neutral pool, scoring/governance unchanged —
+    documented semantics, not a hole); the dedupe nit (duplicate
+    favor_kinds from a loader-BYPASSING profile duplicate variant
+    dicts — unreachable via load_profile; one-line future hardening);
+    quincy experimental (subtractive_drop + width_bloom) = the closest
+    IN-VOCABULARY approximation of the user's "arrangement-lift /
+    ensemble-rebalance" example — the true families are STAGED C,
+    named as C's motivation; the winning_variant tie-break note (max =
+    first-wins; favor-reordering could flip an EXACT score tie; none
+    exists today, and a favored kind winning a tie is arguably
+    authored intent).
+  - **★ THE USER'S ACCEPTANCE BAR — every clause met:** mode
+    load-bearing ✓ · candidate sets differ by mode ✓ · differences
+    profile-authored ✓ (the 90-cell reconstruction) · safety caps
+    bind ✓ (both layers + probes) · no new move families ✓ (the
+    vocabulary pinned = the frozen pool union) · no producer-specific
+    engine code ✓ (AST guard + qa grep) · existing default behavior
+    explainable ✓ (byte-identical defaults, evidence-key discipline,
+    strictly additive pins).
+  - **★ NEXT per the USER = Shape C — new mode-specific move families
+    (STAGED, not active):** extend `CREATIVE_VARIANT_KINDS` + the
+    curated builders through a conscious packet; profiles then author
+    reach with ZERO loader/fork changes. ★ USER-GATED: not built until
+    the user opens it; the orchestrator presents scope first. **THE
+    OPEN USER GATE: the merge of P-042 (`ab4914a` + `9acecfd` +
+    `9d746e3` + the close commit) atop `dadda12` (= PR #20).**
+    Receipt: `build-os/receipts/P-042-mode-forking.md`.
 
 - **★★★ P-041 LANDS THE THIRD PRODUCER — QUINCY JONES (profile-only,
   packet 3 of the user's sequence): the framework is proven NOT a
@@ -432,7 +568,13 @@
     shape/scope decision; do NOT open blind. **THE OPEN USER GATE: the
     merge of P-041 (`ece2b5c` + `f2614f9` + `dfe8c54` + the close
     commit) atop `61582b5` (= PR #19).** Receipt:
-    `build-os/receipts/P-041-quincy-jones.md`.
+    `build-os/receipts/P-041-quincy-jones.md`. **(✓ UPDATE
+    P-042 close, 2026-07-03: BOTH resolved in the SAME user directive —
+    the P-041 merge landed as PR #20 → default tip `dadda12`, AND the
+    mode-forking shape gate was presented and decided [Shape B — A
+    rejected as final shape, C staged] — CLOSED as P-042; the mode
+    lever is now LOAD-BEARING and the P-033 calibration note is
+    ✓ RESOLVED; NEXT = Shape C, ★ USER-GATED.)**
 
 - **★★★ P-040 COMMITS THE TWO-PRODUCER DEMO — the SAMPLE REFRESH
   (packet 2 of the user's sequence): `examples/sample_output/` (the

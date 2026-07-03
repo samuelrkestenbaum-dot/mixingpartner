@@ -50,12 +50,12 @@
   ],
 
   "search_modes": {
-    "conservative": {"allowed_risk": "low", "bias": "preserve identity, subtle improvements, vocal belief"},
-    "spatial_depth": {"allowed_risk": "medium", "bias": "physical room/chamber/plate depth, space as storytelling"},
-    "vocal_truth": {"allowed_risk": "low", "bias": "vocal rides, phrase emotion, clarity, restraint"},
-    "dramatic_contrast": {"allowed_risk": "medium", "bias": "push verse/chorus/bridge contrast harder"},
-    "deconstructive": {"allowed_risk": "medium", "bias": "remove, mute, chop, filter, simplify"},
-    "experimental": {"allowed_risk": "high", "bias": "unusual transforms, reverses, extreme depth shifts"}
+    "conservative": {"allowed_risk": "low", "bias": "preserve identity, subtle improvements, vocal belief", "favor_kinds": ["vocal_ride", "depth_cleanup"], "suppress_kinds": ["width_bloom"]},
+    "spatial_depth": {"allowed_risk": "medium", "bias": "physical room/chamber/plate depth, space as storytelling", "favor_kinds": ["drum_room_bloom", "depth_cleanup"], "suppress_kinds": []},
+    "vocal_truth": {"allowed_risk": "low", "bias": "vocal rides, phrase emotion, clarity, restraint", "favor_kinds": [], "suppress_kinds": []},
+    "dramatic_contrast": {"allowed_risk": "medium", "bias": "push verse/chorus/bridge contrast harder", "favor_kinds": [], "suppress_kinds": []},
+    "deconstructive": {"allowed_risk": "medium", "bias": "remove, mute, chop, filter, simplify", "favor_kinds": ["subtractive_drop", "loop_deconstruct"], "suppress_kinds": ["width_bloom", "drum_room_bloom"]},
+    "experimental": {"allowed_risk": "high", "bias": "unusual transforms, reverses, extreme depth shifts", "favor_kinds": ["width_bloom", "drum_room_bloom"], "suppress_kinds": []}
   },
 
   "philosophy": "A mix is not finished when it is balanced. It is finished when the static balance supports the song and the dynamic movement makes the song feel inevitable. The best mix is the version where the song feels most inevitable, not the most processed.",

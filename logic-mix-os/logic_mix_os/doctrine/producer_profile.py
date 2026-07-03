@@ -26,6 +26,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List
 
+from ..constants import CREATIVE_VARIANT_KINDS, TRANSLATION_RISK_LEVELS
+
 _DIR = Path(__file__).parent
 _PRODUCERS_DIR = _DIR / "producers"
 
@@ -88,7 +90,12 @@ class ProducerProfile:
     creative_nudge_cap: float
     creative_promotion_cap: float
     risk_penalty: Dict[str, int]
-    search_modes: Dict[str, Dict[str, str]]
+    # P-042: a mode entry carries ``allowed_risk`` + ``bias`` (str) and MAY
+    # author the OPTIONAL declaration fields ``favor_kinds`` /
+    # ``suppress_kinds`` (lists of engine-vocabulary kind names) that fork
+    # candidate generation per mode. Absent fields = neutral = the engine's
+    # un-forked emission, so pre-P-042 profiles stay valid unchanged.
+    search_modes: Dict[str, Dict[str, Any]]
     philosophy: str
 
     # governance.py
@@ -197,6 +204,76 @@ def _validate(raw: Dict[str, Any], name: str) -> None:
     modes = raw["search_modes"]
     if not isinstance(modes, dict) or not modes:
         raise ValueError(f"profile {name!r}: search_modes must be a non-empty object")
+    # P-042: profile-authored mode-forking declarations — OPTIONAL per mode
+    # (absent fields = neutral = the engine's un-forked emission, so
+    # third-party profiles without them stay valid). When a mode authors
+    # them, the declaration must be sound at LOAD time, never at judgment
+    # time: kind names come from the ENGINE's move vocabulary (the engine
+    # owns the vocabulary; the profile only decides what each mode reaches
+    # for), a kind cannot be favored and suppressed at once, and a declaring
+    # mode must carry a real ``allowed_risk`` whose posture its own favored
+    # kinds respect — favoring a kind whose curated translation risk ranks
+    # beyond the mode's ``allowed_risk`` is a LOUD error (governance owns
+    # the safety cap; it cannot be out-authored).
+    kind_scores = raw["kind_scores"] if isinstance(raw["kind_scores"], dict) else {}
+    for mode_name, entry in modes.items():
+        if not isinstance(entry, dict):
+            raise ValueError(
+                f"profile {name!r}: search_modes[{mode_name!r}] must be an object"
+            )
+        declared = [f for f in ("favor_kinds", "suppress_kinds") if f in entry]
+        for field_name in declared:
+            kinds = entry[field_name]
+            if not isinstance(kinds, list) or not all(isinstance(k, str) for k in kinds):
+                raise ValueError(
+                    f"profile {name!r}: search_modes[{mode_name!r}].{field_name} "
+                    f"must be a list of strings"
+                )
+            unknown = [k for k in kinds if k not in CREATIVE_VARIANT_KINDS]
+            if unknown:
+                raise ValueError(
+                    f"profile {name!r}: search_modes[{mode_name!r}].{field_name} "
+                    f"names unknown variant kind(s) {unknown} — kinds must come "
+                    f"from the engine's move vocabulary {list(CREATIVE_VARIANT_KINDS)}"
+                )
+            if len(set(kinds)) != len(kinds):
+                raise ValueError(
+                    f"profile {name!r}: search_modes[{mode_name!r}].{field_name} "
+                    f"has duplicate kind(s)"
+                )
+        if not declared:
+            continue
+        favor = entry.get("favor_kinds", [])
+        suppress = entry.get("suppress_kinds", [])
+        contradiction = [k for k in favor if k in set(suppress)]
+        if contradiction:
+            raise ValueError(
+                f"profile {name!r}: search_modes[{mode_name!r}] both favors and "
+                f"suppresses {contradiction} — a kind cannot be reached for and "
+                f"removed at once"
+            )
+        allowed = entry.get("allowed_risk")
+        if allowed not in TRANSLATION_RISK_LEVELS:
+            raise ValueError(
+                f"profile {name!r}: search_modes[{mode_name!r}] authors mode "
+                f"declarations but its allowed_risk is not one of "
+                f"{list(TRANSLATION_RISK_LEVELS)} (got {allowed!r})"
+            )
+        cap = TRANSLATION_RISK_LEVELS.index(allowed)
+        for k in favor:
+            row = kind_scores.get(k, kind_scores.get("depth_cleanup", {}))
+            risk = row.get("translation") if isinstance(row, dict) else None
+            rank = (
+                TRANSLATION_RISK_LEVELS.index(risk)
+                if risk in TRANSLATION_RISK_LEVELS
+                else len(TRANSLATION_RISK_LEVELS) - 1  # unknown risk reads as highest
+            )
+            if rank > cap:
+                raise ValueError(
+                    f"profile {name!r}: search_modes[{mode_name!r}] favors {k!r} "
+                    f"(curated translation risk {risk!r}) beyond its allowed_risk "
+                    f"{allowed!r} — the cap is governance and cannot be out-authored"
+                )
     # P-037: default_creative_mode structural check — the three keys
     # ``pipeline._default_creative_mode`` hard-dereferences must be present
     # with sane types, so a malformed table is a load-time ValueError rather

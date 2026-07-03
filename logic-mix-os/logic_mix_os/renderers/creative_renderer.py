@@ -16,6 +16,16 @@ def render_creative(creative: Dict) -> str:
     if fallback:
         out.append("")
         out.append(f"_{fallback['reason']}_")
+    # P-042 (requirement 10): the resolved mode's profile-authored reach —
+    # the key is present only when the mode actually forks candidate
+    # generation, so this emits zero bytes on every neutral/default run.
+    decl = creative.get("search_mode_declarations")
+    if decl:
+        favors = ", ".join(f"`{k}`" for k in decl["favor_kinds"]) or "—"
+        suppresses = ", ".join(f"`{k}`" for k in decl["suppress_kinds"]) or "—"
+        out.append("")
+        out.append(f"**Mode reach (profile-authored):** favors {favors}; "
+                   f"suppresses {suppresses} — capped at `{decl['allowed_risk']}` risk")
     out.append("")
 
     svd = creative.get("static_vs_dynamic", {})
@@ -38,6 +48,25 @@ def render_creative(creative: Dict) -> str:
             out.append(f"| {v['name']} | `{v['kind']}` | {s['overall_score']} | {s['vocal_belief_score']} "
                        f"| {s['section_contrast_score']} | {s['translation_risk']} | {s['overall_verdict']} |")
         out.append("")
+        # P-042 (requirement 10): what the mode fork ACTUALLY did to this
+        # branch's candidate set — present only on forking modes; silent when
+        # nothing applied to this branch.
+        fork = branch.get("mode_fork")
+        if fork:
+            notes = []
+            if fork["suppressed"]:
+                notes.append("suppressed " + ", ".join(f"`{k}`" for k in fork["suppressed"]))
+            if fork["favored"]:
+                notes.append("favored " + ", ".join(f"`{k}`" for k in fork["favored"]))
+            if fork["risk_capped"]:
+                notes.append("favor refused by the allowed-risk cap: "
+                             + ", ".join(f"`{k}`" for k in fork["risk_capped"]))
+            if fork["suppression_fallback"]:
+                notes.append("suppression would have emptied this set — "
+                             "the full neutral pool was emitted (fallback)")
+            if notes:
+                out.append(f"_Mode fork: {'; '.join(notes)}._")
+                out.append("")
         win = branch.get("winning")
         if win:
             out.append(f"**Top-scored:** {win['winning_variant']} — {win['reason']}")
