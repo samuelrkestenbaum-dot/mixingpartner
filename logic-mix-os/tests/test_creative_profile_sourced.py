@@ -157,6 +157,12 @@ def test_search_modes_value_pins():
     # P-038 (conscious flip): the reference renamed its producer-named modes
     # (halee_depth -> spatial_depth, ramone_vocal_truth -> vocal_truth);
     # risks and biases are the untouched authored values.
+    # P-042 (conscious flip): every mode entry now ALSO authors the
+    # mode-forking declaration fields ``favor_kinds`` / ``suppress_kinds``
+    # explicitly (the profile owns each mode's reach); risks and biases are
+    # still the untouched authored values, and the default-flow modes
+    # (dramatic_contrast / vocal_truth) author NEUTRAL declarations, so the
+    # default candidate emission is byte-identical.
     sm = creative.SEARCH_MODES
     assert set(sm) == {
         "conservative", "spatial_depth", "vocal_truth",
@@ -165,9 +171,15 @@ def test_search_modes_value_pins():
     assert sm["conservative"] == {
         "allowed_risk": "low",
         "bias": "preserve identity, subtle improvements, vocal belief",
+        "favor_kinds": ["vocal_ride", "depth_cleanup"],
+        "suppress_kinds": ["width_bloom"],
     }
     assert sm["experimental"]["allowed_risk"] == "high"
     assert sm["dramatic_contrast"]["allowed_risk"] == "medium"
+    # The two default-flow modes: explicitly authored NEUTRAL reach.
+    for default_flow in ("dramatic_contrast", "vocal_truth"):
+        assert sm[default_flow]["favor_kinds"] == []
+        assert sm[default_flow]["suppress_kinds"] == []
 
 
 def test_philosophy_value_pin():
