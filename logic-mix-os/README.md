@@ -69,7 +69,10 @@ Halee/Ramone profile, plus one tree per selectable producer:
 [`examples/sample_output_quincy/`](examples/sample_output_quincy)
 (`--producer quincy_jones`) and
 [`examples/sample_output_eno/`](examples/sample_output_eno)
-(`--producer brian_eno`). See the next section for what to compare.
+(`--producer brian_eno`). See the next section for what to compare. The
+mode-level story has its own committed examples —
+[`examples/mode_demos/`](examples/mode_demos), nine producer × mode runs
+from one denser fixture ("Same stems, different modes" below).
 
 ## Four producers, same stems
 
@@ -148,7 +151,10 @@ trees.
 ### Modes are behavior
 
 A producer profile is not just weights — its authored **search modes** fork
-the creative candidate set. Each mode declares what it favors (reordered to
+the creative candidate set. The ownership split is the standing doctrine,
+verbatim:
+"engine owns move vocabulary / profile owns mode reach / governance owns safety cap".
+Each mode declares what it favors (reordered to
 the front of a branch), what it suppresses (removed), and what it *reaches*
 for (extended move families admitted into the search), all under a declared
 risk posture that the engine caps fail-closed: a mode whose posture sits
@@ -189,6 +195,129 @@ lead vocal, the groove foundation and sacred elements are never targeted,
 and no profile can reword the proposal text — and the doctrine line is
 verbatim: "dropout is an arrangement proposal, not a destructive
 operation."
+
+### Same stems, different modes — the committed mode demos
+
+[`examples/mode_demos/`](examples/mode_demos) commits the mode-level
+differential the way the four trees above commit the producer-level one:
+nine directories, one per producer × mode run, all from the **same stems**
+(the seeded `dense_chorus_with_loops` fixture — the only shipped fixture
+that fires all five creative problem branches). Each directory keeps the
+creative pair from its run — `creative.json` (the candidate ids, the
+authored declarations echo, the per-branch fork reports, the winners) and
+`creative_report.md` (the human-readable half); the run's other artifacts
+tell the producer-level story the sample trees above already commit in
+full. Each pair is the output of exactly one of these invocations (from
+the project root, after `python fixtures/generate_fixtures.py`):
+
+```bash
+python -m logic_mix_os.cli creative \
+  --stems fixtures/dense_chorus_with_loops/stems \
+  --manifest fixtures/dense_chorus_with_loops/project_manifest.json \
+  --mode dramatic_contrast --out examples/mode_demos/halee_ramone_dramatic_contrast
+
+python -m logic_mix_os.cli creative \
+  --stems fixtures/dense_chorus_with_loops/stems \
+  --manifest fixtures/dense_chorus_with_loops/project_manifest.json \
+  --mode conservative --out examples/mode_demos/halee_ramone_conservative
+
+python -m logic_mix_os.cli creative \
+  --stems fixtures/dense_chorus_with_loops/stems \
+  --manifest fixtures/dense_chorus_with_loops/project_manifest.json \
+  --mode deconstructive --out examples/mode_demos/halee_ramone_deconstructive
+
+python -m logic_mix_os.cli creative \
+  --stems fixtures/dense_chorus_with_loops/stems \
+  --manifest fixtures/dense_chorus_with_loops/project_manifest.json \
+  --producer timbaland --mode conservative --out examples/mode_demos/timbaland_conservative
+
+python -m logic_mix_os.cli creative \
+  --stems fixtures/dense_chorus_with_loops/stems \
+  --manifest fixtures/dense_chorus_with_loops/project_manifest.json \
+  --producer quincy_jones --mode conservative --out examples/mode_demos/quincy_jones_conservative
+
+python -m logic_mix_os.cli creative \
+  --stems fixtures/dense_chorus_with_loops/stems \
+  --manifest fixtures/dense_chorus_with_loops/project_manifest.json \
+  --producer brian_eno --mode conservative --out examples/mode_demos/brian_eno_conservative
+
+python -m logic_mix_os.cli creative \
+  --stems fixtures/dense_chorus_with_loops/stems \
+  --manifest fixtures/dense_chorus_with_loops/project_manifest.json \
+  --producer quincy_jones --mode experimental --out examples/mode_demos/quincy_jones_experimental
+
+python -m logic_mix_os.cli creative \
+  --stems fixtures/dense_chorus_with_loops/stems \
+  --manifest fixtures/dense_chorus_with_loops/project_manifest.json \
+  --producer timbaland --mode negative_space --out examples/mode_demos/timbaland_negative_space
+
+python -m logic_mix_os.cli creative \
+  --stems fixtures/dense_chorus_with_loops/stems \
+  --manifest fixtures/dense_chorus_with_loops/project_manifest.json \
+  --producer timbaland --mode groove_pocket --out examples/mode_demos/timbaland_groove_pocket
+```
+
+The committed pairs are pinned byte-for-byte against fresh renders — and
+every set in the table below is pinned directly on the committed bytes —
+in `tests/test_mode_demo_refresh.py`. Candidate-id sets per branch
+(`chorus_lift_A` abbreviated to `A` under its branch column, extended
+reach-gated ids in **bold**; every demo's `loop` and `depth` branches emit
+the same `loop_A loop_B` / `depth_A` sets):
+
+| Demo | `chorus_lift` | `density` | `vocal_belief` |
+|---|---|---|---|
+| `halee_ramone_dramatic_contrast` | A B C D | A B | A B |
+| `halee_ramone_conservative` | B C D | A B | A B |
+| `halee_ramone_deconstructive` | B C | A B | A B |
+| `timbaland_conservative` | A B C D | A B | A B |
+| `quincy_jones_conservative` | B C | A B | A B |
+| `brian_eno_conservative` | B D | A B | B |
+| `quincy_jones_experimental` | A B C D **E** | A B **C D** | A B **C** |
+| `timbaland_negative_space` | B C **F** | A B **E** | A B |
+| `timbaland_groove_pocket` | B C D | A B | A B |
+
+What to read off it:
+
+- **Same producer, different mode** (the three `halee_ramone_*` rows):
+  three different chorus-lift candidate sets from one profile on one
+  project — her default `dramatic_contrast` searches the full pool, her
+  `conservative` suppresses the width move, her `deconstructive` also
+  drops the drum-room move. A mode is a different candidate search, not a
+  label on the same one.
+- **Same mode name, different producer** (the four `*_conservative` rows):
+  four pairwise-distinct chorus-lift sets under one mode name — each is
+  the shared engine pool minus that profile JSON's authored suppress list.
+  Timbaland's conservative authors nothing, so his demo carries zero
+  declaration bytes — an authored-neutral mode is byte-silent even when
+  selected explicitly by name (halee's `dramatic_contrast` row shows the
+  same silence).
+- **Quincy reaching both his families** (`quincy_jones_experimental`): his
+  high-posture experimental admits `chorus_lift_E` / `density_C`
+  (arrangement_lift, at his authored 85.3) and `density_D` / `vocal_C`
+  (ensemble_rebalance, 83.1) — and `vocal_C` **wins** its branch, the one
+  committed demo where a reached move takes a verdict. The only other demo
+  that moves a verdict does it by suppression, not reach: eno's
+  conservative suppresses the vocal ride, leaving his intimacy pass
+  (`vocal_B`) as the only vocal candidate. Every remaining winner across
+  the nine demos is the same move the neutral search picks.
+- **Dropout only where authored** (the timbaland pair): his
+  `negative_space` mode reaches the dropout family — `chorus_lift_F`
+  proposes region-muting a duplicate of the Synth Pad and Splice Texture
+  Loop texture beds through the final pre-chorus bar, `density_E` a
+  sectional dropout, both at his honest 80.9 and both outranked by his
+  subtractive economy — while `groove_pocket`, same producer and same
+  stems, authors no reach: no dropout id anywhere and no reach key in its
+  fork reports. Halee/Ramone stays reference-safe the same way: none of
+  her modes authors reach, so no extended id appears in any of her rows
+  (her committed default-flow tree is
+  [`examples/sample_output/`](examples/sample_output)).
+
+The roster behind these demos is directory-driven: drop a JSON in the
+producers directory (`logic_mix_os/doctrine/producers/`) — the CLI and the
+structural test sweeps discover it automatically. `--producer` resolves
+any name in that directory (an unknown name's error message lists what was
+found there), and the suite's producer sweeps glob the same directory, so
+a fifth profile joins the comparison without a code change.
 
 ## CLI
 
@@ -321,6 +450,7 @@ logic_mix_os/
   schemas/          # JSON Schemas for every output
 fixtures/           # deterministic synthetic test projects (generator + manifests)
 examples/           # example manifest + the four committed sample trees (same stems, four producers)
+                    #   + mode_demos/ (nine committed producer × mode creative pairs, same stems)
 tests/              # pytest suite (4 fixtures, acceptance + unit)
 ```
 
