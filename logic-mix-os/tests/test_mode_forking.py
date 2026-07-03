@@ -48,6 +48,9 @@ from logic_mix_os.creative import (
     run_creative_engine,
 )
 from logic_mix_os.doctrine.producer_profile import _validate, load_profile
+from logic_mix_os.pipeline import analyze
+from logic_mix_os.project import load_manifest
+from logic_mix_os.renderers.creative_renderer import render_creative
 
 from conftest import FIXTURE_NAMES, ROOT
 
@@ -454,21 +457,228 @@ def test_default_flow_candidate_ids_do_not_drift(producer, analyzed):
         assert emitted == DEFAULT_FLOW_IDS[name], (producer, name)
 
 
-def test_reference_authors_the_declaration_fields_explicitly_on_every_mode():
-    """The shipped reference authors ``favor_kinds`` + ``suppress_kinds``
+@pytest.mark.parametrize("producer", PRODUCERS)
+def test_every_shipped_profile_authors_the_fields_explicitly(producer):
+    """Every shipped profile authors ``favor_kinds`` + ``suppress_kinds``
     EXPLICITLY on every mode (no silent inheritance for load-bearing
-    choices), and its default-flow modes (declared default + intimate)
-    author them NEUTRAL — the requirement-8 construction, visible in the
-    JSON itself."""
-    raw = _raw("halee_ramone")
+    choices); its default-flow modes (declared default + intimate) author
+    them NEUTRAL — the requirement-8 construction, visible in the JSON
+    itself; and at least one NON-default mode authors a NON-neutral reach,
+    so the fork is real for every producer."""
+    raw = _raw(producer)
     for mode_name, entry in raw["search_modes"].items():
-        assert "favor_kinds" in entry, mode_name
-        assert "suppress_kinds" in entry, mode_name
-    for default_flow in (raw["default_creative_mode"]["default_mode"],
-                         raw["default_creative_mode"]["intimate_mode"]):
-        entry = raw["search_modes"][default_flow]
-        assert entry["favor_kinds"] == [], default_flow
-        assert entry["suppress_kinds"] == [], default_flow
+        assert "favor_kinds" in entry, (producer, mode_name)
+        assert "suppress_kinds" in entry, (producer, mode_name)
+    default_flow = {raw["default_creative_mode"]["default_mode"],
+                    raw["default_creative_mode"]["intimate_mode"]}
+    for mode_name in default_flow:
+        entry = raw["search_modes"][mode_name]
+        assert entry["favor_kinds"] == [], (producer, mode_name)
+        assert entry["suppress_kinds"] == [], (producer, mode_name)
+    forking = [m for m, e in raw["search_modes"].items()
+               if e["favor_kinds"] or e["suppress_kinds"]]
+    assert forking, producer
+    assert not default_flow & set(forking), producer
+
+
+# =========================================================================== #
+# Requirement 4 — SAME MODE NAME, DIFFERENT PRODUCERS, different sets.
+# =========================================================================== #
+def test_same_mode_different_producers_different_candidate_sets(dense):
+    """``conservative`` exists in all three profiles: on the same stems and
+    problem it emits THREE pairwise-distinct candidate-id sets — Timbaland's
+    authored-neutral full pool, Halee/Ramone's width-suppressed pool,
+    Quincy's width-and-drum-room-suppressed pool. And on ``experimental``,
+    Timbaland's authored ``intimacy_pass`` suppression splits the
+    vocal_belief set from both others. Sets, not order or labels."""
+    conservative = {}
+    for producer in PRODUCERS:
+        out = run_creative_engine(dense, "conservative", profile=load_profile(producer))
+        conservative[producer] = set(_ids(_branch(out, "chorus_lift")["variants"]))
+    assert conservative["timbaland"] == {
+        "chorus_lift_A", "chorus_lift_B", "chorus_lift_C", "chorus_lift_D"}
+    assert conservative["halee_ramone"] == {
+        "chorus_lift_B", "chorus_lift_C", "chorus_lift_D"}
+    assert conservative["quincy_jones"] == {"chorus_lift_B", "chorus_lift_C"}
+    assert len({frozenset(s) for s in conservative.values()}) == 3  # pairwise distinct
+
+    experimental = {}
+    for producer in PRODUCERS:
+        out = run_creative_engine(dense, "experimental", profile=load_profile(producer))
+        experimental[producer] = set(_ids(_branch(out, "vocal_belief")["variants"]))
+    assert experimental["timbaland"] == {"vocal_A"}
+    assert experimental["halee_ramone"] == {"vocal_A", "vocal_B"}
+    assert experimental["quincy_jones"] == {"vocal_A", "vocal_B"}
+
+
+@pytest.mark.parametrize("producer", PRODUCERS)
+def test_every_producers_every_mode_is_attributable_to_its_json(producer, dense):
+    """The full reconstructive attribution (requirements 3 + 4 + 9), all
+    three producers: for EVERY authored mode and EVERY problem, the emitted
+    kind set equals the shared ENGINE POOL minus THAT producer's authored
+    ``suppress_kinds`` for THAT mode — derived from the JSON on disk. Where
+    two producers' declarations differ, their same-mode sets differ; where
+    they are both neutral (``dramatic_contrast``), the sets agree — the
+    difference is the DATA, never a code path."""
+    prof = load_profile(producer)
+    raw_modes = _raw(producer)["search_modes"]
+    for mode_name, entry in raw_modes.items():
+        for pid in PROBLEM_IDS:
+            emitted = _kinds(generate_variants({"id": pid}, dense, mode_name, prof))
+            assert emitted == _expected_kind_set(pid, entry["suppress_kinds"]), \
+                (producer, mode_name, pid)
+
+
+# =========================================================================== #
+# The REAL CALL CHAIN (the P-039 threading lesson) + requirement 10.
+# =========================================================================== #
+def test_profile_declarations_reach_the_seam_through_the_real_call_chain():
+    """Flag PRESENCE is not flag THREADING: a real
+    ``analyze(producer="timbaland", creative_mode="negative_space")`` run —
+    the same chain the CLI drives — must show timbaland's AUTHORED
+    declarations forking the emission, artifact-level: the echoed
+    declarations equal the JSON verbatim, the suppressed kinds are absent
+    from the emitted set, and the per-branch fork report names what was
+    actually suppressed/favored."""
+    manifest = load_manifest(ROOT / "fixtures" / DENSE / "project_manifest.json")
+    res = analyze(str(ROOT / "fixtures" / DENSE / "stems"), manifest,
+                  producer="timbaland", creative_mode="negative_space")
+    cr = res.creative
+    authored = _raw("timbaland")["search_modes"]["negative_space"]
+
+    assert cr["search_mode"] == "negative_space"
+    assert cr["search_mode_declarations"] == {
+        "allowed_risk": authored["allowed_risk"],
+        "favor_kinds": authored["favor_kinds"],
+        "suppress_kinds": authored["suppress_kinds"],
+    }
+
+    chorus = _branch(cr, "chorus_lift")
+    assert _kinds(chorus["variants"]) \
+        == _expected_kind_set("chorus_lift", authored["suppress_kinds"])
+    assert set(authored["suppress_kinds"]) & _kinds(chorus["variants"]) == set()
+    assert chorus["mode_fork"] == {
+        "suppressed": ["width_bloom", "drum_room_bloom"],
+        "favored": ["subtractive_drop"],
+        "risk_capped": [],
+        "suppression_fallback": False,
+    }
+    # a branch the suppressions don't touch still explains itself honestly
+    vocal = _branch(cr, "vocal_belief")
+    assert vocal["mode_fork"] == {
+        "suppressed": [], "favored": [], "risk_capped": [],
+        "suppression_fallback": False,
+    }
+    # the run is a full pipeline run — governance governed the forked sets
+    assert res.governance["governed_branches"]
+
+
+def test_artifact_explains_the_fork_requirement_10(dense):
+    """The engine artifact carries enough mode information to explain WHY a
+    candidate set differed: the authored declarations echo plus, per branch,
+    what was actually suppressed and favored — pinned for the reference's
+    ``deconstructive`` mode."""
+    out = run_creative_engine(dense, "deconstructive", profile=load_profile("halee_ramone"))
+    authored = _raw("halee_ramone")["search_modes"]["deconstructive"]
+    assert out["search_mode_declarations"] == {
+        "allowed_risk": "medium",
+        "favor_kinds": authored["favor_kinds"],
+        "suppress_kinds": authored["suppress_kinds"],
+    }
+    for b in out["branches"]:
+        assert "mode_fork" in b, b["problem_id"]
+    assert _branch(out, "chorus_lift")["mode_fork"] == {
+        "suppressed": ["width_bloom", "drum_room_bloom"],
+        "favored": ["subtractive_drop"],
+        "risk_capped": [],
+        "suppression_fallback": False,
+    }
+    assert _branch(out, "loop")["mode_fork"]["favored"] \
+        == ["subtractive_drop", "loop_deconstruct"]
+    assert _branch(out, "depth")["mode_fork"] == {
+        "suppressed": [], "favored": [], "risk_capped": [],
+        "suppression_fallback": False,
+    }
+
+
+@pytest.mark.parametrize("producer", PRODUCERS)
+def test_artifact_keys_absent_on_default_flows(producer, analyzed):
+    """The evidence-key discipline (and the committed sample trees' byte
+    safety): neutral/default runs carry NEITHER additive key — zero new
+    artifact bytes anywhere on the default flow."""
+    prof = load_profile(producer)
+    for name in FIXTURE_NAMES:
+        res = analyzed[name]
+        mode = pipeline._default_creative_mode(res.project.intent, prof)
+        out = run_creative_engine(res, mode, profile=prof)
+        assert "search_mode_declarations" not in out, (producer, name)
+        for b in out["branches"]:
+            assert "mode_fork" not in b, (producer, name, b["problem_id"])
+
+
+def test_fallback_and_risk_cap_are_surfaced_in_the_artifact(dense):
+    """Honesty over silence: the non-empty fallback and the allowed-risk
+    refusal both surface in the artifact when they fire."""
+    ref = load_profile("halee_ramone")
+    nothing = dataclasses.replace(ref, search_modes={
+        "nothing": {
+            "allowed_risk": "high",
+            "bias": "test-local: suppress everything",
+            "favor_kinds": [],
+            "suppress_kinds": list(CREATIVE_VARIANT_KINDS),
+        },
+    })
+    out = run_creative_engine(dense, "nothing", profile=nothing)
+    for b in out["branches"]:
+        assert b["mode_fork"]["suppression_fallback"] is True, b["problem_id"]
+        assert b["mode_fork"]["suppressed"] == [], b["problem_id"]
+        assert _ids(b["variants"]) == [vid for vid, _ in ENGINE_POOL[b["problem_id"]]]
+
+    reach = dataclasses.replace(ref, search_modes={
+        "reach": {
+            "allowed_risk": "low",
+            "bias": "test-local: reach beyond posture",
+            "favor_kinds": ["width_bloom"],
+            "suppress_kinds": [],
+        },
+    })
+    out = run_creative_engine(dense, "reach", profile=reach)
+    chorus = _branch(out, "chorus_lift")
+    assert chorus["mode_fork"]["risk_capped"] == ["width_bloom"]
+    assert chorus["mode_fork"]["favored"] == []
+    assert _ids(chorus["variants"]) == [vid for vid, _ in ENGINE_POOL["chorus_lift"]]
+
+
+def test_renderer_explains_the_fork_and_stays_silent_when_neutral(dense):
+    """Requirement 10 at the RENDERER: a forking run renders the authored
+    mode reach and the per-branch fork lines; the fallback and the cap
+    refusal render when they fire; a neutral default run renders ZERO fork
+    bytes (the sample trees' human-readable half stays byte-identical)."""
+    ref = load_profile("halee_ramone")
+    md = render_creative(run_creative_engine(dense, "deconstructive", profile=ref))
+    assert "**Mode reach (profile-authored):**" in md
+    assert "suppresses `width_bloom`, `drum_room_bloom`" in md
+    assert "favors `subtractive_drop`, `loop_deconstruct`" in md
+    assert "capped at `medium` risk" in md
+    assert "_Mode fork: suppressed `width_bloom`, `drum_room_bloom`" in md
+
+    nothing = dataclasses.replace(ref, search_modes={
+        "nothing": {"allowed_risk": "high", "bias": "test-local",
+                    "favor_kinds": [], "suppress_kinds": list(CREATIVE_VARIANT_KINDS)},
+    })
+    md_fb = render_creative(run_creative_engine(dense, "nothing", profile=nothing))
+    assert "the full neutral pool was emitted (fallback)" in md_fb
+
+    reach = dataclasses.replace(ref, search_modes={
+        "reach": {"allowed_risk": "low", "bias": "test-local",
+                  "favor_kinds": ["width_bloom"], "suppress_kinds": []},
+    })
+    md_cap = render_creative(run_creative_engine(dense, "reach", profile=reach))
+    assert "favor refused by the allowed-risk cap: `width_bloom`" in md_cap
+
+    md_neutral = render_creative(run_creative_engine(dense, "dramatic_contrast", profile=ref))
+    assert "Mode reach" not in md_neutral
+    assert "Mode fork" not in md_neutral
 
 
 # =========================================================================== #

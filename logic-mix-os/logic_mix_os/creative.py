@@ -692,6 +692,10 @@ def run_creative_engine(result, mode: Optional[str] = None,
     if mode is None or mode not in search_modes:
         mode = _profile_default_mode(prof)
     problems = detect_creative_problems(result)
+    # P-042: the resolved mode's authored declarations — non-None ONLY when
+    # the mode forks (neutral/default modes leave every artifact byte
+    # untouched, the ``score_nudges`` evidence-key discipline).
+    decl = _mode_declarations(prof, mode)
     branches: List[Dict] = []
     for problem in problems:
         # P-042: the profile reaches the fork seam through the REAL call
@@ -700,12 +704,22 @@ def run_creative_engine(result, mode: Optional[str] = None,
         variants = generate_variants(problem, result, mode, prof)
         for v in variants:
             v["scores"] = score_variant(v, result, prof)
-        branches.append({
+        branch = {
             "problem": problem["problem"],
             "problem_id": problem["id"],
             "variants": variants,
             "winning": winning_variant(variants),
-        })
+        }
+        if decl is not None:
+            # Requirement-10 honesty: the per-branch fork report is derived
+            # by the SAME pure helpers, on the same inputs, that produced
+            # the emission above — what was ACTUALLY suppressed/favored for
+            # this branch, any allowed-risk refusal, and whether the
+            # non-empty fallback fired. Identical pure functions, identical
+            # inputs: the report cannot drift from the emission.
+            _, branch["mode_fork"] = _fork_candidates(
+                _curated_variants(problem, result), decl, prof)
+        branches.append(branch)
     out = {
         "search_mode": mode,
         "search_mode_bias": search_modes[mode]["bias"],
@@ -722,6 +736,16 @@ def run_creative_engine(result, mode: Optional[str] = None,
         ],
         "philosophy": prof.philosophy,
     }
+    # P-042 (requirement 10): echo the resolved mode's AUTHORED declarations
+    # so a reader can explain WHY this run's candidate sets differ — present
+    # ONLY when the mode actually forks (neutral/default runs, the committed
+    # sample trees included, carry zero new bytes).
+    if decl is not None:
+        out["search_mode_declarations"] = {
+            "allowed_risk": decl["allowed_risk"],
+            "favor_kinds": list(decl["favor_kinds"]),
+            "suppress_kinds": list(decl["suppress_kinds"]),
+        }
     # P-033: observational fallback evidence — present ONLY when a requested
     # mode was substituted (never on the ``mode=None`` default resolution, and
     # never when the requested mode exists in the profile's table).

@@ -50,12 +50,12 @@
   ],
 
   "search_modes": {
-    "conservative": {"allowed_risk": "low", "bias": "preserve the arrangement's intent, subtle balance moves, protect the lead"},
-    "ensemble_balance": {"allowed_risk": "low", "bias": "section hierarchy, the ensemble in layers around the lead"},
-    "space_for_the_singer": {"allowed_risk": "low", "bias": "carve space around the lead vocal, restraint, clarity"},
-    "arrangement_lift": {"allowed_risk": "medium", "bias": "sectional entrances and exits, build the lift through the arrangement"},
-    "orchestral_depth": {"allowed_risk": "medium", "bias": "front-to-back staging, separation between sections, layered depth"},
-    "experimental": {"allowed_risk": "high", "bias": "unusual re-voicings, extreme section flips, re-arranged gestures"}
+    "conservative": {"allowed_risk": "low", "bias": "preserve the arrangement's intent, subtle balance moves, protect the lead", "favor_kinds": ["vocal_ride"], "suppress_kinds": ["width_bloom", "drum_room_bloom"]},
+    "ensemble_balance": {"allowed_risk": "low", "bias": "section hierarchy, the ensemble in layers around the lead", "favor_kinds": ["depth_cleanup", "vocal_ride"], "suppress_kinds": ["width_bloom"]},
+    "space_for_the_singer": {"allowed_risk": "low", "bias": "carve space around the lead vocal, restraint, clarity", "favor_kinds": [], "suppress_kinds": []},
+    "arrangement_lift": {"allowed_risk": "medium", "bias": "sectional entrances and exits, build the lift through the arrangement", "favor_kinds": [], "suppress_kinds": []},
+    "orchestral_depth": {"allowed_risk": "medium", "bias": "front-to-back staging, separation between sections, layered depth", "favor_kinds": ["depth_cleanup", "drum_room_bloom"], "suppress_kinds": []},
+    "experimental": {"allowed_risk": "high", "bias": "unusual re-voicings, extreme section flips, re-arranged gestures", "favor_kinds": ["subtractive_drop", "width_bloom"], "suppress_kinds": []}
   },
 
   "philosophy": "A mix is finished when the arrangement carries the song: the lead vocal sits prominent inside an arranged ensemble, each section earns its lift through parts entering and leaving, and the space between layers lets every role read. The groove holds the floor steady while the orchestration tells the story — the record moves because the arrangement moves.",
