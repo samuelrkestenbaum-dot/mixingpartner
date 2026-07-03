@@ -55,10 +55,10 @@
   "search_modes": {
     "conservative": {"allowed_risk": "low", "bias": "preserve groove identity, subtle moves, protect the pocket", "favor_kinds": [], "suppress_kinds": [], "reach_kinds": []},
     "groove_pocket": {"allowed_risk": "low", "bias": "pocket tightness, drum punch, space around the beat", "favor_kinds": ["drum_room_bloom", "subtractive_drop"], "suppress_kinds": ["width_bloom"], "reach_kinds": []},
-    "negative_space": {"allowed_risk": "medium", "bias": "remove, mute, drop out — silence as arrangement", "favor_kinds": ["subtractive_drop"], "suppress_kinds": ["width_bloom", "drum_room_bloom"], "reach_kinds": []},
-    "dramatic_contrast": {"allowed_risk": "medium", "bias": "hard section flips, beat dropouts, hook impact through contrast", "favor_kinds": [], "suppress_kinds": [], "reach_kinds": []},
+    "negative_space": {"allowed_risk": "medium", "bias": "remove, mute, drop out — silence as arrangement", "favor_kinds": ["subtractive_drop"], "suppress_kinds": ["width_bloom", "drum_room_bloom"], "reach_kinds": ["negative_space_dropout"]},
+    "dramatic_contrast": {"allowed_risk": "medium", "bias": "hard section flips, beat dropouts, hook impact through contrast", "favor_kinds": [], "suppress_kinds": [], "reach_kinds": ["negative_space_dropout"]},
     "low_end_sculpt": {"allowed_risk": "medium", "bias": "kick/sub relationship, reserved sub, room around the bass", "favor_kinds": ["subtractive_drop", "depth_cleanup"], "suppress_kinds": ["width_bloom"], "reach_kinds": []},
-    "experimental": {"allowed_risk": "high", "bias": "unusual rhythmic transforms, stutters, reversed gestures, extreme dropouts", "favor_kinds": ["subtractive_drop", "loop_deconstruct"], "suppress_kinds": ["intimacy_pass"], "reach_kinds": []}
+    "experimental": {"allowed_risk": "high", "bias": "unusual rhythmic transforms, stutters, reversed gestures, extreme dropouts", "favor_kinds": ["subtractive_drop", "loop_deconstruct"], "suppress_kinds": ["intimacy_pass"], "reach_kinds": ["negative_space_dropout"]}
   },
 
   "philosophy": "A mix is finished when the groove is undeniable: the beat carries an identity you can name in one bar, the low end moves as one articulated pocket, and the arrangement leaves space — the silence is as composed as the sound. Sections flip hard enough to feel, and the record breathes between the hits.",

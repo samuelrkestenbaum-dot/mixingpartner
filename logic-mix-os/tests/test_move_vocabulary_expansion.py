@@ -29,9 +29,10 @@ reaches for it:
 
 Curated risk rows exist EVERYWHERE: all three shipped profiles author
 explicit ``kind_scores`` + ``truth_alignment`` rows for both new kinds even
-where reach is absent — no silent inheritance. Halee/Timbaland author ZERO
-reach (their "only if authored" gate is proven with test-local synthetic
-profiles, never by touching their taste).
+where reach is absent — no silent inheritance. Halee/Timbaland authored
+ZERO reach in P-043 (their "only if authored" gate is proven with
+test-local synthetic profiles, never by touching their taste) — and they
+STILL author zero reach over the two P-043 families.
 
 P-044 (conscious extension, the user's explicit go): the vocabulary widened
 by ONE more extended kind — ``negative_space_dropout``
@@ -233,14 +234,23 @@ def test_new_kinds_never_in_any_unreached_emission(producer, dense):
                 (producer, mode, pid)
 
 
-def test_halee_and_timbaland_author_zero_reach():
-    """The packet's authored-reach boundary: halee_ramone and timbaland
-    author ``reach_kinds`` EXPLICITLY on every mode — and every one of them
-    EMPTY. Their gate is proven with synthetic profiles below, never by
-    touching their taste."""
-    for producer in ("halee_ramone", "timbaland"):
-        for mode_name, entry in _raw(producer)["search_modes"].items():
-            assert entry.get("reach_kinds") == [], (producer, mode_name)
+def test_halee_authors_zero_reach_and_timbaland_only_the_p044_dropout():
+    """The authored-reach boundary after P-044: halee_ramone still authors
+    ``reach_kinds`` EXPLICITLY EMPTY on every mode (her gate is proven with
+    synthetic profiles, never by touching her taste), and timbaland's ONLY
+    reach is the P-044 dropout family on exactly the user's three modes —
+    he still authors ZERO reach over the P-043 families
+    (arrangement_lift / ensemble_rebalance), so every P-043 pin for him
+    holds by authoring, not by accident. His full dropout-reach pin lives
+    in tests/test_negative_space_dropout.py."""
+    for mode_name, entry in _raw("halee_ramone")["search_modes"].items():
+        assert entry.get("reach_kinds") == [], ("halee_ramone", mode_name)
+    for mode_name, entry in _raw("timbaland")["search_modes"].items():
+        reach = entry.get("reach_kinds")
+        assert reach in ([], ["negative_space_dropout"]), \
+            ("timbaland", mode_name)
+        assert "arrangement_lift" not in reach, ("timbaland", mode_name)
+        assert "ensemble_rebalance" not in reach, ("timbaland", mode_name)
 
 
 @pytest.mark.parametrize("producer", PRODUCERS)
@@ -566,8 +576,11 @@ def test_artifact_surfaces_authored_reach_and_what_it_added(dense):
 def test_reach_keys_absent_when_no_reach_is_authored(dense):
     """The evidence-key discipline, byte-level: a forking-but-not-reaching
     mode (the reference's ``deconstructive``) carries NEITHER reach key —
-    the P-042 artifact stays byte-identical; and neutral/default flows for
-    the zero-reach producers carry no fork surface at all."""
+    the P-042 artifact stays byte-identical; the zero-reach producer's
+    default flow carries no fork surface at all; and timbaland's INTIMATE
+    path (``conservative``, zero authored reach) stays byte-silent even
+    though his DEFAULT mode now reaches (the P-044 conscious drift — its
+    surface is pinned in tests/test_negative_space_dropout.py)."""
     ref = load_profile("halee_ramone")
     out = run_creative_engine(dense, "deconstructive", profile=ref)
     assert "reach_kinds" not in out["search_mode_declarations"]
@@ -575,13 +588,18 @@ def test_reach_keys_absent_when_no_reach_is_authored(dense):
         assert "reached" not in b["mode_fork"], b["problem_id"]
         assert "reach_capped" not in b["mode_fork"], b["problem_id"]
 
-    for producer in ("halee_ramone", "timbaland"):
-        prof = load_profile(producer)
-        mode = pipeline._default_creative_mode({}, prof)
-        neutral = run_creative_engine(dense, mode, profile=prof)
-        assert "search_mode_declarations" not in neutral, producer
-        for b in neutral["branches"]:
-            assert "mode_fork" not in b, (producer, b["problem_id"])
+    ref_mode = pipeline._default_creative_mode({}, ref)
+    neutral = run_creative_engine(dense, ref_mode, profile=ref)
+    assert "search_mode_declarations" not in neutral
+    for b in neutral["branches"]:
+        assert "mode_fork" not in b, b["problem_id"]
+
+    tim = load_profile("timbaland")
+    intimate = run_creative_engine(
+        dense, tim.default_creative_mode["intimate_mode"], profile=tim)
+    assert "search_mode_declarations" not in intimate
+    for b in intimate["branches"]:
+        assert "mode_fork" not in b, b["problem_id"]
 
 
 def test_renderer_explains_reach_and_stays_silent_without_it(dense):
@@ -657,12 +675,14 @@ def test_quincy_authors_the_pinned_reach_and_it_validates():
     _validate(raw, "quincy_jones")
 
 
-def test_same_mode_same_stems_only_quincy_emits_the_new_kinds(dense):
-    """THE HEADLINE DIFFERENTIAL: ``experimental`` exists in all three
-    profiles. Same mode name, same stems: quincy_jones emits the extended
-    families (reached AND favored to the front of each touched branch);
-    halee_ramone and timbaland emit ZERO extended ids anywhere — their gate
-    holds because reach was never authored, not because of any code path."""
+def test_same_mode_same_stems_each_producer_emits_only_its_authored_reach(dense):
+    """THE HEADLINE DIFFERENTIAL, P-044-extended: ``experimental`` exists in
+    all three profiles. Same mode name, same stems, THREE different
+    reaches: quincy_jones emits the P-043 families (reached AND favored to
+    the front of each touched branch) and ZERO dropout ids; timbaland
+    (P-044) emits the dropout ids and ZERO P-043-family ids; halee_ramone
+    emits ZERO extended ids of any kind. Each gate holds because of what
+    was and was not AUTHORED — never a code path."""
     emitted = {}
     for producer in PRODUCERS:
         out = run_creative_engine(dense, "experimental",
@@ -676,9 +696,25 @@ def test_same_mode_same_stems_only_quincy_emits_the_new_kinds(dense):
     assert q["vocal_belief"] == ["vocal_C", "vocal_A", "vocal_B"]
     assert q["loop"] == ["loop_A", "loop_B"]
     assert q["depth"] == ["depth_A"]
-    for producer in ("halee_ramone", "timbaland"):
-        for pid, ids in emitted[producer].items():
-            assert not set(ids) & EXTENDED_IDS, (producer, pid)
+    dropout_ids = {"chorus_lift_F", "density_E"}
+    for pid, ids in q.items():
+        assert not set(ids) & dropout_ids, ("quincy_jones", pid)
+
+    # timbaland: his authored favor fronts subtractive_drop, his P-044 reach
+    # appends the dropout variants, his intimacy_pass suppression holds —
+    # and no P-043-family id appears (he never authored that reach).
+    t = emitted["timbaland"]
+    assert t["chorus_lift"] == ["chorus_lift_B", "chorus_lift_A",
+                                "chorus_lift_C", "chorus_lift_D", "chorus_lift_F"]
+    assert t["density"] == ["density_B", "density_A", "density_E"]
+    assert t["loop"] == ["loop_B", "loop_A"]
+    assert t["depth"] == ["depth_A"]
+    assert t["vocal_belief"] == ["vocal_A"]
+    for pid, ids in t.items():
+        assert not set(ids) & (EXTENDED_IDS - dropout_ids), ("timbaland", pid)
+
+    for pid, ids in emitted["halee_ramone"].items():
+        assert not set(ids) & EXTENDED_IDS, ("halee_ramone", pid)
 
 
 @pytest.mark.parametrize("producer", PRODUCERS)

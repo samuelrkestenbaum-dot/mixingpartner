@@ -39,6 +39,18 @@ surface; halee_ramone/timbaland author ZERO reach and every one of their
 pins here is byte-identical. The reconstructive rule extends to
 (pool ∪ authored reach) − suppress, with the unchanged neutral-only
 fallback.
+
+P-044 (conscious deltas, enumerated): ``negative_space_dropout`` is the
+THIRD extended kind (tests/test_negative_space_dropout.py), and TIMBALAND
+authors its reach on exactly ``experimental`` / ``dramatic_contrast`` /
+``negative_space`` (the user's list — dramatic_contrast is his DEFAULT
+mode: negative space IS his documented philosophy). His default-flow pin
+therefore gains exactly the reached dropout ids
+(TIMBALAND_DEFAULT_FLOW_IDS below) and his default artifacts carry the
+reach surface — his committed sample tree drifted CONSCIOUSLY under the
+full-strength staleness pin. halee_ramone still authors ZERO reach: her
+pins and her committed tree stay byte-identical, and quincy's P-043 pins
+are untouched.
 """
 
 from __future__ import annotations
@@ -148,6 +160,34 @@ QUINCY_DEFAULT_FLOW_IDS = {
     "splice_loop_problem": {
         "chorus_lift": ["chorus_lift_A", "chorus_lift_B", "chorus_lift_C",
                         "chorus_lift_D", "chorus_lift_E"],
+        "loop": ["loop_A", "loop_B"],
+        "vocal_belief": ["vocal_A", "vocal_B"],
+    },
+}
+
+# P-044 CONSCIOUS DELTA — timbaland only: ``dramatic_contrast`` is his
+# DEFAULT mode and the user explicitly authorized dropout reach on it
+# ("Timbaland: yes — experimental / contrast / negative-space modes"), so
+# his default flow gains EXACTLY the reached ``negative_space_dropout`` ids
+# where the extended pool holds them and the protection filter finds an
+# unprotected target (appended after the neutral pool — reach admits, never
+# reorders the original seven). His intimate path (``conservative``, zero
+# reach) and every branch WINNER are unchanged — the drift is
+# candidate-set-only (chorus_lift_B at 86.7 still outranks the dropout's
+# honest 80.9 by his own curated margin).
+TIMBALAND_DEFAULT_FLOW_IDS = {
+    "simple_vocal_piano_song": DEFAULT_FLOW_IDS["simple_vocal_piano_song"],
+    "dense_chorus_with_loops": {
+        "chorus_lift": ["chorus_lift_A", "chorus_lift_B", "chorus_lift_C",
+                        "chorus_lift_D", "chorus_lift_F"],
+        "density": ["density_A", "density_B", "density_E"],
+        "loop": ["loop_A", "loop_B"],
+        "depth": ["depth_A"],
+        "vocal_belief": ["vocal_A", "vocal_B"],
+    },
+    "splice_loop_problem": {
+        "chorus_lift": ["chorus_lift_A", "chorus_lift_B", "chorus_lift_C",
+                        "chorus_lift_D", "chorus_lift_F"],
         "loop": ["loop_A", "loop_B"],
         "vocal_belief": ["vocal_A", "vocal_B"],
     },
@@ -513,13 +553,18 @@ def test_default_flow_candidate_ids_do_not_drift(producer, analyzed):
     """Each producer's own default-flow mode (its authored
     ``default_creative_mode`` resolution per fixture) emits the PINNED
     variant-id lists — order included — on all three fixtures. For
-    halee_ramone/timbaland that is the pre-P-042 neutral emission,
-    byte-identical (they author zero reach). For quincy_jones it is the
-    P-043 CONSCIOUS delta: his default mode's authored reach appends
-    exactly the arrangement_lift ids (see QUINCY_DEFAULT_FLOW_IDS)."""
+    halee_ramone that is the pre-P-042 neutral emission, byte-identical
+    (she authors zero reach). For quincy_jones it is the P-043 CONSCIOUS
+    delta (his default mode's authored reach appends exactly the
+    arrangement_lift ids — QUINCY_DEFAULT_FLOW_IDS); for timbaland the
+    P-044 CONSCIOUS delta (his default mode's authored dropout reach
+    appends exactly the negative_space_dropout ids —
+    TIMBALAND_DEFAULT_FLOW_IDS)."""
     prof = load_profile(producer)
-    expected_flow = (QUINCY_DEFAULT_FLOW_IDS if producer == "quincy_jones"
-                     else DEFAULT_FLOW_IDS)
+    expected_flow = {
+        "quincy_jones": QUINCY_DEFAULT_FLOW_IDS,
+        "timbaland": TIMBALAND_DEFAULT_FLOW_IDS,
+    }.get(producer, DEFAULT_FLOW_IDS)
     for name in FIXTURE_NAMES:
         res = analyzed[name]
         mode = pipeline._default_creative_mode(res.project.intent, prof)
@@ -620,7 +665,10 @@ def test_profile_declarations_reach_the_seam_through_the_real_call_chain():
     declarations forking the emission, artifact-level: the echoed
     declarations equal the JSON verbatim, the suppressed kinds are absent
     from the emitted set, and the per-branch fork report names what was
-    actually suppressed/favored."""
+    actually suppressed/favored. P-044 (conscious): ``negative_space`` now
+    also authors the dropout reach — the mode literally NAMED for the
+    family — so the echo carries ``reach_kinds`` and the fork report the
+    reach keys, verbatim from the JSON."""
     manifest = load_manifest(ROOT / "fixtures" / DENSE / "project_manifest.json")
     res = analyze(str(ROOT / "fixtures" / DENSE / "stems"), manifest,
                   producer="timbaland", creative_mode="negative_space")
@@ -632,23 +680,26 @@ def test_profile_declarations_reach_the_seam_through_the_real_call_chain():
         "allowed_risk": authored["allowed_risk"],
         "favor_kinds": authored["favor_kinds"],
         "suppress_kinds": authored["suppress_kinds"],
+        "reach_kinds": ["negative_space_dropout"],
     }
 
     chorus = _branch(cr, "chorus_lift")
-    assert _kinds(chorus["variants"]) \
-        == _expected_kind_set("chorus_lift", authored["suppress_kinds"])
+    assert _kinds(chorus["variants"]) == _expected_kind_set(
+        "chorus_lift", authored["suppress_kinds"], authored["reach_kinds"])
     assert set(authored["suppress_kinds"]) & _kinds(chorus["variants"]) == set()
     assert chorus["mode_fork"] == {
         "suppressed": ["width_bloom", "drum_room_bloom"],
         "favored": ["subtractive_drop"],
         "risk_capped": [],
         "suppression_fallback": False,
+        "reached": ["negative_space_dropout"],
+        "reach_capped": [],
     }
-    # a branch the suppressions don't touch still explains itself honestly
+    # a branch the declarations don't touch still explains itself honestly
     vocal = _branch(cr, "vocal_belief")
     assert vocal["mode_fork"] == {
         "suppressed": [], "favored": [], "risk_capped": [],
-        "suppression_fallback": False,
+        "suppression_fallback": False, "reached": [], "reach_capped": [],
     }
     # the run is a full pipeline run — governance governed the forked sets
     assert res.governance["governed_branches"]
@@ -682,14 +733,15 @@ def test_artifact_explains_the_fork_requirement_10(dense):
     }
 
 
-# P-043: quincy's default mode now consciously authors reach, so his default
-# artifacts CARRY the declaration surface (pinned in
-# tests/test_move_vocabulary_expansion.py); the zero-byte discipline is the
-# ZERO-REACH producers' guarantee — exactly the two whose trees are committed
-# under the staleness pin.
-@pytest.mark.parametrize("producer", ("halee_ramone", "timbaland"))
+# P-043: quincy's default mode consciously authors reach; P-044: timbaland's
+# default mode does too (his committed tree drifted CONSCIOUSLY under the
+# full-strength staleness pin — the drift surface is pinned in
+# tests/test_negative_space_dropout.py). The zero-byte discipline is now the
+# ZERO-REACH producer's guarantee: halee_ramone, whose committed reference
+# tree stays byte-identical.
+@pytest.mark.parametrize("producer", ("halee_ramone",))
 def test_artifact_keys_absent_on_default_flows(producer, analyzed):
-    """The evidence-key discipline (and the committed sample trees' byte
+    """The evidence-key discipline (and the committed reference tree's byte
     safety): neutral/default runs carry NEITHER additive key — zero new
     artifact bytes anywhere on the default flow."""
     prof = load_profile(producer)

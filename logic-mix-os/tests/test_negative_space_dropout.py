@@ -58,7 +58,7 @@ import inspect
 
 import pytest
 
-from logic_mix_os import creative
+from logic_mix_os import pipeline
 from logic_mix_os.constants import (
     CREATIVE_EXTENDED_KINDS,
     CREATIVE_VARIANT_KINDS,
@@ -81,6 +81,8 @@ from test_mode_forking import (
     ENGINE_POOL,
     PROBLEM_IDS,
     PRODUCERS,
+    TIMBALAND_DEFAULT_FLOW_IDS,
+    _branch,
     _ids,
     _kinds,
     _raw,
@@ -684,3 +686,189 @@ def test_dropout_reach_is_data_not_producer(base, dense):
     for pid in PROBLEM_IDS:
         assert DROPOUT not in _kinds(
             generate_variants({"id": pid}, dense, "reach", unreaching)), (base, pid)
+
+
+# =========================================================================== #
+# THE SHIPPED REACH — Timbaland only, on exactly the user's three modes.
+# =========================================================================== #
+# The user's authorization, verbatim: "Timbaland: yes — experimental /
+# contrast / negative-space modes" (his mode names: ``experimental``,
+# ``dramatic_contrast``, ``negative_space``). "Halee/Ramone: no by default.
+# Quincy: no by default." — "This keeps it from becoming a general 'remove
+# stuff' move."
+TIMBALAND_REACH = {
+    "conservative": [],
+    "groove_pocket": [],
+    "negative_space": [DROPOUT],
+    "dramatic_contrast": [DROPOUT],
+    "low_end_sculpt": [],
+    "experimental": [DROPOUT],
+}
+TIMBALAND_REACHING_MODES = ("experimental", "dramatic_contrast", "negative_space")
+
+DROPOUT_IDS = {"chorus_lift_F", "density_E"}
+
+
+def test_timbaland_authors_the_pinned_reach_and_it_validates():
+    """Timbaland's ``reach_kinds`` per mode IS the pinned authoring — the
+    dropout family on exactly the user's three modes, nothing else, nowhere
+    else — and the shipped JSON passes full loader validation: his honest
+    MEDIUM translation row clears the medium posture of dramatic_contrast /
+    negative_space and the high posture of experimental (the authored reach
+    lives INSIDE the governance cap)."""
+    raw = _raw("timbaland")
+    reach = {m: e["reach_kinds"] for m, e in raw["search_modes"].items()}
+    assert reach == TIMBALAND_REACH
+    _validate(raw, "timbaland")
+
+
+def test_halee_and_quincy_author_zero_dropout_reach():
+    """The other half of the user's decision: NO halee or quincy mode
+    reaches the dropout family — read from the JSONs on disk, so any future
+    authoring of it must consciously break this pin."""
+    for producer in ("halee_ramone", "quincy_jones"):
+        for mode_name, entry in _raw(producer)["search_modes"].items():
+            assert DROPOUT not in entry.get("reach_kinds", []), \
+                (producer, mode_name)
+
+
+def test_same_mode_same_stems_only_timbaland_emits_dropout(dense, all_analyzed):
+    """THE HEADLINE DIFFERENTIAL: on the same stems, timbaland emits the
+    dropout ids on each of his three authored modes exactly where the
+    curated pool holds a variant — while halee and quincy emit ZERO dropout
+    ids on EVERY authored mode, the default resolution and an unknown mode.
+    The differential is attributable entirely to the authored reach."""
+    tim = load_profile("timbaland")
+    for mode in TIMBALAND_REACHING_MODES:
+        out = run_creative_engine(dense, mode, profile=tim)
+        assert out["search_mode_declarations"]["reach_kinds"] == [DROPOUT], mode
+        for b in out["branches"]:
+            ids = set(_ids(b["variants"]))
+            assert ids & DROPOUT_IDS \
+                == set(DROPOUT_POOL[b["problem_id"]]), (mode, b["problem_id"])
+            assert b["mode_fork"]["reached"] \
+                == ([DROPOUT] if DROPOUT_POOL[b["problem_id"]] else []), \
+                (mode, b["problem_id"])
+            assert b["mode_fork"]["reach_capped"] == [], (mode, b["problem_id"])
+
+    for producer in ("halee_ramone", "quincy_jones"):
+        prof = load_profile(producer)
+        modes = list(_raw(producer)["search_modes"]) + [None, "no_such_mode"]
+        for mode in modes:
+            for pid in PROBLEM_IDS:
+                emitted = generate_variants({"id": pid}, dense, mode, prof)
+                assert DROPOUT not in _kinds(emitted), (producer, mode, pid)
+                assert not set(_ids(emitted)) & DROPOUT_IDS, (producer, mode, pid)
+
+
+@pytest.mark.parametrize("name", sorted(PROTECTED_BY_FIXTURE))
+@pytest.mark.parametrize("mode", TIMBALAND_REACHING_MODES)
+def test_protection_overrides_timbalands_real_authored_reach(name, mode, all_analyzed):
+    """The protection filter under the SHIPPED reach, every fixture × every
+    reaching mode: no protected name ever appears in a dropout variant's
+    targets, and no dropout variant emits empty — the reach admits the
+    family, the ENGINE decides what it may touch."""
+    res = all_analyzed[name]
+    protected = _dropout_protected_names(res)
+    out = run_creative_engine(res, mode, profile=load_profile("timbaland"))
+    for b in out["branches"]:
+        for v in b["variants"]:
+            if v["kind"] != DROPOUT:
+                continue
+            assert v["tracks_affected"], (name, mode, v["variant_id"])
+            assert set(v["tracks_affected"]) & protected == set(), \
+                (name, mode, v["variant_id"])
+
+
+def test_timbaland_default_flow_drift_is_conscious_and_bounded(analyzed):
+    """THE DEFAULT-MODE DECISION at its blast radius (the quincy P-043
+    pattern): timbaland's intimate path (conservative, zero reach) stays
+    byte-neutral — no declaration surface at all; his default path
+    (dramatic_contrast — the user explicitly authorized reach on his
+    default) emits the pinned TIMBALAND_DEFAULT_FLOW_IDS, reports exactly
+    the dropout reach on the branches the curated pool touches, and every
+    branch WINNER is unmoved — his economy (subtractive_drop 86.7, vocal
+    rides, depth cleanup) still outranks the dropout's honest 80.9 by his
+    own curated margin, so the drift is candidate-set-only."""
+    prof = load_profile("timbaland")
+    for name in FIXTURE_NAMES:
+        res = analyzed[name]
+        mode = pipeline._default_creative_mode(res.project.intent, prof)
+        out = run_creative_engine(res, mode, profile=prof)
+        emitted = {b["problem_id"]: _ids(b["variants"]) for b in out["branches"]}
+        assert emitted == TIMBALAND_DEFAULT_FLOW_IDS[name], name
+
+        if mode == "conservative":  # the intimate path: zero reach
+            assert "search_mode_declarations" not in out, name
+            for b in out["branches"]:
+                assert "mode_fork" not in b, (name, b["problem_id"])
+            continue
+        assert mode == "dramatic_contrast", name
+        assert out["search_mode_declarations"] == {
+            "allowed_risk": "medium", "favor_kinds": [], "suppress_kinds": [],
+            "reach_kinds": [DROPOUT],
+        }
+        for b in out["branches"]:
+            expected = [DROPOUT] if DROPOUT_POOL[b["problem_id"]] else []
+            assert b["mode_fork"]["reached"] == expected, (name, b["problem_id"])
+            assert b["mode_fork"]["reach_capped"] == [], (name, b["problem_id"])
+            for v in b["variants"]:
+                if v["kind"] == DROPOUT:
+                    assert v["scores"]["overall_score"] \
+                        == AUTHORED_DROPOUT["timbaland"]["overall"]
+        winners = {b["problem_id"]: b["winning"]["winning_variant"]
+                   for b in out["branches"]}
+        assert winners["chorus_lift"] == "chorus_lift_B", name
+        if "density" in winners:
+            assert winners["density"] == "density_B", name
+
+
+def test_committed_trees_carry_the_conscious_drift_and_only_that():
+    """The committed sample trees, in committed form: timbaland's tree (the
+    CONSCIOUS P-044 drift, regenerated via the verbatim README invocation
+    under the full-strength staleness pin) carries the authored reach
+    surface — the declarations echo, the chorus_lift dropout candidate
+    targeting the BGV Chop bed at his honest 80.9, the reach report — while
+    the WINNERS and the doctrine headline (60.9) are unmoved; the reference
+    tree carries ZERO reach/dropout bytes and its headline (76.3) is
+    unmoved. (Byte-level staleness is pinned in tests/test_sample_refresh.py
+    — this pins the drift's SHAPE.)"""
+    import json
+
+    tim = json.loads(
+        (ROOT / "examples" / "sample_output_timbaland" / "creative.json")
+        .read_text(encoding="utf-8"))
+    assert tim["search_mode"] == "dramatic_contrast"
+    assert tim["search_mode_declarations"] == {
+        "allowed_risk": "medium", "favor_kinds": [], "suppress_kinds": [],
+        "reach_kinds": [DROPOUT],
+    }
+    chorus = _branch(tim, "chorus_lift")
+    assert chorus["mode_fork"]["reached"] == [DROPOUT]
+    f = next(v for v in chorus["variants"] if v["variant_id"] == "chorus_lift_F")
+    assert f["kind"] == DROPOUT
+    assert f["tracks_affected"] == ["BGV Chop"]
+    assert f["changes"] == CHORUS_F_CHANGES
+    assert f["reversibility"] == "non_destructive_duplicate_track"
+    assert f["scores"]["overall_score"] == AUTHORED_DROPOUT["timbaland"]["overall"]
+    assert chorus["winning"]["winning_variant"] == "chorus_lift_B"
+    for b in tim["branches"]:
+        if b["problem_id"] != "chorus_lift":
+            assert not set(_ids(b["variants"])) & DROPOUT_IDS, b["problem_id"]
+
+    tim_ds = json.loads(
+        (ROOT / "examples" / "sample_output_timbaland" / "doctrine_score.json")
+        .read_text(encoding="utf-8"))
+    assert tim_ds["overall_mix_readiness_score"] == 60.9  # doctrine unmoved
+
+    ref = json.loads(
+        (ROOT / "examples" / "sample_output" / "creative.json")
+        .read_text(encoding="utf-8"))
+    assert "search_mode_declarations" not in ref
+    for b in ref["branches"]:
+        assert "mode_fork" not in b, b["problem_id"]
+        assert not set(_ids(b["variants"])) & DROPOUT_IDS, b["problem_id"]
+    ref_ds = json.loads(
+        (ROOT / "examples" / "sample_output" / "doctrine_score.json")
+        .read_text(encoding="utf-8"))
+    assert ref_ds["overall_mix_readiness_score"] == 76.3  # reference unmoved

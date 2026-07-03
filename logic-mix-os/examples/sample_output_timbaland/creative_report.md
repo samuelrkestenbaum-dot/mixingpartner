@@ -2,6 +2,8 @@
 
 **Search mode:** `dramatic_contrast` — hard section flips, beat dropouts, hook impact through contrast
 
+**Mode reach (profile-authored):** favors —; suppresses —; reaches for `negative_space_dropout` — capped at `medium` risk
+
 ## Static vs. Dynamic
 
 - Static mix: 80.0/100
@@ -18,6 +20,9 @@
 | Subtractive Drop | `subtractive_drop` | 86.7 | 85 | 92 | low | promising |
 | Vocal-Ride Lift | `vocal_ride` | 79.1 | 88 | 72 | low | worth testing |
 | Drum Room Bloom | `drum_room_bloom` | 82.1 | 75 | 86 | low | promising |
+| Negative-Space Dropout | `negative_space_dropout` | 80.9 | 80 | 94 | medium | promising |
+
+_Mode fork: reached for `negative_space_dropout`._
 
 **Top-scored:** chorus_lift_B — 'Subtractive Drop' scored 86.7 (promising); strongest on its intended axis without breaking vocal belief.
 
