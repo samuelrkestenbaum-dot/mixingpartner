@@ -4,6 +4,87 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
+## ★★★ STATUS (P-047 close, 2026-07-03): residue = accepted standing notes only — THE SWEEPS ARE PRODUCER-COMPLETE AND FUTURE-PROOF
+
+- **P-047 (DIRECTORY-DRIVEN PRODUCER SWEEPS + DOCS RESIDUES — TEST +
+  DOCS hardening, ZERO runtime changes by definition; opened on the
+  user's "Go" 2026-07-03 after the P-046 merge [PR #25 → default tip
+  `24b5ca7`], down the orchestrator's presented recommendation — the
+  P-045 reviewer residue [the hardcoded three-producer sweep tuple] +
+  the P-046 docs residues, one packet) closed 2026-07-03:** qa GREEN
+  (11/11, zero discrepancies) + reviewer PASS (no must-fix). Commits
+  `3322c88` (Commit-1 — `PRODUCERS = tuple(sorted(p.stem for p in
+  _PRODUCERS_DIR.glob("*.json")))` [the IDENTICAL expression
+  cli.py:50 uses on the product's single source of truth; the old
+  hand-rolled second path DELETED — the P-045 drift vector is gone]
+  + the NEW minimum-containment discovery guard
+  `test_producer_sweep_is_directory_driven_with_the_known_minimum`
+  [four known names as MINIMUM, no maximum — nothing blocks a fifth
+  producer] + eno's data rows at every per-producer site, captured
+  from the real engine then pinned; GREEN IN ISOLATION at **1122**)
+  + `f9736f3` (Commit-2 — docs residues: four-fixture README,
+  four-tree docstring, ~10 stale-prose sites across the sweep files;
+  prose-only, ZERO collection changes — verified per file
+  C1 == HEAD) on parent `37e4120`, atop merge base `24b5ca7` (= PR
+  #25 — P-046 merged FIRST). Exactly **5 files, +125/−41**, ZERO
+  .py under logic_mix_os/, zero profiles/fixtures/goldens, the four
+  committed trees byte-untouched. PUSHED BEFORE qa/reviewer
+  (standing go — both gates validated the final SHAs), NOT merged.
+  Suite **1122** / regression **93/93** / Commit-1 iso **1122** /
+  the fifth-producer property PROVEN (a synthetic `test_fifth.json`
+  → passive collection growth 36→39, 41→46, 50→53; 5 exact
+  KeyErrors, ZERO structural failures) / sabotage 3/3 (incl. the
+  tuple reverted to the hardcoded three → the guard FAILS — silent
+  regression impossible) / STOP-condition integrity held (fail-first
+  = exactly 6 missing-data-row failures, zero structural — P-045's
+  claimed equivalents were REAL). **Codex unavailable — single-model
+  review.** Receipt:
+  `build-os/receipts/P-047-directory-driven-sweeps.md`.
+- **★ THE P-045 REVIEWER RESIDUE (c) IS ✓ RESOLVED** (the named
+  future-packet candidate — the hardcoded `PRODUCERS` 3-tuples): the
+  sweeps are now DIRECTORY-DRIVEN and a fifth producer grows them
+  passively (proven); brian_eno is swept by the SAME structural
+  guards as the three (the contract's consequential coverage items
+  landed with the sweep extension). **THE P-046 DOCS RESIDUES
+  (notes 1–2) ARE ✓ RESOLVED** (README fixture count; the four-way
+  docstring), plus the sweep files' stale prose swept.
+- **NEW accepted notes (P-047, recorded not fixed):**
+  1. **Two stale test NAMES in `test_negative_space_dropout.py`:**
+     `test_all_three_profiles_author_honest_dropout_rows` sweeps
+     four; `test_same_mode_same_stems_only_timbaland_emits_dropout`
+     stale since P-045 — name-only, the assertions are true and
+     non-vacuous; rename = node-ID churn; fold into a future touch.
+  2. **`_PRODUCER_TOKENS` at `test_mode_forking.py:873` has no
+     eno/brian token** — the fork-path code-purity guard wouldn't
+     flag a hypothetical eno-named engine branch (pre-existing since
+     P-045; the same holds for any fifth name) — fold the token
+     list into the next hardening touch.
+  3. **`test_same_mode_same_stems_each_producer_emits_only_its_authored_reach`
+     would silently skip (collect-but-not-assert) a fifth producer's
+     emission** — marginal: the loud KeyErrors elsewhere force
+     conscious extension.
+- **All prior standing notes RETAINED** (the banners below), incl.
+  the ★★ STANDING TRAJECTORY WATCH-ITEM (a REAL groove-carrier
+  signal before ANY dropout-surface widening) and the safety line
+  (execution/apply semantics NEVER without explicit user re-gating).
+- **Open boundary:** P-047's commits pushed to the dev branch BEFORE
+  qa/reviewer under the orchestrator's standing go; **the MERGE of
+  P-047 (`37e4120` + `3322c88` + `f9736f3` + the close commit, atop
+  `24b5ca7` = PR #25) is the OPEN USER GATE** — it awaits the
+  user's explicit word.
+- **NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open
+  directions to the user (ALL user-gated): the P-047 merge ·
+  quincy/halee authored dropout reach · the future-analyzer
+  candidates from Eno's honest deferrals (textural coherence ·
+  generative process · ambient patience) · a fifth producer (now
+  cheaper than ever — auto-swept) · the small test-name/token-list
+  hardening touch (notes 1–3 above) · anything else the user calls.
+  Do NOT open anything blind.
+- **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
+  comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
+  placement faith; (3) flag PRESENCE is not flag THREADING — levers
+  need reaches-the-destination guards.
+
 ## ★★★ STATUS (P-046 close, 2026-07-03): residue = accepted standing notes only — THE PRODUCT SURFACE MATCHES THE PRODUCT
 
 - **P-046 (PRODUCT-SURFACE REFRESH — The Four-Producer Demo,
@@ -58,7 +139,11 @@
      markdown-parsing test stays not worth its brittleness.
   - Notes 1–2 pair naturally with the P-045 directory-driven
     `PRODUCERS`-tuple sweeps hardening — one hardening/docs packet,
-    ★ USER-GATED.
+    ★ USER-GATED. **(✓ RESOLVED by P-047, 2026-07-03:
+    notes 1–2 FIXED — README "the four example projects" [generator
+    verified: exactly 4 builders] + the four-way docstring re-worded;
+    note 3's stale sweep-file prose also swept [~10 sites]; see the
+    P-047 banner above.)**
 - **All prior standing notes RETAINED** (the banners below), incl.
   the ★★ STANDING TRAJECTORY WATCH-ITEM (a REAL groove-carrier
   signal before ANY dropout-surface widening) and the safety line
@@ -67,7 +152,9 @@
   qa/reviewer under the orchestrator's standing go; **the MERGE of
   P-046 (`8674a97` + `c94f2fe` + `95f65bf` + the close commit, atop
   `0a53bb5` = PR #24) is the OPEN USER GATE** — it awaits the
-  user's explicit word.
+  user's explicit word. **(✓ RESOLVED at P-047 open, 2026-07-03:
+  merged as PR #25 on the user's directive — merge commit `24b5ca7`,
+  the current default tip and the P-047 merge base.)**
 - **NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open
   directions to the user (ALL user-gated): the P-046 merge · the
   directory-driven sweeps hardening (the P-045 named candidate, now
@@ -75,7 +162,11 @@
   reach · the future-analyzer candidates from Eno's honest deferrals
   (textural coherence · generative process · ambient patience) · a
   fifth producer · anything else the user calls. Do NOT open
-  anything blind.
+  anything blind. **(✓ UPDATE at P-047 close, 2026-07-03: the
+  user called the directory-driven sweeps + docs residues hardening —
+  opened and CLOSED as P-047 — see the P-047 banner above; NEXT =
+  NOTHING STAGED again, the orchestrator presents the open
+  directions.)**
 - **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
   comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
   placement faith; (3) flag PRESENCE is not flag THREADING — levers
@@ -123,7 +214,11 @@
      (imported by two other suites) should eventually become
      DIRECTORY-DRIVEN so a FIFTH producer grows the sweeps
      passively — an existing-test change, correctly out of P-045's
-     scope.
+     scope. **(✓ RESOLVED by P-047, 2026-07-03: the tuple
+     is now DIRECTORY-DRIVEN — the IDENTICAL cli.py:50 expression on
+     the producers dir, the drift vector deleted, the
+     minimum-containment guard added; a fifth producer PROVEN to grow
+     the sweeps passively; see the P-047 banner above.)**
   4. **The honest future-analyzer candidates (from Eno's own
      deferrals — ★ USER-GATED):** textural coherence · generative
      process/Oblique Strategies · ambient patience — measurement

@@ -419,23 +419,52 @@
     merge is a user gate**, atop the set-active `8674a97`. P-046's
     parent chain: `95f65bf` → `c94f2fe` → `8674a97` (active-packet
     confirmation) → `0a53bb5` (PR #24 merge).
+    ★★ P-046 IS MERGED — **PR #25 (P-046 — the four-producer demo +
+    closes) is MERGED to default on the user's directive — merge
+    commit `24b5ca7`, the CURRENT default-branch tip. The base for
+    MERGE/landing decisions is now `24b5ca7`.** The dev branch now
+    carries **P-047 (`3322c88` + `f9736f3`, TEST + DOCS hardening —
+    DIRECTORY-DRIVEN PRODUCER SWEEPS + DOCS RESIDUES: the hardcoded
+    three-producer sweep tuple replaced by `PRODUCERS =
+    tuple(sorted(p.stem for p in _PRODUCERS_DIR.glob("*.json")))` —
+    the IDENTICAL expression cli.py:50 uses on the product's single
+    source of truth, the old hand-rolled second path DELETED [the
+    P-045 drift vector is gone] — + the NEW minimum-containment
+    discovery guard + eno's data rows at every per-producer site
+    [captured from the real engine, then pinned] + the docs residues
+    [four-fixture README, four-tree docstring, ~10 stale-prose
+    sites]; exactly 5 files, +125/−41, ZERO .py under logic_mix_os/,
+    zero profiles/fixtures/goldens, the four committed trees
+    byte-untouched), PUSHED to the dev branch BEFORE qa/reviewer
+    under the orchestrator's standing go (both gates validated the
+    final SHAs), NOT merged — the P-047 merge is a user gate**,
+    atop the set-active `37e4120`. P-047's parent chain: `f9736f3`
+    → `3322c88` → `37e4120` (active-packet confirmation) →
+    `24b5ca7` (PR #25 merge).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-03, P-046 — the
-  four-producer DEMO baseline):** suite **1110 passed** (0 failed /
-  skipped); regression **93/93** (tests_run 93 / passed 93 /
-  failed 0) — the corpus is **4 fixtures** (the 68/68 era ended
-  CONSCIOUSLY at P-035). Commits `c94f2fe` (the two NEW demo trees
-  [quincy 68.8 + eno 65.5] + the staleness pin extended to four +
-  the NEW mode-surface pin + test-9 2→4) + `95f65bf` (README only)
-  on parent `8674a97` (active-packet confirmation), atop merge base
-  `0a53bb5` (= the PR #24 merge) — `c94f2fe` IS Commit-1 → green in
-  isolation (throwaway worktree: **1110 passed** — no test depends
-  on README bytes). (History: 1100 → **1110** at P-046 — +10: +2
+- **Green baseline (verified 2026-07-03, P-047 — the
+  directory-driven-sweeps baseline):** suite **1122 passed**
+  (0 failed / skipped); regression **93/93** (tests_run 93 /
+  passed 93 / failed 0) — the corpus is **4 fixtures** (the 68/68
+  era ended CONSCIOUSLY at P-035). Commits `3322c88` (the
+  directory-driven `PRODUCERS` discovery [the IDENTICAL cli.py:50
+  expression; the old hand-rolled second path DELETED] + the NEW
+  minimum-containment discovery guard + eno's data rows at every
+  per-producer site) + `f9736f3` (docs residues — prose-only, ZERO
+  collection changes, verified per file C1 == HEAD) on parent
+  `37e4120` (active-packet confirmation), atop merge base `24b5ca7`
+  (= the PR #25 merge) — `3322c88` IS Commit-1 → GREEN IN ISOLATION
+  at **1122**. (History: 1110 → **1122** at P-047 — +12: 11 new
+  `[brian_eno]` sweep instances + the NEW discovery guard
+  `test_producer_sweep_is_directory_driven_with_the_known_minimum`
+  [per-file +4/+5/+3 across mode_forking / move_vocabulary /
+  dropout] — Commit-1 iso **1122**; 1100 → **1110** at P-046 —
+  +10: +2
   staleness params + +2 headline params + +4 mode-surface pin
   [`test_committed_sample_mode_surface_is_the_authored_reach` ×4] +
   +2 contract-migration [test-9 2→4] — Commit-1 iso **1110**;
@@ -477,6 +506,112 @@
   331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-047 MAKES THE SWEEPS PRODUCER-COMPLETE AND FUTURE-PROOF —
+  DIRECTORY-DRIVEN PRODUCER SWEEPS + DOCS RESIDUES (TEST + DOCS
+  hardening, ZERO runtime changes by definition; opened on the
+  user's "Go", 2026-07-03, after the P-046 merge [PR #25 → default
+  tip `24b5ca7`], down the orchestrator's presented recommendation —
+  the P-045 reviewer residue [the hardcoded three-producer sweep
+  tuple] + the P-046 docs residues, one packet). Every structural
+  guard now DISCOVERS profiles from the producers directory — every
+  current and future profile is swept automatically; the P-045 drift
+  vector (the hand-rolled second path) is DELETED; brian_eno is
+  swept by the SAME structural guards as the three. The P-045
+  reviewer residue (the hardcoded tuple) ✓ RESOLVED; the P-046 docs
+  residues ✓ RESOLVED. qa GREEN (11/11, zero discrepancies) +
+  reviewer PASS (no must-fix). Last-closed = P-047.**
+  - **Two commits** on parent `37e4120` (active-packet
+    confirmation), atop merge base `24b5ca7` (= the PR #25 merge —
+    P-046 landed FIRST): `3322c88` (Commit-1 — `PRODUCERS =
+    tuple(sorted(p.stem for p in _PRODUCERS_DIR.glob("*.json")))`,
+    the IDENTICAL expression cli.py:50 uses on the product's single
+    source of truth, the old hand-rolled second path DELETED + the
+    NEW guard
+    `test_producer_sweep_is_directory_driven_with_the_known_minimum`
+    [sorted, duplicate-free, the four known names as MINIMUM
+    containment, no maximum — nothing blocks a fifth producer] +
+    eno's data rows at every per-producer site, captured from the
+    real engine then pinned; GREEN IN ISOLATION at **1122**) +
+    `f9736f3` (Commit-2 — docs residues: README "the four example
+    projects" [generator verified: exactly 4 builders], the four-way
+    docstring [2-of-4 committed trees re-read there], ~10
+    stale-prose sites across the sweep files; prose-only everywhere,
+    ZERO collection changes — verified per file C1 == HEAD).
+    Exactly **5 files, +125/−41 (347-line diff)** — the three sweep
+    test files + README.md + test_four_way_differential.py
+    (docs-only hunks); ZERO .py under `logic_mix_os/`; zero
+    profiles/fixtures/goldens; the four committed trees
+    byte-untouched. **PUSHED to the dev branch BEFORE qa/reviewer
+    under the standing go (both gates validated the final SHAs);
+    NOT merged — the P-047 merge is the OPEN USER GATE.**
+  - **★ The eno rows (the key data):** AUTHORED_DROPOUT {medium,
+    low, 78.9, truth 64/82/78}; AUTHORED_TRANSLATION {low, medium,
+    medium}; AUTHORED_OVERALLS {72.0, 62.6}; conservative set
+    {chorus_lift_B, chorus_lift_D} (the pairwise-distinct count
+    STRENGTHENED 3→4); experimental emission [B,A,C,F] /
+    [density_B,A,E] / [vocal_A,B] (the vocal set coincides with
+    halee's — honest coincidence documentation, both sets pinned by
+    equality); the affinity ordering extended to the FULL
+    four-producer chain timbaland 80.9 > eno 78.9 > quincy 73.7 >
+    halee 60.6 with the original t>q>h chains KEPT verbatim.
+    **STOP-condition integrity:** the fail-first run after the tuple
+    swap produced exactly 6 missing-data-row failures and ZERO
+    structural failures on eno — P-045's claimed equivalents were
+    REAL (corroborated by the reviewer against the four-way suite's
+    existing eno coverage).
+  - **★ qa GREEN (11/11, zero discrepancies):** suite 1110 →
+    **1122 passed, 0 failed** (+4/+5/+3 per file = 11 new
+    `[brian_eno]` sweep instances + the NEW discovery guard);
+    regression **93/93**; Commit-1 iso **1122**; **the
+    fifth-producer property PROVEN** — a synthetic `test_fifth.json`
+    (neutral halee clone) dropped into a worktree's producers dir →
+    collection GREW passively (36→39, 41→46, 50→53), run =
+    5 failed / 133 passed, ALL FIVE `KeyError: 'test_fifth'` on
+    per-producer data tables, zero structural-guard failures
+    (test_mode_forking 39/39 green on the neutral clone) — the sweep
+    reaches a fifth producer BY CONSTRUCTION; the cost is exactly
+    the conscious data-table rows; node-ID diff parent→HEAD =
+    exactly the guard + 11 `[brian_eno]` params; sabotage 3/3 (eno
+    row removed → 3 exact KeyErrors; brian_eno.json deleted → the
+    containment guard FAILS + 50 failed/49 errors in exactly the
+    predicted shape; the tuple reverted to the hardcoded three →
+    the guard test FAILS — silent regression to the old world is
+    impossible); eno rows independently reconstructed from raw
+    JSON + live engine (78.9 = mean of 7 dims − medium penalty, to
+    the decimal); safety grep 0 across the full diff; docs accuracy
+    verified.
+  - **★ reviewer PASS (no must-fix; Codex unavailable —
+    single-model):** discovery design SOUND (single source of truth,
+    drift vector deleted, minimum-only guard; a fifth producer fails
+    ONLY per-producer data sites — conscious-extension-by-design);
+    assertion strength — NOTHING removed or loosened (every removed
+    line enumerated: the tuple, the duplicate path, `==3`→`==4`,
+    prose); the under-specified decisions all judged right (eno's
+    row-free DEFAULT_FLOW_IDS fallthrough traced and judged the
+    STRONGER design — any default-flow drift fails the equality,
+    future neutral producers pass passively; the stale test NAMES
+    left [node-ID stability] — follow-up residue; the halee-only
+    artifact-keys pin left — outside "make existing proofs
+    producer-complete"); one briefing correction recorded (Commit-2
+    also carries the prose-only hunks in the three sweep files —
+    within scope, collection-neutral); trajectory — a fifth producer
+    now costs exactly its JSON (auto-discovered, auto-swept) + its
+    own profile/differential files + conscious data-table rows at
+    enumerable sites.
+  - **★ NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open
+    directions to the user (ALL user-gated): the P-047 merge ·
+    quincy/halee authored dropout reach · the future-analyzer
+    candidates from Eno's honest deferrals (textural coherence ·
+    generative process · ambient patience) · a fifth producer (now
+    cheaper than ever — auto-swept) · the small
+    test-name/token-list hardening touch (the three new P-047
+    accepted notes) · anything else the user calls. Do NOT open
+    anything blind. Execution/apply semantics NEVER without explicit
+    user re-gating. **THE OPEN USER GATE: the merge of P-047
+    (`37e4120` + `3322c88` + `f9736f3` + the close commit) atop
+    `24b5ca7` (= PR #25).** Receipt:
+    `build-os/receipts/P-047-directory-driven-sweeps.md`.
 
 - **★★★ P-046 MAKES THE PRODUCT SURFACE MATCH THE PRODUCT — THE
   FOUR-PRODUCER DEMO (docs/demo only; opened on the user's "go",
@@ -575,7 +710,13 @@
     explicit user re-gating. **THE OPEN USER GATE: the merge of
     P-046 (`8674a97` + `c94f2fe` + `95f65bf` + the close commit)
     atop `0a53bb5` (= PR #24).** Receipt:
-    `build-os/receipts/P-046-four-producer-demo.md`.
+    `build-os/receipts/P-046-four-producer-demo.md`. **(✓ RESOLVED
+    at P-047 open, 2026-07-03: merged as PR #25 on the user's
+    directive — merge commit `24b5ca7`, the current default tip and
+    the P-047 merge base; the user then called the DIRECTORY-DRIVEN
+    SWEEPS + DOCS RESIDUES hardening — opened and CLOSED as P-047,
+    see the banner above; NEXT = NOTHING STAGED again, the
+    orchestrator presents the open directions.)**
 
 - **★★★ P-045 WIDENS THE AESTHETIC MAP — THE FOURTH PRODUCER: BRIAN
   ENO (profile-only; the user's pick, verbatim 2026-07-03: "Yes —
