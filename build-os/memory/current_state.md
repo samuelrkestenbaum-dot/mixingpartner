@@ -318,23 +318,52 @@
     the set-active `ab4914a`. P-042's parent chain: `9d746e3` →
     `9acecfd` → `ab4914a` (active-packet confirmation) → `dadda12`
     (PR #20 merge).
+    ★★ P-042 IS MERGED — **PR #21 (P-042 — profile-authored mode
+    forking, Shape B + closes) is MERGED to default on the user's
+    directive — merge commit `17cc270`, the CURRENT default-branch
+    tip. The base for MERGE/landing decisions is now `17cc270`.** The
+    dev branch now carries **P-043 (`ed94020` + `e382d86`, product —
+    CURATED MOVE VOCABULARY EXPANSION (Shape C, opened NARROWLY per
+    the user: arrangement_lift + ensemble_rebalance ONLY;
+    negative-space dropout EXPLICITLY EXCLUDED): the move vocabulary
+    is now 9 kinds — 7 neutral + 2 reach-gated EXTENDED
+    (`CREATIVE_VARIANT_KINDS` 7→9; `CREATIVE_EXTENDED_KINDS`);
+    `reach_kinds` = the third per-mode declaration
+    (extended-vocabulary-only; reached variants append after the
+    neutral pool; suppression beats reach; fallback
+    neutral-pool-only; two-layer cap incl. runtime `reach_capped`);
+    4 new curated variants, all non_destructive_duplicate_track,
+    anti-mute by design; kind_scores + truth_alignment rows in ALL
+    three profiles; QUINCY ONLY authors reach — three modes, the
+    P-042 approximation favor consciously REPLACED; halee/timbaland
+    reach_kinds [] everywhere; exactly 11 files, +1184/−96), PUSHED
+    to the dev branch BEFORE qa/reviewer under the orchestrator's
+    standing go (both gates validated the final SHAs), NOT merged —
+    the P-043 merge is a user gate**, atop the set-active `3110126`.
+    P-043's parent chain: `e382d86` → `ed94020` → `3110126`
+    (active-packet confirmation) → `17cc270` (PR #21 merge).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-03, P-042 — the mode-forking
-  baseline):** suite **907 passed** (0 failed / skipped; `907 passed
-  in 63.05s`); regression **93/93** (tests_run 93 / passed 93 /
+- **Green baseline (verified 2026-07-03, P-043 — the
+  widened-vocabulary baseline):** suite **950 passed** (0 failed /
+  skipped); regression **93/93** (tests_run 93 / passed 93 /
   failed 0) — the corpus is **4 fixtures** (the 68/68 era ended
-  CONSCIOUSLY at P-035). Commits `9acecfd` (the mode-forking seam +
-  loader validation + the reference's explicit authored declarations)
-  + `9d746e3` (timbaland + quincy mode declarations + the three-way
-  mode differential + the requirement-10 artifact surface) on parent
-  `ab4914a` (active-packet confirmation), atop merge base `dadda12`
-  (= the PR #20 merge) — `9acecfd` IS Commit-1 → green in isolation
-  (throwaway worktree: **894 passed**). (History: 873 → **907** at
+  CONSCIOUSLY at P-035). Commits `ed94020` (the widened move
+  vocabulary — arrangement_lift + ensemble_rebalance, reach-gated,
+  zero behavioral change) + `e382d86` (Quincy's authored reach + the
+  differential proof) on parent `3110126` (active-packet
+  confirmation), atop merge base `17cc270` (= the PR #21 merge) —
+  `ed94020` IS Commit-1 → green in isolation (throwaway worktree:
+  **944 passed**). (History: 907 → **950** at P-043 — +43 net: the
+  NEW `tests/test_move_vocabulary_expansion.py` [29 tests at
+  Commit-1 → 36 at HEAD] + 8 passive growth in the UNTOUCHED
+  `tests/test_creative_nudges.py` − 1 mode_forking consolidation —
+  arithmetic closes 907+29+8 = **944** at C1 / +6 net at C2 [+7
+  new-file / −1 consolidation]; 873 → **907** at
   P-042 — +34 net: the NEW `tests/test_mode_forking.py` [21 tests at
   Commit-1 → 34 at HEAD; one C1 test consciously subsumed into the
   3-producer generalization] + the strictly-additive
@@ -359,6 +388,144 @@
   331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-043 WIDENS THE MOVE VOCABULARY — CURATED MOVE VOCABULARY
+  EXPANSION: ARRANGEMENT LIFT + ENSEMBLE REBALANCE (Shape C, opened
+  NARROWLY on the user's call, verbatim 2026-07-03: "Merge P-042 now.
+  Then open Shape C, but narrowly: arrangement_lift +
+  ensemble_rebalance only." — P-042 merged FIRST as PR #21 → default
+  tip `17cc270`, then this packet; **negative-space dropout
+  EXPLICITLY EXCLUDED by the user:** "higher risk… smells more
+  Timbaland-specific. It should come after C proves the widened
+  vocabulary can stay governed."): the move vocabulary is now **9
+  kinds — 7 neutral + 2 reach-gated EXTENDED**
+  (`CREATIVE_VARIANT_KINDS` 7→9; `CREATIVE_EXTENDED_KINDS =
+  (arrangement_lift, ensemble_rebalance)`). `reach_kinds` is the
+  THIRD per-mode declaration (extended-vocabulary-only at load):
+  reached variants append AFTER the neutral pool; favor stays
+  order-only for the original seven; suppression beats reach; the
+  fallback is neutral-pool-only; the cap binds at TWO layers incl.
+  the runtime `reach_capped` surface. QUINCY ONLY authors reach (his
+  default `arrangement_lift` mode → [arrangement_lift];
+  `ensemble_balance` → [ensemble_rebalance]; `experimental` → both —
+  the P-042 approximation favor consciously REPLACED by real reach:
+  ★ the P-042 residue note 3 is ✓ RESOLVED); halee/timbaland author
+  `reach_kinds []` everywhere → zero extended emissions. The standing
+  doctrine deepens: **the engine curates the families / the profile
+  authors reach / governance caps.** Quincy's mode behavior is now
+  GENUINELY MUSICAL (the user's product intent for C). qa GREEN +
+  reviewer PASS (no must-fix; all adapted adversarial attacks
+  defeated). Last-closed = P-043.**
+  - **Two commits** on parent `3110126` (active-packet confirmation),
+    atop merge base `17cc270` (= the PR #21 merge — P-042 landed
+    FIRST): `ed94020` (Commit-1 — the widened vocabulary + the reach
+    seam + the load gates [extended-membership, reach∩suppress,
+    over-cap reach "cannot be out-authored"] + 4 new curated variants
+    [`chorus_lift_E` / `density_C` / `density_D` / `vocal_C`], all
+    `non_destructive_duplicate_track`, anti-mute by design; loop/depth
+    get neither by curation; kind_scores + truth_alignment rows for
+    both kinds in ALL three profiles [timbaland's ensemble_rebalance
+    honestly `medium` translation risk]; ZERO behavioral change — all
+    18 mode entries author reach_kinds [], zero extended emissions
+    across 6 probe runs; GREEN IN ISOLATION at **944**) + `e382d86`
+    (Commit-2 — Quincy's authored reach + the differential proof).
+    Exactly **11 files, +1184/−96**. **PUSHED to the dev branch
+    BEFORE qa/reviewer under the standing go (both gates validated
+    the final SHAs); NOT merged — the P-043 merge is the OPEN USER
+    GATE.**
+  - **★ qa GREEN (the eleven items, exact):** suite 907 → **950
+    passed, 0 failed**; regression **93/93**; Commit-1 iso **944**
+    (arithmetic verified: 907 + 29 new + 8 passive growth in the
+    UNTOUCHED test_creative_nudges.py; C2 net +6 = +7 new-file / −1
+    mode_forking consolidation — qa discrepancy #1, direction safe);
+    the staleness pin 4/4 WITHOUT regeneration + both trees
+    independently re-rendered via the verbatim README invocations →
+    30/30 + 30/30 byte-identical, headlines 76.3/60.9; default-flow
+    byte-identity — halee + timbaland identical over all 4 fixtures
+    pre/post (import-path-guarded worktree comparison); quincy's
+    CONSCIOUS delta exactly as enumerated (dense/splice chorus_lift
+    +E, dense density +C, simple/intimate unchanged) + qa discrepancy
+    #2: the chop default flow ALSO gains chorus_lift_E — same
+    authored mechanism, winner unchanged, doctrine unmoved, sample
+    trees unaffected, but UNPINNED (the 4th fixture lives outside the
+    FIXTURE_NAMES pin corpus) — accepted pin-coverage note; ALL
+    WINNERS UNCHANGED on every fixture/branch, doctrine overalls
+    unmoved (dense 70.7/52.6/62.1; chop 76.3/60.9/68.8); the reach
+    gate independently reproduced (quincy experimental dense
+    [E,A,B,C,D]/[C,D,A,B]/[C,A,B]; halee/timbaland ZERO extended ids
+    over 48 runs); **attribution reconstruction over 234 cells (3
+    producers × 6 modes × 13 fixture-problems), 0 mismatches**;
+    suppression beats reach; the fallback never admits extended
+    kinds; cap + loader — over-cap reach ValueError (live proof =
+    timbaland's medium row under a low posture), reach∩suppress
+    ValueError, reach naming a NEUTRAL kind ValueError,
+    loader-bypassing runtime fail-closed with `reach_capped`
+    surfaced; sabotage 4/4 (neutral-pool admission → **36 failed**
+    incl. the staleness pins — the gate IS what protects the trees;
+    quincy reach deletion → 6; fallback-admits-reach → 1, the exact
+    test; timbaland row deletion → 6); the real chain — vocal_C WINS
+    vocal_belief at exactly **83.1** through full analyze() incl.
+    governance ("keep", zero violations) — the new families are
+    LIVE, not inert; safety grep 0 across all categories on 1184
+    added lines, 0 producer names added to engine code, AST guard
+    4/4; requirement-10 — the quincy experimental artifact carries
+    search_mode_declarations.reach_kinds + per-branch
+    mode_fork.reached + the renderer lines; the halee DEFAULT render
+    carries ZERO new-key bytes.
+  - **★ reviewer PASS (no must-fix; Codex unavailable — single-model,
+    independent worktree execution: HEAD 950 + C1 944 REPRODUCED):**
+    reach gate NO LEAK (extended pools built only inside
+    declaring-mode branches; favor-of-extended silently order-only —
+    no admission; the test helper does NOT share the engine's
+    derivation — hand-pinned literals both sides, no shared-bug
+    channel); cap authority = correct data-authority semantics, not a
+    hole (byte-identical to the P-042 favor precedent; shipped rows
+    byte-pinned); quincy's default-mode reach JUSTIFIED, HONEST,
+    COMPLETE (all six authored overalls reconstructed from disk; the
+    85.6 vs 85.3 margin real — 85.3 = second-highest in his table,
+    and ensemble_rebalance outright WINS vocal_belief, not
+    authored-to-be-inert; the pin delta append-only; the
+    artifact-keys pin narrowing to (halee, timbaland) judged EXACTLY
+    RIGHT — precisely the committed trees — with quincy's surface
+    re-pinned STRONGER); content in house style — density_D/vocal_C
+    explicitly anti-mute, nothing smells like the excluded dropout
+    family, the loop/depth exclusion defensible and pinned;
+    kind_scores/truth_alignment read as each producer's lens (the
+    truth_alignment extension = consistency not creep — prevents
+    silent align_fallback inheritance); vocabulary discipline intact
+    (exact-tuple + length pins close the union-pin tolerance); AST
+    clean; P-042 guarantees intact (the requirement-8 test body
+    byte-identical; the attribution rule extends without loosening).
+    Two non-blocking observations (→ residue): `fork["reached"]` on a
+    loader-BYPASSING profile reaching a NEUTRAL kind would misreport
+    it as reached (emission unaffected; the loader rejects the
+    authoring; future tightening: intersect with admitted kinds); the
+    degenerate empty-neutral-pool + bypass edge (unreachable on all
+    five shipped problem ids, pre-existing in shape). Trajectory:
+    delivers "widen the vocabulary just enough to make Quincy's mode
+    behavior genuinely musical"; dropout later = one tuple entry +
+    authored reach, zero engine changes.
+  - **★ THE USER'S ACCEPTANCE BAR — all nine clauses met:** new move
+    families exist ✓ · curated risk rows exist ✓ (all three
+    profiles, both kinds, byte-pinned) · profiles author reach ✓
+    (loader-validated, explicit everywhere) · Quincy can reach them ✓
+    (three modes, live emissions, a governed WIN) · Timbaland/Halee
+    only if authored ✓ (zero reach → zero extended ids over 48 runs;
+    synthetic proves data-not-producer) · safety caps bind ✓ (two
+    layers + live medium-risk proof) · no producer-specific engine
+    branches ✓ · sample-tree drift conscious ✓ (zero drift; quincy
+    default-flow delta enumerated) · differential proof attributes to
+    vocabulary + reach ✓ (the 234-cell reconstruction, 0 mismatches).
+  - **★ NEXT — ★ USER-GATED: negative-space dropout as a move family
+    (STAGED, not active):** the user's own sequencing — "after C
+    proves the widened vocabulary can stay governed" — and C has now
+    proven exactly that; adding it = one `CREATIVE_EXTENDED_KINDS`
+    entry + curated variants + authored reach, ZERO engine changes.
+    The decision of whether/when is the USER'S — the orchestrator
+    presents scope first; do NOT open blind. **THE OPEN USER GATE:
+    the merge of P-043 (`3110126` + `ed94020` + `e382d86` + the close
+    commit) atop `17cc270` (= PR #21).** Receipt:
+    `build-os/receipts/P-043-move-vocabulary-expansion.md`.
 
 - **★★★ P-042 MAKES THE MODE LEVER LOAD-BEARING — PROFILE-AUTHORED
   MODE FORKING (Shape B; the user's call, verbatim 2026-07-03: "My
@@ -467,7 +634,14 @@
     the user opens it; the orchestrator presents scope first. **THE
     OPEN USER GATE: the merge of P-042 (`ab4914a` + `9acecfd` +
     `9d746e3` + the close commit) atop `dadda12` (= PR #20).**
-    Receipt: `build-os/receipts/P-042-mode-forking.md`.
+    Receipt: `build-os/receipts/P-042-mode-forking.md`. **(✓ UPDATE
+    P-043 close, 2026-07-03: BOTH resolved in the SAME user
+    directive — the P-042 merge landed as PR #21 → default tip
+    `17cc270`, AND Shape C was opened NARROWLY [arrangement_lift +
+    ensemble_rebalance only; negative-space dropout EXPLICITLY
+    EXCLUDED] — CLOSED as P-043; the move vocabulary is now 9 kinds,
+    reach-gated and governed — see the P-043 banner above; NEXT =
+    negative-space dropout, ★ USER-GATED.)**
 
 - **★★★ P-041 LANDS THE THIRD PRODUCER — QUINCY JONES (profile-only,
   packet 3 of the user's sequence): the framework is proven NOT a
