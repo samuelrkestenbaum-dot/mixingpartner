@@ -4,50 +4,55 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** NONE ACTIVE — **P-043 CLOSED** (2026-07-03; qa GREEN +
-  reviewer PASS, no must-fix; all adapted adversarial attacks
-  defeated). Receipt:
-  `build-os/receipts/P-043-move-vocabulary-expansion.md`.
+- **Status:** NONE ACTIVE — **P-044 (Negative-Space Dropout Move Family)
+  CLOSED 2026-07-03.** qa GREEN + reviewer PASS (no must-fix; all
+  adversarial attacks defeated). Receipt:
+  `build-os/receipts/P-044-negative-space-dropout.md`.
 
-## Last closed — P-043 — Curated Move Vocabulary Expansion: Arrangement Lift + Ensemble Rebalance
+## Last closed — P-044: Negative-Space Dropout Move Family
 
-- **Commits:** `ed94020` (Commit-1 — the widened, reach-gated
-  vocabulary: `CREATIVE_VARIANT_KINDS` 7→9, the `reach_kinds` seam,
-  4 curated anti-mute variants, rows in ALL three profiles, ZERO
-  behavioral change; GREEN IN ISOLATION at **944**) + `e382d86`
-  (Commit-2 — Quincy's authored reach [three modes; the P-042
-  approximation favor consciously REPLACED] + the differential proof)
-  on parent `3110126` (active-packet confirmation), atop merge base
-  `17cc270` (= PR #21 — P-042 merged FIRST on the user's directive).
-  Exactly **11 files, +1184/−96**.
-- **Proof:** suite 907 → **950** / regression **93/93** / Commit-1
-  iso **944** / the 234-cell reach reconstruction 0 mismatches / ALL
-  winners unchanged / sabotage 4/4 / safety grep 0 / a governed WIN
-  through full analyze() (vocal_C at 83.1).
-- **Push state:** PUSHED to the dev branch BEFORE qa/reviewer under
-  the orchestrator's standing go (both gates validated the final
-  SHAs); **NOT merged.**
+- **Commits:** `87635d3` (Commit-1 — the kind + the curated variants +
+  the profile-blind `_dropout_protected_names` filter with the
+  fail-closed NO-EMIT rule + honest rows everywhere; ZERO behavioral
+  change; **GREEN IN ISOLATION at 984**) + `f72f222` (Commit-2 —
+  Timbaland's authored dropout reach + the differential proof + the
+  conscious enumerated drift) on parent `9fdb172` (set-active), atop
+  merge base `80e9bd5` (= PR #22 — P-043 merged FIRST on the user's
+  directive). Exactly **13 files, +1354/−112**.
+- **Proof:** suite **1000 passed** / regression **93/93** / Commit-1 iso
+  **984** / the 312-cell differential **0 mismatches** / EVERY winner
+  unchanged / sabotage 4/4 / halee's governance VETO live (48 < 50).
+- **Push state:** PUSHED to the dev branch BEFORE qa/reviewer under the
+  orchestrator's standing go (both gates validated the final SHAs);
+  **NOT merged**.
+- **THE SAFETY LINE (the user's doctrine, verbatim, STANDING): "dropout
+  is an arrangement proposal, not a destructive operation."**
+  Candidate-planning only; execution/apply semantics NEVER without
+  explicit user re-gating.
 
-## ★★ OPEN USER GATE
+## Open user gate
 
-- **The MERGE of P-043** — `3110126` + `ed94020` + `e382d86` (+ the
-  close commit) atop `17cc270` (= PR #21) — awaits the user's
-  explicit word. Never merge without go.
+- **The MERGE of P-044** — `9fdb172` + `87635d3` + `f72f222` (+ the
+  close commit) atop `80e9bd5` (= PR #22) — awaits the user's explicit
+  word. No push/merge/deploy/secret action taken in this close.
 
-## STAGED next — ★ USER-GATED: negative-space dropout as a move family
+## Staged next
 
-- **The user's own sequencing (stated at P-043 open):** negative-space
-  dropout is "higher risk… smells more Timbaland-specific. It should
-  come after C proves the widened vocabulary can stay governed." —
-  **C has now proven exactly that** (reach-gated, cap-bound, zero
-  unauthorized drift, all winners unchanged, a governed win through
-  full analyze()).
-- **Shape if opened:** one `CREATIVE_EXTENDED_KINDS` entry + curated
-  variants + authored reach — ZERO engine changes (the P-043 seam
-  carries it).
-- **The decision of whether/when is the USER'S** — the orchestrator
-  PRESENTS scope first; it does NOT open blind.
+- **NOTHING STAGED — the user's sequenced arc is COMPLETE** (CLI ✓
+  samples ✓ third producer ✓ analyzer extension ✓ mode-forking B ✓
+  vocabulary C narrow ✓ dropout ✓). The orchestrator PRESENTS the open
+  directions to the user (ALL user-gated) and does NOT open anything
+  blind:
+  - quincy/halee authored dropout reach;
+  - further C families (behind the ★ STANDING groove-carrier
+    watch-item where applicable: a REAL groove-carrier signal is
+    required before ANY dropout-surface widening — never faked from
+    beat_identity);
+  - a fourth producer;
+  - product-surface work (samples/README refresh for the new
+    families);
+  - anything else the user calls.
 
 ---
-_Cleared by the archivist at P-043 close (2026-07-03). One packet at a
+_Cleared by the archivist on P-044 close (2026-07-03). One packet at a
 time: builder → qa + reviewer → archivist → receipt._

@@ -64,26 +64,32 @@ def test_globals_equal_a_fresh_load():
 # --------------------------------------------------------------------------- #
 def test_truth_alignment_value_pins():
     """3 leans, byte-for-byte: the pre-P-027 curated alignment table (7
-    kinds), widened CONSCIOUSLY by P-043 with the reference's authored rows
-    for the two EXTENDED kinds — the table is kind-keyed and fully
-    enumerated, so a reached emission is governed by curated per-lean
-    values, never the generic ``align_fallback`` (no silent inheritance)."""
+    kinds), widened CONSCIOUSLY by P-043 (``arrangement_lift`` /
+    ``ensemble_rebalance``) and P-044 (``negative_space_dropout`` — the
+    reference's honest low-affinity lean rows: 48 intimate sits BELOW her
+    align-veto line, so her governance refuses a hard dropout on an
+    intimate record) — the table is kind-keyed and fully enumerated, so a
+    reached emission is governed by curated per-lean values, never the
+    generic ``align_fallback`` (no silent inheritance)."""
     ta = governance._TRUTH_ALIGNMENT
     assert set(ta) == {"intimate", "big", "neutral"}
     assert ta["intimate"] == {
         "vocal_ride": 88, "intimacy_pass": 90, "subtractive_drop": 84,
         "depth_cleanup": 82, "loop_deconstruct": 83, "drum_room_bloom": 58,
         "width_bloom": 45, "arrangement_lift": 72, "ensemble_rebalance": 84,
+        "negative_space_dropout": 48,
     }
     assert ta["big"] == {
         "width_bloom": 86, "drum_room_bloom": 86, "vocal_ride": 78,
         "subtractive_drop": 76, "depth_cleanup": 76, "loop_deconstruct": 78,
         "intimacy_pass": 70, "arrangement_lift": 84, "ensemble_rebalance": 74,
+        "negative_space_dropout": 68,
     }
     assert ta["neutral"] == {
         "width_bloom": 72, "drum_room_bloom": 78, "vocal_ride": 84,
         "subtractive_drop": 82, "depth_cleanup": 82, "loop_deconstruct": 80,
         "intimacy_pass": 82, "arrangement_lift": 78, "ensemble_rebalance": 80,
+        "negative_space_dropout": 60,
     }
 
 

@@ -286,6 +286,56 @@
             "vetoed": false,
             "verdict": "keep"
           }
+        },
+        {
+          "variant_id": "chorus_lift_F",
+          "problem": "chorus_lift",
+          "kind": "negative_space_dropout",
+          "name": "Negative-Space Dropout",
+          "creative_hypothesis": "The chorus hits hardest when the background texture DISAPPEARS just before it — the hole is the arrangement move, and the entrance becomes the event by contrast.",
+          "changes": [
+            "Duplicate the texture bed and region-mute the duplicate through the final pre-chorus bar",
+            "Let the chorus downbeat restore it so the re-entry reads as impact",
+            "Keep the original track untouched — the dropout lives on the muted duplicate"
+          ],
+          "tracks_affected": [
+            "BGV Chop"
+          ],
+          "risk": "A hole this deliberate can read as a mistake on first listen, and a sparse pre-chorus risks losing momentum on small speakers — A/B against the static baseline.",
+          "reversibility": "non_destructive_duplicate_track",
+          "validation": [
+            "the final pre-chorus bar reads as intentional negative space",
+            "the chorus entrance gains impact with zero added processing"
+          ],
+          "expected_strength": "impact through absence",
+          "scores": {
+            "technical_score": 86,
+            "physical_space_score": 82,
+            "emotional_hierarchy_score": 84,
+            "section_contrast_score": 94,
+            "vocal_belief_score": 80,
+            "listener_excitement_score": 92,
+            "taste_alignment_score": 90,
+            "translation_risk": "medium",
+            "mono_compatibility": "low",
+            "reversibility": "non_destructive",
+            "overall_score": 80.9,
+            "overall_verdict": "promising"
+          },
+          "governance": {
+            "emotional_truth_alignment": 86,
+            "taste_triangle": {
+              "emotion": 89,
+              "craft": 86,
+              "identity": 90,
+              "verdict": "keep"
+            },
+            "constraint_violations": [],
+            "false_progress": null,
+            "emotional_overfit": null,
+            "vetoed": false,
+            "verdict": "keep"
+          }
         }
       ],
       "winning": {
@@ -298,9 +348,22 @@
           "Widen supporting bus 60%->75%",
           "Ride lead vocal +1 dB into chorus",
           "Delay throw on last pre-chorus phrase",
-          "Increase drum room/overhead energy at chorus entry"
+          "Increase drum room/overhead energy at chorus entry",
+          "Duplicate the texture bed and region-mute the duplicate through the final pre-chorus bar",
+          "Let the chorus downbeat restore it so the re-entry reads as impact",
+          "Keep the original track untouched — the dropout lives on the muted duplicate"
         ],
         "reason": "'Subtractive Drop' scored 86.7 (promising); strongest on its intended axis without breaking vocal belief."
+      },
+      "mode_fork": {
+        "suppressed": [],
+        "favored": [],
+        "risk_capped": [],
+        "suppression_fallback": false,
+        "reached": [
+          "negative_space_dropout"
+        ],
+        "reach_capped": []
       }
     },
     {
@@ -420,6 +483,14 @@
           "Push to background except bridge"
         ],
         "reason": "'Loop as Accent' scored 86.7 (promising); strongest on its intended axis without breaking vocal belief."
+      },
+      "mode_fork": {
+        "suppressed": [],
+        "favored": [],
+        "risk_capped": [],
+        "suppression_fallback": false,
+        "reached": [],
+        "reach_capped": []
       }
     },
     {
@@ -486,6 +557,14 @@
         ],
         "reject_moves": [],
         "reason": "'Depth Cleanup' scored 79.1 (worth testing); strongest on its intended axis without breaking vocal belief."
+      },
+      "mode_fork": {
+        "suppressed": [],
+        "favored": [],
+        "risk_capped": [],
+        "suppression_fallback": false,
+        "reached": [],
+        "reach_capped": []
       }
     },
     {
@@ -598,6 +677,14 @@
           "Bloom sends at chorus"
         ],
         "reason": "'Phrase Rides' scored 79.1 (worth testing); strongest on its intended axis without breaking vocal belief."
+      },
+      "mode_fork": {
+        "suppressed": [],
+        "favored": [],
+        "risk_capped": [],
+        "suppression_fallback": false,
+        "reached": [],
+        "reach_capped": []
       }
     }
   ],
@@ -608,5 +695,13 @@
     "Never let novelty override vocal belief.",
     "Always compare creative variants to the song's emotional truth."
   ],
-  "philosophy": "A mix is finished when the groove is undeniable: the beat carries an identity you can name in one bar, the low end moves as one articulated pocket, and the arrangement leaves space — the silence is as composed as the sound. Sections flip hard enough to feel, and the record breathes between the hits."
+  "philosophy": "A mix is finished when the groove is undeniable: the beat carries an identity you can name in one bar, the low end moves as one articulated pocket, and the arrangement leaves space — the silence is as composed as the sound. Sections flip hard enough to feel, and the record breathes between the hits.",
+  "search_mode_declarations": {
+    "allowed_risk": "medium",
+    "favor_kinds": [],
+    "suppress_kinds": [],
+    "reach_kinds": [
+      "negative_space_dropout"
+    ]
+  }
 }

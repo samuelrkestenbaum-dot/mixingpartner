@@ -4,6 +4,75 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
+## ★★★ STATUS (P-044 close, 2026-07-03): residue = accepted standing notes only — THE DROPOUT FAMILY IS GOVERNED; THE SHAPE C ARC IS COMPLETE
+
+- **P-044 (NEGATIVE-SPACE DROPOUT MOVE FAMILY — opened NARROWLY AND
+  CONSERVATIVELY on the user's word; THE SAFETY LINE, the user's
+  doctrine verbatim: "dropout is an arrangement proposal, not a
+  destructive operation" — candidate-planning only, NO execution
+  semantics) closed 2026-07-03:** qa GREEN + reviewer PASS (no
+  must-fix; all adversarial attacks defeated). Commits `87635d3`
+  (Commit-1 — the kind + the curated variants [`chorus_lift_F` +
+  `density_E`; the LOOP dropout consciously OMITTED —
+  `DROPOUT_POOL["loop"] == []` pinned] + the profile-blind
+  `_dropout_protected_names` filter with the fail-closed NO-EMIT rule
+  + honest rows everywhere; ZERO behavioral change — GREEN IN
+  ISOLATION at **984**) + `f72f222` (Commit-2 — Timbaland's authored
+  dropout reach [exactly experimental / dramatic_contrast /
+  negative_space] + the differential proof + the conscious enumerated
+  drift [EXACTLY 3 regenerated timbaland artifacts; the halee tree
+  ABSENT from the diff]) on parent `9fdb172`, atop merge base
+  `80e9bd5` (= PR #22 — P-043 merged FIRST on the user's directive).
+  Exactly 13 files, +1354/−112; `producer_profile.py` UNCHANGED (the
+  P-043 loader gates generalize unmodified — proven live). PUSHED
+  BEFORE qa/reviewer (standing go — both gates validated the final
+  SHAs), NOT merged. Suite **1000** / regression **93/93** / Commit-1
+  iso **984** / the 312-cell differential 0 mismatches / EVERY winner
+  unchanged / sabotage 4/4 / halee's governance VETO live (intimate
+  truth 48 < align_veto 50). **Codex unavailable — single-model
+  review (the full suite independently re-run at 1000).** Receipt:
+  `build-os/receipts/P-044-negative-space-dropout.md`.
+- **NEW accepted notes (P-044, recorded not fixed):**
+  1. **qa discrepancy #1 (task-premise):** `_lead_masked` is False on
+     EVERY fixture at HEAD (no real fixture carries a bad-masked
+     lead) — the masked-lead exclusion is proven SYNTHETICALLY only.
+     Fine: the synthetic tests bite exactly.
+  2. **qa discrepancy #2 (filter bite surface):** removing the filter
+     changes NO shipped artifact bytes (no protected name sits on the
+     shipped fixtures' candidate surfaces today) — the protection
+     guarantee rests on the 4 synthetic tests, which bite exactly.
+  3. **Reviewer residual (AST-guard blind spot):** the AST guard
+     would miss a future profile-sourced global whose name lacks
+     "prof" — today's code reads none; the runtime differentials
+     carry the real weight.
+  4. **★★ STANDING TRAJECTORY WATCH-ITEM (reviewer — binding on any
+     future dropout packet):** a REAL groove-carrier signal is
+     required before ANY dropout-surface widening — do NOT fake it
+     from beat_identity (its dense-fixture "dominant" is a synth pad;
+     kick/snare/bass is the only honest read of "main kick/sub
+     foundation" today).
+  5. **Execution/apply semantics NEVER without explicit user
+     re-gating** — the safety line is standing doctrine.
+- **All prior standing notes RETAINED** (the banners below).
+- **Open boundary:** P-044's commits pushed to the dev branch BEFORE
+  qa/reviewer under the orchestrator's standing go; **the MERGE of
+  P-044 (`9fdb172` + `87635d3` + `f72f222` + the close commit, atop
+  `80e9bd5` = PR #22) is the OPEN USER GATE** — it awaits the user's
+  explicit word.
+- **NEXT: NOTHING STAGED — the user's sequenced arc is COMPLETE**
+  (CLI ✓ samples ✓ third producer ✓ analyzer extension ✓
+  mode-forking B ✓ vocabulary C narrow ✓ dropout ✓). The
+  orchestrator PRESENTS the open directions to the user (ALL
+  user-gated): quincy/halee authored dropout reach · further C
+  families (behind the groove-carrier watch-item where applicable) ·
+  a fourth producer · product-surface work (samples/README refresh
+  for the new families) · anything else the user calls. Do NOT open
+  anything blind.
+- **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
+  comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
+  placement faith; (3) flag PRESENCE is not flag THREADING — levers
+  need reaches-the-destination guards.
+
 ## ★★★ STATUS (P-043 close, 2026-07-03): residue = accepted standing notes only — THE MOVE VOCABULARY IS WIDENED AND GOVERNED
 
 - **P-043 (CURATED MOVE VOCABULARY EXPANSION — Shape C, opened
@@ -58,14 +127,20 @@
   qa/reviewer under the orchestrator's standing go; **the MERGE of
   P-043 (`3110126` + `ed94020` + `e382d86` + the close commit, atop
   `17cc270` = PR #21) is the OPEN USER GATE** — it awaits the user's
-  explicit word.
+  explicit word. **(✓ RESOLVED at P-044 open, 2026-07-03:
+  merged as PR #22 on the user's directive — merge commit `80e9bd5`,
+  the current default tip and the P-044 merge base.)**
 - **NEXT — ★ USER-GATED: negative-space dropout as a move family**
   (the user's own sequencing: "after C proves the widened vocabulary
   can stay governed" — C has now proven exactly that; adding it = one
   `CREATIVE_EXTENDED_KINDS` entry + curated variants + authored reach,
   ZERO engine changes); STAGED in `build-os/packets/active_packet.md`
   — the decision of whether/when is the USER'S; the orchestrator
-  presents scope first, does NOT open blind.
+  presents scope first, does NOT open blind. **(✓ DONE at P-044
+  close, 2026-07-03: opened NARROWLY AND CONSERVATIVELY on the user's
+  word and CLOSED as P-044 — see the P-044 banner above; ★ THE SHAPE
+  C ARC IS COMPLETE; NEXT = NOTHING STAGED — the orchestrator
+  presents the open directions.)**
 - **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
   comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
   placement faith; (3) flag PRESENCE is not flag THREADING — levers

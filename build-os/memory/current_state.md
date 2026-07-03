@@ -342,23 +342,54 @@
     the P-043 merge is a user gate**, atop the set-active `3110126`.
     P-043's parent chain: `e382d86` → `ed94020` → `3110126`
     (active-packet confirmation) → `17cc270` (PR #21 merge).
+    ★★ P-043 IS MERGED — **PR #22 (P-043 — curated move vocabulary
+    expansion, Shape C + closes) is MERGED to default on the user's
+    directive — merge commit `80e9bd5`, the CURRENT default-branch
+    tip. The base for MERGE/landing decisions is now `80e9bd5`.** The
+    dev branch now carries **P-044 (`87635d3` + `f72f222`, product —
+    NEGATIVE-SPACE DROPOUT MOVE FAMILY, opened narrowly and
+    conservatively on the user's word; THE SAFETY LINE, the user's
+    doctrine verbatim: "dropout is an arrangement proposal, not a
+    destructive operation" — candidate-planning only, NO execution
+    semantics: the move vocabulary is now 10 kinds — 7 neutral + 3
+    reach-gated EXTENDED; the profile-blind `_dropout_protected_names`
+    filter with the fail-closed NO-EMIT rule; two curated variants
+    [`chorus_lift_F` + `density_E`], byte-pinned plan text,
+    reversibility-tagged; the LOOP dropout consciously OMITTED
+    [source integrity — `DROPOUT_POOL["loop"] == []` pinned]; rows
+    everywhere in all three profiles [halee's intimate truth 48 < her
+    align_veto 50 → governance VETOES dropout under her intimate
+    lean]; reach ONLY timbaland on exactly experimental /
+    dramatic_contrast / negative_space; 47 new tests; EXACTLY 3
+    regenerated artifacts in `examples/sample_output_timbaland/`;
+    `producer_profile.py` UNCHANGED — the P-043 loader gates
+    generalize unmodified; exactly 13 files, +1354/−112), PUSHED to
+    the dev branch BEFORE qa/reviewer under the orchestrator's
+    standing go (both gates validated the final SHAs), NOT merged —
+    the P-044 merge is a user gate**, atop the set-active `9fdb172`.
+    P-044's parent chain: `f72f222` → `87635d3` → `9fdb172`
+    (active-packet confirmation) → `80e9bd5` (PR #22 merge).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-03, P-043 — the
-  widened-vocabulary baseline):** suite **950 passed** (0 failed /
+- **Green baseline (verified 2026-07-03, P-044 — the
+  dropout-family baseline):** suite **1000 passed** (0 failed /
   skipped); regression **93/93** (tests_run 93 / passed 93 /
   failed 0) — the corpus is **4 fixtures** (the 68/68 era ended
-  CONSCIOUSLY at P-035). Commits `ed94020` (the widened move
-  vocabulary — arrangement_lift + ensemble_rebalance, reach-gated,
-  zero behavioral change) + `e382d86` (Quincy's authored reach + the
-  differential proof) on parent `3110126` (active-packet
-  confirmation), atop merge base `17cc270` (= the PR #21 merge) —
-  `ed94020` IS Commit-1 → green in isolation (throwaway worktree:
-  **944 passed**). (History: 907 → **950** at P-043 — +43 net: the
+  CONSCIOUSLY at P-035). Commits `87635d3` (negative_space_dropout —
+  the kind, the curated variants, the structural protection filter,
+  honest rows everywhere; zero behavioral change) + `f72f222`
+  (Timbaland's authored dropout reach + the differential proof + the
+  conscious enumerated drift) on parent `9fdb172` (active-packet
+  confirmation), atop merge base `80e9bd5` (= the PR #22 merge) —
+  `87635d3` IS Commit-1 → green in isolation (throwaway worktree:
+  **984 passed**). (History: 950 → **1000** at P-044 — +50 net: the
+  NEW `tests/test_negative_space_dropout.py` [47 tests] + net pin
+  growth across the 4 touched test files, Commit-1 iso **984**;
+  907 → **950** at P-043 — +43 net: the
   NEW `tests/test_move_vocabulary_expansion.py` [29 tests at
   Commit-1 → 36 at HEAD] + 8 passive growth in the UNTOUCHED
   `tests/test_creative_nudges.py` − 1 mode_forking consolidation —
@@ -388,6 +419,136 @@
   331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-044 LANDS THE DROPOUT FAMILY — NEGATIVE-SPACE DROPOUT MOVE
+  FAMILY (opened NARROWLY AND CONSERVATIVELY on the user's call,
+  verbatim 2026-07-03: "Merge P-043 now. Then open negative-space
+  dropout, but narrowly and conservatively." — P-043 merged FIRST as
+  PR #22 → default tip `80e9bd5`, then this packet. **THE SAFETY LINE
+  (the user's doctrine, verbatim — STANDING): "dropout is an
+  arrangement proposal, not a destructive operation."**
+  Candidate-planning only — no execution semantics): the move
+  vocabulary is now **10 kinds — 7 neutral + 3 reach-gated EXTENDED**
+  (`negative_space_dropout` joins the C families). The profile-blind
+  `_dropout_protected_names` filter (ENGINE-owned, creative.py
+  ~439–511) EXCLUDES lead vocals / hook candidates / vocal_uncertain
+  always / ALL vocals while the lead is masked / the kick+snare+bass
+  family / sacred elements, with the FAIL-CLOSED NO-EMIT rule (no
+  `_resolve` degrade chain). Two curated variants (`chorus_lift_F` +
+  `density_E`), byte-pinned plan text in the duplicate+region-mute
+  vocabulary, reversibility-tagged; the LOOP dropout consciously
+  OMITTED (source integrity — `DROPOUT_POOL["loop"] == []` pinned).
+  Rows EVERYWHERE: timbaland medium/80.9 (his signature family),
+  quincy medium/73.7, halee HIGH/60.6 — her intimate truth 48 < her
+  align_veto 50 → governance VETOES dropout under her intimate lean.
+  Reach ONLY timbaland, on exactly experimental / dramatic_contrast /
+  negative_space. `producer_profile.py` UNCHANGED — the P-043 loader
+  gates generalize unmodified, proven live. **★ THE SHAPE C ARC IS
+  COMPLETE** — B seam → narrow C → the aggressive family, all
+  governed; the safety line is standing doctrine in
+  code/constants/tests. qa GREEN + reviewer PASS (no must-fix; all
+  adversarial attacks defeated). Last-closed = P-044.**
+  - **Two commits** on parent `9fdb172` (active-packet confirmation),
+    atop merge base `80e9bd5` (= the PR #22 merge — P-043 landed
+    FIRST): `87635d3` (Commit-1 — the kind, the curated variants,
+    the structural protection filter, honest rows everywhere; ZERO
+    behavioral change — verified THREE ways incl. qa's 312-cell C1
+    probe with 0 dropout emissions; both sample trees byte-untouched
+    at C1; GREEN IN ISOLATION at **984**) + `f72f222` (Commit-2 —
+    Timbaland's authored dropout reach + the differential proof + the
+    conscious enumerated drift: EXACTLY 3 regenerated artifacts in
+    `examples/sample_output_timbaland/` — creative.json /
+    creative_report.md / dashboard.html; the halee tree ABSENT from
+    the diff). Exactly **13 files, +1354/−112**; NEW
+    `tests/test_negative_space_dropout.py` (47 tests) + pin updates
+    in 4 test files. **PUSHED to the dev branch BEFORE qa/reviewer
+    under the standing go (both gates validated the final SHAs); NOT
+    merged — the P-044 merge is the OPEN USER GATE.**
+  - **★ qa GREEN (twelve items, ZERO deviations from builder
+    claims):** suite 950 → **1000 passed, 0 failed**; regression
+    **93/93**; Commit-1 iso **984**; both trees independently
+    re-rendered via the verbatim README invocations — halee 30/30
+    byte-identical, timbaland 30/30 vs the NEW committed tree, vs
+    pre-packet EXACTLY 3 differ / 27 byte-identical (`cmp` per file);
+    headlines 76.3/60.9 unchanged; EVERY winner unchanged
+    (chorus_lift_B 86.7 / loop_B / depth_A / vocal_A); **the 312-cell
+    differential, 0 mismatches** — dropout ids only timbaland, only
+    his three authored modes (+ default resolution =
+    dramatic_contrast), halee+quincy 0 dropout over the full
+    parametrization, the ordering property held; protection probes —
+    an only-protected synthetic → ZERO emission under all reaching
+    modes × all 5 problems, 12 real emissions × 0 forbidden names,
+    profile-blind by AST + behaviorally (synthetic reaching profiles
+    cannot surface a protected name), the masked-lead rule holds
+    synthetically; sabotage 4/4 (filter removed → 4 failed — the
+    four protection tests; reach deleted → 3; no-emit degraded to
+    fallback → 5; halee risk high→low → 6 incl. BOTH cap tests);
+    cap + governance LIVE (halee ValueErrors on all five
+    low/medium-posture modes, validates only on high-posture
+    experimental; runtime fail-closed `reach_capped`;
+    govern_variant(dropout, intimate, halee) → 48 < 50 →
+    vetoed=True); the no-execution guard (0 machinery-word hits in
+    all dropout prose; reversibility tags; doctrine byte-stability
+    across all 12 producer×fixture overalls). Two non-blocking qa
+    discrepancies → residue: `_lead_masked` is False on every fixture
+    at HEAD (the masked-lead exclusion proven SYNTHETICALLY only);
+    removing the filter changes NO shipped artifact bytes (the
+    protection rests on the 4 synthetic tests, which bite exactly).
+  - **★ reviewer PASS (no must-fix; Codex unavailable —
+    single-model, stated explicitly; the full suite independently
+    re-run at 1000):** filter evasion NO SUCCESS (single gate,
+    filtered BEFORE construction, fail-closed no-emit, exact
+    real-signal spellings verified, fixture pins are literal name
+    lists — falsifiable, not circular); profile-widenability — no
+    path (residual note → residue: the AST guard would miss a future
+    profile-sourced global whose name lacks "prof" — today's code
+    reads none; the runtime differentials carry the real weight);
+    masked-lead interpretation FAITHFUL (the stricter reading —
+    vocal_uncertain unconditional + all vocals while lead-masked,
+    single shared predicate basis); core groove carrier DEFENSIBLE
+    with an honest edge (on the chop fixture the beat_identity
+    dominant IS the BGV chop the dropout targets; judged NOT-A-HOLE —
+    keying on beat_identity would misfire absurdly, its dense-fixture
+    "dominant" is a synth pad; kick/snare/bass is the only honest
+    read of "main kick/sub foundation") — **★ TRAJECTORY WATCH-ITEM
+    (→ residue, STANDING): a real groove-carrier signal is required
+    before ANY dropout-surface widening — do not fake it from
+    beat_identity**; execution semantics — none smuggled (the lexical
+    guard real, covers the right strings); conscious drift exactly as
+    enumerated; the halee-only narrowing of the artifact-keys pin
+    judged correct with NO coverage loss (timbaland's intimate-path
+    byte-silence re-pinned; quincy pinned by his own P-043 surfaces);
+    risk rows honest (arithmetic reconstructed from the JSONs; halee
+    HIGH upheld as the SAFER authoring; timbaland 80.9 a real read
+    landing honestly under his 86.7 subtractive economy — the packet
+    permitted a winner flip and his lens coherently doesn't produce
+    one); P-042/P-043 guarantees intact; reconstruction stays
+    falsifiable.
+  - **★ THE USER'S ACCEPTANCE BAR — all nine clauses met:** exists as
+    an extended curated kind ✓ (10/3) · reach-gated admission ✓ ·
+    Timbaland only where authored ✓ (his three modes exactly; zero
+    elsewhere incl. the intimate path) · Halee/Quincy do not drift ✓
+    (0 dropout over the full parametrization; halee tree + quincy
+    pins byte-stable) · risk caps bind ✓ (load + runtime, against
+    each profile's own row) · lead/hook/core-groove protections
+    override ✓ (engine-owned, profile-blind, fail-closed no-emit) ·
+    no execution semantics ✓ (byte-pinned prose + lexical guard) ·
+    sample-tree drift conscious ✓ (3/30 enumerated, verbatim
+    invocation, pin full strength) · differential attributes to
+    authored reach ✓ (312 cells, 0 mismatches).
+  - **★ NEXT: NOTHING STAGED — the user's sequenced arc is COMPLETE**
+    (CLI ✓ samples ✓ third producer ✓ analyzer extension ✓
+    mode-forking B ✓ vocabulary C narrow ✓ dropout ✓). The
+    orchestrator PRESENTS the open directions to the user (ALL
+    user-gated): quincy/halee authored dropout reach · further C
+    families (behind the groove-carrier watch-item where applicable)
+    · a fourth producer · product-surface work (samples/README
+    refresh for the new families) · anything else the user calls. Do
+    NOT open anything blind. Execution/apply semantics NEVER without
+    explicit user re-gating. **THE OPEN USER GATE: the merge of P-044
+    (`9fdb172` + `87635d3` + `f72f222` + the close commit) atop
+    `80e9bd5` (= PR #22).** Receipt:
+    `build-os/receipts/P-044-negative-space-dropout.md`.
 
 - **★★★ P-043 WIDENS THE MOVE VOCABULARY — CURATED MOVE VOCABULARY
   EXPANSION: ARRANGEMENT LIFT + ENSEMBLE REBALANCE (Shape C, opened
@@ -525,7 +686,13 @@
     presents scope first; do NOT open blind. **THE OPEN USER GATE:
     the merge of P-043 (`3110126` + `ed94020` + `e382d86` + the close
     commit) atop `17cc270` (= PR #21).** Receipt:
-    `build-os/receipts/P-043-move-vocabulary-expansion.md`.
+    `build-os/receipts/P-043-move-vocabulary-expansion.md`. **(✓ UPDATE
+    P-044 close, 2026-07-03: BOTH resolved in the SAME user
+    directive — the P-043 merge landed as PR #22 → default tip
+    `80e9bd5`, AND negative-space dropout was opened NARROWLY AND
+    CONSERVATIVELY — CLOSED as P-044; the Shape C arc is COMPLETE —
+    see the P-044 banner above; NEXT = NOTHING STAGED, the
+    orchestrator presents the open directions.)**
 
 - **★★★ P-042 MAKES THE MODE LEVER LOAD-BEARING — PROFILE-AUTHORED
   MODE FORKING (Shape B; the user's call, verbatim 2026-07-03: "My

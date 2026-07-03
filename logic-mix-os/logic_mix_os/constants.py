@@ -151,9 +151,10 @@ CREATIVE_VARIANT_KINDS = (
     "loop_deconstruct",
     "depth_cleanup",
     "intimacy_pass",
-    # P-043 (Shape C, narrow): the EXTENDED vocabulary — see below.
+    # P-043 (Shape C, narrow) + P-044: the EXTENDED vocabulary — see below.
     "arrangement_lift",
     "ensemble_rebalance",
+    "negative_space_dropout",
 )
 
 # P-043: the EXTENDED move vocabulary — the reach-gated subset of
@@ -167,12 +168,26 @@ CREATIVE_VARIANT_KINDS = (
 # ``favor_kinds`` stays ORDER-ONLY — favoring can still never grow a
 # candidate set; admission happens through ``reach_kinds`` alone, and the
 # non-empty suppression fallback stays neutral-pool-only (a fallback can
-# never admit extended kinds). Exactly two families by the user's decision;
-# negative-space dropout is EXPLICITLY excluded until C proves the widened
-# vocabulary stays governed.
+# never admit extended kinds).
+#
+# P-043 shipped exactly two families by the user's decision, with
+# negative-space dropout EXPLICITLY excluded until C proved the widened
+# vocabulary stays governed. P-044 lifts that exclusion on the user's
+# explicit go: ``negative_space_dropout`` joins as the THIRD extended family
+# — candidate-PLANNING only, never execution semantics, under the user's
+# safety line (verbatim): "dropout is an arrangement proposal, not a
+# destructive operation." Its curated variants additionally resolve their
+# targets through the ENGINE-owned, profile-BLIND structural protection
+# filter (``creative._dropout_protected_names``): the lead vocal, hook
+# candidates, masked-lead-protected vocals, the core groove carriers (the
+# kick/snare + bass foundation) and the primary emotional-hierarchy
+# (sacred) elements are never dropout targets, and a dropout variant with
+# no unprotected target does NOT emit — no fallback into protected
+# territory, no phantom targets, and no profile data can widen the filter.
 CREATIVE_EXTENDED_KINDS = (
     "arrangement_lift",
     "ensemble_rebalance",
+    "negative_space_dropout",
 )
 
 # Translation-risk levels in SEVERITY ORDER (index = rank). This is the shared

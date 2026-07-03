@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from typing import Dict, List, Optional
 
-from .analyzers.vocal_type_classifier import lead_vocal_names
+from .analyzers.vocal_type_classifier import is_vocal_record, lead_vocal_names
 from .constants import (
     CREATIVE_EXTENDED_KINDS,
     LOOP_SAMPLE_KINDS,
@@ -436,17 +436,107 @@ def _curated_variants(problem: Dict, result) -> List[Dict]:
     return variants
 
 
+# --- P-044: the STRUCTURAL dropout protection filter (ENGINE-owned) ----------
+# THE DOCTRINE (the user's safety line, verbatim): "dropout is an arrangement
+# proposal, not a destructive operation." The ``negative_space_dropout``
+# family is the aggressive end of the extended vocabulary — it PROPOSES
+# withholding a layer — so its targets resolve ONLY through this filter,
+# which is deliberately PROFILE-BLIND: the helpers below take the analysis
+# ``result``/``records`` alone (no ``profile`` parameter, no profile field
+# read — asserted structurally in the tests), so no authored taste can ever
+# widen what dropout may touch. The filter EXCLUDES, keying on the
+# pipeline's REAL record/analysis signals:
+#
+#   * the LEAD VOCAL — identity-derived (``lead_vocal_names``, the one
+#     shared lead-matching basis);
+#   * HOOK CANDIDATES — ``vocal_type == "vocal_hook_candidate"`` (the
+#     classifier's strongest honest hook claim, P-032f);
+#   * vocals under MASKED-LEAD-grade protection — ``vocal_uncertain`` stems
+#     (protected AS THE LEAD downstream, P-032f) and, while the lead is
+#     bad-masked (``_lead_masked``), EVERY vocal stem: a buried lead means
+#     no vocal layer is a legitimate dropout target;
+#   * the CORE GROOVE CARRIERS / the main kick+sub foundation — the kick and
+#     snare identities plus the bass identity family;
+#   * the PRIMARY EMOTIONAL-HIERARCHY elements — every ``sacredness ==
+#     "sacred"`` record (the emotional centre the doctrine engine protects).
+#
+# NO FALLBACK INTO PROTECTED TERRITORY: unlike ``_resolve`` (which degrades
+# toward any real record so a plan never names a phantom), a dropout variant
+# whose candidate surface is empty after the filter simply DOES NOT EMIT —
+# dropout may never degrade toward protected elements or invent targets.
+_DROPOUT_PROTECTED_IDENTITIES = {"kick", "snare"}
+_DROPOUT_PROTECTED_FAMILIES = {"bass"}
+_DROPOUT_PROTECTED_VOCAL_TYPES = {"vocal_hook_candidate", "vocal_uncertain"}
+
+
+def _dropout_protected_names(result) -> set:
+    """The track names a dropout variant may NEVER target (see the block
+    comment above). Pure, deterministic, PROFILE-BLIND: reads only the
+    analysis ``result`` (records + masking report via ``_lead_masked``)."""
+    records = result.records
+    protected = set(lead_vocal_names(records))
+    masked = _lead_masked(result)
+    for r in records:
+        if r.get("vocal_type") in _DROPOUT_PROTECTED_VOCAL_TYPES:
+            protected.add(r["name"])
+        if masked and is_vocal_record(r):
+            protected.add(r["name"])
+        if (r["instrument_identity"] in _DROPOUT_PROTECTED_IDENTITIES
+                or r["identity_family"] in _DROPOUT_PROTECTED_FAMILIES):
+            protected.add(r["name"])
+        if r["sacredness"] == "sacred":
+            protected.add(r["name"])
+    return protected
+
+
+def _dropout_texture_beds(records) -> List[str]:
+    """The BACKGROUND-TEXTURE-REDUCTION candidate surface (the user's
+    may-address list), in project order: felt layers living behind the
+    foreground plus imported loop/texture beds. Never resolved further —
+    dropout has no degrade chain."""
+    return [r["name"] for r in records
+            if (r["perceptual_role"] == "felt"
+                and r["depth_default"] in {"midground", "background"})
+            or r["source_kind"] in LOOP_SAMPLE_KINDS]
+
+
+def _dropout_clutter(records) -> List[str]:
+    """The SUPPORTING-CLUTTER candidate surface (the user's may-address
+    list), in project order: decorative/expendable-read layers plus the
+    supporting ensemble. Never resolved further — dropout has no degrade
+    chain."""
+    supporting = set(_supporting_elements(records))
+    return [r["name"] for r in records
+            if r["sacredness"] in {"decorative", "expendable"}
+            or r["name"] in supporting]
+
+
 def _extended_variants(problem: Dict, result) -> List[Dict]:
-    """The engine's EXTENDED curated emission for one problem (P-043): the
-    two reach-gated move families, ``arrangement_lift`` (section-level lift
-    built in the arrangement — parts withheld and entering across section
-    boundaries, sectional builds) and ``ensemble_rebalance`` (ensemble-aware
-    RELATIVE rebalancing that reveals arrangement roles — never mute-only
-    aggression). Curated exactly like the neutral pool above — plan-only,
-    non-destructive, real track targets via the same resolution helpers —
-    but NEVER part of the neutral emission: these variants enter a candidate
-    set ONLY when the active mode's authored ``reach_kinds`` admit them
-    (``_fork_candidates``). No profile data reaches this builder."""
+    """The engine's EXTENDED curated emission for one problem (P-043 +
+    P-044): the reach-gated move families — ``arrangement_lift``
+    (section-level lift built in the arrangement — parts withheld and
+    entering across section boundaries, sectional builds),
+    ``ensemble_rebalance`` (ensemble-aware RELATIVE rebalancing that reveals
+    arrangement roles — never mute-only aggression), and — P-044, on the
+    user's explicit go — ``negative_space_dropout`` (an ARRANGEMENT PROPOSAL
+    to withhold a supporting/decorative layer for a section: silence as the
+    move). Curated exactly like the neutral pool above — plan-only,
+    non-destructive, real track targets — but NEVER part of the neutral
+    emission: these variants enter a candidate set ONLY when the active
+    mode's authored ``reach_kinds`` admit them (``_fork_candidates``). No
+    profile data reaches this builder.
+
+    P-044 target discipline: the dropout variants resolve their targets
+    through the ENGINE-owned protection filter above and DO NOT EMIT when no
+    unprotected target exists (no ``_resolve`` degrade chain — dropout never
+    falls back toward protected elements or phantom targets). The user's
+    may-address list bounds the candidate surfaces: supporting clutter,
+    non-lead decorative layers, sectional over-density, rhythmic-contrast
+    opportunities, background texture reduction. A loop-problem dropout
+    variant is CONSCIOUSLY absent: proposing dropout against the loop
+    problem itself would press on the loop's source integrity (the user's
+    must-never-touch line), so the loop family keeps its existing
+    deconstruct/accent moves only."""
     records = result.records
     supporting = _supporting_elements(records)
     loops = [r["name"] for r in records if r["source_kind"] in LOOP_SAMPLE_KINDS]
@@ -458,6 +548,12 @@ def _extended_variants(problem: Dict, result) -> List[Dict]:
     # never empty while the project has records).
     ensemble_target = _resolve(supporting, loops, [r["name"] for r in records][:1])
 
+    # P-044: the dropout targets — protection-filtered, NEVER degraded. An
+    # empty list here means the variant below is withheld entirely.
+    protected = _dropout_protected_names(result)
+    texture_target = [n for n in _dropout_texture_beds(records) if n not in protected]
+    clutter_target = [n for n in _dropout_clutter(records) if n not in protected]
+
     if pid == "chorus_lift":
         variants.append(
             _variant("chorus_lift_E", pid, "arrangement_lift", "Sectional Arrangement Lift",
@@ -468,6 +564,18 @@ def _extended_variants(problem: Dict, result) -> List[Dict]:
                      ensemble_target, "A sparser pre-chorus may briefly read as lost energy before the payoff registers.",
                      ["chorus entry feels larger with no new processing", "pre-chorus tension increases"],
                      "sectional lift"))
+        if texture_target:
+            variants.append(
+                _variant("chorus_lift_F", pid, "negative_space_dropout", "Negative-Space Dropout",
+                         "The chorus hits hardest when the background texture DISAPPEARS just before it — the hole is the arrangement move, and the entrance becomes the event by contrast.",
+                         ["Duplicate the texture bed and region-mute the duplicate through the final pre-chorus bar",
+                          "Let the chorus downbeat restore it so the re-entry reads as impact",
+                          "Keep the original track untouched — the dropout lives on the muted duplicate"],
+                         texture_target,
+                         "A hole this deliberate can read as a mistake on first listen, and a sparse pre-chorus risks losing momentum on small speakers — A/B against the static baseline.",
+                         ["the final pre-chorus bar reads as intentional negative space",
+                          "the chorus entrance gains impact with zero added processing"],
+                         "impact through absence"))
     elif pid == "density":
         variants += [
             _variant("density_C", pid, "arrangement_lift", "Staggered Entrances",
@@ -487,6 +595,18 @@ def _extended_variants(problem: Dict, result) -> List[Dict]:
                      ["hierarchy reads without muting anything", "every part keeps an audible role"],
                      "ensemble hierarchy"),
         ]
+        if clutter_target:
+            variants.append(
+                _variant("density_E", pid, "negative_space_dropout", "Sectional Dropout",
+                         "Over-density is rarely a fader problem — withhold ONE decorative or clutter layer for a full section and let the negative space carry the hierarchy.",
+                         ["Pick ONE decorative/clutter layer from the affected tracks",
+                          "Duplicate it and region-mute the duplicate for one full section",
+                          "Leave the hole open — resist refilling it with another layer"],
+                         clutter_target,
+                         "The section can feel empty until the ear re-anchors on the remaining parts, and the missing layer may be missed more than expected — A/B against the static baseline.",
+                         ["the section breathes with one fewer layer",
+                          "the withheld layer's return reads as an event"],
+                         "negative space"))
     elif pid == "vocal_belief":
         variants.append(
             _variant("vocal_C", pid, "ensemble_rebalance", "Lead-in-Ensemble Rebalance",

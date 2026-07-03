@@ -16,7 +16,8 @@
     "depth_cleanup":    {"technical": 86, "physical_space": 89, "emotional_hierarchy": 87, "contrast": 75, "vocal_belief": 88, "excitement": 70, "taste": 89, "translation": "low", "mono": "low"},
     "intimacy_pass":    {"technical": 81, "physical_space": 82, "emotional_hierarchy": 89, "contrast": 70, "vocal_belief": 90, "excitement": 63, "taste": 85, "translation": "low", "mono": "low"},
     "arrangement_lift":   {"technical": 84, "physical_space": 82, "emotional_hierarchy": 88, "contrast": 92, "vocal_belief": 79, "excitement": 84, "taste": 88, "translation": "low", "mono": "low"},
-    "ensemble_rebalance": {"technical": 85, "physical_space": 84, "emotional_hierarchy": 90, "contrast": 74, "vocal_belief": 89, "excitement": 70, "taste": 90, "translation": "low", "mono": "low"}
+    "ensemble_rebalance": {"technical": 85, "physical_space": 84, "emotional_hierarchy": 90, "contrast": 74, "vocal_belief": 89, "excitement": 70, "taste": 90, "translation": "low", "mono": "low"},
+    "negative_space_dropout": {"technical": 82, "physical_space": 78, "emotional_hierarchy": 80, "contrast": 88, "vocal_belief": 76, "excitement": 80, "taste": 74, "translation": "medium", "mono": "low"}
   },
 
   "risk_penalty": {"low": 0, "medium": 6, "high": 14},
@@ -63,9 +64,9 @@
   "philosophy": "A mix is finished when the arrangement carries the song: the lead vocal sits prominent inside an arranged ensemble, each section earns its lift through parts entering and leaving, and the space between layers lets every role read. The groove holds the floor steady while the orchestration tells the story — the record moves because the arrangement moves.",
 
   "truth_alignment": {
-    "intimate": {"vocal_ride": 90, "intimacy_pass": 88, "subtractive_drop": 85, "depth_cleanup": 84, "loop_deconstruct": 80, "drum_room_bloom": 60, "width_bloom": 45, "arrangement_lift": 76, "ensemble_rebalance": 88},
-    "big": {"width_bloom": 82, "drum_room_bloom": 84, "vocal_ride": 80, "subtractive_drop": 80, "depth_cleanup": 78, "loop_deconstruct": 78, "intimacy_pass": 68, "arrangement_lift": 88, "ensemble_rebalance": 78},
-    "neutral": {"width_bloom": 70, "drum_room_bloom": 80, "vocal_ride": 82, "subtractive_drop": 84, "depth_cleanup": 84, "loop_deconstruct": 78, "intimacy_pass": 78, "arrangement_lift": 84, "ensemble_rebalance": 84}
+    "intimate": {"vocal_ride": 90, "intimacy_pass": 88, "subtractive_drop": 85, "depth_cleanup": 84, "loop_deconstruct": 80, "drum_room_bloom": 60, "width_bloom": 45, "arrangement_lift": 76, "ensemble_rebalance": 88, "negative_space_dropout": 52},
+    "big": {"width_bloom": 82, "drum_room_bloom": 84, "vocal_ride": 80, "subtractive_drop": 80, "depth_cleanup": 78, "loop_deconstruct": 78, "intimacy_pass": 68, "arrangement_lift": 88, "ensemble_rebalance": 78, "negative_space_dropout": 78},
+    "neutral": {"width_bloom": 70, "drum_room_bloom": 80, "vocal_ride": 82, "subtractive_drop": 84, "depth_cleanup": 84, "loop_deconstruct": 78, "intimacy_pass": 78, "arrangement_lift": 84, "ensemble_rebalance": 84, "negative_space_dropout": 72}
   },
 
   "taste_max_delta": 15,
