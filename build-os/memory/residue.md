@@ -4,6 +4,76 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
+## ★★★ STATUS (P-042 close, 2026-07-03): residue = accepted standing notes only — THE MODE LEVER IS LOAD-BEARING
+
+- **P-042 (PROFILE-AUTHORED MODE FORKING — Shape B) closed
+  2026-07-03:** qa GREEN + reviewer PASS (no must-fix; all EIGHT
+  user-mandated adversarial attacks defeated). Commits `9acecfd` (the
+  seam: additive `profile` param; `suppress_kinds` = candidate-SET
+  fork / `favor_kinds` = order-only reach / absent = byte-identical
+  neutral; the frozen `CREATIVE_VARIANT_KINDS` vocabulary; loader
+  validation incl. the over-cap "cannot be out-authored" ValueError;
+  runtime fail-closed cap; non-empty `suppression_fallback`; the
+  reference's authored declarations; GREEN IN ISOLATION at 894) +
+  `9d746e3` (timbaland + quincy mode declarations, the three-way mode
+  differential, the requirement-10 artifact surface) on parent
+  `ab4914a`, atop merge base `dadda12` (= PR #20 — P-041 merged FIRST
+  on the user's directive). Exactly 9 files, +1069/−27; every mode of
+  all three producers explicitly authored; all three DEFAULT/intimate
+  modes authored-neutral → defaults byte-identical. PUSHED BEFORE
+  qa/reviewer (orchestrator standing go — both gates validated the
+  final SHAs), NOT merged. Suite **907** / regression **93/93** /
+  Commit-1 iso **894** / the 90-cell attribution reconstruction 0
+  mismatches / 12 default-flow runs byte-identical / sabotage 4/4.
+  **Codex NOT available — single-model review (own executed probes).**
+  The standing doctrine extends to creative reach: **engine owns move
+  vocabulary / profile owns mode reach / governance owns safety cap.**
+  Receipt: `build-os/receipts/P-042-mode-forking.md`.
+- **★ THE P-033 "THIN LEVER" CALIBRATION NOTE IS ✓ RESOLVED** —
+  `generate_variants` now forks candidate generation on the mode via
+  profile-authored data (annotated in place below); behavioral
+  steering may now be claimed.
+- **NEW accepted notes (P-042, recorded not fixed):**
+  1. **Cap-semantics stated decision (reviewer finding 1):**
+     `allowed_risk` caps authored ELEVATION (favor), not pool
+     membership — a loader-legal low-posture mode can suppress
+     everything except the one medium-risk kind and thereby
+     concentrate emission on it; that kind was always in the neutral
+     pool, scoring/governance unchanged. Documented semantics, not a
+     hole.
+  2. **Dedupe nit (reviewer finding 2):** duplicate favor_kinds from a
+     loader-BYPASSING profile duplicate variant dicts in emission —
+     unreachable via load_profile (the loader rejects duplicates); a
+     one-line dedupe is a future hardening candidate.
+  3. **Quincy experimental (subtractive_drop + width_bloom) is the
+     closest IN-VOCABULARY approximation** of the user's
+     "arrangement-lift / ensemble-rebalance" example — the true
+     families are STAGED C; recorded as C's motivation.
+  4. **winning_variant tie-break (reviewer finding 4):** max =
+     first-wins; favor-reordering could flip an EXACT score tie; none
+     exists today, and a favored kind winning a tie is arguably
+     authored intent.
+  5. **qa's builder-report discrepancy:** gutted-fork sabotage — 5
+     failures claimed vs **10 measured**; direction SAFE (the net is
+     STRONGER than claimed). A calibration note on builder
+     self-reports, not a defect.
+- **All prior standing notes RETAINED** (the banners below).
+- **Open boundary:** P-042's commits pushed to the dev branch BEFORE
+  qa/reviewer under the orchestrator's standing go; **the MERGE of
+  P-042 (`ab4914a` + `9acecfd` + `9d746e3` + the close commit, atop
+  `dadda12` = PR #20) is the OPEN USER GATE** — it awaits the user's
+  explicit word.
+- **NEXT per the USER = Shape C — new mode-specific move families**
+  (extend `CREATIVE_VARIANT_KINDS` + the curated builders through a
+  conscious packet; profiles then author reach with ZERO loader/fork
+  changes); STAGED in `build-os/packets/active_packet.md` —
+  ★ USER-GATED: not built until the user opens it; the orchestrator
+  presents scope first.
+- **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
+  comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
+  placement faith; (3) flag PRESENCE is not flag THREADING — levers
+  need reaches-the-destination guards.
+
 ## ★★★ STATUS (P-041 close, 2026-07-03): residue = accepted standing notes only — THE PRODUCER ROSTER IS THREE
 
 - **P-041 (THE THIRD PRODUCER — Quincy Jones, profile-only) closed
@@ -39,13 +109,18 @@
   qa/reviewer under the orchestrator's standing go; **the MERGE of
   P-041 (`ece2b5c` + `f2614f9` + `dfe8c54` + the close commit, atop
   `61582b5` = PR #19) is the OPEN USER GATE** — it awaits the user's
-  explicit word.
+  explicit word. **(✓ RESOLVED at P-042 open, 2026-07-03: merged
+  as PR #20 on the user's directive — merge commit `dadda12`, the
+  current default tip and the P-042 merge base.)**
 - **NEXT per the USER'S SEQUENCE = DEEPER MODE-FORKING in variant
   generation** (`search_mode` is a THIN lever today —
   `generate_variants` does not fork on it; the P-033 reviewer
   calibration note); STAGED in `build-os/packets/active_packet.md` —
   ★ USER-GATED: the orchestrator presents the shape/scope decision;
-  do NOT open blind.
+  do NOT open blind. **(✓ DONE at P-042 close, 2026-07-03: the shape
+  gate was presented and the user chose Shape B — profile-authored
+  mode forking; CLOSED as P-042, the mode lever now LOAD-BEARING — see
+  the P-042 banner above; NEXT = Shape C, ★ USER-GATED.)**
 - **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
   comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
   placement faith; (3) flag PRESENCE is not flag THREADING — levers
@@ -620,6 +695,12 @@
     fork on it. P-033 makes the authored mode REACHABLE and VISIBLE; a
     future packet would make modes reshape variant generation/scoring. Do
     NOT over-claim behavioral steering.
+    **✓ RESOLVED by P-042 (2026-07-03): `generate_variants` now READS
+    the active mode and FORKS candidate generation via profile-authored
+    `search_modes` declarations (`suppress_kinds` = candidate-SET fork,
+    `favor_kinds` = order-only reach, absent = byte-identical neutral;
+    caps bind at loader AND runtime) — the mode lever is LOAD-BEARING;
+    behavioral steering may now be claimed.**
   - **★★ NEW (P-030 reviewer JUDGMENT CALL — residue-sweep candidates,
     explicitly NOT contract keys):** three producer-named-VALUE surfaces
     survive the migration — (1) the search-mode NAMES
