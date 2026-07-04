@@ -4,66 +4,44 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** ACTIVE — opened on the user's "Ok go" (2026-07-04) after the
-  P-048 merge report. Of the presented directions, this is the ONLY one
-  requiring no user taste/product decision (pure suite hardening — the
-  P-048 reviewer's named candidate); the fifth producer, the analyzer
-  candidates, and quincy/halee dropout reach remain user-gated and are
-  NOT touched here.
-- **ID / Title:** **P-049 — Committed-Example Directory-Set Guards**
-- **Branch:** `claude/logic-mix-os-hardening-12-7hbeh1` atop merge base
-  `7ae96f2` (= PR #27 merge; verify with `git merge-base`).
-- **Baseline to protect:** suite **1143** / regression **93/93** / all
-  committed example artifacts byte-stable / ZERO runtime changes — tests
-  only.
+- **Status:** NONE ACTIVE — **P-049 CLOSED** (2026-07-04, by the
+  archivist). qa GREEN (8/8, bites 6/6) + reviewer PASS (no must-fix;
+  single-model — Codex unavailable). Receipt:
+  `build-os/receipts/P-049-directory-set-guards.md`.
 
-## Why this packet (the P-048 reviewer residue, verbatim)
+## Last closed — P-049: Committed-Example Directory-Set Guards
 
-"Nothing asserts `examples/mode_demos/` contains EXACTLY the nine pinned
-directories — a tenth unpinned demo dir could land silently. This matches
-the existing convention (test_sample_refresh.py also hardcodes its tree
-dict with no directory-set guard), so it is a suite-wide hardening
-candidate." An unpinned committed example is a silent product-surface
-liability: it ships, drifts stale, and nothing catches it.
+- **Single commit** `94b7df9` ("tests: P-049 — committed-example
+  directory-set guards"; 2 files, +51/−0, tests only) on parent
+  `b6ba8d1` (set-active), atop merge base `7ae96f2` (= the PR #27
+  merge — P-048 landed FIRST). PUSHED to the dev branch
+  `claude/logic-mix-os-hardening-12-7hbeh1` under the standing go
+  BEFORE qa/reviewer (both gates validated the final SHA);
+  **NOT merged**.
+- Suite **1145 passed, 0 failed** (+2 exactly) / regression **93/93** /
+  single-commit packet — the HEAD run IS the Commit-1-isolation proof /
+  bites 6/6 in an isolated worktree / safety grep 0.
+- Both committed-example homes now EXACT-SET-GUARDED
+  (derivation-coupled to the pinned tables): 4 trees + 9 demos + the
+  manifest example — nothing can land or vanish silently. The P-048
+  reviewer residue (the directory-set guard) ✓ RESOLVED in full.
 
-## Scope (tests only — one conscious guard per committed-example home)
+## ★★ OPEN USER GATE
 
-1. `tests/test_mode_demo_refresh.py`: assert `examples/mode_demos/`
-   contains EXACTLY the nine pinned demo directories (and nothing else —
-   no stray files at that level beyond any documented README).
-2. `tests/test_sample_refresh.py`: assert the `examples/` sample-tree
-   set is EXACTLY the four pinned trees (`sample_output`,
-   `sample_output_timbaland`, `sample_output_quincy`,
-   `sample_output_eno`) — scoped so the guard covers the sample-tree
-   naming pattern without false-positiving on the OTHER legitimate
-   `examples/` residents (mode_demos/, project_manifest.example.json —
-   enumerate the full allowed set consciously after LOOKING at the real
-   directory).
-3. The guards fail LOUDLY on: a new unpinned dir, a deleted pinned dir,
-   a stray file. Adding a legitimate fifth tree/tenth demo later = a
-   conscious one-line extension of the allowed set (state this in the
-   guard's docstring — the same conscious-extension semantics as the
-   P-047 data tables).
+- **The merge of P-049** — `b6ba8d1` + `94b7df9` + the close commit,
+  atop `7ae96f2` (= PR #27) — awaits the user's explicit word. No
+  deploy/publish/secrets touched.
 
-## Non-scope (binding)
+## Staged next
 
-Tests only — zero changes to engine code, profiles, fixtures, goldens,
-committed examples, README. No new demo artifacts. No renames. Nothing
-else rides. No merge until qa + reviewer dual-green (the merge stays a
-user gate).
-
-## Commit shape (1 commit — this packet is small by design)
-
-- **Commit-1 (only):** the two guard additions — full suite green.
-  (≤2 commits allowed; one suffices. Commit-1 green in isolation is
-  trivially the HEAD proof.)
-
-## Open user gates carried (NOT this packet's to touch)
-
-The fifth producer (who + grounding) · the future-analyzer candidates
-from Eno's deferrals · quincy/halee authored dropout reach — all await
-the user's call.
+**NOTHING.** The orchestrator PRESENTS the open directions to the user
+(ALL user-gated — all product/taste decisions that belong to the user):
+a fifth producer (who + the grounding) · the future-analyzer candidates
+from Eno's honest deferrals (textural coherence · generative process ·
+ambient patience) · quincy/halee authored dropout reach · the one-line
+sample-pin micro-hardening (could ride any future packet) · anything
+else the user calls. Do NOT open anything blind.
 
 ---
-_Set active by the orchestrator on the user's "Ok go" (2026-07-04). One
-packet at a time: builder → qa + reviewer → archivist → receipt._
+_Cleared by the archivist at P-049 close (2026-07-04). One packet at a
+time: builder → qa + reviewer → archivist → receipt._

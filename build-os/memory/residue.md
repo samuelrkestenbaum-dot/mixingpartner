@@ -4,6 +4,89 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
+## ★★★ STATUS (P-049 close, 2026-07-04): residue = accepted standing notes only — THE COMMITTED-EXAMPLE SURFACE IS EXACT-SET-GUARDED
+
+- **P-049 (COMMITTED-EXAMPLE DIRECTORY-SET GUARDS — tests only, one
+  commit by design; opened on the user's "Ok go" 2026-07-04 after
+  the P-048 merge [PR #27 → default tip `7ae96f2`] — the ONLY
+  presented direction requiring no user taste/product decision: the
+  P-048 reviewer's ★ named suite-wide hardening candidate) closed
+  2026-07-04:** qa GREEN (8/8, bites 6/6) + reviewer PASS (no
+  must-fix). Single commit `94b7df9` ("tests: P-049 —
+  committed-example directory-set guards"; 2 files, +51/−0, tests
+  only — the two derivation-coupled guards:
+  `test_committed_mode_demo_directory_set_is_exactly_the_pinned_nine`
+  [allowed set = sorted(MODE_DEMOS), the same table every
+  staleness/surface pin parametrizes, + a no-non-dirs assert] and
+  `test_committed_examples_directory_set_is_exactly_the_pinned_residents`
+  [trees from SAMPLE_TREES ∪ the consciously-enumerated
+  NON_TREE_RESIDENTS {mode_demos, project_manifest.example.json},
+  + dirs-vs-files shape + parents-sanity asserts]; reality checked
+  FIRST — no README at either level, none allowed;
+  conscious-extension semantics in both docstrings — a fifth tree /
+  tenth demo = a one-line pinned-table extension that auto-extends
+  guard + pins together) on parent `b6ba8d1` (set-active), atop
+  merge base `7ae96f2` (= PR #27 — P-048 merged FIRST). PUSHED
+  under the standing go BEFORE qa/reviewer (both gates validated
+  the final SHA), NOT merged. Suite **1145** (+2 exactly) /
+  regression **93/93** / single-commit packet — the HEAD run IS the
+  Commit-1-isolation proof / growth arithmetic verified per file
+  (33→35 combined) / guard derivation verified against BOTH the
+  pinned tables and the real directory contents / **bites 6/6 in an
+  isolated worktree** (stray dir and stray file at both levels,
+  unpinned fifth tree, deleted pinned demo, the
+  manifest-replaced-by-directory shape case — each failing exactly
+  its one guard) / safety grep 0 across all +51 lines / the
+  behavioral surface untouched. **Codex unavailable — single-model
+  review.** Reviewer: derivation-from-pins judged "genuinely
+  drift-proof — the strongest property of the diff" (no divergence
+  path between the guards and the pins they protect, in either
+  direction); "This closes the P-048 reviewer residue in full."
+  Receipt: `build-os/receipts/P-049-directory-set-guards.md`.
+- **★ THE P-048 ACCEPTED NOTE 1 (the ★ NAMED suite-wide hardening
+  candidate — the directory-set guard) IS ✓ RESOLVED:** both
+  committed-example homes now carry a derivation-coupled EXACT-SET
+  guard — the committed-example surface is 4 trees + 9 demos + the
+  manifest example EXACTLY; nothing can land or vanish silently.
+  P-048 notes 2–4 stand unchanged.
+- **NEW accepted notes (P-049, recorded not fixed — the two
+  reviewer residuals, non-blocking):**
+  1. **The nested-subdir hole in the sample staleness pin:** a
+     nested stray SUBDIRECTORY inside a sample_output* tree escapes
+     everything — the pin filters `is_file()` on both sides (unlike
+     the mode-demo pin's explicit no-subdir assert). Future
+     one-line micro-hardening: a no-subdirs assert in the sample
+     staleness pin — could ride any future packet. Symlink
+     impersonation judged exotica (caught by the residents set or
+     the byte pins).
+  2. **The "mode_demos" literal duplication in the dirs-shape
+     assert** (a NON_TREE_RESIDENTS member repeated) — a future
+     non-tree dir resident needs a two-place edit, but any
+     half-edit fails loudly; acceptable shape-encoding.
+- **All prior standing notes RETAINED** (the banners below), incl.
+  the ★★ STANDING TRAJECTORY WATCH-ITEM (a REAL groove-carrier
+  signal before ANY dropout-surface widening) and the safety line
+  (execution/apply semantics NEVER without explicit user
+  re-gating).
+- **Open boundary:** P-049's commit pushed to the dev branch BEFORE
+  qa/reviewer under the orchestrator's standing go; **the MERGE of
+  P-049 (`b6ba8d1` + `94b7df9` + the close commit, atop `7ae96f2`
+  = PR #27) is the OPEN USER GATE** — it awaits the user's explicit
+  word.
+- **NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open
+  directions to the user (ALL user-gated — all product/taste
+  decisions that belong to the user): the P-049 merge · a fifth
+  producer (who + the grounding) · the future-analyzer candidates
+  from Eno's honest deferrals (textural coherence · generative
+  process · ambient patience) · quincy/halee authored dropout
+  reach · the one-line sample-pin micro-hardening (note 1 above —
+  could ride any future packet) · anything else the user calls. Do
+  NOT open anything blind.
+- **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
+  comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
+  placement faith; (3) flag PRESENCE is not flag THREADING — levers
+  need reaches-the-destination guards.
+
 ## ★★★ STATUS (P-048 close, 2026-07-03): residue = accepted standing notes only — THE PRODUCT SURFACE IS COMPLETE FOR THE CURRENT SUBSTRATE
 
 - **P-048 (PRODUCT-SURFACE REFRESH — Producer + Mode Demo Artifacts,
@@ -78,7 +161,10 @@
      guard:** nothing asserts `examples/mode_demos/` contains
      EXACTLY the nine pinned dirs — a tenth unpinned demo dir could
      land silently (matches the existing test_sample_refresh.py
-     convention — the same gap suite-wide).
+     convention — the same gap suite-wide). **(✓ RESOLVED by
+     P-049, 2026-07-04: both committed-example homes now carry a
+     derivation-coupled EXACT-SET guard — nothing can land or
+     vanish silently; see the P-049 banner above.)**
   2. **Hairline:** the "only shipped fixture with five problems"
      claim is verified-live but not itself pinned.
   3. **Ergonomic:** re-running a documented invocation verbatim
@@ -98,7 +184,10 @@
   BEFORE qa/reviewer under the orchestrator's standing go; **the
   MERGE of P-048 (`0c47fb7` + `4725169` + `44381a8` + the close
   commit, atop `645c925` = PR #26) is the OPEN USER GATE** — it
-  awaits the user's explicit word.
+  awaits the user's explicit word. **(✓ RESOLVED at P-049 open,
+  2026-07-04: merged as PR #27 on the user's directive — merge
+  commit `7ae96f2`, the current default tip and the P-049 merge
+  base.)**
 - **NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open
   directions to the user (ALL user-gated): the P-048 merge ·
   quincy/halee authored dropout reach · the future-analyzer
@@ -106,7 +195,12 @@
   generative process · ambient patience) · a fifth producer
   (auto-discovered, auto-swept) · the directory-set-guard
   hardening candidate (note 1 above) · anything else the user
-  calls. Do NOT open anything blind.
+  calls. Do NOT open anything blind. **(✓ UPDATE at P-049 close,
+  2026-07-04: the user's "Ok go" called the directory-set-guard
+  hardening [note 1 above — the only presented direction requiring
+  no user taste/product decision]; opened and CLOSED as P-049 —
+  see the P-049 banner above; NEXT = NOTHING STAGED again, the
+  orchestrator presents the open directions.)**
 - **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
   comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
   placement faith; (3) flag PRESENCE is not flag THREADING — levers

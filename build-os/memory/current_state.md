@@ -467,27 +467,49 @@
     the set-active `0c47fb7`. P-048's parent chain: `44381a8` →
     `4725169` → `0c47fb7` (active-packet confirmation) → `645c925`
     (PR #26 merge).
+    ★★ P-048 IS MERGED — **PR #27 (P-048 — product-surface refresh:
+    producer + mode demo artifacts + closes) is MERGED to default on
+    the user's directive — merge commit `7ae96f2`, the CURRENT
+    default-branch tip. The base for MERGE/landing decisions is now
+    `7ae96f2`.** The dev branch now carries **P-049 (`94b7df9`,
+    tests only — COMMITTED-EXAMPLE DIRECTORY-SET GUARDS: two
+    derivation-coupled exact-set guards, one per committed-example
+    home — `examples/mode_demos/` == sorted(MODE_DEMOS) + a
+    no-non-dirs assert; `examples/` == SAMPLE_TREES ∪ the
+    consciously-enumerated NON_TREE_RESIDENTS {mode_demos,
+    project_manifest.example.json} + dirs-vs-files shape +
+    parents-sanity asserts; conscious-extension semantics in both
+    docstrings; single commit, 2 files, +51/−0, tests only), PUSHED
+    to the dev branch BEFORE qa/reviewer under the orchestrator's
+    standing go (both gates validated the final SHA), NOT merged —
+    the P-049 merge is a user gate**, atop the set-active `b6ba8d1`.
+    P-049's parent chain: `94b7df9` → `b6ba8d1` (active-packet
+    confirmation) → `7ae96f2` (PR #27 merge).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-03, P-048 — the
-  mode-demo-artifacts baseline):** suite **1143 passed**
+- **Green baseline (verified 2026-07-04, P-049 — the
+  directory-set-guards baseline):** suite **1145 passed**
   (0 failed / skipped); regression **93/93** (tests_run 93 /
   passed 93 / failed 0) — the corpus is **4 fixtures** (the 68/68
-  era ended CONSCIOUSLY at P-035). Commits `4725169` (the NINE
-  committed mode demos under `examples/mode_demos/` [real-CLI
-  creative pairs, dense fixture] + the NEW 21-test
-  `tests/test_mode_demo_refresh.py` [9 staleness + 9 surface + 3
-  story pins, expected values imported from the standing pinned
-  tables] + the hardening touch [two honest renames + the "brian"
-  token]) + `44381a8` (README only — ZERO collection changes,
-  node-id lists diffed identical C1 vs HEAD) on parent `0c47fb7`
-  (active-packet confirmation), atop merge base `645c925`
-  (= the PR #26 merge) — `4725169` IS Commit-1 → GREEN IN ISOLATION
-  at **1143**. (History: 1122 → **1143** at P-048 — +21: the NEW
+  era ended CONSCIOUSLY at P-035). Single commit `94b7df9` (the two
+  derivation-coupled directory-set guards —
+  `test_committed_mode_demo_directory_set_is_exactly_the_pinned_nine`
+  [allowed set = sorted(MODE_DEMOS), the same table every
+  staleness/surface pin parametrizes, + a no-non-dirs assert] +
+  `test_committed_examples_directory_set_is_exactly_the_pinned_residents`
+  [trees from SAMPLE_TREES ∪ the consciously-enumerated
+  NON_TREE_RESIDENTS {mode_demos, project_manifest.example.json},
+  + dirs-vs-files shape + parents-sanity asserts]; 2 files, +51/−0,
+  tests only) on parent `b6ba8d1` (active-packet confirmation),
+  atop merge base `7ae96f2` (= the PR #27 merge) — single-commit
+  packet: the HEAD run IS the Commit-1-isolation proof at **1145**.
+  (History: 1143 → **1145** at P-049 — +2 exactly: the two
+  directory-set guards [the two touched files' counts 33→35
+  combined]; 1122 → **1143** at P-048 — +21: the NEW
   `tests/test_mode_demo_refresh.py` [21 tests: 9 staleness + 9
   surface + 3 story]; the two hardening renames count-neutral —
   Commit-1 iso **1143**; 1110 → **1122** at P-047 — +12: 11 new
@@ -537,6 +559,90 @@
   331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-049 EXACT-SET-GUARDS THE COMMITTED-EXAMPLE SURFACE —
+  COMMITTED-EXAMPLE DIRECTORY-SET GUARDS (tests only, one commit by
+  design; opened on the user's "Ok go", 2026-07-04, after the P-048
+  merge [PR #27 → default tip `7ae96f2`] — the ONLY presented
+  direction requiring no user taste/product decision: the P-048
+  reviewer's ★ named suite-wide hardening candidate). Both
+  committed-example homes now carry a derivation-coupled EXACT-SET
+  guard: `examples/mode_demos/` is EXACTLY the pinned nine and
+  `examples/` is EXACTLY the four pinned trees + the two
+  consciously-enumerated non-tree residents — **the
+  committed-example surface is EXACT-SET-GUARDED: 4 trees + 9 demos
+  + the manifest example, and nothing can land or vanish
+  silently.** The P-048 reviewer residue (the directory-set guard)
+  ✓ RESOLVED in full. qa GREEN (8/8, bites 6/6) + reviewer PASS
+  (no must-fix). Last-closed = P-049.**
+  - **One commit** on parent `b6ba8d1` (active-packet
+    confirmation), atop merge base `7ae96f2` (= the PR #27 merge —
+    P-048 landed FIRST): `94b7df9` — "tests: P-049 —
+    committed-example directory-set guards"; 2 files, +51/−0,
+    tests only.
+    `test_committed_mode_demo_directory_set_is_exactly_the_pinned_nine`
+    (test_mode_demo_refresh.py): allowed set = sorted(MODE_DEMOS) —
+    the SAME table every staleness/surface pin parametrizes — plus
+    a no-non-dirs assert (beyond the contract).
+    `test_committed_examples_directory_set_is_exactly_the_pinned_residents`
+    (test_sample_refresh.py): trees from SAMPLE_TREES ∪ the
+    consciously-enumerated NON_TREE_RESIDENTS {mode_demos,
+    project_manifest.example.json}, plus a dirs-vs-files shape
+    assert and a parents-sanity assert. Reality checked FIRST: no
+    README exists at either level — none allowed.
+    Conscious-extension semantics in both docstrings (a fifth
+    tree / tenth demo = a one-line pinned-table extension that
+    auto-extends guard + pins together). **PUSHED to the dev branch
+    BEFORE qa/reviewer under the standing go (both gates validated
+    the final SHA); NOT merged — the P-049 merge is the OPEN USER
+    GATE.**
+  - **★ qa GREEN (8/8):** suite 1143 → **1145 passed, 0 failed**
+    (+2 exactly); regression **93/93**; single-commit packet — the
+    HEAD run IS the Commit-1-isolation proof; growth arithmetic
+    verified per file (the two touched files' counts 33→35
+    combined); scope exactly the two test files; guard derivation
+    verified against BOTH the pinned tables and the real directory
+    contents; **bites 6/6 in an isolated worktree** — stray dir and
+    stray file at both levels, unpinned fifth tree, deleted pinned
+    demo, and the manifest-replaced-by-directory shape case, each
+    failing exactly its one guard; safety grep 0 across all +51
+    lines; the behavioral surface untouched (the 35 pin/guard tests
+    green; doctrine untouched by construction).
+  - **★ reviewer PASS (no must-fix; Codex unavailable —
+    single-model):** derivation-from-pins judged "genuinely
+    drift-proof — the strongest property of the diff" (no
+    divergence path exists between the guards and the pins they
+    protect, in either direction); all four contracted failure
+    modes covered at BOTH levels (the builder added the mode-demos
+    no-non-dirs assert beyond the contract); nested strays
+    confirmed already covered by the P-048/P-040 file-set pins;
+    scope discipline clean; the builder's in-place bite mutations
+    provably left nothing behind; trajectory — "This closes the
+    P-048 reviewer residue in full." Two non-blocking residuals →
+    residue: (1) a nested stray SUBDIRECTORY inside a
+    sample_output* tree escapes everything — the sample staleness
+    pin filters `is_file()` on both sides (unlike the mode-demo
+    pin's explicit no-subdir assert); future one-line
+    micro-hardening: a no-subdirs assert in the sample staleness
+    pin (symlink impersonation judged exotica — caught by the
+    residents set or the byte pins); (2) the dirs-shape assert
+    hardcodes the "mode_demos" literal (duplicating a
+    NON_TREE_RESIDENTS member) — a future non-tree dir resident
+    needs a two-place edit, but any half-edit fails loudly;
+    acceptable shape-encoding.
+  - **★ NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open
+    directions to the user (ALL user-gated — all product/taste
+    decisions that belong to the user): the P-049 merge · a fifth
+    producer (who + the grounding) · the future-analyzer candidates
+    from Eno's honest deferrals (textural coherence · generative
+    process · ambient patience) · quincy/halee authored dropout
+    reach · the one-line sample-pin micro-hardening (could ride any
+    future packet) · anything else the user calls. Do NOT open
+    anything blind. Execution/apply semantics NEVER without
+    explicit user re-gating. **THE OPEN USER GATE: the merge of
+    P-049 (`b6ba8d1` + `94b7df9` + the close commit) atop `7ae96f2`
+    (= PR #27).** Receipt:
+    `build-os/receipts/P-049-directory-set-guards.md`.
 
 - **★★★ P-048 GIVES THE SUBSTRATE ITS PRODUCT FACE — PRODUCT-SURFACE
   REFRESH: PRODUCER + MODE DEMO ARTIFACTS (docs/samples/demo clarity
@@ -659,7 +765,14 @@
     re-gating. **THE OPEN USER GATE: the merge of P-048 (`0c47fb7`
     + `4725169` + `44381a8` + the close commit) atop `645c925`
     (= PR #26).** Receipt:
-    `build-os/receipts/P-048-mode-demo-artifacts.md`.
+    `build-os/receipts/P-048-mode-demo-artifacts.md`. **(✓ RESOLVED
+    at P-049 open, 2026-07-04: merged as PR #27 on the user's
+    directive — merge commit `7ae96f2`, the current default tip and
+    the P-049 merge base; the user's "Ok go" then opened the
+    directory-set-guard hardening — the named candidate — opened
+    and CLOSED as P-049, see the banner above [the P-048 reviewer
+    residue 1 resolved in full]; NEXT = NOTHING STAGED again, the
+    orchestrator presents the open directions.)**
 
 - **★★★ P-047 MAKES THE SWEEPS PRODUCER-COMPLETE AND FUTURE-PROOF —
   DIRECTORY-DRIVEN PRODUCER SWEEPS + DOCS RESIDUES (TEST + DOCS
