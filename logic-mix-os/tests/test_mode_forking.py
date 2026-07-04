@@ -274,8 +274,10 @@ def test_producer_sweep_is_directory_driven_with_the_known_minimum():
     every PRODUCERS-keyed sweep passively."""
     assert PRODUCERS == tuple(sorted(PRODUCERS))
     assert len(PRODUCERS) == len(set(PRODUCERS))
-    assert {"brian_eno", "halee_ramone", "quincy_jones", "timbaland"} \
-        <= set(PRODUCERS)
+    # P-050: the fifth producer joins the known MINIMUM — still a containment
+    # floor (``<=``), never a ceiling, so a sixth producer must grow it too.
+    assert {"brian_eno", "chris_lord_alge", "halee_ramone", "quincy_jones",
+            "timbaland"} <= set(PRODUCERS)
 
 
 # =========================================================================== #
@@ -652,7 +654,13 @@ def test_same_mode_different_producers_different_candidate_sets(dense):
     # width_bloom AND vocal_ride — a fourth authored reach, distinct from
     # all three others on the same stems.
     assert conservative["brian_eno"] == {"chorus_lift_B", "chorus_lift_D"}
-    assert len({frozenset(s) for s in conservative.values()}) == 4  # pairwise distinct
+    # P-050 (the fifth producer swept here): CLA's conservative suppresses
+    # subtractive_drop — "commit, don't thin the mix out" — a fifth authored
+    # reach distinct from all four others (he alone keeps the width push
+    # while withholding the subtractive move).
+    assert conservative["chris_lord_alge"] == {
+        "chorus_lift_A", "chorus_lift_C", "chorus_lift_D"}
+    assert len({frozenset(s) for s in conservative.values()}) == 5  # pairwise distinct
 
     experimental = {}
     for producer in PRODUCERS:
@@ -670,6 +678,11 @@ def test_same_mode_different_producers_different_candidate_sets(dense):
     # is the authored-neutral pool, coinciding with halee's (a DATA fact:
     # the distinct-set count over the four stays 3 on this branch).
     assert experimental["brian_eno"] == {"vocal_A", "vocal_B"}
+    # P-050: CLA's experimental reaches arrangement_lift (no vocal_belief
+    # variant) and suppresses subtractive_drop (not in this pool) — so his
+    # vocal_belief set is the authored-neutral pool, coinciding with
+    # halee/eno; the distinct-set count over the five stays 3 on this branch.
+    assert experimental["chris_lord_alge"] == {"vocal_A", "vocal_B"}
     assert len({frozenset(s) for s in experimental.values()}) == 3
 
 
