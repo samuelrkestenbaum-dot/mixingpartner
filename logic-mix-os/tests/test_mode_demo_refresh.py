@@ -412,3 +412,21 @@ def test_committed_halee_demos_stay_reference_safe():
         winners = {b["problem_id"]: b["winning"]["winning_variant"]
                    for b in cr["branches"]}
         assert winners == _COMMON_WINNERS, demo
+
+
+def test_committed_mode_demo_directory_set_is_exactly_the_pinned_nine():
+    """THE DIRECTORY-SET GUARD (P-049): ``examples/mode_demos/`` holds
+    EXACTLY the nine pinned demo directories — MODE_DEMOS' own keys, so
+    this guard derives from the same table every pin above parametrizes
+    over and can never drift from the pins it protects — and nothing else
+    lives at that level (no stray file of any kind; reality at pin time:
+    no README lives here). It fails LOUDLY on a new unpinned demo dir
+    (which would ship staleness-unpinned), on a deleted pinned dir, and
+    on any stray file. A legitimate tenth demo later is a CONSCIOUS
+    one-line MODE_DEMOS extension — which automatically brings the
+    staleness and surface pins above to the newcomer; anything failing
+    here without that extension is a stray committed artifact."""
+    residents = sorted(p.name for p in DEMO_ROOT.iterdir())
+    assert residents == sorted(MODE_DEMOS), residents
+    non_dirs = sorted(p.name for p in DEMO_ROOT.iterdir() if not p.is_dir())
+    assert non_dirs == [], non_dirs
