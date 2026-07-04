@@ -4,83 +4,158 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** **NONE ACTIVE.** P-051 CLOSED 2026-07-04 — qa GREEN (13/13) +
-  reviewer PASS (no must-fix; the no-execution boundary verified STRUCTURALLY
-  ABSENT; single-model — Codex unavailable). The orchestrator PRESENTS the open
-  directions (all user-gated) and does NOT open anything blind.
+- **Status:** ACTIVE — confirmed by the USER 2026-07-04 ("Merge P-050 +
+  P-051 together now. Then do the real end-to-end MCP client test… The
+  next skate is: P-052 — Real End-to-End MCP Client Session."). The
+  P-050+P-051 bundle merged FIRST as PR #29 → default tip `f6cc9b7`.
+- **ID / Title:** **P-052 — Real End-to-End MCP Client Session**
+- **Branch:** `claude/logic-mix-os-hardening-12-7hbeh1` atop merge base
+  `f6cc9b7` (= PR #29 merge — the branch was fast-forwarded to it; verify
+  with `git merge-base`).
+- **Baseline to protect:** suite **1279** / regression **93/93** / the
+  five producers + four sample trees + nine mode demos byte-stable / the
+  MCP surface (`cowork_mcp/`), `cli.py`, `cowork.py` byte-stable — this is
+  a PROOF packet: prove the real product path, do NOT change product
+  runtime code.
 
-## Last closed — P-051 (Cowork Registry MCP Adapter: Read/Plan Surface First)
+## Intent (the user's, verbatim)
 
-- **What landed:** the FIRST packet to reach past the plan-only boundary into an
-  external transport (an MCP server wrapping the cowork registry) — and it HELD
-  THE LINE. Also the first code-bearing integration packet since the producer arc
-  (real Python under `logic_mix_os/`). The cowork registry (35 commands) is now
-  reachable through a ZERO-DEPENDENCY stdio MCP server
-  (`python -m logic_mix_os.cowork_mcp`), read/plan/producer/mode with the four
-  side-effecting commands memory_dir-gated. **Logic execution is not merely
-  refused — it is STRUCTURALLY ABSENT** (no execution surface anywhere in the
-  package; the safety scan bites when one is injected).
-- **Commits (≤2, atop merge base `2b0ad1a` = PR #28, on parent `c3726f5`
-  set-active):**
-  - `5d8dfe7` — "P-051 Commit-1: Cowork MCP adapter (schema-from-contract, gated
-    dispatch) + full proof suite" (3 files, +762; NEW `cowork_mcp/__init__.py` +
-    `cowork_mcp/adapter.py` + `tests/test_cowork_mcp.py` — **GREEN IN ISOLATION
-    at 1264**, the server content ABSENT).
-  - `5a04ae1` — "P-051 Commit-2: minimal stdio JSON-RPC MCP server shell +
-    entrypoint + docs" (5 files, +420; NEW `cowork_mcp/server.py` +
-    `cowork_mcp/__main__.py` + `tests/test_cowork_mcp_server.py` +
-    `docs/COWORK_MCP.md` + the ONE additive pyproject packages line).
-  - 8 files; `cli.py` + `cowork.py` BYTE-UNCHANGED (blob-identical to `c3726f5`);
-    ZERO new dependency (deps stay `[numpy>=1.21]`).
-- **Proof:** suite **1279 passed, 0 failed** (+29 C1 + 15 C2); regression
-  **93/93**; Commit-1 iso **1264**; arithmetic 1235+31+13=1279; the no-execution
-  scan bites an injected `subprocess.Popen(['osascript',…])`; the memory_dir gate
-  zero-writes without it; the drift guard follows a synthetic registry command; a
-  REAL `python -m logic_mix_os.cowork_mcp` subprocess handshakes + serves 35
-  tools with empty stderr; source stems sha256-stable; safety grep 0.
-- **Push state:** PUSHED to the dev branch BEFORE qa/reviewer under the standing
-  go (both gates validated the final SHAs), **NOT merged.**
-- **Receipt:** `build-os/receipts/P-051-cowork-mcp-adapter.md`.
+P-051 proved the server in controlled tests (in-memory `handle_message` +
+one smoke subprocess). **P-052 proves the ACTUAL PRODUCT PATH:**
 
-## ★★ OPEN USER GATE — the merge (bundles BOTH P-050 and P-051)
+> Claude/Cowork MCP client
+> → stdio MCP server
+> → Cowork registry
+> → stems + manifest
+> → producer/mode plan
+> → artifacts
+> → no DAW execution
 
-The dev branch `claude/logic-mix-os-hardening-12-7hbeh1` carries BOTH:
-- **P-050** (`ec16ae6` + `74feeab` + `0e1009a` + `931a257`) — the fifth producer,
-  Chris Lord-Alge; and
-- **P-051** (`c3726f5` + `5d8dfe7` + `5a04ae1` + the close commit) — the Cowork
-  MCP surface,
+"That is the real 'does this actually work?' moment." SDK swap is optional
+polish; apply-to-Logic is a future re-gated architecture. The
+product-facing next step is: **drive a real session through the MCP
+surface.**
 
-atop `2b0ad1a` (= PR #28). **A single merge PR would land BOTH** — the fifth
-producer + the MCP surface. The merge awaits the user's explicit word. No
-deploy/publish/secrets touched.
+## THE SAFETY DOCTRINE (standing, preserved — binding)
 
-## NEW STANDING SAFETY LINE (recorded, binding on any future transport/apply packet)
+> MCP can ask what the system recommends; MCP cannot make Logic do it.
+> The product is callable as a planning/recommendation surface, not a DAW
+> execution surface.
 
-> MCP can ask the system what it recommends; MCP cannot make Logic do it — Logic
-> actions remain checklist/plan artifacts; execution stays
-> human/Cowork-in-the-loop.
+## Scope
 
-The apply-to-Logic backend is a FUTURE, EXPLICITLY re-gated packet — NEVER auto.
+Build a **real MCP client harness** and a **committed end-to-end session
+test** that drives the actual product path — a genuine client process
+speaking JSON-RPC 2.0 over the REAL stdio pipes of a spawned
+`python -m logic_mix_os.cowork_mcp` server subprocess (NOT the in-memory
+`handle_message` shortcut P-051 already covers; NOT a mock). The client is
+hand-rolled, **zero new dependency** (stdlib subprocess + json over the
+child's stdin/stdout), matching the project's numpy-only discipline. Note:
+spawning the MCP SERVER (a Python process) is the product path and is
+explicitly fine — the non-scope forbids subprocess-to-LOGIC, not running
+the server.
 
-## STAGED next — NOTHING
+The end-to-end session drives a realistic multi-command flow over the wire
+(the `describe_session` `_SESSION_FLOW`: intake → classify → diagnose →
+plan → checklist → validate → record-outcome → next-pass, or a faithful
+realistic subset) against a REAL fixture (`fixtures/dense_chorus_with_loops`
+or another shipped fixture — stems + manifest), with a real producer
+(showcase `chris_lord_alge` and at least one other for the attributable
+difference) and a real mode.
 
-The orchestrator PRESENTS the open directions (ALL user-gated); it does NOT open
-anything blind:
+Optionally (docs, recommended): a `docs/COWORK_MCP.md` addition (or a new
+snippet) showing how an ACTUAL external MCP client (Claude Desktop /
+Cowork) is configured to launch the server — the `{command, args}` MCP
+server-config JSON — so the "real client" story is documented for product
+use. No overclaim; the safety line verbatim.
 
-- the **merge** (lands both P-050 + P-051);
-- a **real MCP-SDK transport swap** (optional-extra; the trivial future swap the
-  shell was framed for);
-- the **apply-to-Logic backend** (FUTURE, EXPLICITLY re-gated — never auto; the
-  safety line above stands);
-- a **CLA product-surface refresh** (fifth sample tree + mode demos);
-- the **future-analyzer candidates** from Eno's honest deferrals (textural
-  coherence · generative process · ambient patience);
-- **quincy/halee authored dropout reach**;
-- a **sixth producer** (auto-discovered, auto-swept);
-- the **README 32→35 + sample-pin micro-hardening** cleanups;
-- anything else the user calls.
+## Required proof (the real product path)
+
+1. A real hand-rolled MCP client spawns `python -m logic_mix_os.cowork_mcp`
+   as a subprocess and completes the `initialize` handshake over the REAL
+   stdio pipes (protocolVersion 2025-06-18, serverInfo, tools capability).
+2. `tools/list` over the wire returns the 35 tools with their schemas.
+3. A full realistic session sequence (several `tools/call` in order) runs
+   over the wire against a real fixture and returns real,
+   JSON-deserializable results (a real producer/mode plan + verdict +
+   checklist + next-pass).
+4. Producer selection works over the wire — `chris_lord_alge` vs another
+   producer on identical stems → attributable difference in the returned
+   plan.
+5. Mode selection works over the wire — a creative command with a mode →
+   reflected in the result.
+6. Artifacts/plan/checklist are reachable and reported over the wire.
+7. The memory-write path over the wire: a side-effecting command WITHOUT
+   `memory_dir` → clean error over the wire (nothing written); WITH an
+   explicit `memory_dir` → writes to the MEMORY STORE (JSON), and the
+   store is a memory dir, never a DAW/session file.
+8. Across the whole REAL path: no `osascript`, no `.logicx`, no DAW
+   execution; the source stems are byte-unchanged (sha256 before/after the
+   whole session); the server subprocess exits cleanly (exit 0, empty or
+   benign stderr).
+9. Deterministic: the same session twice → the same plan results.
+10. Full suite passes; regression passes; ZERO new dependency; ZERO change
+    to product runtime code (`cowork_mcp/`, `cli.py`, `cowork.py`, the
+    engine — byte-unchanged); the five producers + trees + demos untouched.
+
+## Required adversarial reviewer attacks (any success = MUST-FIX)
+
+1. find any DAW/Logic execution reachable through the real client path;
+2. find `osascript` / `.logicx` / subprocess-to-Logic anywhere the session
+   touches; 3. mutate source audio across a real session; 4. get a
+   side-effecting command to write without `memory_dir` over the wire;
+5. make the end-to-end test pass without actually spawning the server
+   subprocess (i.e. prove it's a REAL over-the-wire test, not a disguised
+   in-process call); 6. find a hidden new dependency; 7. find product
+   runtime drift (cowork_mcp/cli/cowork/engine changed).
+
+## Acceptance bar
+
+A real client process drives a real server subprocess over stdio · a
+realistic multi-command session returns real producer/mode plans +
+artifacts · producer/mode work over the wire · the memory gate holds over
+the wire · no DAW execution anywhere on the real path · source stems
+immutable · zero new dependency · zero product-runtime drift · the safety
+doctrine preserved verbatim in any docs.
+
+## Orchestrator recon (binding on the builder)
+
+- This is a TEST + (optional) DOCS packet. Do NOT modify `cowork_mcp/`,
+  `cli.py`, `cowork.py`, or any engine file (if a real bug in the surface
+  is discovered → STOP and report; do not fix silently — that would be its
+  own packet).
+- The client MUST speak over the child process's real stdin/stdout pipes
+  (`subprocess.Popen(..., stdin=PIPE, stdout=PIPE, text=True)`, write a
+  JSON-RPC line + flush, read a response line) — NOT `handle_message`
+  in-process (that's P-051's coverage). Attack 5 is the guard that this is
+  genuinely over-the-wire.
+- Robustness: bounded timeouts, clean teardown (terminate the child,
+  drain pipes), deterministic — must not flake or hang the suite. Mirror
+  the existing subprocess discipline (`tests/test_producer_cli.py`, the
+  P-051 smoke).
+- A small reusable client helper (e.g. `tests/_mcp_client.py` or a
+  `tests/mcp_e2e/` helper) is fine; keep it minimal and stdlib-only.
+- Determinism/no-DAW/stems-immutability get first-class assertions (the
+  packet's whole point is the REAL path holding the boundary).
+
+## Non-scope (binding)
+
+No MCP SDK / SDK transport swap. No apply-to-Logic. No DAW execution
+backend. No `osascript`. No `.logicx`. No product runtime changes
+(`cowork_mcp`/`cli`/`cowork`/engine byte-unchanged). No new producers /
+analyzers / move families. No new hard dependency. No safety/governance
+changes. No merge until qa + reviewer dual-green.
+
+## Commit shape (≤2, Commit-1 green in isolation)
+
+- **Commit-1:** the real MCP client harness + the end-to-end session test
+  (all 10 proofs + the 7 attacks it can cover) — full suite green in
+  isolation.
+- **Commit-2 (optional):** the docs snippet (how a real Cowork/Claude MCP
+  client launches the server; the safety line verbatim) — zero collection
+  change. If no docs, one commit is fine.
 
 ---
-_Cleared by the archivist on P-051 close (2026-07-04). One packet at a time:
-builder → qa + reviewer → archivist → receipt. NONE ACTIVE — awaiting the user's
-next go._
+_Set active by the orchestrator on the user's explicit go (2026-07-04),
+after the PR #29 merge report. One packet at a time: builder → qa +
+reviewer → archivist → receipt._
