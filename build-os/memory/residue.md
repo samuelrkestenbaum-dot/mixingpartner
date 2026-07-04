@@ -4,6 +4,96 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
+## ★★★ STATUS (P-051 close, 2026-07-04): residue = accepted standing notes only — THE CALLABLE SURFACE IS LIVE; THE DAW-EXECUTION BOUNDARY IS STRUCTURALLY ABSENT
+
+- **P-051 (COWORK REGISTRY MCP ADAPTER — Read/Plan Surface First;
+  code-bearing, real Python under `logic_mix_os/`; opened on the
+  user's go 2026-07-04 — "Make the next packet: Cowork Registry MCP
+  Adapter — Read/Plan Surface First… That is exactly the right next
+  layer."; THE FIRST packet to reach past the plan-only boundary into
+  an EXTERNAL TRANSPORT, and it HELD THE LINE — MCP can ask the system
+  what it recommends; MCP cannot make Logic do it) closed 2026-07-04:**
+  qa GREEN (13/13) + reviewer PASS (no must-fix; the no-execution
+  boundary verified STRUCTURALLY ABSENT). Commits `5d8dfe7` (Commit-1 —
+  the pure-Python adapter [`cowork_mcp/__init__.py` +
+  `cowork_mcp/adapter.py`: `tool_definitions()` derives 35 MCP tools
+  from `describe_contract()`; `dispatch` gates unknown-tool → missing
+  stems → side-effecting-without-memory_dir → unknown producer →
+  unknown mode BEFORE any analyze/disk touch, routes ONLY via
+  `run_command`; producer+mode threaded via `analyze(creative_mode=…,
+  producer=…)` → `build_context(result=…)`] + the NEW
+  `tests/test_cowork_mcp.py`; 3 files, +762; **GREEN IN ISOLATION at
+  1264** with the server content ABSENT) + `5a04ae1` (Commit-2 — the
+  minimal stdio JSON-RPC 2.0 server shell [`cowork_mcp/server.py` +
+  `cowork_mcp/__main__.py`] + `tests/test_cowork_mcp_server.py` +
+  `docs/COWORK_MCP.md` + the ONE additive pyproject packages line; 5
+  files, +420) on parent `c3726f5` (set-active), atop the UNMERGED
+  P-050, atop merge base `2b0ad1a` (= PR #28). Exactly **8 files**;
+  `cli.py` + `cowork.py` BYTE-UNCHANGED (blob-identical to `c3726f5`);
+  the pyproject delta = one packages line, ZERO new dependency (deps
+  stay [numpy>=1.21]); ZERO third-party import in `cowork_mcp/*.py`.
+  PUSHED to the dev branch BEFORE qa/reviewer under the standing go
+  (both gates validated the final SHAs), NOT merged. Suite **1279**
+  (+29 C1 + 15 C2) / regression **93/93** / Commit-1 iso **1264** /
+  arithmetic 1235+31+13=1279. The no-execution boundary: whole-package
+  grep 0 hits, the AST/token scan BITES an injected
+  `subprocess.Popen(['osascript',…])`, attack-4 rejects
+  `dispatch("__import__")`/`dispatch("os.system")`; the memory_dir
+  gate zero-writes without it (marked set == `cowork._SIDE_EFFECTS`
+  exactly); the drift guard follows a synthetic registry command; a
+  REAL `python -m logic_mix_os.cowork_mcp` subprocess handshakes +
+  serves 35 tools with empty stderr; source stems sha256-stable.
+  **Codex unavailable — single-model review.** Reviewer: the only
+  artifact writer (`write_artifacts`) is a standalone CLI function no
+  registry handler calls — unreachable from any MCP tool; the plan-only
+  → callable-surface milestone is crossed WITHOUT crossing the
+  DAW-execution boundary. Receipt:
+  `build-os/receipts/P-051-cowork-mcp-adapter.md`.
+- **★ NEW STANDING SAFETY LINE (record it, binding on any future
+  transport/apply packet):** "MCP can ask the system what it
+  recommends; MCP cannot make Logic do it — Logic actions remain
+  checklist/plan artifacts; execution stays
+  human/Cowork-in-the-loop." The apply-to-Logic backend is a FUTURE,
+  EXPLICITLY re-gated packet — NEVER auto.
+- **NEW accepted notes (P-051, recorded not fixed — non-blocking):**
+  1. **The thin server's deliberate protocol gaps** — it pins its own
+     `protocolVersion` (no client negotiation), no `structuredContent`,
+     no JSON-RPC batch. Acceptable for a shell explicitly framed as a
+     future SDK swap.
+  2. **The pre-existing stale README "32 commands"** (the registry is
+     35) — GENUINE residue, a later docs cleanup, OUT of this packet's
+     scope (pair with the README/sample-pin micro-hardening).
+  3. **The awareness note:** a read/plan tool called WITH a
+     `memory_dir` will mkdir it via `ProjectMemory.__init__` though it
+     writes no history — pre-existing engine behavior, confined to the
+     explicit path, NOT a DAW write, NOT reported as an artifact.
+  4. **The optional strict-mode error-message polish** — the
+     explicitly-wrong-mode error could suggest omitting mode for the
+     profile default.
+- **All prior standing notes RETAINED** (the banners below), incl. the
+  ★★ groove-carrier trajectory watch-item, the P-049 sample-pin
+  micro-hardening, the CLA sha256-self-pin-on-sixth-producer note, and
+  the CLA product-surface refresh candidate.
+- **Open boundary:** P-051's commits pushed to the dev branch BEFORE
+  qa/reviewer under the orchestrator's standing go; **the MERGE is the
+  OPEN USER GATE — the dev branch carries BOTH P-050
+  (`ec16ae6`+`74feeab`+`0e1009a`+`931a257`) AND P-051
+  (`c3726f5`+`5d8dfe7`+`5a04ae1`+ the close commit) atop `2b0ad1a`
+  (= PR #28); a single merge PR would land BOTH — the fifth producer +
+  the MCP surface** — it awaits the user's explicit word.
+- **NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open
+  directions to the user (ALL user-gated): the merge · a real MCP-SDK
+  transport swap (optional-extra) · the apply-to-Logic backend
+  (FUTURE, EXPLICITLY re-gated — never auto; the safety line stands) ·
+  a CLA product-surface refresh · the future-analyzer candidates from
+  Eno's honest deferrals · quincy/halee authored dropout reach · a
+  sixth producer · the README 32→35 + sample-pin micro-hardening
+  cleanups · anything else the user calls. Do NOT open anything blind.
+- **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
+  comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
+  placement faith; (3) flag PRESENCE is not flag THREADING — levers
+  need reaches-the-destination guards.
+
 ## ★★★ STATUS (P-050 close, 2026-07-04): residue = accepted standing notes only — THE PRODUCER ROSTER IS FIVE; THE DOCTRINE'S HARDEST TEST PASSED
 
 - **P-050 (THE FIFTH PRODUCER — Chris Lord-Alge, profile-only, the

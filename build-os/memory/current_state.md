@@ -484,27 +484,49 @@
     NOT merged — the P-050 merge is a user gate**, atop the set-active
     `ec16ae6`. P-050's parent chain: `0e1009a` → `74feeab` → `ec16ae6`
     (active-packet confirmation) → `2b0ad1a` (PR #28 merge).
+    ★ ON TOP of P-050, the dev branch now ALSO carries P-051
+    (`5d8dfe7` + `5a04ae1`, PRODUCT/code-bearing — THE COWORK REGISTRY
+    MCP ADAPTER, read/plan surface first: the pure-Python adapter
+    [schema-from-contract via `describe_contract()`, gated dispatch, the
+    memory_dir gate, the drift guard, the no-execution AST/behavioral
+    guards] + the NEW `tests/test_cowork_mcp.py` [Commit-1, GREEN IN
+    ISOLATION at **1264** with the server content ABSENT], then the
+    minimal stdio JSON-RPC MCP server shell + `__main__` entrypoint +
+    `tests/test_cowork_mcp_server.py` + `docs/COWORK_MCP.md` + the ONE
+    additive pyproject packages line [Commit-2]; 8 files,
+    `cli.py`/`cowork.py` byte-unchanged, ZERO new dependency), PUSHED to
+    the dev branch BEFORE qa/reviewer under the orchestrator's standing
+    go (both gates validated the final SHAs), NOT merged — the P-051
+    merge is a user gate; the dev branch now carries BOTH P-050 AND
+    P-051 unmerged atop `2b0ad1a`**, atop the set-active `c3726f5`.
+    P-051's parent chain: `5a04ae1` → `5d8dfe7` → `c3726f5`
+    (active-packet confirmation) → `931a257` (P-050 close).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-04, P-050 — the
-  fifth-producer / Chris Lord-Alge baseline):** suite **1235 passed**
+- **Green baseline (verified 2026-07-04, P-051 — the Cowork MCP
+  adapter / callable-surface baseline):** suite **1279 passed**
   (0 failed / skipped); regression **93/93** (tests_run 93 /
   passed 93 / failed 0) — the corpus is **4 fixtures** (the 68/68
-  era ended CONSCIOUSLY at P-035). Two commits `74feeab` (Commit-1 —
-  the NEW `chris_lord_alge.json` + the NEW 37-test
-  `test_cla_profile.py` + the P-047 data-row-only additions across
-  mode_forking / move_vocabulary / dropout [captured from the real
-  engine then pinned, same Commit-1 so the auto-swept guards stay
-  green in isolation]; 5 files, +1230/−3 — GREEN IN ISOLATION at
-  **1193**) + `0e1009a` (Commit-2 — the permanent 42-test FIVE-WAY
-  differential `test_five_way_differential.py`; 1 file, +648/−0) on
-  parent `ec16ae6` (active-packet confirmation), atop merge base
-  `2b0ad1a` (= the PR #28 merge — P-049 landed FIRST).
-  (History: 1145 → **1235** at P-050 — +90: +48 at Commit-1 [37
+  era ended CONSCIOUSLY at P-035). Two commits `5d8dfe7` (Commit-1 —
+  the pure-Python adapter [`cowork_mcp/__init__.py` +
+  `cowork_mcp/adapter.py`] + the NEW `tests/test_cowork_mcp.py`;
+  3 files, +762 — GREEN IN ISOLATION at **1264** with the server
+  content ABSENT) + `5a04ae1` (Commit-2 — the minimal stdio JSON-RPC
+  MCP server shell [`cowork_mcp/server.py` + `cowork_mcp/__main__.py`]
+  + `tests/test_cowork_mcp_server.py` + `docs/COWORK_MCP.md` + the one
+  additive pyproject packages line; 5 files, +420) on parent `c3726f5`
+  (active-packet confirmation), atop the UNMERGED P-050, atop merge
+  base `2b0ad1a` (= the PR #28 merge). `cli.py` + `cowork.py`
+  byte-unchanged; ZERO new dependency (deps stay [numpy>=1.21]).
+  (History: 1235 → **1279** at P-051 — +44: +29 at Commit-1 [the
+  NEW `tests/test_cowork_mcp.py` adapter suite — GREEN IN ISOLATION
+  at **1264** with the server content absent] + 15 at Commit-2
+  [`tests/test_cowork_mcp_server.py` 13 + the parametrized no-exec
+  scan growing 2→4 module files]; 1145 → **1235** at P-050 — +90: +48 at Commit-1 [37
   `test_cla_profile.py` guards + 11 passive sweep growth: mode_forking
   +3, move_vocabulary +5, dropout +3] + 42 at Commit-2 [the five-way];
   Commit-1 iso **1193**; 1143 → **1145** at P-049 — +2 exactly: the two
@@ -559,6 +581,104 @@
   331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-051 CROSSES THE PLAN-ONLY → CALLABLE-SURFACE
+  MILESTONE WITHOUT CROSSING THE DAW-EXECUTION BOUNDARY — COWORK
+  REGISTRY MCP ADAPTER: Read/Plan Surface First (code-bearing, real
+  Python under logic_mix_os/; opened on the user's go, 2026-07-04 —
+  "Make the next packet: Cowork Registry MCP Adapter — Read/Plan
+  Surface First… That is exactly the right next layer."). THE FIRST
+  packet to reach past the plan-only boundary into an EXTERNAL
+  TRANSPORT (an MCP server wrapping the cowork registry) — and it HELD
+  THE LINE. The product now has a CALLABLE AI MIXING SERVICE SURFACE:
+  the cowork registry (35 commands) is reachable through a
+  ZERO-DEPENDENCY stdio MCP server (`python -m logic_mix_os.cowork_mcp`),
+  read/plan/producer/mode with the four side-effecting commands
+  memory_dir-gated. **Logic execution is not merely refused — it is
+  STRUCTURALLY ABSENT (no execution surface anywhere in the package;
+  the safety scan bites when one is injected).** qa GREEN (13/13) +
+  reviewer PASS (no must-fix; the no-execution boundary verified
+  structurally absent; single-model — Codex unavailable). Last-closed
+  = P-051.**
+  - **NEW STANDING SAFETY LINE:** "MCP can ask the system what it
+    recommends; MCP cannot make Logic do it — Logic actions remain
+    checklist/plan artifacts; execution stays
+    human/Cowork-in-the-loop." The apply-to-Logic backend is a FUTURE,
+    EXPLICITLY re-gated packet — never auto.
+  - **Two commits** on parent `c3726f5` (set-active), atop the
+    UNMERGED P-050, atop merge base `2b0ad1a` (= PR #28): `5d8dfe7` —
+    "P-051 Commit-1: Cowork MCP adapter (schema-from-contract, gated
+    dispatch) + full proof suite" (3 files, +762; NEW
+    `cowork_mcp/__init__.py` + `cowork_mcp/adapter.py` +
+    `tests/test_cowork_mcp.py` — GREEN IN ISOLATION at **1264**,
+    server content ABSENT) + `5a04ae1` — "P-051 Commit-2: minimal
+    stdio JSON-RPC MCP server shell + entrypoint + docs" (5 files,
+    +420; NEW `cowork_mcp/server.py` + `cowork_mcp/__main__.py` +
+    `tests/test_cowork_mcp_server.py` + `docs/COWORK_MCP.md` + the ONE
+    additive pyproject packages line). 8 files; `cli.py` + `cowork.py`
+    BYTE-UNCHANGED (blob-identical to `c3726f5`); ZERO new dependency
+    (deps stay [numpy>=1.21]); ZERO third-party import in
+    cowork_mcp/*.py. **PUSHED to the dev branch BEFORE qa/reviewer
+    under the standing go; NOT merged.**
+  - **The architecture (two layers, zero new dep):** the pure-Python
+    ADAPTER — `tool_definitions()` derives 35 MCP tools from
+    `describe_contract()` (schema from the contract, never
+    hand-written; drift-guarded); `dispatch(tool_name, arguments)`
+    gates (unknown tool → missing stems →
+    side-effecting-without-memory_dir → unknown producer → unknown
+    mode) BEFORE any analyze/disk touch, threads producer+mode via
+    `analyze(creative_mode=…, producer=…)` → `build_context(result=…)`
+    (no double-analyze), routes ONLY via `run_command`. The minimal
+    stdio JSON-RPC 2.0 SERVER shell — initialize (protocolVersion
+    2025-06-18 + tools capability + serverInfo) /
+    notifications/initialized / tools/list / tools/call (text +
+    isError); `handle_message` a PURE function, StringIO-testable.
+  - **★ qa GREEN (13/13):** suite 1235 → **1279 passed, 0 failed**
+    (+29 C1 test_cowork_mcp.py + 15 C2 [test_cowork_mcp_server.py 13 +
+    the no-exec scan growing 2→4 module files]); regression **93/93**;
+    Commit-1 iso **1264** (server absent); arithmetic
+    1235+31+13=1279. THE NO-EXECUTION BOUNDARY: whole-package grep
+    ZERO hits (osascript / subprocess / Popen / os.system / os.exec /
+    pty / .logicx / .applescript / .wav / .aif / eval / exec /
+    __import__ / getattr / open / socket / urllib), dispatch routes
+    only via run_command, the AST/token scan BITES an injected
+    subprocess.Popen(['osascript',…]) (non-vacuous), attack-4 rejects
+    dispatch("__import__") / dispatch("os.system"). The gate: a
+    side-effecting tool without memory_dir → clean error, ZERO writes;
+    the marked set == cowork._SIDE_EFFECTS exactly. The drift guard: a
+    synthetic registry command → tool_definitions() picks up EXACTLY
+    its novel params (CONTEXT_INPUTS subtracted first). The server: a
+    REAL subprocess `python -m logic_mix_os.cowork_mcp` fed
+    initialize+tools/list over stdin → exit 0, handshake + 35 tools,
+    empty stderr. Source stems sha256-identical before/after a
+    read+plan+memory-write run; safety grep 0.
+  - **★ reviewer PASS (no must-fix; Codex unavailable —
+    single-model):** the no-execution boundary STRUCTURALLY ABSENT —
+    write_artifacts (the only .applescript/artifact writer) is a
+    standalone CLI function no registry handler calls, unreachable
+    from any MCP tool; the only tool-reachable disk writes are
+    ProjectMemory JSON in the explicit memory_dir. The one behavior
+    choice — strict mode validation (error on an explicitly-wrong
+    mode) vs the engine's silent search_mode_fallback — ACCEPTED
+    (explicit > silent at a machine/agent boundary; mode=None still
+    flows to the engine default; additive, engine byte-unchanged).
+    The drift guard load-bearing; producer/mode threading correct;
+    docs carry the safety doctrine verbatim without overclaim.
+  - **★ NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open
+    directions (ALL user-gated): the merge · a real MCP-SDK transport
+    swap (optional-extra) · the apply-to-Logic backend (FUTURE,
+    EXPLICITLY re-gated — never auto; the safety line stands) · a CLA
+    product-surface refresh · the future-analyzer candidates from
+    Eno's deferrals · quincy/halee authored dropout reach · a sixth
+    producer · the README 32→35 + sample-pin micro-hardening
+    cleanups · anything else the user calls. Do NOT open anything
+    blind. Execution/apply semantics NEVER without explicit user
+    re-gating. **THE OPEN USER GATE: the merge — the dev branch
+    carries BOTH P-050 (`ec16ae6`+`74feeab`+`0e1009a`+`931a257`) AND
+    P-051 (`c3726f5`+`5d8dfe7`+`5a04ae1`+ the close commit) atop
+    `2b0ad1a` (= PR #28); a single merge PR would land both (the fifth
+    producer + the MCP surface).** Receipt:
+    `build-os/receipts/P-051-cowork-mcp-adapter.md`.
 
 - **★★★ P-050 PUTS THE DOCTRINE THROUGH ITS HARDEST TEST — THE FIFTH
   PRODUCER: Chris Lord-Alge (profile-only; opened on the user's go,
