@@ -130,6 +130,13 @@ AUTHORED_TRANSLATION = {
     # dropout authors (never low — the P-044 honesty floor).
     "brian_eno": {"arrangement_lift": "low", "ensemble_rebalance": "medium",
                   "negative_space_dropout": "medium"},
+    # P-050 (the fifth producer swept here): CLA's honest rows — his
+    # big-chorus arrangement lift translates loud on every system (low), the
+    # ensemble-rebalance move is off his vocal-forward grammar (medium), and
+    # the dropout is the aggressive family at the same honest medium risk the
+    # other dropout authors carry (never low — the P-044 floor).
+    "chris_lord_alge": {"arrangement_lift": "low", "ensemble_rebalance": "medium",
+                        "negative_space_dropout": "medium"},
 }
 
 # Each profile's honest curated overall for the new kinds (mean of the 7
@@ -142,6 +149,11 @@ AUTHORED_OVERALLS = {
     # P-047: eno's curated overalls, reconstructed from his JSON exactly
     # like the other three (also pinned in tests/test_eno_profile.py).
     "brian_eno": {"arrangement_lift": 72.0, "ensemble_rebalance": 62.6},
+    # P-050: CLA's curated overalls, reconstructed from his JSON — his
+    # big-chorus arrangement lift is a top curated move (84.3), the
+    # off-grammar ensemble rebalance sits low (67.4). Also pinned in
+    # tests/test_cla_profile.py.
+    "chris_lord_alge": {"arrangement_lift": 84.3, "ensemble_rebalance": 67.4},
 }
 
 _SCORE_DIMS = ("technical", "physical_space", "emotional_hierarchy",

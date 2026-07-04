@@ -158,6 +158,15 @@ AUTHORED_DROPOUT = {
         "translation": "medium", "mono": "low", "overall": 78.9,
         "truth": {"intimate": 64, "big": 82, "neutral": 78},
     },
+    # P-050 (the fifth producer swept here): CLA's authored row — dropout is
+    # off his fill-the-space grammar, so it sits low-moderate (70.6, between
+    # quincy and halee) at the same honest medium risk the other dropout
+    # authors carry (never low — the P-044 floor). Also pinned in
+    # tests/test_cla_profile.py.
+    "chris_lord_alge": {
+        "translation": "medium", "mono": "low", "overall": 70.6,
+        "truth": {"intimate": 50, "big": 80, "neutral": 74},
+    },
 }
 
 _SCORE_DIMS = ("technical", "physical_space", "emotional_hierarchy",
@@ -554,13 +563,21 @@ def test_affinity_ordering_is_the_packet_story():
     # documented philosophy of absence), quincy moderate-low, halee low:
     # timbaland > brian_eno > quincy_jones > halee_ramone, everywhere.
     assert overalls["timbaland"] > overalls["brian_eno"] > overalls["quincy_jones"]
+    # P-050: CLA fills space rather than carving it, so dropout is off his
+    # grammar — he slots between quincy and halee (70.6): timbaland >
+    # brian_eno > quincy_jones > chris_lord_alge > halee_ramone on the
+    # curated overall; on the big/neutral leans his contrast-for-impact
+    # reading lifts him just past quincy, so brian_eno > CLA > quincy there.
+    assert overalls["quincy_jones"] > overalls["chris_lord_alge"] > overalls["halee_ramone"]
     for lean in ("big", "neutral"):
         t = AUTHORED_DROPOUT["timbaland"]["truth"][lean]
         q = AUTHORED_DROPOUT["quincy_jones"]["truth"][lean]
         h = AUTHORED_DROPOUT["halee_ramone"]["truth"][lean]
         e = AUTHORED_DROPOUT["brian_eno"]["truth"][lean]
+        c = AUTHORED_DROPOUT["chris_lord_alge"]["truth"][lean]
         assert t > q > h, lean
         assert t > e > q, lean
+        assert e > c > q, lean
 
 
 @pytest.mark.parametrize("producer", PRODUCERS)

@@ -37,6 +37,7 @@ packages = [
     "logic_mix_os",
     "logic_mix_os.analyzers",
     "logic_mix_os.bridge",
+    "logic_mix_os.cowork_mcp",
     "logic_mix_os.doctrine",
     "logic_mix_os.planners",
     "logic_mix_os.renderers",

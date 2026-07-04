@@ -4,6 +4,186 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
+## ★★★ STATUS (P-051 close, 2026-07-04): residue = accepted standing notes only — THE CALLABLE SURFACE IS LIVE; THE DAW-EXECUTION BOUNDARY IS STRUCTURALLY ABSENT
+
+- **P-051 (COWORK REGISTRY MCP ADAPTER — Read/Plan Surface First;
+  code-bearing, real Python under `logic_mix_os/`; opened on the
+  user's go 2026-07-04 — "Make the next packet: Cowork Registry MCP
+  Adapter — Read/Plan Surface First… That is exactly the right next
+  layer."; THE FIRST packet to reach past the plan-only boundary into
+  an EXTERNAL TRANSPORT, and it HELD THE LINE — MCP can ask the system
+  what it recommends; MCP cannot make Logic do it) closed 2026-07-04:**
+  qa GREEN (13/13) + reviewer PASS (no must-fix; the no-execution
+  boundary verified STRUCTURALLY ABSENT). Commits `5d8dfe7` (Commit-1 —
+  the pure-Python adapter [`cowork_mcp/__init__.py` +
+  `cowork_mcp/adapter.py`: `tool_definitions()` derives 35 MCP tools
+  from `describe_contract()`; `dispatch` gates unknown-tool → missing
+  stems → side-effecting-without-memory_dir → unknown producer →
+  unknown mode BEFORE any analyze/disk touch, routes ONLY via
+  `run_command`; producer+mode threaded via `analyze(creative_mode=…,
+  producer=…)` → `build_context(result=…)`] + the NEW
+  `tests/test_cowork_mcp.py`; 3 files, +762; **GREEN IN ISOLATION at
+  1264** with the server content ABSENT) + `5a04ae1` (Commit-2 — the
+  minimal stdio JSON-RPC 2.0 server shell [`cowork_mcp/server.py` +
+  `cowork_mcp/__main__.py`] + `tests/test_cowork_mcp_server.py` +
+  `docs/COWORK_MCP.md` + the ONE additive pyproject packages line; 5
+  files, +420) on parent `c3726f5` (set-active), atop the UNMERGED
+  P-050, atop merge base `2b0ad1a` (= PR #28). Exactly **8 files**;
+  `cli.py` + `cowork.py` BYTE-UNCHANGED (blob-identical to `c3726f5`);
+  the pyproject delta = one packages line, ZERO new dependency (deps
+  stay [numpy>=1.21]); ZERO third-party import in `cowork_mcp/*.py`.
+  PUSHED to the dev branch BEFORE qa/reviewer under the standing go
+  (both gates validated the final SHAs), NOT merged. Suite **1279**
+  (+29 C1 + 15 C2) / regression **93/93** / Commit-1 iso **1264** /
+  arithmetic 1235+31+13=1279. The no-execution boundary: whole-package
+  grep 0 hits, the AST/token scan BITES an injected
+  `subprocess.Popen(['osascript',…])`, attack-4 rejects
+  `dispatch("__import__")`/`dispatch("os.system")`; the memory_dir
+  gate zero-writes without it (marked set == `cowork._SIDE_EFFECTS`
+  exactly); the drift guard follows a synthetic registry command; a
+  REAL `python -m logic_mix_os.cowork_mcp` subprocess handshakes +
+  serves 35 tools with empty stderr; source stems sha256-stable.
+  **Codex unavailable — single-model review.** Reviewer: the only
+  artifact writer (`write_artifacts`) is a standalone CLI function no
+  registry handler calls — unreachable from any MCP tool; the plan-only
+  → callable-surface milestone is crossed WITHOUT crossing the
+  DAW-execution boundary. Receipt:
+  `build-os/receipts/P-051-cowork-mcp-adapter.md`.
+- **★ NEW STANDING SAFETY LINE (record it, binding on any future
+  transport/apply packet):** "MCP can ask the system what it
+  recommends; MCP cannot make Logic do it — Logic actions remain
+  checklist/plan artifacts; execution stays
+  human/Cowork-in-the-loop." The apply-to-Logic backend is a FUTURE,
+  EXPLICITLY re-gated packet — NEVER auto.
+- **NEW accepted notes (P-051, recorded not fixed — non-blocking):**
+  1. **The thin server's deliberate protocol gaps** — it pins its own
+     `protocolVersion` (no client negotiation), no `structuredContent`,
+     no JSON-RPC batch. Acceptable for a shell explicitly framed as a
+     future SDK swap.
+  2. **The pre-existing stale README "32 commands"** (the registry is
+     35) — GENUINE residue, a later docs cleanup, OUT of this packet's
+     scope (pair with the README/sample-pin micro-hardening).
+  3. **The awareness note:** a read/plan tool called WITH a
+     `memory_dir` will mkdir it via `ProjectMemory.__init__` though it
+     writes no history — pre-existing engine behavior, confined to the
+     explicit path, NOT a DAW write, NOT reported as an artifact.
+  4. **The optional strict-mode error-message polish** — the
+     explicitly-wrong-mode error could suggest omitting mode for the
+     profile default.
+- **All prior standing notes RETAINED** (the banners below), incl. the
+  ★★ groove-carrier trajectory watch-item, the P-049 sample-pin
+  micro-hardening, the CLA sha256-self-pin-on-sixth-producer note, and
+  the CLA product-surface refresh candidate.
+- **Open boundary:** P-051's commits pushed to the dev branch BEFORE
+  qa/reviewer under the orchestrator's standing go; **the MERGE is the
+  OPEN USER GATE — the dev branch carries BOTH P-050
+  (`ec16ae6`+`74feeab`+`0e1009a`+`931a257`) AND P-051
+  (`c3726f5`+`5d8dfe7`+`5a04ae1`+ the close commit) atop `2b0ad1a`
+  (= PR #28); a single merge PR would land BOTH — the fifth producer +
+  the MCP surface** — it awaits the user's explicit word.
+- **NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open
+  directions to the user (ALL user-gated): the merge · a real MCP-SDK
+  transport swap (optional-extra) · the apply-to-Logic backend
+  (FUTURE, EXPLICITLY re-gated — never auto; the safety line stands) ·
+  a CLA product-surface refresh · the future-analyzer candidates from
+  Eno's honest deferrals · quincy/halee authored dropout reach · a
+  sixth producer · the README 32→35 + sample-pin micro-hardening
+  cleanups · anything else the user calls. Do NOT open anything blind.
+- **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
+  comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
+  placement faith; (3) flag PRESENCE is not flag THREADING — levers
+  need reaches-the-destination guards.
+
+## ★★★ STATUS (P-050 close, 2026-07-04): residue = accepted standing notes only — THE PRODUCER ROSTER IS FIVE; THE DOCTRINE'S HARDEST TEST PASSED
+
+- **P-050 (THE FIFTH PRODUCER — Chris Lord-Alge, profile-only, the
+  impact/excitement pole; opened on the user's go 2026-07-04 —
+  AskUserQuestion "Merge P-049, then open CLA" + pole "Impact /
+  excitement pole"; P-049 merged FIRST as PR #28 → default tip
+  `2b0ad1a`, then this packet) closed 2026-07-04:** qa GREEN (12/12;
+  one non-blocking wording nuance, no protection gap) + reviewer PASS
+  (no must-fix; THE CENTRAL STRESS-TEST upheld, unweakened). Commits
+  `74feeab` (Commit-1 — the NEW `chris_lord_alge.json` [section_contrast
+  1.7 = ARGMAX, the single highest weight in the five-way field; 9 axes
+  outside the four-way envelope; negative_space 0.2 = his floor, the
+  anti-Eno, ZERO negative_space_dropout reach authored `[]`; blend floor
+  0.85 the strictest shipped; six own-named modes, commit_and_slam
+  default; confidence map 6 high / 1 limited / 8 deferred — his own
+  three no-axis concepts DEFERRED not faked] + the 37-test
+  `test_cla_profile.py` + the P-047 data-row-only additions across
+  mode_forking / move_vocabulary / dropout [captured from the real
+  engine then pinned, same Commit-1 so the auto-swept guards stay green
+  in isolation]; 5 files, +1230/−3; GREEN IN ISOLATION at **1193**) +
+  `0e1009a` (Commit-2 — the permanent 42-test FIVE-WAY differential
+  `test_five_way_differential.py`, all 8 requirements incl. the
+  loudness-invariant clause) on parent `ec16ae6` (active-packet
+  confirmation), atop merge base `2b0ad1a` (= PR #28 — P-049 merged
+  FIRST on the user's directive). Exactly **6 files**, ZERO .py under
+  logic_mix_os/; the four existing JSONs byte-identical to their
+  `2b0ad1a` blobs (halee `de171b8c…`, timbaland `b8047afb…`, quincy
+  `20ae6824…`, eno `f2211c8d…`) — pinned in the five-way suite;
+  examples/ untouched (4 trees + 9 demos + the manifest). PUSHED BEFORE
+  qa/reviewer (standing go — both gates validated the final SHAs), NOT
+  merged. Suite **1235** (+48 C1 = 37 guard + 11 passive sweep growth
+  [mode_forking +3, move_vocab +5, dropout +3]; +42 C2 five-way) /
+  regression **93/93** / Commit-1 iso **1193** / measured overalls
+  74.8 / 59.6 / 58.1 / 67.8 — pairwise-distinct from all four on every
+  fixture, reconstruction to the decimal, the emergent chorus_lift_D
+  winner / dropout governed 104 branch-cells zero / sabotage bites —
+  incl. **the loudness kill-switch DELETED → 5 failed (THE invariant
+  enforced, not decorative)**. **Codex unavailable — single-model
+  review.** Reviewer: "An exceptionally disciplined, minimal, honest
+  packet." Receipt: `build-os/receipts/P-050-chris-lord-alge.md`.
+- **★★ THE CENTRAL STRESS-TEST — UPHELD, UNWEAKENED:** CLA's
+  loudness-forward identity is the exact force the safety layer
+  restrains; it is expressed ONLY through weighting + kind_scores +
+  recommendation language, while the loudness kill-switch **"Never
+  chase reference loudness at the mix stage."** stays VERBATIM (first
+  line of his kill-switches; his list a STRICT SUPERSET of the
+  reference's, ref − CLA = ∅), veto_thresholds identical five-way
+  {45,50,75}, caps/penalty_coeffs/scorer params identical to the
+  reference except the one authored taste key (loop_context),
+  governance.py + the dropout protection filter byte-untouched.
+  Loudness maximization is a DEFERRED confidence entry, not faked. The
+  doctrine holds; the profile bent around it — a loudness-maximalist
+  who cannot weaken the loudness rail; the kill-switch DELETION bites 5
+  tests (enforcement proven, not decorative).
+- **NEW accepted notes (P-050, recorded not fixed — non-blocking):**
+  1. **The builder's sabotage-(e) wording inaccuracy:** there is NO
+     sha256 self-pin on `chris_lord_alge.json` — the
+     EXISTING_JSON_SHA256 guard covers the FOUR existing producers
+     (exactly where requirement-7 needs it); CLA's own content is
+     exhaustively value-pinned and bites in sabotage a/b/c.
+     **NON-BLOCKING, no protection gap.** CLA would naturally acquire a
+     byte-pin when a sixth producer makes him "existing" (the standing
+     pattern).
+  2. **The standing CLA product-surface refresh candidate** — a fifth
+     sample tree + mode demos (the P-046/P-048 pattern) — a possible
+     LATER packet, ★ USER-GATED.
+- **All prior standing notes RETAINED** (the banners below), incl. the
+  P-049 sample-pin micro-hardening (a no-subdirs assert in the sample
+  staleness pin — could ride any future packet), the ★★ STANDING
+  TRAJECTORY WATCH-ITEM (a REAL groove-carrier signal before ANY
+  dropout-surface widening) and the safety line (execution/apply
+  semantics NEVER without explicit user re-gating).
+- **Open boundary:** P-050's commits pushed to the dev branch BEFORE
+  qa/reviewer under the orchestrator's standing go; **the MERGE of
+  P-050 (`ec16ae6` + `74feeab` + `0e1009a` + the close commit, atop
+  `2b0ad1a` = PR #28) is the OPEN USER GATE** — it awaits the user's
+  explicit word.
+- **NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open
+  directions to the user (ALL user-gated): the P-050 merge · a CLA
+  product-surface refresh (fifth tree + mode demos) · the
+  future-analyzer candidates from Eno's honest deferrals (textural
+  coherence · generative process · ambient patience) · quincy/halee
+  authored dropout reach · a sixth producer (auto-discovered,
+  auto-swept) · the one-line sample-pin micro-hardening · anything else
+  the user calls. Do NOT open anything blind.
+- **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
+  comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
+  placement faith; (3) flag PRESENCE is not flag THREADING — levers
+  need reaches-the-destination guards.
+
 ## ★★★ STATUS (P-049 close, 2026-07-04): residue = accepted standing notes only — THE COMMITTED-EXAMPLE SURFACE IS EXACT-SET-GUARDED
 
 - **P-049 (COMMITTED-EXAMPLE DIRECTORY-SET GUARDS — tests only, one
