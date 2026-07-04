@@ -4,54 +4,44 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** NONE ACTIVE — **P-048 CLOSED** (2026-07-03): qa GREEN (11/11,
-  zero discrepancies) + reviewer PASS (no must-fix; single-model — Codex
-  unavailable). Receipt: `build-os/receipts/P-048-mode-demo-artifacts.md`.
+- **Status:** NONE ACTIVE — **P-049 CLOSED** (2026-07-04, by the
+  archivist). qa GREEN (8/8, bites 6/6) + reviewer PASS (no must-fix;
+  single-model — Codex unavailable). Receipt:
+  `build-os/receipts/P-049-directory-set-guards.md`.
 
-## Last closed — P-048: Product-Surface Refresh — Producer + Mode Demo Artifacts
+## Last closed — P-049: Committed-Example Directory-Set Guards
 
-- Commits `4725169` (Commit-1 — the NINE committed mode demos under
-  `examples/mode_demos/` [real-CLI creative pairs, dense fixture] + the
-  21-test staleness/surface/story pin module + the hardening touch [two
-  honest renames + the "brian" token, mutation-proven load-bearing];
-  21 files, +7943/−4; GREEN IN ISOLATION at **1143**) + `44381a8`
-  (Commit-2 — README only: the ownership doctrine line VERBATIM + the
-  committed mode-demo section + directory-driven discovery; +132/−2; ZERO
-  collection changes) on parent `0c47fb7` (active-packet confirmation),
-  atop merge base `645c925` (= the PR #26 merge — P-047 merged FIRST on
-  the user's sequencing).
-- Suite **1143 passed / 0 failed** · regression **93/93** · Commit-1 iso
-  **1143** · freshness 9/9 verbatim re-renders byte-identical · ZERO .py
-  under `logic_mix_os/` · the four existing trees byte-untouched.
-- The user's seven required demos ALL served by the nine committed pairs;
-  the ownership doctrine line on the product surface VERBATIM exactly
-  once.
-- **PUSHED to the dev branch (standing go, pre-gates); NOT merged.**
+- **Single commit** `94b7df9` ("tests: P-049 — committed-example
+  directory-set guards"; 2 files, +51/−0, tests only) on parent
+  `b6ba8d1` (set-active), atop merge base `7ae96f2` (= the PR #27
+  merge — P-048 landed FIRST). PUSHED to the dev branch
+  `claude/logic-mix-os-hardening-12-7hbeh1` under the standing go
+  BEFORE qa/reviewer (both gates validated the final SHA);
+  **NOT merged**.
+- Suite **1145 passed, 0 failed** (+2 exactly) / regression **93/93** /
+  single-commit packet — the HEAD run IS the Commit-1-isolation proof /
+  bites 6/6 in an isolated worktree / safety grep 0.
+- Both committed-example homes now EXACT-SET-GUARDED
+  (derivation-coupled to the pinned tables): 4 trees + 9 demos + the
+  manifest example — nothing can land or vanish silently. The P-048
+  reviewer residue (the directory-set guard) ✓ RESOLVED in full.
 
 ## ★★ OPEN USER GATE
 
-- **The merge of P-048** — `0c47fb7` + `4725169` + `44381a8` + the close
-  commit, atop `645c925` (= PR #26) — awaits the user's explicit word.
+- **The merge of P-049** — `b6ba8d1` + `94b7df9` + the close commit,
+  atop `7ae96f2` (= PR #27) — awaits the user's explicit word. No
+  deploy/publish/secrets touched.
 
-## Staged next: NOTHING
+## Staged next
 
-The orchestrator PRESENTS the open directions to the user (ALL
-user-gated):
-
-- the P-048 merge (the open gate above)
-- quincy/halee authored dropout reach (behind the ★★ standing
-  groove-carrier watch-item)
-- the future-analyzer candidates from Eno's honest deferrals (textural
-  coherence · generative process · ambient patience)
-- a fifth producer (auto-discovered, auto-swept — cheaper than ever)
-- the directory-set-guard hardening candidate (the P-048 reviewer
-  residue — suite-wide: nothing asserts a committed demo/sample dir
-  contains EXACTLY the pinned set)
-- anything else the user calls
-
-Do NOT open anything blind. Execution/apply semantics NEVER without
-explicit user re-gating.
+**NOTHING.** The orchestrator PRESENTS the open directions to the user
+(ALL user-gated — all product/taste decisions that belong to the user):
+a fifth producer (who + the grounding) · the future-analyzer candidates
+from Eno's honest deferrals (textural coherence · generative process ·
+ambient patience) · quincy/halee authored dropout reach · the one-line
+sample-pin micro-hardening (could ride any future packet) · anything
+else the user calls. Do NOT open anything blind.
 
 ---
-_Cleared by the archivist on P-048 close (2026-07-03). One packet at a
+_Cleared by the archivist at P-049 close (2026-07-04). One packet at a
 time: builder → qa + reviewer → archivist → receipt._

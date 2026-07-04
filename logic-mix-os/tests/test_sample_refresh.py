@@ -65,6 +65,14 @@ SAMPLE_TREES = {
     "brian_eno": ROOT / "examples" / "sample_output_eno",
 }
 
+# THE ALLOWED ``examples/``-LEVEL RESIDENT SET beyond the sample trees
+# (P-049), enumerated CONSCIOUSLY from the real directory: the mode-demo
+# home (its own residents guarded resident-by-resident in
+# tests/test_mode_demo_refresh.py) and the manifest-format example the
+# README documents. Nothing else lives at that level at pin time.
+EXAMPLES_ROOT = ROOT / "examples"
+NON_TREE_RESIDENTS = {"mode_demos", "project_manifest.example.json"}
+
 # The ONE normalization the comparison needs: two artifacts
 # (source_material.json, track_analysis.json) echo the stems path exactly
 # as it was given on the command line. The committed trees were generated
@@ -254,3 +262,28 @@ def test_committed_sample_mode_surface_is_the_authored_reach(producer):
     winners = {b["problem_id"]: b["winning"]["winning_variant"]
                for b in cr["branches"]}
     assert winners == WINNERS[producer]
+
+
+def test_committed_examples_directory_set_is_exactly_the_pinned_residents():
+    """THE DIRECTORY-SET GUARD (P-049): the committed sample-tree set under
+    ``examples/`` is EXACTLY the four pinned trees — SAMPLE_TREES' own
+    directories, so this guard derives from the same table every pin above
+    parametrizes over and can never drift from the pins it protects — and
+    the FULL ``examples/``-level resident set is exactly those trees plus
+    the consciously enumerated NON_TREE_RESIDENTS. It fails LOUDLY on a
+    new unpinned tree (which would ship staleness-unpinned), on a deleted
+    pinned tree, and on any stray file or dir at that level. A legitimate
+    fifth tree later is a CONSCIOUS one-line SAMPLE_TREES extension —
+    which automatically brings the staleness/headline/mode-surface pins
+    above to the newcomer; a new non-tree resident is a conscious
+    NON_TREE_RESIDENTS extension; anything failing here without one of
+    those is a stray committed artifact."""
+    tree_names = {path.name for path in SAMPLE_TREES.values()}
+    assert len(tree_names) == len(SAMPLE_TREES), tree_names
+    assert all(p.parent == EXAMPLES_ROOT for p in SAMPLE_TREES.values())
+
+    residents = sorted(p.name for p in EXAMPLES_ROOT.iterdir())
+    assert residents == sorted(tree_names | NON_TREE_RESIDENTS), residents
+
+    dirs = sorted(p.name for p in EXAMPLES_ROOT.iterdir() if p.is_dir())
+    assert dirs == sorted(tree_names | {"mode_demos"}), dirs
