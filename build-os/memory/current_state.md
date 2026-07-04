@@ -441,25 +441,56 @@
     atop the set-active `37e4120`. P-047's parent chain: `f9736f3`
     → `3322c88` → `37e4120` (active-packet confirmation) →
     `24b5ca7` (PR #25 merge).
+    ★★ P-047 IS MERGED — **PR #26 (P-047 — directory-driven producer
+    sweeps + docs residues + closes) is MERGED to default on the
+    user's directive — merge commit `645c925`, the CURRENT
+    default-branch tip. The base for MERGE/landing decisions is now
+    `645c925`.** The dev branch now carries **P-048 (`4725169` +
+    `44381a8`, docs/demo — PRODUCT-SURFACE REFRESH: PRODUCER + MODE
+    DEMO ARTIFACTS — the NINE committed mode demos under
+    `examples/mode_demos/` [each the "creative pair" — creative.json
+    + creative_report.md from a real CLI `creative` run on the dense
+    fixture, the only fixture firing all five creative problems; 18
+    artifacts, 265,305 bytes; zero normalization — no path echo in
+    the pair] + the NEW 21-test `tests/test_mode_demo_refresh.py`
+    [9 staleness + 9 surface + 3 story pins, expected values
+    imported from the standing pinned tables] + the hardening touch
+    [two honest test renames, byte-identical assertions;
+    `_PRODUCER_TOKENS` gained "brian" — mutation-proven
+    load-bearing] + the README committed-mode-demo section with the
+    ownership doctrine line VERBATIM exactly once; 21 files
+    +7943/−4 then README-only +132/−2 with ZERO collection changes;
+    ZERO .py under logic_mix_os/, the FOUR existing trees
+    byte-untouched), PUSHED to the dev branch BEFORE qa/reviewer
+    under the orchestrator's standing go (both gates validated the
+    final SHAs), NOT merged — the P-048 merge is a user gate**, atop
+    the set-active `0c47fb7`. P-048's parent chain: `44381a8` →
+    `4725169` → `0c47fb7` (active-packet confirmation) → `645c925`
+    (PR #26 merge).
 - **Build/test command:** from `logic-mix-os/` — `pip install -e ".[dev]"`
   (numpy is the only hard dependency; the `[dev]` extra adds pytest), then
   `python -m pytest` (testpaths=`tests`). Golden + doctrine regression:
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-03, P-047 — the
-  directory-driven-sweeps baseline):** suite **1122 passed**
+- **Green baseline (verified 2026-07-03, P-048 — the
+  mode-demo-artifacts baseline):** suite **1143 passed**
   (0 failed / skipped); regression **93/93** (tests_run 93 /
   passed 93 / failed 0) — the corpus is **4 fixtures** (the 68/68
-  era ended CONSCIOUSLY at P-035). Commits `3322c88` (the
-  directory-driven `PRODUCERS` discovery [the IDENTICAL cli.py:50
-  expression; the old hand-rolled second path DELETED] + the NEW
-  minimum-containment discovery guard + eno's data rows at every
-  per-producer site) + `f9736f3` (docs residues — prose-only, ZERO
-  collection changes, verified per file C1 == HEAD) on parent
-  `37e4120` (active-packet confirmation), atop merge base `24b5ca7`
-  (= the PR #25 merge) — `3322c88` IS Commit-1 → GREEN IN ISOLATION
-  at **1122**. (History: 1110 → **1122** at P-047 — +12: 11 new
+  era ended CONSCIOUSLY at P-035). Commits `4725169` (the NINE
+  committed mode demos under `examples/mode_demos/` [real-CLI
+  creative pairs, dense fixture] + the NEW 21-test
+  `tests/test_mode_demo_refresh.py` [9 staleness + 9 surface + 3
+  story pins, expected values imported from the standing pinned
+  tables] + the hardening touch [two honest renames + the "brian"
+  token]) + `44381a8` (README only — ZERO collection changes,
+  node-id lists diffed identical C1 vs HEAD) on parent `0c47fb7`
+  (active-packet confirmation), atop merge base `645c925`
+  (= the PR #26 merge) — `4725169` IS Commit-1 → GREEN IN ISOLATION
+  at **1143**. (History: 1122 → **1143** at P-048 — +21: the NEW
+  `tests/test_mode_demo_refresh.py` [21 tests: 9 staleness + 9
+  surface + 3 story]; the two hardening renames count-neutral —
+  Commit-1 iso **1143**; 1110 → **1122** at P-047 — +12: 11 new
   `[brian_eno]` sweep instances + the NEW discovery guard
   `test_producer_sweep_is_directory_driven_with_the_known_minimum`
   [per-file +4/+5/+3 across mode_forking / move_vocabulary /
@@ -506,6 +537,129 @@
   331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-048 GIVES THE SUBSTRATE ITS PRODUCT FACE — PRODUCT-SURFACE
+  REFRESH: PRODUCER + MODE DEMO ARTIFACTS (docs/samples/demo clarity
+  only, ZERO runtime behavior changes; opened on the user's go,
+  2026-07-03, verbatim: "Merge P-047 now. Then do product-surface
+  refresh… This is the right next skate: make the now-powerful
+  system explain itself before adding more depth." — P-047 merged
+  FIRST as PR #26 → default tip `645c925`, then this packet). NINE
+  committed mode demos under `examples/mode_demos/` serve ALL SEVEN
+  of the user's required demo stories; the ownership doctrine line
+  is on the product surface VERBATIM exactly once; every demo is
+  staleness- and surface-pinned. **THE PRODUCT SURFACE IS COMPLETE
+  FOR THE CURRENT SUBSTRATE** — the committed-demo inventory is now
+  4 full producer trees + 9 creative pairs, all staleness-pinned.
+  The P-047 accepted notes 1–2 (the two stale test names + the
+  missing token) ✓ RESOLVED by the hardening touch. qa GREEN
+  (11/11, zero discrepancies) + reviewer PASS (no must-fix).
+  Last-closed = P-048.**
+  - **Two commits** on parent `0c47fb7` (active-packet
+    confirmation), atop merge base `645c925` (= the PR #26 merge —
+    P-047 landed FIRST): `4725169` (Commit-1 — the nine mode demos
+    [each the "creative pair": creative.json + creative_report.md
+    from a real CLI `creative` run on the dense fixture — the only
+    fixture firing all five creative problems; 18 artifacts,
+    265,305 bytes; zero normalization needed — no path echo in the
+    pair] + the NEW `tests/test_mode_demo_refresh.py` [21 tests: 9
+    staleness + 9 surface + 3 story, expected values IMPORTED from
+    the standing pinned tables — single source of truth] + the
+    hardening touch [two honest test renames with byte-identical
+    assertions; `_PRODUCER_TOKENS` gained "brian" — bare "eno"
+    false-positives on "enough", verified]; 21 files, +7943/−4;
+    GREEN IN ISOLATION at **1143**) + `44381a8` (Commit-2 — README
+    only: the ownership doctrine line VERBATIM exactly once
+    ["engine owns move vocabulary / profile owns mode reach /
+    governance owns safety cap"] + the committed mode-demo section
+    + directory-driven discovery; +132/−2; ZERO collection
+    changes — node-id lists diffed identical C1 vs HEAD). ZERO .py
+    under `logic_mix_os/`; zero profiles/fixtures/goldens; the FOUR
+    existing trees byte-untouched (their pins 12/12). **PUSHED to
+    the dev branch BEFORE qa/reviewer under the standing go (both
+    gates validated the final SHAs); NOT merged — the P-048 merge
+    is the OPEN USER GATE.**
+  - **★ The nine demos (the user's seven, ALL served):** (1)
+    different-producer = the four P-046 trees, referenced; (2–3)
+    halee dramatic [A,B,C,D] / conservative [C,B,D] /
+    deconstructive [B,C]; (4) the conservative four-way
+    {A,B,C,D}/{B,C,D}/{B,C}/{B,D}; (5) quincy experimental — BOTH
+    extended families live (85.3/83.1), vocal_C's governed WIN in
+    committed bytes; (6) timbaland negative_space (dropout ids at
+    80.9, F targeting [Synth Pad, Splice Texture Loop]) CONTRASTED
+    with groove_pocket (declarations present, NO reach key, zero
+    dropout ids — the only-where-authored evidence, judged STRONGER
+    than a neutral mode); (7) halee reference-safety (her committed
+    tree + her mode demos + a dedicated pin). Eno's role HONEST: a
+    conservative demo with the vocal_B-by-suppression story (the
+    builder CAUGHT AND FIXED its own overclaim pre-commit); his
+    reaching modes undemoed (the user's list names
+    quincy/timbaland/halee only).
+  - **★ qa GREEN (11/11, zero discrepancies):** suite 1122 →
+    **1143 passed, 0 failed** (+21, all the new pin module; the
+    renames count-neutral); regression **93/93**; Commit-1 iso
+    **1143**; freshness INDEPENDENT — isolated worktree, fixtures
+    regenerated, all NINE verbatim README invocations via the real
+    CLI → **9/9 creative pairs byte-identical** (cmp, zero
+    normalization); captured sets verified against live engine +
+    committed bytes (the two authored-neutral demos carry NO
+    declarations key despite an explicit --mode); the hardening
+    MUTATION PROOF — injecting `if "brian_eno" in x:` into
+    creative.py → the code-purity guard FAILS at HEAD and passes
+    UNDETECTED at base (the token addition is LOAD-BEARING); README
+    sweep "unpinned claims: none material" — the ownership line
+    verbatim ONCE, the dropout line ONCE README-wide, the "only
+    fixture firing all five problems" claim verified live (1/5/3/4
+    branch counts); sabotage EXACT — flipped byte → exactly 2
+    failures (its staleness + surface pins); deleted demo dir →
+    exactly 3; README id edit → nothing fails (the standing
+    accepted README-drift posture, confirmed); rename reverted →
+    nothing fails (docs-hygiene, confirmed); zero .py under
+    logic_mix_os/; the four trees' pins 12/12; the doctrine dense
+    row spot-checked 70.7/52.6/62.1/57.8; safety grep none found.
+  - **★ reviewer PASS (no must-fix; Codex unavailable —
+    single-model):** the demo-unit decision judged SOUND at the
+    code level (the CLI==library stand-in verified STRONGER than
+    the P-039 citation alone — `_run_creative` IS the pinned chain;
+    the pair is a whole-file subset, provenance stated in docstring
+    + README); all seven demos served, demo 6's contrast pair
+    judged stronger evidence than a neutral mode; pins
+    load-bearing, the single-source coupling to the standing tables
+    judged correct; the hardening honest (renames
+    zero-assertion-change; the "brian" token reasoning verified — a
+    bare-"eno" branch would be dead code, an acceptable documented
+    residual); README honesty CLEAN including the self-caught
+    overclaim; the modes framing never oversells (candidate-set
+    forking + order, not scoring); trajectory — "This packet does
+    exactly what the user asked": the substrate's
+    mode/reach/dropout/discovery capabilities now have a committed,
+    pinned, human-readable product face. Four non-blocking
+    residues → residue (the directory-set guard as the NAMED
+    suite-wide hardening candidate; the five-problems claim
+    verified-live but unpinned; the rerun-writes-28-extra-files
+    ergonomic; 15 of 24 producer×mode combos undemoed — the nine
+    cover all seven required stories, none owed).
+  - **★ The user's required proof — every clause met:** suite clean
+    (1143/0) · regression clean (93/93) · zero runtime behavior
+    changes (zero .py, diff-proven) · samples intentionally
+    refreshed (nine new, four existing untouched) · README/examples
+    match current CLI behavior (9/9 verbatim re-renders
+    byte-identical) · no producer outputs drift except committed
+    sample refreshes · the hardening touch assertion-strengthening
+    only (mutation-proven load-bearing).
+  - **★ NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open
+    directions to the user (ALL user-gated): the P-048 merge ·
+    quincy/halee authored dropout reach · the future-analyzer
+    candidates from Eno's honest deferrals (textural coherence ·
+    generative process · ambient patience) · a fifth producer
+    (auto-discovered, auto-swept) · the directory-set-guard
+    hardening candidate (the P-048 reviewer residue) · anything
+    else the user calls. Do NOT open anything blind.
+    Execution/apply semantics NEVER without explicit user
+    re-gating. **THE OPEN USER GATE: the merge of P-048 (`0c47fb7`
+    + `4725169` + `44381a8` + the close commit) atop `645c925`
+    (= PR #26).** Receipt:
+    `build-os/receipts/P-048-mode-demo-artifacts.md`.
 
 - **★★★ P-047 MAKES THE SWEEPS PRODUCER-COMPLETE AND FUTURE-PROOF —
   DIRECTORY-DRIVEN PRODUCER SWEEPS + DOCS RESIDUES (TEST + DOCS
@@ -611,7 +765,14 @@
     user re-gating. **THE OPEN USER GATE: the merge of P-047
     (`37e4120` + `3322c88` + `f9736f3` + the close commit) atop
     `24b5ca7` (= PR #25).** Receipt:
-    `build-os/receipts/P-047-directory-driven-sweeps.md`.
+    `build-os/receipts/P-047-directory-driven-sweeps.md`. **(✓ RESOLVED
+    at P-048 open, 2026-07-03: merged as PR #26 on the user's
+    directive — merge commit `645c925`, the current default tip and
+    the P-048 merge base; the user then called the PRODUCT-SURFACE
+    REFRESH — producer + mode demo artifacts — opened and CLOSED as
+    P-048, see the banner above [the P-047 accepted notes 1–2
+    resolved by its hardening touch]; NEXT = NOTHING STAGED again,
+    the orchestrator presents the open directions.)**
 
 - **★★★ P-046 MAKES THE PRODUCT SURFACE MATCH THE PRODUCT — THE
   FOUR-PRODUCER DEMO (docs/demo only; opened on the user's "go",

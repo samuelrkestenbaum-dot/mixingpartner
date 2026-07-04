@@ -870,7 +870,12 @@ _FORK_PATH_MODULES = (
     _PACKAGE / "pipeline.py",
     _PACKAGE / "constants.py",
 )
-_PRODUCER_TOKENS = ("timbaland", "quincy", "halee", "ramone")
+# P-048: "brian" covers the fourth producer (any branch on his profile-name
+# string "brian_eno" contains it). A bare "eno" token is CONSCIOUSLY not
+# includable under this guard's substring matching: the established curated
+# plan prose in creative.py carries "enough" ("does not lift enough
+# emotionally", "May not create enough scale"), which contains "eno".
+_PRODUCER_TOKENS = ("timbaland", "quincy", "halee", "ramone", "brian")
 
 
 def _code_producer_mentions(path: pathlib.Path) -> list:
