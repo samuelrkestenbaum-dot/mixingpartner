@@ -2,13 +2,16 @@
 
 ``examples/mode_demos/`` carries the MODE-level differential in committed
 form, the way ``examples/sample_output*`` carries the producer-level one
-(tests/test_sample_refresh.py). Nine demo directories, all rendered by the
-real CLI from the SAME stems — the seeded ``dense_chorus_with_loops``
-fixture, chosen because it is the only fixture that fires ALL FIVE creative
-problems (so the density branch, where three extended ids live, is on the
-surface) and because it is the fixture every standing mode/dropout pin
-already runs on (tests/test_mode_forking.py, tests/test_negative_space_
-dropout.py, tests/test_move_vocabulary_expansion.py).
+(tests/test_sample_refresh.py). Eleven demo directories (P-053 added CLA's
+two — ``chris_lord_alge_conservative`` widening the same-mode conservative
+comparison to five producers, and ``chris_lord_alge_big_chorus``, his named
+center-of-gravity mode reaching arrangement_lift), all rendered by the real
+CLI from the SAME stems — the seeded ``dense_chorus_with_loops`` fixture,
+chosen because it is the only fixture that fires ALL FIVE creative problems
+(so the density branch, where three extended ids live, is on the surface)
+and because it is the fixture every standing mode/dropout pin already runs
+on (tests/test_mode_forking.py, tests/test_negative_space_dropout.py,
+tests/test_move_vocabulary_expansion.py).
 
 Each directory is the output of exactly one verbatim invocation from the
 project root (after ``python fixtures/generate_fixtures.py``) — the same
@@ -82,6 +85,8 @@ DEMO_FILES = ("creative.json", "creative_report.md")
 # producer; her demos' documented invocations carry no --producer flag.
 MODE_DEMOS = {
     "brian_eno_conservative": ("brian_eno", "conservative"),
+    "chris_lord_alge_big_chorus": ("chris_lord_alge", "big_chorus"),
+    "chris_lord_alge_conservative": ("chris_lord_alge", "conservative"),
     "halee_ramone_conservative": ("halee_ramone", "conservative"),
     "halee_ramone_deconstructive": ("halee_ramone", "deconstructive"),
     "halee_ramone_dramatic_contrast": ("halee_ramone", "dramatic_contrast"),
@@ -101,6 +106,21 @@ DECLARATIONS = {
     "brian_eno_conservative": {
         "allowed_risk": "low", "favor_kinds": ["depth_cleanup"],
         "suppress_kinds": ["width_bloom", "vocal_ride"],
+    },
+    # P-053 CLA. His big_chorus is his named center-of-gravity mode ("the
+    # chorus lands bigger than the verse") — medium posture, favors the
+    # width move, and REACHES arrangement_lift (the one CLA mode with a
+    # reach key in this demo set). His conservative authors a low posture
+    # that SUPPRESSES the subtractive move — his "commit, the thinning-out
+    # moves are withheld" bias, the only committed conservative that drops
+    # subtractive_drop.
+    "chris_lord_alge_big_chorus": {
+        "allowed_risk": "medium", "favor_kinds": ["width_bloom"],
+        "suppress_kinds": [], "reach_kinds": ["arrangement_lift"],
+    },
+    "chris_lord_alge_conservative": {
+        "allowed_risk": "low", "favor_kinds": [],
+        "suppress_kinds": ["subtractive_drop"],
     },
     "halee_ramone_conservative": {
         "allowed_risk": "low", "favor_kinds": ["vocal_ride", "depth_cleanup"],
@@ -147,6 +167,28 @@ BRANCH_IDS = {
         "loop": ["loop_A", "loop_B"],
         "depth": ["depth_A"],
         "vocal_belief": ["vocal_B"],
+    },
+    # CLA big_chorus: the width favor fronts nothing new here (chorus_lift_A
+    # is already width_bloom), the reach APPENDS the arrangement_lift ids
+    # (chorus_lift_E, density_C) to the end of the curated order — and both
+    # WIN their branches (see WINNERS): the reach takes the verdict.
+    "chris_lord_alge_big_chorus": {
+        "chorus_lift": ["chorus_lift_A", "chorus_lift_B", "chorus_lift_C",
+                        "chorus_lift_D", "chorus_lift_E"],
+        "density": ["density_A", "density_B", "density_C"],
+        "loop": ["loop_A", "loop_B"],
+        "depth": ["depth_A"],
+        "vocal_belief": ["vocal_A", "vocal_B"],
+    },
+    # CLA conservative: subtractive_drop suppressed — the ONLY committed
+    # conservative demo whose chorus_lift drops chorus_lift_B (subtractive)
+    # and whose density/loop fall to a single non-subtractive candidate.
+    "chris_lord_alge_conservative": {
+        "chorus_lift": ["chorus_lift_A", "chorus_lift_C", "chorus_lift_D"],
+        "density": ["density_A"],
+        "loop": ["loop_A"],
+        "depth": ["depth_A"],
+        "vocal_belief": ["vocal_A", "vocal_B"],
     },
     "halee_ramone_conservative": {
         "chorus_lift": ["chorus_lift_C", "chorus_lift_B", "chorus_lift_D"],
@@ -214,6 +256,11 @@ BRANCH_IDS = {
 # ``reach_capped`` empty everywhere (both authored reaches live inside
 # their modes' risk postures).
 REACHED = {
+    "chris_lord_alge_big_chorus": {
+        "chorus_lift": ["arrangement_lift"],
+        "density": ["arrangement_lift"],
+        "loop": [], "depth": [], "vocal_belief": [],
+    },
     "quincy_jones_experimental": {
         "chorus_lift": ["arrangement_lift"],
         "density": ["arrangement_lift", "ensemble_rebalance"],
@@ -228,12 +275,15 @@ REACHED = {
 }
 
 # Branch winners. The mode fork moves candidate SETS far more than verdicts:
-# every demo wins the same four non-vocal moves; the two exceptions are both
+# most demos win the same four non-vocal moves. The exceptions are all
 # authored realities — eno's conservative suppresses vocal_ride so his
-# intimacy pass is the only vocal candidate left (vocal_B, the P-045 pin),
-# and quincy's high-posture experimental is the one committed demo where a
-# REACHED variant wins a branch (vocal_C at his authored 83.1 — the standing
-# live pin in tests/test_move_vocabulary_expansion.py).
+# intimacy pass is the only vocal candidate left (vocal_B, the P-045 pin);
+# quincy's high-posture experimental REACHES a winner (vocal_C at his
+# authored 83.1 — tests/test_move_vocabulary_expansion.py); and P-053's CLA
+# demos, whose impact/commitment posture wins the drum-room and reached
+# arrangement_lift moves outright. Two committed demos now let a REACHED
+# variant take a verdict: quincy_experimental (vocal_C) and
+# chris_lord_alge_big_chorus (chorus_lift_E + density_C, arrangement_lift).
 _COMMON_WINNERS = {
     "chorus_lift": "chorus_lift_B", "density": "density_B", "loop": "loop_B",
     "depth": "depth_A", "vocal_belief": "vocal_A",
@@ -241,6 +291,19 @@ _COMMON_WINNERS = {
 WINNERS = {demo: dict(_COMMON_WINNERS) for demo in MODE_DEMOS}
 WINNERS["brian_eno_conservative"]["vocal_belief"] = "vocal_B"
 WINNERS["quincy_jones_experimental"]["vocal_belief"] = "vocal_C"
+# CLA big_chorus: the reached arrangement_lift ids win chorus_lift and
+# density; loop falls to loop_A (loop_deconstruct) as his impact move over
+# the subtractive loop_B.
+WINNERS["chris_lord_alge_big_chorus"] = {
+    "chorus_lift": "chorus_lift_E", "density": "density_C", "loop": "loop_A",
+    "depth": "depth_A", "vocal_belief": "vocal_A",
+}
+# CLA conservative: subtractive_drop suppressed, so the drum-room move wins
+# chorus_lift (chorus_lift_D) and the sole survivors win density/loop.
+WINNERS["chris_lord_alge_conservative"] = {
+    "chorus_lift": "chorus_lift_D", "density": "density_A", "loop": "loop_A",
+    "depth": "depth_A", "vocal_belief": "vocal_A",
+}
 
 # The extended-id universe on this fixture's branches (the same leak guard
 # as tests/test_sample_refresh.py) and each demo's admitted subset.
@@ -250,6 +313,10 @@ EXTENDED_PRESENT = {demo: set() for demo in MODE_DEMOS}
 EXTENDED_PRESENT["quincy_jones_experimental"] = {
     "chorus_lift_E", "density_C", "density_D", "vocal_C"}
 EXTENDED_PRESENT["timbaland_negative_space"] = {"chorus_lift_F", "density_E"}
+# CLA big_chorus reaches arrangement_lift only: chorus_lift_E + density_C
+# (no ensemble_rebalance/dropout ids — his big_chorus authors just the one
+# reach kind).
+EXTENDED_PRESENT["chris_lord_alge_big_chorus"] = {"chorus_lift_E", "density_C"}
 
 
 @pytest.fixture(scope="module")
@@ -414,18 +481,21 @@ def test_committed_halee_demos_stay_reference_safe():
         assert winners == _COMMON_WINNERS, demo
 
 
-def test_committed_mode_demo_directory_set_is_exactly_the_pinned_nine():
+def test_committed_mode_demo_directory_set_is_exactly_the_pinned_eleven():
     """THE DIRECTORY-SET GUARD (P-049): ``examples/mode_demos/`` holds
-    EXACTLY the nine pinned demo directories — MODE_DEMOS' own keys, so
-    this guard derives from the same table every pin above parametrizes
-    over and can never drift from the pins it protects — and nothing else
-    lives at that level (no stray file of any kind; reality at pin time:
-    no README lives here). It fails LOUDLY on a new unpinned demo dir
-    (which would ship staleness-unpinned), on a deleted pinned dir, and
-    on any stray file. A legitimate tenth demo later is a CONSCIOUS
-    one-line MODE_DEMOS extension — which automatically brings the
-    staleness and surface pins above to the newcomer; anything failing
-    here without that extension is a stray committed artifact."""
+    EXACTLY the eleven pinned demo directories (P-053 added CLA's two —
+    chris_lord_alge_conservative + chris_lord_alge_big_chorus — via the
+    conscious MODE_DEMOS extension this guard was designed for) —
+    MODE_DEMOS' own keys, so this guard derives from the same table every
+    pin above parametrizes over and can never drift from the pins it
+    protects — and nothing else lives at that level (no stray file of any
+    kind; reality at pin time: no README lives here). It fails LOUDLY on a
+    new unpinned demo dir (which would ship staleness-unpinned), on a
+    deleted pinned dir, and on any stray file. A legitimate twelfth demo
+    later is a CONSCIOUS one-line MODE_DEMOS extension — which
+    automatically brings the staleness and surface pins above to the
+    newcomer; anything failing here without that extension is a stray
+    committed artifact."""
     residents = sorted(p.name for p in DEMO_ROOT.iterdir())
     assert residents == sorted(MODE_DEMOS), residents
     non_dirs = sorted(p.name for p in DEMO_ROOT.iterdir() if not p.is_dir())

@@ -60,23 +60,25 @@ logic-mix-os analyze \
 
 (Or without installing: `python -m logic_mix_os.cli analyze ...`.)
 
-Ready-made examples of the output live in `examples/`: four committed trees
+Ready-made examples of the output live in `examples/`: five committed trees
 generated from the **same stems** (the seeded `vocal_chop_groove` fixture) —
 [`examples/sample_output/`](examples/sample_output) under the default
 Halee/Ramone profile, plus one tree per selectable producer:
 [`examples/sample_output_timbaland/`](examples/sample_output_timbaland)
 (`--producer timbaland`),
 [`examples/sample_output_quincy/`](examples/sample_output_quincy)
-(`--producer quincy_jones`) and
+(`--producer quincy_jones`),
 [`examples/sample_output_eno/`](examples/sample_output_eno)
-(`--producer brian_eno`). See the next section for what to compare. The
+(`--producer brian_eno`) and
+[`examples/sample_output_chris_lord_alge/`](examples/sample_output_chris_lord_alge)
+(`--producer chris_lord_alge`). See the next section for what to compare. The
 mode-level story has its own committed examples —
-[`examples/mode_demos/`](examples/mode_demos), nine producer × mode runs
+[`examples/mode_demos/`](examples/mode_demos), eleven producer × mode runs
 from one denser fixture ("Same stems, different modes" below).
 
-## Four producers, same stems
+## Five producers, same stems
 
-The four committed sample trees are the output of exactly these invocations
+The five committed sample trees are the output of exactly these invocations
 (from the project root, after `python fixtures/generate_fixtures.py`):
 
 ```bash
@@ -99,25 +101,30 @@ python -m logic_mix_os.cli analyze \
   --stems fixtures/vocal_chop_groove/stems \
   --manifest fixtures/vocal_chop_groove/project_manifest.json \
   --out out_eno --producer brian_eno
+
+python -m logic_mix_os.cli analyze \
+  --stems fixtures/vocal_chop_groove/stems \
+  --manifest fixtures/vocal_chop_groove/project_manifest.json \
+  --out out_cla --producer chris_lord_alge
 ```
 
-Same stems, same measurements, four judgments — the values below are the ones
+Same stems, same measurements, five judgments — the values below are the ones
 pinned in the test suite:
 
-| Reading | Halee/Ramone (reference) | Timbaland | Quincy Jones | Brian Eno |
-|---|---|---|---|---|
-| Overall mix readiness | **76.3** | **60.9** | **68.8** | **65.5** |
-| Vocal role fit | 65.0 | 85.0 | 85.0 | 85.0 |
-| Loop context | 15.0 | 10.0 | 12.0 | 35.0 |
+| Reading | Halee/Ramone (reference) | Timbaland | Quincy Jones | Brian Eno | Chris Lord-Alge |
+|---|---|---|---|---|---|
+| Overall mix readiness | **76.3** | **60.9** | **68.8** | **65.5** | **67.8** |
+| Vocal role fit | 65.0 | 85.0 | 85.0 | 85.0 | 85.0 |
+| Loop context | 15.0 | 10.0 | 12.0 | 35.0 | 18.0 |
 
 Each overall is its own profile's weighted mean over the shared component
 axes. The two rows that move are the two authored divergence channels: the
 vocal-blend policy (the reference reads the vocal chop/stack masking
-involvements under full clarity protection at 65.0; the other three profiles'
+involvements under full clarity protection at 65.0; the other four profiles'
 authored opt-ins accept the same involvements as blend at 85.0) and the
-static-loop polarity (all four profiles read the dominant chop loop as STATIC
+static-loop polarity (all five profiles read the dominant chop loop as STATIC
 from the same stems; each maps that one reading to its own authored value —
-15.0 / 10.0 / 12.0 / 35.0).
+15.0 / 10.0 / 12.0 / 35.0 / 18.0).
 
 One sentence per producer:
 
@@ -132,20 +139,32 @@ One sentence per producer:
   scoring axis, a static loop is a legitimate ambient bed (his authored
   35.0), and his winning vocal move is the intimacy pass (`vocal_B`) where
   the other three ride the phrase (`vocal_A`).
+- **Chris Lord-Alge** — impact and excitement: section contrast is his
+  heaviest scoring axis (his center of gravity, weighted above every other
+  axis) — the loudness-forward anti-Eno. A static dominant loop is material
+  to commit to and drive rather than an ambient bed (his authored 18.0,
+  above the reference's 15.0), and his impact/commitment posture even moves
+  the plan choice (below).
 
-All four default runs land the same non-vocal winners (`chorus_lift_B` /
-`loop_B` / `depth_A`) — on this fixture most of the divergence lives in the
-readings, the overalls and the candidate sets, not the plan choice (the
-plan-level reversal needs an iconic-reading loop; see
-`tests/test_differential_proof.py`). What stays invariant under all four
-producers: the safety surface (every tree's composed kill-switch list leads
-with the five hardcoded safety switches, verbatim) and the measurements
-themselves (the shared axes — e.g. emotional hierarchy 86.0, groove
-coherence 99.4 — read identically in all four trees).
+The four reference-lineage producers land the same non-vocal winners
+(`chorus_lift_B` / `loop_B` / `depth_A`, both `_B` moves being
+subtractive) — for them most of the divergence lives in the readings, the
+overalls and the candidate sets, not the plan choice (their plan-level
+reversal needs an iconic-reading loop; see
+`tests/test_differential_proof.py`). Chris Lord-Alge is the first producer
+to break that on these very stems: his impact/commitment weighting wins the
+drum-room move (`chorus_lift_D`) over the subtractive `chorus_lift_B` and
+`loop_A` (a loop-deconstruct) over `loop_B`, straight from his doctrine and
+with no iconic-loop reading — his divergence reaches the plan choice, not
+just the readings. What stays invariant under all five producers: the safety
+surface (every tree's composed kill-switch list leads with the five
+hardcoded safety switches, verbatim) and the measurements themselves (the
+shared axes — e.g. emotional hierarchy 86.0, groove coherence 99.4 — read
+identically in all five trees).
 
 Start the comparison at `doctrine_score.json` (each tree names its selecting
 producer and carries its own scores) and `mix_verdict.md` (the human-readable
-verdict, producer line near the top) across the four `examples/sample_output*`
+verdict, producer line near the top) across the five `examples/sample_output*`
 trees.
 
 ### Modes are behavior
@@ -199,8 +218,8 @@ operation."
 ### Same stems, different modes — the committed mode demos
 
 [`examples/mode_demos/`](examples/mode_demos) commits the mode-level
-differential the way the four trees above commit the producer-level one:
-nine directories, one per producer × mode run, all from the **same stems**
+differential the way the five trees above commit the producer-level one:
+eleven directories, one per producer × mode run, all from the **same stems**
 (the seeded `dense_chorus_with_loops` fixture — the only shipped fixture
 that fires all five creative problem branches). Each directory keeps the
 creative pair from its run — `creative.json` (the candidate ids, the
@@ -255,6 +274,16 @@ python -m logic_mix_os.cli creative \
   --stems fixtures/dense_chorus_with_loops/stems \
   --manifest fixtures/dense_chorus_with_loops/project_manifest.json \
   --producer timbaland --mode groove_pocket --out examples/mode_demos/timbaland_groove_pocket
+
+python -m logic_mix_os.cli creative \
+  --stems fixtures/dense_chorus_with_loops/stems \
+  --manifest fixtures/dense_chorus_with_loops/project_manifest.json \
+  --producer chris_lord_alge --mode conservative --out examples/mode_demos/chris_lord_alge_conservative
+
+python -m logic_mix_os.cli creative \
+  --stems fixtures/dense_chorus_with_loops/stems \
+  --manifest fixtures/dense_chorus_with_loops/project_manifest.json \
+  --producer chris_lord_alge --mode big_chorus --out examples/mode_demos/chris_lord_alge_big_chorus
 ```
 
 The committed pairs are pinned byte-for-byte against fresh renders — and
@@ -262,7 +291,9 @@ every set in the table below is pinned directly on the committed bytes —
 in `tests/test_mode_demo_refresh.py`. Candidate-id sets per branch
 (`chorus_lift_A` abbreviated to `A` under its branch column, extended
 reach-gated ids in **bold**; every demo's `loop` and `depth` branches emit
-the same `loop_A loop_B` / `depth_A` sets):
+the same `loop_A loop_B` / `depth_A` sets — except
+`chris_lord_alge_conservative`, whose suppressed subtractive move also drops
+`loop_B`, leaving `loop_A`):
 
 | Demo | `chorus_lift` | `density` | `vocal_belief` |
 |---|---|---|---|
@@ -272,9 +303,11 @@ the same `loop_A loop_B` / `depth_A` sets):
 | `timbaland_conservative` | A B C D | A B | A B |
 | `quincy_jones_conservative` | B C | A B | A B |
 | `brian_eno_conservative` | B D | A B | B |
+| `chris_lord_alge_conservative` | A C D | A | A B |
 | `quincy_jones_experimental` | A B C D **E** | A B **C D** | A B **C** |
 | `timbaland_negative_space` | B C **F** | A B **E** | A B |
 | `timbaland_groove_pocket` | B C D | A B | A B |
+| `chris_lord_alge_big_chorus` | A B C D **E** | A B **C** | A B |
 
 What to read off it:
 
@@ -284,22 +317,34 @@ What to read off it:
   `conservative` suppresses the width move, her `deconstructive` also
   drops the drum-room move. A mode is a different candidate search, not a
   label on the same one.
-- **Same mode name, different producer** (the four `*_conservative` rows):
-  four pairwise-distinct chorus-lift sets under one mode name — each is
+- **Same mode name, different producer** (the five `*_conservative` rows):
+  five pairwise-distinct chorus-lift sets under one mode name — each is
   the shared engine pool minus that profile JSON's authored suppress list.
   Timbaland's conservative authors nothing, so his demo carries zero
   declaration bytes — an authored-neutral mode is byte-silent even when
   selected explicitly by name (halee's `dramatic_contrast` row shows the
-  same silence).
+  same silence). Chris Lord-Alge's conservative is the only one to suppress
+  the subtractive move, so it is the only conservative row without
+  `chorus_lift_B` (and, uniquely, it also drops `loop_B` / `density_B`) —
+  and it wins the drum-room `chorus_lift_D` where the other four win the
+  subtractive `chorus_lift_B`: his "commit, the thinning-out moves are
+  withheld" bias.
 - **Quincy reaching both his families** (`quincy_jones_experimental`): his
   high-posture experimental admits `chorus_lift_E` / `density_C`
   (arrangement_lift, at his authored 85.3) and `density_D` / `vocal_C`
-  (ensemble_rebalance, 83.1) — and `vocal_C` **wins** its branch, the one
-  committed demo where a reached move takes a verdict. The only other demo
-  that moves a verdict does it by suppression, not reach: eno's
-  conservative suppresses the vocal ride, leaving his intimacy pass
-  (`vocal_B`) as the only vocal candidate. Every remaining winner across
-  the nine demos is the same move the neutral search picks.
+  (ensemble_rebalance, 83.1) — and `vocal_C` **wins** its branch, one of
+  two committed demos where a reached move takes a verdict (CLA's
+  `big_chorus`, below, is the other).
+- **Chris Lord-Alge going bigger** (`chris_lord_alge_big_chorus`): his named
+  center-of-gravity mode ("the chorus lands bigger than the verse") reaches
+  `arrangement_lift`, so `chorus_lift_E` and `density_C` are admitted — and
+  both **win** their branches, the second committed demo where a reached
+  move takes a verdict and the only one where the reach wins on two
+  branches. Of the eleven demos, seven win exactly the moves the neutral
+  search picks; the four that deviate all deviate for an authored reason —
+  eno's suppression (`vocal_B`), quincy's reach (`vocal_C`), and CLA's two
+  impact demos (his conservative's drum-room `chorus_lift_D` and this
+  mode's reached `chorus_lift_E` / `density_C`).
 - **Dropout only where authored** (the timbaland pair): his
   `negative_space` mode reaches the dropout family — `chorus_lift_F`
   proposes region-muting a duplicate of the Synth Pad and Splice Texture
@@ -353,7 +398,7 @@ a fifth profile joins the comparison without a code change.
 | `memory-show --memory-dir` | Mix-pass history, taste profile, ledger size |
 | `feedback --memory-dir --label` | Record taste feedback → taste profile |
 | `album --projects DIR` | Album-level coherence across songs |
-| `cowork --list` / `cowork --name CMD` | Claude Cowork command surface (32 commands) |
+| `cowork --list` / `cowork --name CMD` | Claude Cowork command surface (35 commands) |
 | `export-actions --plan --format json\|applescript\|shortcuts` | Bridge export |
 | `bridge-dryrun --plan [--review-mode]` | Simulate applying actions (never executes) |
 | `regression [--fixtures] [--update-golden]` | Golden-output + doctrine regression |
@@ -449,8 +494,8 @@ logic_mix_os/
   validation/       # schema validation, confidence/evidence tagging
   schemas/          # JSON Schemas for every output
 fixtures/           # deterministic synthetic test projects (generator + manifests)
-examples/           # example manifest + the four committed sample trees (same stems, four producers)
-                    #   + mode_demos/ (nine committed producer × mode creative pairs, same stems)
+examples/           # example manifest + the five committed sample trees (same stems, five producers)
+                    #   + mode_demos/ (eleven committed producer × mode creative pairs, same stems)
 tests/              # pytest suite (4 fixtures, acceptance + unit)
 ```
 
@@ -526,7 +571,7 @@ the UI. All of the following are implemented and tested:
 - **Source-aware auditors (§19–21)** — live / synth-MIDI / sampler / loop.
 - **Logic bridge (§41–42)** — action export, AppleScript/Shortcuts codegen,
   dry-run executor (**never executes** here), helper-AU spec.
-- **Cowork command surface (§43)** — 32 bounded commands.
+- **Cowork command surface (§43)** — 35 bounded commands.
 - **UI (§50)** — local self-contained HTML dashboard + terminal `status`.
 
 ### What remains environment-bound

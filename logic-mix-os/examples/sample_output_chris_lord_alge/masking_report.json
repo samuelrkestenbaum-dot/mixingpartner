@@ -1,0 +1,104 @@
+{
+  "doctrine_rule": "Only flag masking as critical when competing elements occupy the same depth layer and perceptual role. Allow controlled overlap when one element is midground/background or classified as felt.",
+  "events": [
+    {
+      "elements": [
+        "BGV Chop",
+        "Electric Guitar"
+      ],
+      "frequency_range": "1.5kHz-4kHz",
+      "section": "verse_1",
+      "depth_layers": [
+        "background",
+        "foreground"
+      ],
+      "perceptual_roles": [
+        "heard",
+        "heard"
+      ],
+      "classification": "vocal_band_masking",
+      "severity": "moderate",
+      "overlap": 0.2191,
+      "reason": "'Electric Guitar' sits forward/heard in front of non-lead vocal 'BGV Chop' (background) in the vocal presence range (overlap 0.22).",
+      "recommendation": "Observational reading: what vocal-band overlap means for a non-lead vocal is a producer-profile decision; no action is prescribed by this event."
+    },
+    {
+      "elements": [
+        "Backing Vocals Stack",
+        "Electric Guitar"
+      ],
+      "frequency_range": "1.5kHz-4kHz",
+      "section": "verse_1",
+      "depth_layers": [
+        "background",
+        "foreground"
+      ],
+      "perceptual_roles": [
+        "heard",
+        "heard"
+      ],
+      "classification": "vocal_band_masking",
+      "severity": "moderate",
+      "overlap": 0.1655,
+      "reason": "'Electric Guitar' sits forward/heard in front of non-lead vocal 'Backing Vocals Stack' (background) in the vocal presence range (overlap 0.17).",
+      "recommendation": "Observational reading: what vocal-band overlap means for a non-lead vocal is a producer-profile decision; no action is prescribed by this event."
+    },
+    {
+      "elements": [
+        "BGV Chop",
+        "Electric Guitar"
+      ],
+      "frequency_range": "1.5kHz-4kHz",
+      "section": "chorus_1",
+      "depth_layers": [
+        "foreground",
+        "midground"
+      ],
+      "perceptual_roles": [
+        "heard",
+        "heard"
+      ],
+      "classification": "vocal_band_masking",
+      "severity": "info",
+      "overlap": 0.2191,
+      "reason": "'Electric Guitar' overlaps non-lead vocal 'BGV Chop' in the presence range from midground/heard (overlap 0.22).",
+      "recommendation": "Observational reading: what vocal-band overlap means for a non-lead vocal is a producer-profile decision; no action is prescribed by this event."
+    },
+    {
+      "elements": [
+        "Backing Vocals Stack",
+        "Electric Guitar"
+      ],
+      "frequency_range": "1.5kHz-4kHz",
+      "section": "chorus_1",
+      "depth_layers": [
+        "foreground",
+        "midground"
+      ],
+      "perceptual_roles": [
+        "heard",
+        "heard"
+      ],
+      "classification": "vocal_band_masking",
+      "severity": "info",
+      "overlap": 0.1655,
+      "reason": "'Electric Guitar' overlaps non-lead vocal 'Backing Vocals Stack' in the presence range from midground/heard (overlap 0.17).",
+      "recommendation": "Observational reading: what vocal-band overlap means for a non-lead vocal is a producer-profile decision; no action is prescribed by this event."
+    }
+  ],
+  "per_track_masking_risk": {
+    "lead_vocal": 0.0,
+    "bgv_chop": 0.0,
+    "backing_vocals_stack": 0.0,
+    "electric_guitar": 0.0,
+    "kick": 0.0,
+    "snare": 0.0
+  },
+  "summary": {
+    "critical_count": 0,
+    "moderate_count": 2,
+    "blend_count": 0,
+    "total_events": 4,
+    "vocal_band_masking_count": 4
+  }
+}

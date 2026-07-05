@@ -63,6 +63,7 @@ SAMPLE_TREES = {
     "timbaland": ROOT / "examples" / "sample_output_timbaland",
     "quincy_jones": ROOT / "examples" / "sample_output_quincy",
     "brian_eno": ROOT / "examples" / "sample_output_eno",
+    "chris_lord_alge": ROOT / "examples" / "sample_output_chris_lord_alge",
 }
 
 # THE ALLOWED ``examples/``-LEVEL RESIDENT SET beyond the sample trees
@@ -115,6 +116,17 @@ HEADLINES = {
         "vocal_role_fit_score": 85.0,
         "loop_context_score": 35.0,
     },
+    # P-053: the fifth producer. His overall agrees with the five-way pin
+    # (67.8); vocal_role_fit reads 85.0 (his authored vocal-blend opt-in,
+    # the same masking involvements the other three profiles accept) and
+    # loop_context 18.0 — his own authored value for the STATIC dominant
+    # chop loop ("commit to it and drive it": doctrine 18.0, above the
+    # reference's clarity-protecting 15.0, below eno's ambient-bed 35.0).
+    "chris_lord_alge": {
+        "overall_mix_readiness_score": 67.8,
+        "vocal_role_fit_score": 85.0,
+        "loop_context_score": 18.0,
+    },
 }
 
 # THE MODE SURFACE OF EACH COMMITTED TREE (P-046) — what each producer's
@@ -138,6 +150,12 @@ DECLARATIONS = {
         "reach_kinds": ["arrangement_lift"],
     },
     "brian_eno": None,
+    # CLA's default mode (commit_and_slam) authors a medium risk posture but
+    # zero favor / suppress / reach — so it is byte-silent, the P-042
+    # discipline (like the reference and eno): no declaration key, no
+    # per-branch fork key. His forking shows in his EXPLICIT modes (the
+    # committed mode demos), not his default.
+    "chris_lord_alge": None,
 }
 
 # The extended candidate each authored reach admits into the chorus_lift
@@ -148,14 +166,21 @@ REACH_CANDIDATE = {
     "timbaland": "chorus_lift_F",     # negative_space_dropout (P-044)
     "quincy_jones": "chorus_lift_E",  # arrangement_lift (P-043)
     "brian_eno": None,
+    "chris_lord_alge": None,           # commit_and_slam reaches nothing
 }
 EXTENDED_IDS = {"chorus_lift_E", "chorus_lift_F", "vocal_C",
                 "density_C", "density_D", "density_E"}
 
-# Every committed tree's branch winners — the README's honesty statement:
-# the reach widens candidate sets, not verdicts (three producers ride the
-# phrase: vocal_A; eno's intimacy pass wins his vocal_belief branch —
-# the P-045 pins, re-read from the committed bytes).
+# Every committed tree's branch winners — the README's honesty statement.
+# The four ORIGINAL producers land the same non-vocal winners
+# (chorus_lift_B / loop_B / depth_A — both B's are subtractive_drop moves);
+# they diverge only on vocal_belief (eno's intimacy pass wins vocal_B, the
+# P-045 pin; the other three ride the phrase, vocal_A). P-053: CLA is the
+# FIRST producer whose DEFAULT plan choice diverges on the non-vocal
+# branches — his impact/commitment posture wins the drum-room move
+# (chorus_lift_D) over the subtractive one and loop_deconstruct (loop_A)
+# over the subtractive loop move, WITHOUT any iconic-loop reading, straight
+# from his weighting. Re-read from the committed bytes.
 WINNERS = {
     "halee_ramone": {"chorus_lift": "chorus_lift_B", "loop": "loop_B",
                      "depth": "depth_A", "vocal_belief": "vocal_A"},
@@ -165,21 +190,23 @@ WINNERS = {
                      "depth": "depth_A", "vocal_belief": "vocal_A"},
     "brian_eno": {"chorus_lift": "chorus_lift_B", "loop": "loop_B",
                   "depth": "depth_A", "vocal_belief": "vocal_B"},
+    "chris_lord_alge": {"chorus_lift": "chorus_lift_D", "loop": "loop_A",
+                        "depth": "depth_A", "vocal_belief": "vocal_A"},
 }
 
 
 @pytest.fixture(scope="module")
 def sample_analyses(chop_groove_analyzed):
-    """The four-producer map over the demo fixture: the session-scoped pair
+    """The five-producer map over the demo fixture: the session-scoped pair
     (halee_ramone, timbaland — conftest's ``chop_groove_analyzed``) plus
-    module-scoped quincy/eno runs, each resolved dynamically by name (the
-    P-041/P-045 no-code-changes clause)."""
+    module-scoped quincy/eno/chris_lord_alge runs, each resolved dynamically
+    by name (the P-041/P-045/P-053 no-code-changes clause)."""
     manifest = load_manifest(
         ROOT / "fixtures" / VOCAL_CHOP_FIXTURE / "project_manifest.json"
     )
     stems = str(ROOT / "fixtures" / VOCAL_CHOP_FIXTURE / "stems")
     results = dict(chop_groove_analyzed)
-    for producer in ("quincy_jones", "brian_eno"):
+    for producer in ("quincy_jones", "brian_eno", "chris_lord_alge"):
         results[producer] = analyze(stems, manifest, producer=producer)
     return results
 
@@ -196,6 +223,14 @@ def test_committed_sample_trees_match_a_fresh_run(
     committed = SAMPLE_TREES[producer]
     fresh = tmp_path / "fresh"
     write_artifacts(sample_analyses[producer], fresh)
+
+    # THE NESTED-SUBDIR MICRO-HARDENING (P-049 reviewer note, folded in at
+    # P-053): the file-set comparison below filters ``is_file()`` on both
+    # sides, so a stray nested subdirectory inside a committed
+    # ``sample_output*`` tree would escape the byte comparison entirely.
+    # A committed sample tree is FLAT — 30 files, zero subdirectories — so
+    # assert it directly; a nested stray dir now fails loudly.
+    assert not any(p.is_dir() for p in committed.iterdir()), producer
 
     committed_files = sorted(p.name for p in committed.iterdir() if p.is_file())
     fresh_files = sorted(p.name for p in fresh.iterdir() if p.is_file())
@@ -266,18 +301,19 @@ def test_committed_sample_mode_surface_is_the_authored_reach(producer):
 
 def test_committed_examples_directory_set_is_exactly_the_pinned_residents():
     """THE DIRECTORY-SET GUARD (P-049): the committed sample-tree set under
-    ``examples/`` is EXACTLY the four pinned trees — SAMPLE_TREES' own
-    directories, so this guard derives from the same table every pin above
-    parametrizes over and can never drift from the pins it protects — and
-    the FULL ``examples/``-level resident set is exactly those trees plus
-    the consciously enumerated NON_TREE_RESIDENTS. It fails LOUDLY on a
-    new unpinned tree (which would ship staleness-unpinned), on a deleted
-    pinned tree, and on any stray file or dir at that level. A legitimate
-    fifth tree later is a CONSCIOUS one-line SAMPLE_TREES extension —
-    which automatically brings the staleness/headline/mode-surface pins
-    above to the newcomer; a new non-tree resident is a conscious
-    NON_TREE_RESIDENTS extension; anything failing here without one of
-    those is a stray committed artifact."""
+    ``examples/`` is EXACTLY the five pinned trees (P-053 added the fifth,
+    chris_lord_alge, via the one-line SAMPLE_TREES extension this guard was
+    designed for) — SAMPLE_TREES' own directories, so this guard derives
+    from the same table every pin above parametrizes over and can never
+    drift from the pins it protects — and the FULL ``examples/``-level
+    resident set is exactly those trees plus the consciously enumerated
+    NON_TREE_RESIDENTS. It fails LOUDLY on a new unpinned tree (which would
+    ship staleness-unpinned), on a deleted pinned tree, and on any stray
+    file or dir at that level. A legitimate sixth tree later is a CONSCIOUS
+    one-line SAMPLE_TREES extension — which automatically brings the
+    staleness/headline/mode-surface pins above to the newcomer; a new
+    non-tree resident is a conscious NON_TREE_RESIDENTS extension; anything
+    failing here without one of those is a stray committed artifact."""
     tree_names = {path.name for path in SAMPLE_TREES.values()}
     assert len(tree_names) == len(SAMPLE_TREES), tree_names
     assert all(p.parent == EXAMPLES_ROOT for p in SAMPLE_TREES.values())

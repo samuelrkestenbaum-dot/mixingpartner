@@ -1,0 +1,158 @@
+[
+  {
+    "track_id": "lead_vocal",
+    "name": "Lead Vocal",
+    "instrument_identity": "lead_vocal",
+    "identity_family": "vocal",
+    "confidence": 0.7,
+    "evidence": {
+      "filename_clues": [
+        "lead vocal"
+      ],
+      "spectral_profile": "centroid 1416 Hz; dominant band: low_mid",
+      "transient_profile": "sharp, percussive transients",
+      "stereo_profile": "centred / near-mono"
+    },
+    "alternate_candidates": [
+      {
+        "instrument_identity": "organ",
+        "confidence": 0.17
+      },
+      {
+        "instrument_identity": "pad",
+        "confidence": 0.17
+      }
+    ],
+    "manual_override": null
+  },
+  {
+    "track_id": "bgv_chop",
+    "name": "BGV Chop",
+    "instrument_identity": "backing_vocal",
+    "identity_family": "vocal",
+    "confidence": 0.7,
+    "evidence": {
+      "filename_clues": [
+        "bgv"
+      ],
+      "spectral_profile": "centroid 2324 Hz; dominant band: mid",
+      "transient_profile": "sharp, percussive transients",
+      "stereo_profile": "centred / near-mono"
+    },
+    "alternate_candidates": [
+      {
+        "instrument_identity": "lead_vocal",
+        "confidence": 0.2
+      },
+      {
+        "instrument_identity": "snare",
+        "confidence": 0.19
+      }
+    ],
+    "manual_override": null
+  },
+  {
+    "track_id": "backing_vocals_stack",
+    "name": "Backing Vocals Stack",
+    "instrument_identity": "backing_vocal",
+    "identity_family": "vocal",
+    "confidence": 0.7,
+    "evidence": {
+      "filename_clues": [
+        "backing vocal"
+      ],
+      "spectral_profile": "centroid 1226 Hz; dominant band: low_mid",
+      "transient_profile": "slow attack / sustained, low transient density",
+      "stereo_profile": "wide stereo image"
+    },
+    "alternate_candidates": [
+      {
+        "instrument_identity": "pad",
+        "confidence": 0.25
+      },
+      {
+        "instrument_identity": "strings",
+        "confidence": 0.19
+      }
+    ],
+    "manual_override": null
+  },
+  {
+    "track_id": "electric_guitar",
+    "name": "Electric Guitar",
+    "instrument_identity": "electric_guitar",
+    "identity_family": "guitars",
+    "confidence": 0.7,
+    "evidence": {
+      "filename_clues": [
+        "electric guitar"
+      ],
+      "spectral_profile": "centroid 1210 Hz; dominant band: mid",
+      "transient_profile": "moderate transient articulation",
+      "stereo_profile": "wide stereo image"
+    },
+    "alternate_candidates": [
+      {
+        "instrument_identity": "pad",
+        "confidence": 0.22
+      },
+      {
+        "instrument_identity": "backing_vocal",
+        "confidence": 0.19
+      }
+    ],
+    "manual_override": null
+  },
+  {
+    "track_id": "kick",
+    "name": "Kick",
+    "instrument_identity": "kick",
+    "identity_family": "drums",
+    "confidence": 0.7,
+    "evidence": {
+      "filename_clues": [
+        "kick"
+      ],
+      "spectral_profile": "centroid 184 Hz; dominant band: low",
+      "transient_profile": "slow attack / sustained, low transient density",
+      "stereo_profile": "centred / near-mono"
+    },
+    "alternate_candidates": [
+      {
+        "instrument_identity": "bass_guitar",
+        "confidence": 0.21
+      },
+      {
+        "instrument_identity": "pad",
+        "confidence": 0.13
+      }
+    ],
+    "manual_override": null
+  },
+  {
+    "track_id": "snare",
+    "name": "Snare",
+    "instrument_identity": "snare",
+    "identity_family": "drums",
+    "confidence": 0.7,
+    "evidence": {
+      "filename_clues": [
+        "snare"
+      ],
+      "spectral_profile": "centroid 7879 Hz; dominant band: high",
+      "transient_profile": "slow attack / sustained, low transient density",
+      "stereo_profile": "centred / near-mono"
+    },
+    "alternate_candidates": [
+      {
+        "instrument_identity": "cymbal",
+        "confidence": 0.27
+      },
+      {
+        "instrument_identity": "hi_hat",
+        "confidence": 0.19
+      }
+    ],
+    "manual_override": null
+  }
+]

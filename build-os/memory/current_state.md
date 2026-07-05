@@ -507,6 +507,34 @@
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
+- **Green baseline (verified 2026-07-05, P-053 — the five-producer
+  product-surface refresh baseline):** suite **1298 passed** (0 failed /
+  skipped); regression **93/93** — the corpus is **4 fixtures**. Three commits
+  `0da1dc8` (Commit-1 — the fifth committed sample tree
+  `examples/sample_output_chris_lord_alge/` [30 artifacts, overall 67.8 /
+  vocal_role_fit 85.0 / loop_context 18.0] + two CLA mode demos
+  [`chris_lord_alge_conservative`, `chris_lord_alge_big_chorus`] + the
+  SAMPLE_TREES 4->5 / MODE_DEMOS 9->11 directory-set-guard extensions + the
+  nested-subdir micro-hardening; 36 files; **GREEN IN ISOLATION at 1298**) +
+  `d04b7b7` (Commit-2 — README: "Five producers, same stems" + the two CLA
+  demos + the 32->35 command-count fix; README only, ZERO collection change) +
+  the fix-then-pass `79254a5` (README line 574 — the SECOND "32" occurrence
+  qa's whole-file grep caught after the reviewer's diff-region read missed it;
+  README one line, docs-only, collection-neutral, the two touched test files
+  still 42/42) on parent `99fb353` (set-active), atop the P-052 close
+  `2e4d5db`, merge base with default `f6cc9b7` (= PR #29). Exactly **37 files**;
+  **ZERO `.py` under `logic_mix_os/`** (diff-proven — engine + all five producer
+  JSONs + analyzers + `cowork_mcp/` + `cli.py` + `cowork.py` byte-unchanged);
+  the four existing sample trees + nine existing mode demos byte-untouched (no
+  staleness bug — every existing pin passes without regeneration). **PUSHED to
+  the dev branch BEFORE qa/reviewer under the standing go; NOT merged — the
+  P-053 merge is a user gate.** **★ PR #30 recorded: P-052 merged to default =
+  `8d59656`; a P-053 PR atop it is a clean single-packet PR.** (History: 1291 ->
+  **1298** at P-053 — +7: `test_sample_refresh.py` 13->16 [the fifth tree's
+  staleness/headline/mode-surface params + the nested-subdir assert] +
+  `test_mode_demo_refresh.py` 22->26 [the two CLA demos' staleness/surface/story
+  pins + the directory-set guard renamed `pinned_nine`->`pinned_eleven`] —
+  Commit-1 iso **1298**; the fix commit docs-only + collection-neutral.)
 - **Green baseline (verified 2026-07-04, P-052 — the real
   end-to-end MCP client session / PROVEN PRODUCT PATH baseline):**
   suite **1291 passed** (0 failed / skipped); regression **93/93**
@@ -588,6 +616,78 @@
   331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-053 MAKES THE PRODUCT SURFACE REFLECT THE FIVE-PRODUCER ROSTER
+  (Product-Surface Refresh: The Five-Producer Roster + residue sweep — a
+  surface / test / docs packet, ZERO engine/profile/analyzer/MCP change; opened
+  on the user's "Build what's next", 2026-07-04 — the one substantive open
+  direction requiring NO taste decision; the P-046/P-048 pattern applied to the
+  fifth producer, chris_lord_alge). The committed surface now shows all five:
+  FIVE committed sample trees + ELEVEN mode demos, all staleness-pinned +
+  exact-set-guarded. THE REAL FINDING (honestly surfaced, not a bug): CLA is the
+  FIRST of the five whose DEFAULT plan diverges — his `commit_and_slam` default
+  picks chorus_lift_D (drum_room_bloom) + loop_A (loop_deconstruct) where the
+  four reference-lineage producers all land on chorus_lift_B / loop_B — a genuine
+  emergent consequence of his impact weighting (section_contrast 1.7 argmax, no
+  iconic-loop reading), computed through the real pipeline, pinned in
+  WINNERS["chris_lord_alge"] and narrated straight in the README. qa GREEN
+  (1298 / 0, after one fix-then-pass round) + reviewer PASS (no must-fix;
+  single-model — Codex unavailable). Last-closed = P-053.**
+  - **Three commits** on parent `99fb353` (set-active), atop the P-052 close
+    `2e4d5db`, merge base with default `f6cc9b7` (= PR #29): `0da1dc8`
+    (Commit-1 — the CLA sample tree [30 artifacts] + two CLA mode demos
+    [conservative {low, suppress subtractive_drop}; big_chorus {medium, favor
+    width_bloom, reach arrangement_lift} — the SECOND committed demo where a
+    REACHED move (arrangement_lift -> chorus_lift_E + density_C) WINS its branch]
+    + the SAMPLE_TREES 4->5 / MODE_DEMOS 9->11 guard extensions + the nested-subdir
+    micro-hardening; 36 files; **GREEN IN ISOLATION at 1298**) + `d04b7b7`
+    (Commit-2 — README five-producer roster + the 32->35 fix; README only, ZERO
+    collection change) + `79254a5` (fix-then-pass — README line 574, the second
+    "32" occurrence; docs-only, collection-neutral). Exactly **37 files**;
+    **ZERO `.py` under `logic_mix_os/`** (diff-proven); the four existing trees +
+    nine existing demos byte-untouched. **PUSHED BEFORE qa/reviewer under the
+    standing go; NOT merged — the P-053 merge is the OPEN USER GATE.**
+  - **The guard/pin extensions (the one-line conscious extension P-049 designed
+    for):** the directory-set guards now assert exactly FIVE trees + ELEVEN
+    demos (the mode-demo set test renamed `..._pinned_nine` ->
+    `..._pinned_eleven`); nothing loosened — qa proved both bite (stray 6th
+    tree / 12th demo fail). The nested-subdir micro-hardening (the P-049
+    residue): `assert not any(p.is_dir() ...)` added to the sample-tree
+    staleness pin for all five trees, placed BEFORE the `is_file()` filter — qa
+    proved it bites (`mkdir` a subdir -> fails naming the tree).
+  - **★ qa GREEN (after one fix-then-pass round):** suite 1291 -> **1298 passed,
+    0 failed** (+7: `test_sample_refresh.py` 13->16, `test_mode_demo_refresh.py`
+    22->26); regression **93/93**; Commit-1 iso **1298**; Commit-2
+    collection-neutral; the fix commit docs-only + collection-neutral. The CLA
+    tree + both demos + the eno/timbaland existing trees re-rendered
+    byte-identical; the divergence reproduced independently (section_contrast
+    1.7 argmax; the four existing producers' winners UNCHANGED); safety grep
+    clean. **THE CATCH (fix-then-pass):** qa RED on one line — the packet's own
+    "32->35" sweep was INCOMPLETE (README line 574 still "32 bounded commands"
+    while `len(cowork.COMMANDS)==35`; the reviewer verified only line 401 and
+    missed line 574; qa's whole-file grep found it) -> RESOLVED by `79254a5`,
+    NOW GREEN.
+  - **★ reviewer PASS (no must-fix; Codex unavailable — single-model):**
+    faithful-not-curated (real-CLI byte-identical); the divergence real +
+    honestly narrated + WINNERS-pinned; the guard extensions the one-line
+    conscious widening with nothing loosened; the micro-hardening load-bearing
+    and correctly placed; README honest (every number checkable); non-scope
+    clean. Residue -> residue.md: (1) the quincy story-pin docstring now stale
+    (TWO reach-and-win demos, not one — docstring-only; assertions accurate);
+    (2) NEW pre-existing OUT-OF-SCOPE staleness qa surfaced — README ~line 532
+    regression-example `tests_run 68 / passed 68` while the suite is 93/93
+    (stale since P-035, NOT this packet's); (3) the whole-file-grep lesson for
+    residue sweeps.
+  - **★ NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open directions
+    (ALL user-gated): the P-053 merge · the "README numbers audit" residue touch
+    (folds in the 68->93 fix + the quincy docstring + a pin to catch this class) ·
+    a real external host driving the MCP server (manual) · a real MCP-SDK
+    transport swap · the apply-to-Logic backend (FUTURE, re-gated) · the
+    future-analyzer candidates from Eno's deferrals · quincy/halee dropout reach ·
+    a sixth producer · anything else the user calls. Do NOT open anything blind.
+    **THE OPEN USER GATE: the merge of P-053 (`0da1dc8` + `d04b7b7` + `79254a5`
+    + the close commit) atop `8d59656` (= PR #30).** Receipt:
+    `build-os/receipts/P-053-five-producer-surface.md`.
 
 - **★★★ P-052 ANSWERS THE "DOES IT ACTUALLY WORK?" MOMENT — YES:
   THE PRODUCT PATH IS PROVEN END-TO-END. Real End-to-End MCP Client
