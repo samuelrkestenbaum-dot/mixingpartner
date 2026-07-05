@@ -4,6 +4,111 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
+## ★★★ STATUS (P-052 close, 2026-07-04): residue = accepted standing notes only — THE PRODUCT PATH IS PROVEN END-TO-END; THE NO-DAW BOUNDARY HOLDS ACROSS THE REAL PATH
+
+- **P-052 (REAL END-TO-END MCP CLIENT SESSION — a PROOF packet, TEST +
+  DOCS only, ZERO product-runtime change; opened on the user's go
+  2026-07-04 — "Merge P-050 + P-051 together now. Then do the real
+  end-to-end MCP client test… The next skate is: P-052 — Real
+  End-to-End MCP Client Session." The P-050+P-051 bundle merged FIRST
+  as PR #29 → default tip `f6cc9b7`, this packet's merge base; THE
+  packet that answers the "does it actually work?" moment — YES) closed
+  2026-07-04:** qa GREEN (15/15) + reviewer PASS (no must-fix; the
+  over-the-wire proof genuine, the no-DAW boundary held across the real
+  path). Commits `987ab18` (Commit-1 — the stdlib-only real MCP client
+  harness [`tests/_mcp_client.py`: spawns
+  `python -m logic_mix_os.cowork_mcp` via
+  `subprocess.Popen([sys.executable,"-m",…], stdin/stdout/stderr=PIPE,
+  text=True)` and speaks JSON-RPC 2.0 over the child's REAL pipes — two
+  daemon pump threads drain stdout [bounded queue] + stderr so a full
+  OS pipe buffer can't deadlock; every read a 30s bounded timeout [hung
+  server → terminate + raise]; a context manager guarantees child
+  teardown, no orphans] + the over-the-wire session test
+  [`tests/test_mcp_e2e_session.py`, 12 tests driving a REAL
+  nine-command Cowork session — intake → detect_track_identities →
+  classify → detect_masking → generate_mix_plan → score_mix →
+  render_logic_checklist → validate_mix_pass → suggest_next_pass, each
+  isError:false]; 2 NEW files, +579; **GREEN IN ISOLATION at 1291**;
+  the harness collects 0) + `172150a` (Commit-2 — docs: the "Connecting
+  a real MCP client" section in `docs/COWORK_MCP.md` [the {command,
+  args} mcpServers config + the safety line VERBATIM + an explicit
+  no-apply-to-Logic disclaimer]; 1 file, +38; docs only, ZERO
+  collection change) on parent `5921e24` (set-active), atop merge base
+  `f6cc9b7` (= PR #29). Exactly **3 files** under `logic-mix-os/`; ZERO
+  product-runtime change — `git diff f6cc9b7..172150a --
+  logic-mix-os/logic_mix_os/` EMPTY (the whole engine + `cowork_mcp/` +
+  `cli.py` + `cowork.py` byte-identical); `pyproject` untouched (deps
+  stay [numpy>=1.21]); the five producers + four sample trees + nine
+  mode demos byte-unchanged; ZERO new dependency (harness stdlib-only).
+  PUSHED to the dev branch BEFORE qa/reviewer under the standing go
+  (both gates validated the final SHAs), NOT merged. Suite **1291**
+  (+12) / regression **93/93** / Commit-1 iso **1291**. THE CRUX
+  (attack 5) — genuinely over-the-wire, NON-VACUOUS: the harness
+  imports ONLY stdlib (never logic_mix_os/adapter/server/handle_message),
+  the only request→result path is the child's pipes; a bogus module →
+  EOF, killing the child mid-session → the next request raises
+  (BrokenPipeError/MCPClientError) — impossible for a disguised
+  in-process call; child pid != os.getpid(). Producer over the wire
+  (score_mix, identical dense stems) chris_lord_alge 59.6 / timbaland
+  52.6 / halee_ramone 70.7 — distinct + correctly attributed (qa
+  reproduced the numbers; inequality + attribution pinned, not brittle
+  floats); mode front_and_center reflected in run_creative_engine; the
+  memory gate refuses without memory_dir (fresh cwd iterdir()==[]),
+  writes only mix_pass_history.json under the store with it; stems
+  sha256-stable before==after a full session incl. a memory write; the
+  ONLY subprocess is the server itself (rc 0, empty stderr, ps clean);
+  determinism identical JSON. **Codex unavailable — single-model
+  review.** Reviewer: the harness PRODUCTION-GRADE (deadlock-avoidance
+  via pump threads, fail-fast timeouts, guaranteed teardown); the
+  inequality-not-float assertions the RIGHT call; docs honest, no
+  overclaim. Receipt: `build-os/receipts/P-052-mcp-e2e-session.md`.
+- **★ THE STANDING SAFETY LINE NOW HOLDS ACROSS THE REAL PATH** — not
+  just controlled tests: "MCP can ask what the system recommends; MCP
+  cannot make Logic do it." A real external process spawns the server
+  and drives a full producer/mode Cowork session over real stdio, the
+  boundary intact, the product byte-unchanged. The apply-to-Logic
+  backend stays a FUTURE, EXPLICITLY re-gated packet — never auto.
+- **NEW accepted notes (P-052, recorded not fixed — non-blocking):**
+  1. **test_proof07's `assert not (tmp_path/"should_not_exist").exists()`
+     is cosmetic** — a never-created path is trivially absent; the REAL
+     "nothing written" proof is test_attack4 (fresh cwd,
+     iterdir()==[]). Harmless.
+  2. **proof09 determinism is within one server process**, not across
+     two independently spawned servers (cross-process is implicitly
+     covered by every test getting a fresh server). Acceptable.
+  3. **Docs use `"command": "python"` while the harness uses
+     `sys.executable`** — `python` is the conventional MCP-config
+     example form, honest/usable; optional future nicety.
+  4. **The killed-child exception surface** appeared as BrokenPipeError
+     in qa's probe vs the builder's MCPClientError — same guarantee,
+     environment-dependent surface; non-blocking.
+- **All prior standing notes RETAINED** (the banners below), incl. the
+  ★★ groove-carrier trajectory watch-item, the P-049 sample-pin
+  micro-hardening, the CLA sha256-self-pin-on-sixth-producer note, the
+  CLA product-surface refresh candidate, the README 32→35 cleanup, and
+  the P-051 accepted notes (the thin server's deliberate protocol gaps;
+  the memory_dir mkdir awareness note; the strict-mode error-message
+  polish).
+- **Open boundary:** P-052's commits pushed to the dev branch BEFORE
+  qa/reviewer under the orchestrator's standing go; **the MERGE of
+  P-052 (`5921e24` + `987ab18` + `172150a` + the close commit, atop
+  `f6cc9b7` = PR #29) is the OPEN USER GATE** — it awaits the user's
+  explicit word. No deploy/publish/secrets touched.
+- **NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open
+  directions (ALL user-gated): the merge · a real external host
+  (Claude Desktop/Cowork) launching the server via the documented
+  config — a MANUAL product step, NOT machine-exercised here · a real
+  MCP-SDK transport swap (optional polish) · the apply-to-Logic backend
+  (FUTURE, EXPLICITLY re-gated — never auto; the safety line stands) · a
+  CLA product-surface refresh · the future-analyzer candidates from
+  Eno's deferrals · quincy/halee authored dropout reach · a sixth
+  producer · the README 32→35 + sample-pin micro-hardening cleanups ·
+  anything else the user calls. Do NOT open anything blind.
+- **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
+  comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
+  placement faith; (3) flag PRESENCE is not flag THREADING — levers
+  need reaches-the-destination guards.
+
 ## ★★★ STATUS (P-051 close, 2026-07-04): residue = accepted standing notes only — THE CALLABLE SURFACE IS LIVE; THE DAW-EXECUTION BOUNDARY IS STRUCTURALLY ABSENT
 
 - **P-051 (COWORK REGISTRY MCP ADAPTER — Read/Plan Surface First;

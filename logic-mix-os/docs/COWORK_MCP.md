@@ -39,6 +39,44 @@ invalid params `-32602`. A **handled** adapter error (e.g. a missing `stems`
 path, or a side-effecting tool without a `memory_dir`) is returned as
 `isError: true` with the message in the text content — never a transport crash.
 
+## Connecting a real MCP client
+
+An external MCP client (Claude Desktop, Cowork, or any JSON-RPC-over-stdio MCP
+host) launches the server by process — it spawns `python -m
+logic_mix_os.cowork_mcp` and speaks JSON-RPC 2.0 over the child's stdin/stdout.
+The `{command, args}` server-config an MCP host uses:
+
+```json
+{
+  "mcpServers": {
+    "logic-mix-os-cowork": {
+      "command": "python",
+      "args": ["-m", "logic_mix_os.cowork_mcp"]
+    }
+  }
+}
+```
+
+The host completes the `initialize` handshake, sends `notifications/initialized`,
+then drives a session with `tools/list` + `tools/call`. Reads and plans
+(identity, sections, masking, depth, mix plan, doctrine scores, next-pass,
+creative, governance, the Logic checklist, …) are **free** — they take a `stems`
+path and return JSON, and write nothing. The **four** side-effecting commands
+(`record_mix_pass`, `update_taste_calibration`, `write_mix_decision`,
+`override_track_identity`) require an explicit `memory_dir`; without it the call
+is refused with a clean `isError: true` and nothing is written.
+
+This is a real, over-the-wire client path — proven end to end (a client process
+driving a spawned server subprocess through a full producer/mode session) by
+`tests/test_mcp_e2e_session.py`. It is a **planning/recommendation** surface, not
+a Logic execution surface:
+
+> **MCP can ask what the system recommends; MCP cannot make Logic do it.**
+
+The host receives plan/checklist/verdict/next-pass artifacts and decides what to
+do with them; there is no apply-to-Logic path, no DAW execution, no session or
+audio write anywhere on the client path.
+
 ## The tool surface (derived from the registry)
 
 Tool definitions are **generated from `cowork.describe_contract()`**, whose

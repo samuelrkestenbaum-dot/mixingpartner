@@ -507,22 +507,29 @@
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
-- **Green baseline (verified 2026-07-04, P-051 — the Cowork MCP
-  adapter / callable-surface baseline):** suite **1279 passed**
-  (0 failed / skipped); regression **93/93** (tests_run 93 /
-  passed 93 / failed 0) — the corpus is **4 fixtures** (the 68/68
-  era ended CONSCIOUSLY at P-035). Two commits `5d8dfe7` (Commit-1 —
-  the pure-Python adapter [`cowork_mcp/__init__.py` +
-  `cowork_mcp/adapter.py`] + the NEW `tests/test_cowork_mcp.py`;
-  3 files, +762 — GREEN IN ISOLATION at **1264** with the server
-  content ABSENT) + `5a04ae1` (Commit-2 — the minimal stdio JSON-RPC
-  MCP server shell [`cowork_mcp/server.py` + `cowork_mcp/__main__.py`]
-  + `tests/test_cowork_mcp_server.py` + `docs/COWORK_MCP.md` + the one
-  additive pyproject packages line; 5 files, +420) on parent `c3726f5`
-  (active-packet confirmation), atop the UNMERGED P-050, atop merge
-  base `2b0ad1a` (= the PR #28 merge). `cli.py` + `cowork.py`
-  byte-unchanged; ZERO new dependency (deps stay [numpy>=1.21]).
-  (History: 1235 → **1279** at P-051 — +44: +29 at Commit-1 [the
+- **Green baseline (verified 2026-07-04, P-052 — the real
+  end-to-end MCP client session / PROVEN PRODUCT PATH baseline):**
+  suite **1291 passed** (0 failed / skipped); regression **93/93**
+  (tests_run 93 / passed 93 / failed 0) — the corpus is **4
+  fixtures** (the 68/68 era ended CONSCIOUSLY at P-035). Two commits
+  `987ab18` (Commit-1 — the stdlib-only real MCP client harness
+  [`tests/_mcp_client.py`] + the over-the-wire session test
+  [`tests/test_mcp_e2e_session.py`, 12 tests]; 2 NEW files, +579 —
+  GREEN IN ISOLATION at **1291**; the harness collects 0) + `172150a`
+  (Commit-2 — docs: the "Connecting a real MCP client" section in
+  `docs/COWORK_MCP.md`, +38; docs only, ZERO collection change) on
+  parent `5921e24` (active-packet confirmation), atop merge base
+  `f6cc9b7` (= the PR #29 merge — the P-050+P-051 bundle). Exactly 3
+  files under `logic-mix-os/`; ZERO product-runtime change
+  (`git diff f6cc9b7..172150a -- logic-mix-os/logic_mix_os/` EMPTY;
+  `pyproject` untouched; the five producers + four sample trees +
+  nine mode demos byte-unchanged); ZERO new dependency (harness
+  stdlib-only). **PUSHED to the dev branch BEFORE qa/reviewer under
+  the standing go; NOT merged — the P-052 merge is a user gate.**
+  (History: 1279 → **1291** at P-052 — +12: the NEW
+  `tests/test_mcp_e2e_session.py` [12 over-the-wire tests; the harness
+  `tests/_mcp_client.py` collects 0] — Commit-1 iso **1291**;
+  1235 → **1279** at P-051 — +44: +29 at Commit-1 [the
   NEW `tests/test_cowork_mcp.py` adapter suite — GREEN IN ISOLATION
   at **1264** with the server content absent] + 15 at Commit-2
   [`tests/test_cowork_mcp_server.py` 13 + the parametrized no-exec
@@ -581,6 +588,98 @@
   331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-052 ANSWERS THE "DOES IT ACTUALLY WORK?" MOMENT — YES:
+  THE PRODUCT PATH IS PROVEN END-TO-END. Real End-to-End MCP Client
+  Session (a PROOF packet — TEST + DOCS only, ZERO product-runtime
+  change; opened on the user's go, 2026-07-04 — "Merge P-050 + P-051
+  together now. Then do the real end-to-end MCP client test… The next
+  skate is: P-052 — Real End-to-End MCP Client Session." The
+  P-050+P-051 bundle merged FIRST as PR #29 → default tip `f6cc9b7`,
+  this packet's merge base). P-051 proved the server in controlled
+  tests (in-memory `handle_message` + one smoke subprocess); P-052
+  proves the ACTUAL PRODUCT PATH: a real external client PROCESS spawns
+  `python -m logic_mix_os.cowork_mcp` as a subprocess and drives a full
+  nine-command producer/mode Cowork session over the child's REAL stdio
+  pipes, the boundary intact, the product byte-unchanged. THE STANDING
+  SAFETY LINE HOLDS ACROSS THE REAL PATH NOW, not just controlled
+  tests: MCP can ask what the system recommends; MCP cannot make Logic
+  do it. qa GREEN (15/15) + reviewer PASS (no must-fix; the
+  over-the-wire proof genuine, the no-DAW boundary held across the real
+  path; single-model — Codex unavailable). Last-closed = P-052.**
+  - **Two commits** on parent `5921e24` (set-active), atop merge base
+    `f6cc9b7` (= the PR #29 merge — the P-050+P-051 bundle): `987ab18`
+    — "P-052 Commit-1: real end-to-end MCP client harness +
+    over-the-wire session test" (2 NEW files: `tests/_mcp_client.py`
+    +236 [the stdlib-only harness] + `tests/test_mcp_e2e_session.py`
+    +343 [12 tests] — GREEN IN ISOLATION at **1291**; the harness
+    collects 0) + `172150a` — "P-052 Commit-2: docs — connecting a real
+    MCP client (server-config + safety line)" (1 file,
+    `docs/COWORK_MCP.md` +38; docs only, ZERO collection change).
+    Exactly 3 files under `logic-mix-os/`; ZERO product-runtime change
+    (`git diff f6cc9b7..172150a -- logic-mix-os/logic_mix_os/` EMPTY —
+    the whole engine + `cowork_mcp/` + `cli.py` + `cowork.py`
+    byte-identical; `pyproject` untouched, deps stay [numpy>=1.21]; the
+    five producers + four sample trees + nine mode demos byte-unchanged);
+    ZERO new dependency (harness stdlib-only). **PUSHED to the dev
+    branch BEFORE qa/reviewer under the standing go; NOT merged — the
+    P-052 merge is the OPEN USER GATE.**
+  - **The harness (production-grade):** `tests/_mcp_client.py` imports
+    ONLY stdlib (subprocess/json/threading/queue/sys) — never
+    logic_mix_os / the adapter / the server / handle_message; the only
+    request→result path is the child's REAL pipes. Two daemon pump
+    threads drain stdout (bounded queue) + stderr so a full OS pipe
+    buffer can't deadlock; every read has a 30s bounded timeout (hung
+    server → terminate + raise); a context manager guarantees child
+    teardown (no orphans). request()/notify()/call_tool() over the
+    pipes.
+  - **★ qa GREEN (15/15):** suite 1279 → **1291 passed, 0 failed** (+12
+    all `test_mcp_e2e_session.py`; the harness collects 0); regression
+    **93/93**; Commit-1 iso **1291**. THE CRUX (attack 5) — genuinely
+    over-the-wire, NON-VACUOUS: a bogus module → no handshake (EOF);
+    killing the child mid-session → the next request RAISES
+    (BrokenPipeError / MCPClientError) — impossible for a disguised
+    in-process call; child pid != os.getpid(). PRODUCER over the wire:
+    score_mix on identical dense stems → chris_lord_alge **59.6** /
+    timbaland **52.6** / halee_ramone **70.7** — three distinct values,
+    each result.producer.name correctly attributed (inequality +
+    attribution pinned, not brittle floats). MODE over the wire:
+    run_creative_engine chris_lord_alge default search_mode
+    commit_and_slam; mode=front_and_center → search_mode
+    front_and_center, result differs. MEMORY GATE over the wire
+    (attack 4): a side-effecting command without memory_dir → isError,
+    "memory_dir" in the message, nothing written (fresh cwd
+    iterdir()==[]); with memory_dir → writes only mix_pass_history.json
+    UNDER that store. NO-DAW: stems sha256-identical before/after a full
+    session incl. a memory write; only .json under the store produced;
+    the ONLY subprocess anywhere is the server itself; server exits rc 0
+    with empty stderr on stdin close; ps clean (no orphans).
+    Determinism: a plan command twice → identical JSON.
+  - **★ reviewer PASS (no must-fix; Codex unavailable — single-model):**
+    the harness judged PRODUCTION-GRADE (deadlock-avoidance via pump
+    threads, fail-fast timeouts, guaranteed teardown); the
+    inequality-not-float assertions judged the RIGHT call (green under
+    future re-tuning, red if threading breaks); the over-the-wire proof
+    genuine; the no-DAW boundary held across the real path; docs honest,
+    no overclaim. Non-blocking notes → residue: (1) test_proof07's
+    should_not_exist assert is cosmetic (the real "nothing written"
+    proof is test_attack4); (2) proof09 determinism is within one server
+    process; (3) docs use "python" vs the harness's sys.executable;
+    (4) the killed-child exception surfaced as BrokenPipeError in qa's
+    probe vs the builder's MCPClientError — same guarantee.
+  - **★ NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open
+    directions (ALL user-gated): the merge · a real external host
+    (Claude Desktop / Cowork) launching the server via the documented
+    config — a MANUAL product step, NOT machine-exercised here · a real
+    MCP-SDK transport swap (optional polish) · the apply-to-Logic
+    backend (FUTURE, EXPLICITLY re-gated — never auto; the safety line
+    stands) · a CLA product-surface refresh · the future-analyzer
+    candidates from Eno's deferrals · quincy/halee authored dropout
+    reach · a sixth producer · the README 32→35 + sample-pin
+    micro-hardening cleanups · anything else the user calls. Do NOT open
+    anything blind. **THE OPEN USER GATE: the merge of P-052 (`5921e24`
+    + `987ab18` + `172150a` + the close commit) atop `f6cc9b7`
+    (= PR #29).** Receipt: `build-os/receipts/P-052-mcp-e2e-session.md`.
 
 - **★★★ P-051 CROSSES THE PLAN-ONLY → CALLABLE-SURFACE
   MILESTONE WITHOUT CROSSING THE DAW-EXECUTION BOUNDARY — COWORK
