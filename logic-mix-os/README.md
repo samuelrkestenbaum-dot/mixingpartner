@@ -571,7 +571,7 @@ the UI. All of the following are implemented and tested:
 - **Source-aware auditors (§19–21)** — live / synth-MIDI / sampler / loop.
 - **Logic bridge (§41–42)** — action export, AppleScript/Shortcuts codegen,
   dry-run executor (**never executes** here), helper-AU spec.
-- **Cowork command surface (§43)** — 32 bounded commands.
+- **Cowork command surface (§43)** — 35 bounded commands.
 - **UI (§50)** — local self-contained HTML dashboard + terminal `status`.
 
 ### What remains environment-bound
