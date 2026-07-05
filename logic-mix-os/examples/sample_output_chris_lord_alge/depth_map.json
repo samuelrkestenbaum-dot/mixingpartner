@@ -1,0 +1,68 @@
+[
+  {
+    "track_id": "lead_vocal",
+    "name": "Lead Vocal",
+    "instrument_identity": "lead_vocal",
+    "default_depth": "intimate",
+    "depth_by_section": {
+      "verse_1": "intimate",
+      "chorus_1": "foreground"
+    },
+    "reason": "Emotional centre: intimate in verses, foreground in choruses; never buried."
+  },
+  {
+    "track_id": "bgv_chop",
+    "name": "BGV Chop",
+    "instrument_identity": "backing_vocal",
+    "default_depth": "midground",
+    "depth_by_section": {
+      "verse_1": "background",
+      "chorus_1": "foreground"
+    },
+    "reason": "Placed in the midground layer based on identity and role."
+  },
+  {
+    "track_id": "backing_vocals_stack",
+    "name": "Backing Vocals Stack",
+    "instrument_identity": "backing_vocal",
+    "default_depth": "midground",
+    "depth_by_section": {
+      "verse_1": "background",
+      "chorus_1": "foreground"
+    },
+    "reason": "Placed in the midground layer based on identity and role."
+  },
+  {
+    "track_id": "electric_guitar",
+    "name": "Electric Guitar",
+    "instrument_identity": "electric_guitar",
+    "default_depth": "foreground",
+    "depth_by_section": {
+      "verse_1": "foreground",
+      "chorus_1": "midground"
+    },
+    "reason": "Heard element supporting the emotional centre; clear but not competing with the vocal."
+  },
+  {
+    "track_id": "kick",
+    "name": "Kick",
+    "instrument_identity": "kick",
+    "default_depth": "foreground",
+    "depth_by_section": {
+      "verse_1": "foreground",
+      "chorus_1": "foreground"
+    },
+    "reason": "Heard element supporting the emotional centre; clear but not competing with the vocal."
+  },
+  {
+    "track_id": "snare",
+    "name": "Snare",
+    "instrument_identity": "snare",
+    "default_depth": "foreground",
+    "depth_by_section": {
+      "verse_1": "foreground",
+      "chorus_1": "foreground"
+    },
+    "reason": "Heard element supporting the emotional centre; clear but not competing with the vocal."
+  }
+]

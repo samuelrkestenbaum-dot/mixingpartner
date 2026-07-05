@@ -1,0 +1,189 @@
+{
+  "audits": [
+    {
+      "track": "Lead Vocal",
+      "track_id": "lead_vocal",
+      "source_kind": "comped_audio_track",
+      "instrument_identity": "lead_vocal",
+      "identity_family": "vocal",
+      "auditor_type": "live_track",
+      "checks": {
+        "crest_factor_db": 8.771,
+        "stereo_width": 0.0,
+        "brightness": 0.5756,
+        "transient_density": 0.6388,
+        "mud_indicator": 1.0,
+        "sibilance_indicator": 0.0,
+        "low_energy": 0.0941
+      },
+      "recommendations": [
+        "Keep the vocal as the emotional centre — phrase rides before heavier compression."
+      ],
+      "preferred_moves": [
+        "clip gain before compression",
+        "phrase-level rides",
+        "light tuning only where it distracts",
+        "de-ess surgically",
+        "integrate with shared room/depth"
+      ],
+      "red_flags": []
+    },
+    {
+      "track": "BGV Chop",
+      "track_id": "bgv_chop",
+      "source_kind": "one_shot_sample",
+      "instrument_identity": "backing_vocal",
+      "identity_family": "vocal",
+      "auditor_type": "sample_loop",
+      "checks": {
+        "crest_factor_db": 19.247,
+        "stereo_width": 0.0,
+        "brightness": 0.7211,
+        "transient_density": 0.8055,
+        "mud_indicator": 0.569,
+        "sibilance_indicator": 0.0,
+        "low_energy": 0.0101
+      },
+      "recommendations": [
+        "This loop is acting like a finished record inside your record. Chop into transition gestures and re-contextualise into the song's depth, tone, and groove."
+      ],
+      "preferred_moves": [
+        "narrow stereo width",
+        "filter lows or highs",
+        "chop into smaller gestures",
+        "use only at transitions",
+        "push into background depth layer",
+        "sidechain subtly to vocal or kick if needed",
+        "re-pitch or formant-shift if key/tone mismatches",
+        "replace with simpler one-shot if loop dominates"
+      ],
+      "red_flags": [
+        "loop is brighter than the vocal"
+      ]
+    },
+    {
+      "track": "Backing Vocals Stack",
+      "track_id": "backing_vocals_stack",
+      "source_kind": "comped_audio_track",
+      "instrument_identity": "backing_vocal",
+      "identity_family": "vocal",
+      "auditor_type": "live_track",
+      "checks": {
+        "crest_factor_db": 20.688,
+        "stereo_width": 0.7954,
+        "brightness": 0.5332,
+        "transient_density": 0.0555,
+        "mud_indicator": 1.0,
+        "sibilance_indicator": 0.0,
+        "low_energy": 0.0008
+      },
+      "recommendations": [
+        "Inconsistent phrase energy: use clip gain + phrase rides before compression (do not compress harder).",
+        "Keep the vocal as the emotional centre — phrase rides before heavier compression."
+      ],
+      "preferred_moves": [
+        "clip gain before compression",
+        "phrase-level rides",
+        "light tuning only where it distracts",
+        "de-ess surgically",
+        "integrate with shared room/depth"
+      ],
+      "red_flags": []
+    },
+    {
+      "track": "Electric Guitar",
+      "track_id": "electric_guitar",
+      "source_kind": "live_audio_recording",
+      "instrument_identity": "electric_guitar",
+      "identity_family": "guitars",
+      "auditor_type": "live_track",
+      "checks": {
+        "crest_factor_db": 23.834,
+        "stereo_width": 0.6551,
+        "brightness": 0.5292,
+        "transient_density": 0.5833,
+        "mud_indicator": 0.3655,
+        "sibilance_indicator": 0.0,
+        "low_energy": 0.0
+      },
+      "recommendations": [
+        "Set source tone and depth before processing; preserve pick/strum transients with light leveling, not heavy compression."
+      ],
+      "preferred_moves": [
+        "set source tone first",
+        "control noise/handling",
+        "light leveling (not heavy compression)",
+        "preserve pick/strum transients",
+        "place with depth"
+      ],
+      "red_flags": []
+    },
+    {
+      "track": "Kick",
+      "track_id": "kick",
+      "source_kind": "live_audio_recording",
+      "instrument_identity": "kick",
+      "identity_family": "drums",
+      "auditor_type": "live_track",
+      "checks": {
+        "crest_factor_db": 16.095,
+        "stereo_width": 0.0,
+        "brightness": 0.0,
+        "transient_density": 0.25,
+        "mud_indicator": 0.0,
+        "sibilance_indicator": 0.0,
+        "low_energy": 0.8241
+      },
+      "recommendations": [
+        "Define sub vs beater (~50-70 Hz vs 2-5 kHz); check kick/overhead phase; leave headroom for the bass.",
+        "Use bus/parallel compression for punch instead of squashing the transients."
+      ],
+      "preferred_moves": [
+        "transient shaping",
+        "overhead/room balance",
+        "phase & bleed checks",
+        "tuning/ring control",
+        "bus/parallel compression for punch",
+        "preserve transient detail"
+      ],
+      "red_flags": []
+    },
+    {
+      "track": "Snare",
+      "track_id": "snare",
+      "source_kind": "live_audio_recording",
+      "instrument_identity": "snare",
+      "identity_family": "drums",
+      "auditor_type": "live_track",
+      "checks": {
+        "crest_factor_db": 26.469,
+        "stereo_width": 0.0,
+        "brightness": 1.0,
+        "transient_density": 0.1388,
+        "mud_indicator": 0.0,
+        "sibilance_indicator": 1.0,
+        "low_energy": 0.0052
+      },
+      "recommendations": [
+        "Control ring/tuning and balance top vs bottom; check the snare's phase in the overheads.",
+        "Use bus/parallel compression for punch instead of squashing the transients."
+      ],
+      "preferred_moves": [
+        "transient shaping",
+        "overhead/room balance",
+        "phase & bleed checks",
+        "tuning/ring control",
+        "bus/parallel compression for punch",
+        "preserve transient detail"
+      ],
+      "red_flags": []
+    }
+  ],
+  "summary": {
+    "by_type": {
+      "live_track": 5,
+      "sample_loop": 1
+    },
+    "red_flags": 1
+  }
+}
