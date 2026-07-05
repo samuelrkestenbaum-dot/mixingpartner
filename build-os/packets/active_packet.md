@@ -4,61 +4,115 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** NONE ACTIVE — **P-054 CLOSED** (2026-07-05). No packet in flight.
-  The orchestrator PRESENTS the open directions (all user-gated) and opens
-  nothing blind.
+- **Status:** ACTIVE — opened on the user's "Go" (2026-07-05) after the P-054
+  merge (PR #32 → default `7af1e3e`). This is the LAST clean decision-free
+  direction (the P-054 residue named it): the numeric drift guard is done;
+  this completes the README-drift-guard family by pinning the spelled-out
+  PROSE counts. **After this packet the remaining open directions all need a
+  real user decision** (which producer / which analyzer / whether to
+  authorize apply-to-Logic) — the orchestrator will present, not pick.
+- **ID / Title:** **P-055 — README Prose-Count Guard**
+- **Branch:** `claude/logic-mix-os-hardening-12-7hbeh1` atop merge base
+  `7af1e3e` (= PR #32 merge — the branch was fast-forwarded to it, clean;
+  verify with `git merge-base`).
+- **Baseline to protect:** suite **1302** / regression **93/93** / the five
+  producers + five sample trees + eleven mode demos byte-stable / ZERO
+  engine/profile/analyzer/MCP/runtime change (a test + docs packet).
 
-## Last closed — P-054 (README Numbers Audit + Drift Guard)
+## Why this packet (the P-054 residue)
 
-- **Closed:** 2026-07-05 — qa GREEN **(10/10; suite 1302 / 0)** + reviewer
-  **PASS (no must-fix; single-model — Codex unavailable).**
-- **Single commit** `056a8cb` ("P-054: fix two stale README numbers + add
-  README-numbers drift guard") on parent `6c70daa` (set-active), atop merge base
-  with default `bc67df4` (= PR #31 — P-053 merged to default). Exactly **3
-  files**, +192/−3: `README.md` (the 68→93 regression-example fix),
-  `tests/test_mode_demo_refresh.py` (the quincy docstring only — no assertion
-  changed, collection-neutral), `tests/test_readme_numbers.py` (NEW, the 4-test
-  drift guard). **ZERO `.py` under `logic_mix_os/`; ZERO `examples/` change.**
-  The audit was clean beyond the two named items, so one commit;
-  Commit-1-green-in-isolation is trivially satisfied (HEAD == the isolation
-  proof, 1302).
-- **What landed:** the two stale numbers fixed (README regression example
-  68/68 → 93/93/0, live-verified; the quincy story-pin docstring → "one of two …
-  alongside `chris_lord_alge_big_chorus`"); the drift guard pins the README's
-  load-bearing numbers against LIVE/COMMITTED sources — command count (two
-  authored spots == `len(cowork.COMMANDS)`=35 + a whole-file "N commands" sweep),
-  the regression example (== a live `run_regression_suite()`), the five-producer
-  table (each cell == the `HEADLINES` single source imported from
-  `test_sample_refresh`, which ALSO closes the standing P-046 table-drift gap).
-  The guard BITES on all three areas and would have caught BOTH historical misses
-  this session (32→35, 68→93). Safety grep clean.
-- **Push state:** PUSHED to the dev branch `claude/logic-mix-os-hardening-12-7hbeh1`
-  under the standing go BEFORE qa/reviewer; **NOT merged.**
-- **Receipt:** `build-os/receipts/P-054-readme-numbers-guard.md`.
+P-054 pinned the README's numeric values (command count, regression
+example, table) against live sources — but the spelled-out PROSE counts are
+still unguarded, and they are the ones that WILL drift on the next producer
+or demo addition. The README currently states (verified, all correct
+today):
+- "five committed trees" / "five committed sample trees" / "all five
+  producers" / "five trees" (~lines 63, 81, 159, 163, 221, 497)
+- "eleven producer × mode runs" / "eleven directories" / "eleven committed
+  … creative pairs" (~lines 76, 222, 498)
+- "the four example projects" / "across four fixtures" (~lines 46, 510)
+- "Of the eleven demos, seven win exactly the moves the neutral …" (~line
+  343 — a computed split)
 
-## ★★ OPEN USER GATE (pending explicit go)
+Nothing pins these to their live sources. This packet does, so a sixth
+producer / twelfth demo / different fixture count forces the prose to
+update or the suite fails loudly — the same class as P-054's numbers, one
+abstraction level up.
 
-- **The merge of P-054** — `056a8cb` (+ the close commit) atop `bc67df4`
-  (= PR #31) — a clean single-packet PR (the dev branch is fast-forwarded onto
-  default). Awaits the user's explicit word. No deploy/publish/secrets touched.
+## Scope (tests + docs only)
 
-## Staged next
+1. **Audit the prose counts** — confirm each currently matches its live
+   source (they appear correct post-P-053; if ANY is stale, FIX it and
+   report — same discipline as P-054's audit).
+2. **The prose-count guard** — extend `tests/test_readme_numbers.py` (or a
+   sibling `tests/test_readme_prose_counts.py` — builder's call) with
+   TARGETED, anchored assertions that map each spelled-out count word to an
+   int and compare to a LIVE/COMMITTED source:
+   - **"five" (trees / producers):** the tree-count and producer-count
+     prose == `len(SAMPLE_TREES)` (imported from test_sample_refresh — the
+     single source; == the number of shipped producer profiles). Pin every
+     load-bearing "five … trees/producers" phrase the recon lists.
+   - **"eleven" (demos / runs / directories / pairs):** == `len(MODE_DEMOS)`
+     (imported from test_mode_demo_refresh).
+   - **"four" (fixtures / example projects):** == the number of generated
+     fixtures (derive from the generator / the fixtures dir / an existing
+     fixture-list constant — the single source, not a hardcode).
+   - **(If cleanly derivable) the "seven win / four deviate" split** at
+     ~line 343: the count of committed demos whose winner == the neutral
+     winner, derived from the committed demo bytes + the neutral baseline
+     (reuse the WINNERS pin machinery). If it is NOT cleanly derivable
+     without new plumbing, DO NOT force it — flag it as residue and pin the
+     three length-derived classes only. Report the decision.
+   - A small word→int map (three…twelve is plenty) + anchored phrase
+     extraction; fail loudly naming the drifted phrase + its live source;
+     robust — do NOT trip on incidental prose numbers (anchor to the
+     specific "N <noun>" phrases, like P-054's approach).
+   The guard must BITE: prove (scratch) that changing a prose count (e.g.
+   "eleven" → "twelve") fails the guard; restore.
 
-- **NOTHING STAGED.** The orchestrator PRESENTS the open directions (ALL
-  user-gated) and opens nothing blind:
-  - the **P-054 merge**;
-  - a real external host driving the MCP server (manual product step);
-  - a real MCP-SDK transport swap;
-  - the apply-to-Logic backend (FUTURE, EXPLICITLY re-gated — never auto; the
-    safety line stands);
-  - the future-analyzer candidates from Eno's deferrals (textural coherence ·
-    generative process · ambient patience);
-  - quincy/halee authored dropout reach;
-  - a sixth producer;
-  - a **prose-count guard** (the new P-054 residue — pin the README's
-    still-unguarded prose counts);
-  - anything else the user calls.
+## Non-scope (binding)
+
+ZERO changes to engine code (.py under logic_mix_os/), profiles, analyzers,
+fixtures, goldens, the MCP surface, cli.py, cowork.py, the sample trees, the
+mode demos. No new producers / families / analyzers / dependencies. No
+safety/governance changes. No general README rewrite — only stale-count
+fixes (if any) + the guard; do NOT sweep unrelated prose or pin non-count
+words. No merge until qa + reviewer dual-green.
+
+## Orchestrator recon (binding on the builder)
+
+- The prose counts + their line refs are in "Why this packet" above (from
+  a live grep). All appear CORRECT today — so expect the guard + possibly
+  zero fixes (a clean audit). If one is stale, that is a real find → fix +
+  report.
+- DERIVE every expected count from the existing single source
+  (`SAMPLE_TREES`, `MODE_DEMOS`, the fixture list) — NO duplicated hardcode
+  (the P-047/P-049/P-054 discipline). The point is that adding producer #6
+  bumps `len(SAMPLE_TREES)` and the guard then DEMANDS the prose say "six".
+- Robustness: anchored on the specific "<word> <noun>" phrases; a word→int
+  map; deterministic; clear failure messages. Must not false-positive on
+  incidental digits/words elsewhere ("four hard constraints", section refs,
+  the numeric table already guarded by P-054, etc.).
+- Keep it proportionate — this is the small tail of the drift-guard family,
+  not a general NLP audit.
+
+## Required proof
+
+suite clean · regression clean · zero engine/runtime change (diff-proven) ·
+every load-bearing prose count pinned to a live/committed source (derived,
+not hardcoded) · the guard BITES on a prose-count drift · the "seven win"
+split either pinned or consciously flagged as residue · whole-README audit
+shows no currently-stale prose count (or the stale one fixed) · the five
+trees + eleven demos byte-untouched.
+
+## Commit shape (1 commit expected; ≤2)
+
+- **Commit-1:** the prose-count guard (+ any stale-count fix the audit
+  surfaces) — full suite green in isolation. If the audit is clean, this is
+  guard-only; if a fix is needed, it lands in the same commit so the guard
+  is green.
 
 ---
-_Cleared by the archivist on the P-054 close (2026-07-05). One packet at a time:
-orchestrator → builder → qa + reviewer → archivist → receipt._
+_Set active by the orchestrator on the user's "Go" (2026-07-05), after the
+P-054 merge — the last decision-free direction. One packet at a time:
+builder → qa + reviewer → archivist → receipt._
