@@ -4,6 +4,123 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
+## ★★★ STATUS (P-053 close, 2026-07-05): residue = accepted standing notes only — THE PRODUCT SURFACE NOW REFLECTS THE FIVE-PRODUCER ROSTER; CLA'S DEFAULT-PLAN DIVERGENCE IS VISIBLE AND PINNED
+
+- **P-053 (PRODUCT-SURFACE REFRESH — The Five-Producer Roster +
+  residue sweep; a surface / test / docs packet, ZERO
+  engine/profile/analyzer/MCP change; opened on the user's "Build
+  what's next" 2026-07-04 — the ONE substantive open direction
+  needing NO taste decision: the P-046/P-048 surface-refresh pattern
+  applied to the fifth producer, chris_lord_alge) closed 2026-07-05:**
+  qa GREEN (1298 / 0, after one fix-then-pass round) + reviewer PASS
+  (no must-fix; single-model — Codex unavailable). Commits `0da1dc8`
+  (Commit-1 — the fifth committed sample tree
+  `examples/sample_output_chris_lord_alge/` [30 artifacts, real-CLI
+  byte-identical; overall 67.8 / vocal_role_fit 85.0 / loop_context
+  18.0] + two CLA mode demos [`chris_lord_alge_conservative` {low,
+  suppress subtractive_drop}; `chris_lord_alge_big_chorus` {medium,
+  favor width_bloom, reach arrangement_lift} — the SECOND committed
+  demo where a REACHED move (arrangement_lift -> chorus_lift_E +
+  density_C) WINS its branch] + the SAMPLE_TREES 4->5 / MODE_DEMOS
+  9->11 directory-set-guard extensions + the nested-subdir
+  micro-hardening; 36 files; **GREEN IN ISOLATION at 1298**) +
+  `d04b7b7` (Commit-2 — README "Five producers, same stems" + CLA's
+  column + the honest default-plan divergence narrative + the 32->35
+  command-count fix; README only, ZERO collection change) + the
+  fix-then-pass `79254a5` (README line 574 — the SECOND "32"
+  occurrence; docs-only, collection-neutral) on parent `99fb353`
+  (set-active), atop the P-052 close `2e4d5db`, merge base with
+  default `f6cc9b7` (= PR #29). Exactly **37 files**; **ZERO `.py`
+  under `logic_mix_os/`** (diff-proven — engine + all five producer
+  JSONs + analyzers + `cowork_mcp/` + `cli.py` + `cowork.py`
+  byte-unchanged); the four existing sample trees + nine existing
+  mode demos byte-untouched (no staleness bug — every existing pin
+  passes without regeneration; eno + timbaland trees re-rendered
+  byte-identical as a spot-check). PUSHED to the dev branch BEFORE
+  qa/reviewer under the standing go (both gates validated the final
+  SHAs), NOT merged. Suite **1298** (+7: `test_sample_refresh.py`
+  13->16, `test_mode_demo_refresh.py` 22->26) / regression **93/93** /
+  Commit-1 iso **1298**. THE REAL FINDING (honestly surfaced, not a
+  bug): CLA is the FIRST of the five whose DEFAULT plan diverges — his
+  `commit_and_slam` default picks chorus_lift_D (drum_room_bloom) +
+  loop_A (loop_deconstruct) where the four reference-lineage producers
+  all land on chorus_lift_B / loop_B — a genuine emergent consequence
+  of his impact weighting (section_contrast 1.7 argmax, no iconic-loop
+  reading), computed through the real pipeline, pinned in
+  WINNERS["chris_lord_alge"], narrated straight in the README; qa
+  reproduced it independently (the four existing producers' winners
+  UNCHANGED). The guard extensions + the nested-subdir micro-hardening
+  all BITE (proven: stray 6th tree / 12th demo fail; `mkdir` a subdir
+  -> the staleness pin fails naming the tree). Safety grep clean.
+  **Codex unavailable — single-model review.** Reviewer:
+  faithful-not-curated (real-CLI byte-identical renders); the
+  divergence real + honestly narrated + WINNERS-pinned; the guard
+  extensions the one-line conscious widening with nothing loosened;
+  the micro-hardening load-bearing and correctly placed. Receipt:
+  `build-os/receipts/P-053-five-producer-surface.md`.
+- **★ THE CATCH (fix-then-pass — a real lesson):** qa went RED on ONE
+  line — the packet's own scoped "32->35" sweep shipped INCOMPLETE:
+  README line 574 still read "32 bounded commands" while the registry
+  is 35 (`len(cowork.COMMANDS)==35`) and Commit-2's message claimed
+  the fix. The reviewer had verified only the line-401 occurrence
+  (diff-region read) and missed line 574; qa's WHOLE-FILE grep found
+  it. RESOLVED by `79254a5` (one line, exactly as qa specified +
+  pre-blessed; docs-only, collection-neutral — the two touched test
+  files still 42/42). NOW GREEN. **★ THE P-051/P-052 STANDING "32->35
+  README cleanup" NOTE IS ✓ RESOLVED** (both occurrences fixed, live-
+  verified `len(cowork.COMMANDS)==35`).
+- **NEW accepted notes (P-053, recorded not fixed — non-blocking):**
+  1. **The quincy story-pin DOCSTRING** (`tests/test_mode_demo_refresh.py`
+     ~line 405) still says "the one committed demo where the reach
+     moves a verdict" — now TWO (CLA `big_chorus` also
+     reaches-and-wins). Docstring-only; the test NAME + assertions are
+     accurate (they do NOT check uniqueness -> green); the README
+     product surface already says "one of two." A one-line future docs
+     touch.
+  2. **NEW pre-existing residue qa surfaced (OUT of P-053 scope — do
+     NOT attribute to this packet):** README ~line 532, the regression
+     EXAMPLE block shows `"tests_run": 68, "passed": 68` while
+     `run_regression_suite()` now returns **93/93** — stale since
+     P-035, a real wrong number on the product surface, NOT
+     touched/claimed by this packet. A candidate for the NEXT
+     docs/residue touch (the same class as the 32->35 fix — a future
+     "README numbers audit" could sweep it + re-pin the sample/headline
+     numbers to catch this class going forward).
+  3. **★ Process note (a candidate for the named lessons):** a scoped
+     residue-sweep deliverable ("fix every occurrence of X") shipped
+     INCOMPLETE and the reviewer's diff-region read missed the second
+     occurrence; qa's whole-file grep caught it. LESSON: for "fix
+     every occurrence of X" deliverables the proof must be a
+     whole-file/whole-repo grep for X returning ZERO, not a spot-check
+     of the changed region.
+- **All prior standing notes RETAINED** (the banners below), incl. the
+  ★★ groove-carrier trajectory watch-item, the CLA
+  sha256-self-pin-on-sixth-producer note, and the P-050/P-051/P-052
+  accepted notes.
+- **Open boundary:** P-053's commits pushed to the dev branch BEFORE
+  qa/reviewer under the orchestrator's standing go; **the MERGE of
+  P-053 (`0da1dc8` + `d04b7b7` + `79254a5` + the close commit) atop
+  `8d59656` (= PR #30 — P-052 already merged to default, so a P-053 PR
+  carries only the three P-053 commits + the close commit as a clean
+  single-packet PR) is the OPEN USER GATE** — it awaits the user's
+  explicit word. No deploy/publish/secrets touched.
+- **NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open
+  directions (ALL user-gated): the P-053 merge · the "README numbers
+  audit" residue touch (folds in the 68->93 fix + the quincy docstring
+  + a pin to catch this class) · a real external host driving the MCP
+  server (manual) · a real MCP-SDK transport swap · the apply-to-Logic
+  backend (FUTURE, EXPLICITLY re-gated — never auto; the safety line
+  stands) · the future-analyzer candidates from Eno's deferrals ·
+  quincy/halee authored dropout reach · a sixth producer · anything
+  else the user calls. Do NOT open anything blind.
+- **THE THREE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
+  comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
+  placement faith; (3) flag PRESENCE is not flag THREADING — levers
+  need reaches-the-destination guards. **(P-053 nominates a fourth
+  candidate: for "fix every occurrence of X" deliverables, prove with
+  a whole-file/whole-repo grep returning ZERO, not a diff-region
+  spot-check.)**
+
 ## ★★★ STATUS (P-052 close, 2026-07-04): residue = accepted standing notes only — THE PRODUCT PATH IS PROVEN END-TO-END; THE NO-DAW BOUNDARY HOLDS ACROSS THE REAL PATH
 
 - **P-052 (REAL END-TO-END MCP CLIENT SESSION — a PROOF packet, TEST +
