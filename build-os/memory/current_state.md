@@ -507,6 +507,25 @@
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
+- **Green baseline (verified 2026-07-05, P-055 — the README prose-count
+  guard baseline):** suite **1306 passed** (0 failed / skipped); regression
+  **93/93** — the corpus is **4 fixtures**. Single commit `8b3adec` (the README
+  prose-count drift guard; exactly 1 file, +244: `tests/test_readme_prose_counts.py`
+  [NEW — the 4-test guard]) on parent `ccdc054` (set-active), atop merge base with
+  default `7af1e3e` (= PR #32 — P-054 merged to default; the dev branch is
+  fast-forwarded onto it, so a P-055 PR carries only this commit + the close
+  commit — a clean single-packet PR). **README byte-UNCHANGED** (the audit found
+  NO stale prose count; blob-identical `51d7a51…` both sides). **ZERO `.py` under
+  `logic_mix_os/`; ZERO `examples/` change** (the five sample trees + eleven mode
+  demos + the fixture projects byte-untouched; zero fixtures/goldens). **PUSHED to
+  the dev branch BEFORE qa/reviewer under the standing go; NOT merged — the P-055
+  merge is a user gate.** **★ PR #32 recorded: P-054 merged to default =
+  `7af1e3e`.** THE README-drift-guard family is COMPLETE — P-054 pins the numeric
+  values (command count, regression example, table), P-055 pins the spelled-out
+  prose counts (trees/producers, demos/runs, fixtures, the win/deviate split), all
+  against the SAME live/committed single sources. (History: 1302 -> **1306** at
+  P-055 — +4, all the NEW `tests/test_readme_prose_counts.py`; single commit =
+  HEAD is the Commit-1-isolation proof.)
 - **Green baseline (verified 2026-07-05, P-054 — the README-numbers
   audit + drift-guard baseline):** suite **1302 passed** (0 failed /
   skipped); regression **93/93** — the corpus is **4 fixtures**. Single commit
@@ -637,6 +656,71 @@
   331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-055 COMPLETES THE README-DRIFT-GUARD FAMILY — THE README's SPELLED-OUT
+  PROSE COUNTS ARE NOW MACHINE-PINNED (README Prose-Count Guard — a test + docs
+  packet, ZERO engine/profile/analyzer/MCP/runtime change; opened on the user's
+  "Go", 2026-07-05, after the P-054 merge [PR #32 -> default `7af1e3e`] — the LAST
+  clean decision-free direction, the "prose-count guard" candidate the P-054
+  residue named). qa GREEN (10/10; suite 1306 / 0) + reviewer PASS (no must-fix;
+  single-model — Codex unavailable). Last-closed = P-055.**
+  - **Single commit** `8b3adec` on parent `ccdc054` (set-active), atop merge base
+    with default `7af1e3e` (= PR #32). Exactly **1 file**, +244:
+    `tests/test_readme_prose_counts.py` (NEW, the 4-test prose-count drift guard).
+    **README byte-UNCHANGED** — the audit found NO stale prose count
+    (blob-identical `51d7a51…` both sides), so the packet is guard-only. **ZERO
+    `.py` under `logic_mix_os/`; ZERO `examples/` change** (the five sample trees +
+    eleven mode demos + the fixture projects byte-untouched). Commit-1-green-in-
+    isolation trivially satisfied (single commit; HEAD == the isolation proof,
+    1306). **PUSHED BEFORE qa/reviewer under the standing go; NOT merged — the
+    P-055 merge is the OPEN USER GATE.**
+  - **The guard (`tests/test_readme_prose_counts.py`, 4 tests)** pins each
+    load-bearing spelled-out prose count against a DERIVED live/committed source
+    (no hardcoded 5/11/4/7): "five" (trees/producers) == `len(SAMPLE_TREES)`
+    (imported from `test_sample_refresh`) across 9 anchored phrases; "eleven"
+    (demos/runs/directories/pairs) == `len(MODE_DEMOS)` (imported from
+    `test_mode_demo_refresh`); "four" (fixtures/example projects) ==
+    `_live_fixture_count()` = `len(FIXTURES_DIR.glob("*/project_manifest.json"))`
+    = 4 (tracks the generator's 4 builders 1:1); the "seven win / four deviate"
+    split == the count of `MODE_DEMOS` whose byte-pinned `WINNERS[demo]` !=
+    `_COMMON_WINNERS` (= 4 deviating → 11 − 4 = 7 winning) — derived
+    non-circularly, self-updating. A word→int decoder map (three…twelve), anchored
+    "<word> <noun>" extraction, fails loudly naming the drifted phrase.
+  - **★ qa GREEN (10/10):** suite 1302 -> **1306 passed, 0 failed** (+4, all the
+    new guard file); regression **93/93**; Commit-1 iso **1306**; per-file collect
+    test_readme_prose_counts.py=4. Derived-not-hardcoded verified live (grep for
+    `== 4|5|7|11` on the expected side → none; the only digit literals are the
+    decoder map + the `(\d+) fixtures` regex whose expected side is
+    `_live_fixture_count()`). The guard BITES 6/6 (five→six, eleven→twelve,
+    four→five spelled, (4→(5 digit, seven→eight, four-deviate→five). Robust — no
+    false positive: mutating the deliberately-EXCLUDED occurrences (the five
+    hardcoded safety switches ~160, all five creative problem branches ~224, the
+    (producers−1) "other four profiles" ~123, the conservative-residue ~320) left
+    the guard GREEN. The builder's anchor-collision fix confirmed (`the way the
+    (\w+) trees above` captures only "five", not "sample" from ~228). Coverage
+    complete; safety grep clean (the ONLY diff is the additive test file).
+  - **★ reviewer PASS (no must-fix; Codex unavailable — single-model):**
+    derivation clean; the "four" source correct (the builder correctly REJECTED
+    conftest's `FIXTURE_NAMES`, only the original three — vocal_chop_groove lives
+    outside it by design); the seven-win split non-circular; anchors specific; the
+    residue correctly reasoned. "Closes the README-drift-guard family." Residue ->
+    residue.md: RESOLVED — the P-054 "prose-count guard" residue for the
+    length-derived class; NEW accepted notes — the "content-dependent prose count"
+    class (the conservative-demo "fives" ~320/321; the (producers−1) "fours"
+    ~149/329) consciously NOT pinned because pinning to a roster length would
+    mis-source.
+  - **★ NEXT: NOTHING STAGED — the self-serve hygiene well is now DRY.** The
+    README-drift-guard family is COMPLETE. The orchestrator PRESENTS the open
+    directions, ALL of which now require a genuine USER DECISION (not just a green
+    light): a sixth producer (WHO + grounding) · the future-analyzer candidates
+    from Eno's deferrals (WHICH + measurement) · quincy/halee authored dropout
+    reach · the apply-to-Logic backend (FUTURE, re-gated — never auto) · a real
+    external host driving the MCP server (manual) · a real MCP-SDK transport swap ·
+    the content-dependent prose-count residue (low priority) · anything else the
+    user calls. Do NOT open anything blind. **THE OPEN USER GATE: the merge of
+    P-055 (`8b3adec` + the close commit) atop `7af1e3e` (= PR #32) — a clean
+    single-packet PR.** Receipt:
+    `build-os/receipts/P-055-readme-prose-count-guard.md`.
 
 - **★★★ P-054 CONVERTS THE P-053 LESSON INTO A DURABLE, LIVE-PINNED GUARD —
   THE README's LOAD-BEARING NUMBERS ARE NOW MACHINE-PINNED (README Numbers Audit
