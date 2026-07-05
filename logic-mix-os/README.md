@@ -529,7 +529,7 @@ fixture that exercises the vocal-type/blend-policy chain end to end).
   unidentified track.*
 
 ```json
-{ "tests_run": 68, "passed": 68, "failed": 0, "critical_failures": [], "warnings": [] }
+{ "tests_run": 93, "passed": 93, "failed": 0, "critical_failures": [], "warnings": [] }
 ```
 
 ## Risk classes
