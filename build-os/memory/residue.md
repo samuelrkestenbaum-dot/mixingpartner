@@ -4,6 +4,118 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
+## ★★★ STATUS (P-054 close, 2026-07-05): residue = accepted standing notes only — THE README's LOAD-BEARING NUMBERS ARE NOW MACHINE-PINNED; STALE-README-NUMBER IS A CAUGHT CLASS; THE P-046 TABLE-DRIFT GAP IS CLOSED
+
+- **P-054 (README NUMBERS AUDIT + DRIFT GUARD — a test + docs packet,
+  ZERO engine/profile/analyzer/MCP/runtime change; opened on the user's
+  "ok go" 2026-07-05 after the P-053 merge [PR #31 → default `bc67df4`]
+  — the decision-free hygiene/hardening direction that BOTH clears the
+  residue qa surfaced AND implements the P-053 fix-then-pass lesson: a
+  stale README number slipped a diff-region review; pin the class, don't
+  spot-check) closed 2026-07-05:** qa GREEN (10/10; suite **1302 / 0**) +
+  reviewer PASS (no must-fix; single-model — Codex unavailable). Single
+  commit `056a8cb` ("P-054: fix two stale README numbers + add
+  README-numbers drift guard"; exactly **3 files**, +192/−3:
+  `README.md` [the 68→93 regression-example fix, +1/−1],
+  `tests/test_mode_demo_refresh.py` [the quincy docstring ONLY, +3/−3, no
+  assertion changed, collection-neutral], `tests/test_readme_numbers.py`
+  [NEW, +187 — the 4-test drift guard]) on parent `6c70daa` (set-active),
+  atop merge base with default `bc67df4` (= PR #31 — P-053 merged to
+  default; the dev branch is fast-forwarded onto it). **ZERO `.py` under
+  `logic_mix_os/`; ZERO `examples/` change** (the five sample trees +
+  eleven mode demos byte-untouched; zero fixtures/goldens). The audit was
+  CLEAN beyond the two named items, so one commit;
+  Commit-1-green-in-isolation trivially satisfied (HEAD == the isolation
+  proof, 1302). PUSHED to the dev branch BEFORE qa/reviewer under the
+  standing go (both gates validated the final SHA), NOT merged. Suite
+  1298 → **1302** (+4, all `tests/test_readme_numbers.py`) / regression
+  **93/93** / per-file collect test_readme_numbers.py=4,
+  test_mode_demo_refresh.py still 26. **THE GUARD BITES on all three
+  areas** (independent, isolated worktrees, restored between): 35→32 → the
+  command-count authored-spots test + the WHOLE-FILE sweep both FAIL;
+  93→68 → the regression-example test FAILS; 76.3→76.4 → the
+  five-producer-table test FAILS. **★ THE PACKET'S RAISON D'ÊTRE
+  CONFIRMED:** the guard would have failed loudly on BOTH historical
+  misses this session — the 32→35 (the leftover "32 commands" that
+  slipped P-053's diff-region review, caught by the whole-file sweep) AND
+  the 68→93 (the regression example stale since P-035, caught by the
+  live-suite comparison); qa + reviewer both verified this explicitly.
+  Robust in both directions (anchored regexes exclude the §32/§38/§39
+  section refs + the 68.8 Quincy cell; table parsing derives column order
+  from the header + strips bold); no third stale number; safety grep
+  clean. **Codex unavailable — single-model review.** Reviewer: guard
+  load-bearing (not cosmetic); expected sides genuinely
+  derived-from-source (no hardcode that would defeat the purpose); robust
+  in both directions; the two fixes correct + minimal; non-scope clean —
+  "Converts the P-053 lesson into a durable, live-pinned guard for the two
+  classes that actually bit, and additionally closes the standing P-046
+  gap by machine-pinning the table off the existing single source."
+  Receipt: `build-os/receipts/P-054-readme-numbers-guard.md`.
+- **★ THREE PRIOR RESIDUES ✓ RESOLVED by this packet:**
+  1. **The quincy story-pin DOCSTRING** (P-053 note 1;
+     `tests/test_mode_demo_refresh.py` ~line 405) — ✓ RESOLVED: rewritten
+     "the one committed demo where the reach moves a verdict" → "one of
+     two committed reach-and-win demos … alongside
+     `chris_lord_alge_big_chorus`" (docstring only; no assertion touched).
+  2. **The 68→93 regression-example staleness** (P-053 note 2; README
+     ~line 532) — ✓ RESOLVED: fixed to 93/93/0 (live-verified) AND now
+     MACHINE-PINNED to a live `run_regression_suite()` so the class can't
+     recur.
+  3. **The P-053 whole-file-grep LESSON** (P-053 note 3 / the fourth
+     named-lesson candidate) — now ENFORCED BY A TEST, not just a written
+     note: the command-count WHOLE-FILE sweep asserts no stale "N
+     commands" != live returns ZERO. **The three-standing named lessons
+     retain a fourth, now-enforced entry: for "fix every occurrence of X"
+     deliverables, prove with a whole-file/whole-repo check returning
+     ZERO, not a diff-region spot-check — and, where feasible, PIN it as a
+     live test (P-054 did).**
+- **★ THE STANDING P-046 README-TABLE-DRIFT GAP IS ✓ CLOSED:** the
+  five-producer table cells are now machine-pinned against the `HEADLINES`
+  single source (imported from `test_sample_refresh`, no duplicated
+  hardcode) — README table numbers were never machine-pinned before.
+- **NEW accepted notes (P-054, recorded not fixed — both OUT of this
+  packet's scope, named for the record):**
+  1. **Unguarded prose-count class:** README prose counts like "five
+     committed trees", "eleven producer × mode runs" / "eleven demos",
+     "seven win exactly the moves", and the sample-invocation count are
+     NOT pinned (the packet deliberately forbade prose sweeps). A future
+     "prose-count guard" candidate — the same staleness class the numbers
+     now guarded, one abstraction level up. LOWER PRIORITY: prose counts
+     drift less often and are more visible.
+  2. **The command-count sweep is intentionally exact-phrasing**
+     (`(\d+) (?:bounded )?commands`): a future subset phrasing ("12
+     mutating commands") could false-positive, or an interposed-word
+     phrasing ("35 CLI commands") / a spelled-out count could
+     false-negative. Acceptable + consistent with the "targeted, not a
+     general digit parser" mandate given the current README shape;
+     re-examine only if the README's command-count phrasing changes.
+- **All prior standing notes RETAINED** (the banners below), incl. the
+  ★★ groove-carrier trajectory watch-item, the CLA
+  sha256-self-pin-on-sixth-producer note, and the P-050/P-051/P-052/P-053
+  accepted notes.
+- **Open boundary:** P-054's commit pushed to the dev branch BEFORE
+  qa/reviewer under the orchestrator's standing go; **the MERGE of P-054
+  (`056a8cb` + the close commit) atop `bc67df4` (= PR #31) — a clean
+  single-packet PR (the branch is fast-forwarded onto default) — is the
+  OPEN USER GATE**, awaiting the user's explicit word. No
+  deploy/publish/secrets touched.
+- **NEXT: NOTHING STAGED.** The orchestrator PRESENTS the open directions
+  (ALL user-gated): the P-054 merge · a real external host driving the
+  MCP server (manual) · a real MCP-SDK transport swap · the apply-to-Logic
+  backend (FUTURE, EXPLICITLY re-gated — never auto; the safety line
+  stands) · the future-analyzer candidates from Eno's deferrals (textural
+  coherence · generative process · ambient patience) · quincy/halee
+  authored dropout reach · a sixth producer · a PROSE-COUNT GUARD (the new
+  residue note 1) · anything else the user calls. Do NOT open anything
+  blind.
+- **THE NAMED LESSONS (standing, retained):** (1) raw-dict NaN
+  comparisons FAIL OPEN; (2) defense claims need MUTATION TESTS, not
+  placement faith; (3) flag PRESENCE is not flag THREADING — levers need
+  reaches-the-destination guards; **(4, now ENFORCED not just noted — the
+  P-053 nomination, made durable by P-054) for "fix every occurrence of X"
+  deliverables, prove with a whole-file/whole-repo check returning ZERO
+  and PIN it as a live test where feasible, not a diff-region spot-check.**
+
 ## ★★★ STATUS (P-053 close, 2026-07-05): residue = accepted standing notes only — THE PRODUCT SURFACE NOW REFLECTS THE FIVE-PRODUCER ROSTER; CLA'S DEFAULT-PLAN DIVERGENCE IS VISIBLE AND PINNED
 
 - **P-053 (PRODUCT-SURFACE REFRESH — The Five-Producer Roster +
