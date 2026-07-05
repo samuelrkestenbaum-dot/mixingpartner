@@ -402,8 +402,10 @@ def test_committed_quincy_demo_reaches_both_his_families():
     committed run — his experimental admits all four extended ids at his
     authored curated overalls (85.3 / 83.1, reconstructed-from-JSON pins in
     tests/test_move_vocabulary_expansion.py), and the reached ``vocal_C``
-    WINS its branch — the one committed demo where the reach moves a
-    verdict, exactly the standing live pin."""
+    WINS its branch — one of two committed reach-and-win demos where the
+    reach moves a verdict (alongside ``chris_lord_alge_big_chorus``, whose
+    reached ``chorus_lift_E`` wins its chorus_lift branch, pinned above),
+    exactly the standing live pin."""
     cr = json.loads(
         (DEMO_ROOT / "quincy_jones_experimental" / "creative.json")
         .read_text(encoding="utf-8")
