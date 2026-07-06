@@ -4,69 +4,110 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** NONE ACTIVE — **P-056 CLOSED** (2026-07-06). No packet in flight.
-  The orchestrator opens the next one only on an explicit user go — do NOT open
-  anything blind.
+- **Status:** ACTIVE — **P-057 — Non-Eno Textural Weighting** (set on the user's
+  "ok go", 2026-07-06: **Quincy 0.6, CLA defer**). Profile-data packet; roster
+  frozen at five; base `1ab5878` (= PR #34, the default tip — verify
+  `git merge-base HEAD 1ab5878` = `1ab5878`).
+- **Baseline to protect:** suite **1347** / regression **93/93** / the four
+  non-opting producers' (Halee, Timbaland, CLA, Eno) **overall + decision**
+  byte-stability / the aesthetic + loudness kill-switches, veto thresholds,
+  `governance.py`, `creative.py`, and the dropout structural-protection filter
+  byte-untouched.
 
-## Last closed — P-056 — Textural Coherence Analyzer (the 15th doctrine axis)
+## P-057 — Non-Eno Textural Weighting
 
-- **Closed:** 2026-07-06. qa GREEN (suite **1347 / 0**; regression **93/93**;
-  Commit-1 iso **1331**) + reviewer PASS (no must-fix; single-model — Codex
-  unavailable). Both gates independently re-ran the suite.
-- **What landed:** a 15th producer-agnostic doctrine axis
-  `textural_coherence_score` (0–100) = bed-similarity DISPERSION (Option A, user
-  D1=A), wired LAST into `score_doctrine`. MEASURED for all five producers,
-  WEIGHTED only by Eno (weight 1.2, his high tier) — his overall genuinely MOVES
-  (65.5 → 64.3); the four others weight-0, overall + decisions byte-stable. Eno's
-  confidence_map flipped deferred → high. Zero new DSP, zero new dependency;
-  `governance.py` + `creative.py` + the dropout filter byte-untouched.
-- **Two commits (PUSHED to the dev branch under the standing go; NOT merged):**
-  - `acd9a3e` — Commit-1: the `_textural_coherence` scorer + `_textural_bed_set`
-    + `_coherence_from_dispersion` (the sign seam) wired LAST; `_validate`
-    scorer-list; all five profile JSONs (additive block; Eno 1.2 + confidence
-    flip, four at 0); the schema; the five regenerated sample trees; NEW
-    `tests/test_textural_coherence.py` (25) + the existing-test re-pins.
-    **Green in isolation: 1331.**
-  - `d6f9b0b` — Commit-2: additive proof — `tests/test_five_way_differential.py`
-    + `tests/test_eno_profile.py` (the differential + sabotage/mutation, +16 →
-    1347). Exactly those two files.
-  - Parent chain: `d6f9b0b` → `acd9a3e` → `81494c2` (set-active) → merge base
-    `b03f388` (= PR #33). Verified `git merge-base HEAD b03f388` = `b03f388`
-    (fast-forwarded — a clean single-packet PR).
-- **Counts:** suite 1306 → **1347** (+41: +25 C1 axis tests, +16 C2 proof);
-  regression **93/93**; Commit-1 iso **1331**; per-file collect
-  test_textural_coherence.py=**25**, test_five_way_differential.py=**57**,
-  test_eno_profile.py=**37**.
-- **Receipt:** `build-os/receipts/P-056-textural-coherence-analyzer.md`.
+Make the P-056 `textural_coherence_score` axis COUNT for Quincy Jones — the one
+non-Eno producer whose documented aesthetic genuinely supports bed cohesion.
+**Profile-data ONLY — ZERO `.py` under `logic_mix_os/`** (the axis, the
+`_textural_coherence` scorer, the `_coherence_from_dispersion` sign seam,
+`producer_profile._validate`, the schema, and the shared
+`doctrine.scorers.textural_coherence` constants block all exist from P-056; this
+is a weight change + confidence entry + regen + test re-pins). If any engine edit
+is genuinely required → **STOP AND FLAG**.
 
-## OPEN USER GATE
+### The taste decisions (user-confirmed: Quincy 0.6, CLA defer)
 
-- **The merge of P-056** — `acd9a3e` + `d6f9b0b` + the close commit atop
-  `b03f388` (= PR #33) — a clean single-packet PR (the branch is fast-forwarded
-  onto default). Pushed to the dev branch under the standing go; NOT merged; no
-  deploy/publish/secrets touched. Awaits the user's explicit word.
+- **Quincy Jones: weight 0 → 0.6.** Grounding: his retained support/hygiene
+  cluster (= `negative_space`/`beat_identity`/`groove_coherence` 0.6), explicitly
+  BELOW his `depth_hierarchy` 1.4 center and `section_contrast` 1.3 — a
+  support-tier "the ensemble texture coheres as one arranged surface" reading,
+  never his center of gravity. It is DISJOINT from his distinct-layer center:
+  `depth_hierarchy` reads placement/room; textural coherence reads timbral/spatial
+  bed similarity and provably reads none of depth's inputs (a big-band arranger
+  keeps every part in a distinct, readable PLACE and wants the ensemble's texture
+  beds to share one coherent surface). Confidence_map: add a textural-coherence
+  entry at level **`limited`** (documented big-band/ensemble arranging; secondary,
+  support-tier; the "one woven surface" framing runs partly counter to his
+  distinct-readable-layer center, so `limited`, NOT `high` — `high` would
+  over-claim; Eno earns `high` because texture-as-composition is HIS center).
+- **Chris Lord-Alge: DEFER — stay weight 0.** The measured axis reads the
+  background/midground texture-bed layer, which is exactly the layer CLA
+  de-emphasizes to his floor (`depth_hierarchy` 0.4, `negative_space` 0.2, his
+  "anti-Eno" absolute floor). His real cohesion instinct is impact-glue /
+  loudness translation — and loudness is a DEFERRED concern by design, not a
+  doctrine axis. His profile already honestly defers "loudness maximization",
+  "saturation as energy", and "whole-mix translation" rather than fake them with
+  imperfect proxies; deferring textural coherence is the CONSISTENT, honest
+  posture, and it keeps him byte-identical. **Touch nothing in CLA's profile.**
+- **Brian Eno: UNTOUCHED** — weight 1.2, confidence, overall byte-identical.
+- **Halee/Ramone, Timbaland: UNTOUCHED** — weight 0.
 
-## STAGED next — NOTHING opened blind
+### Effect (honest, expected)
 
-The orchestrator PRESENTS the user-gated directions (all require a genuine user
-decision, not just a green light):
+Opting Quincy in pulls his `overall` DOWN (the axis reads 55.0 neutral on the
+`<2`-bed fixtures simple/splice/chop, 27.0 on the one ≥2-bed fixture
+`dense_chorus_with_loops`) — same direction as Eno's 65.5→64.3. Quincy's
+committed headline 68.8 moves; regenerate his sample tree real-CLI-faithful and
+re-pin. The per-fixture axis VALUE is profile-blind and does NOT change (55/55/55/27);
+only Quincy's weighted overall moves.
 
-- **ambient patience** (Eno-deferral #2 — flagged for the negative-space overlap
-  risk that must be carefully separated).
-- **generative process** (Eno-deferral #3 — hand-wavy without
-  arrangement-time / provenance signals; its confidence entry is untouched).
-- **the non-Eno textural weighting taste call** (Quincy ensemble cohesion / CLA
-  wall-cohesion — MEASURED-but-weight-0 today; a one-line weight change).
-- **the Eno `<2 beds` neutral-fallback calibration** (the 55.0 taste knob — a
-  code-change-free constants tweak for the next Eno-calibration pass).
-- **a sixth producer** (WHO + grounding).
-- **apply-to-Logic** (FUTURE, EXPLICITLY re-gated — never auto; the safety line
-  stands).
-- **a real external host driving the MCP server** (a MANUAL user step) · **a real
-  MCP-SDK transport swap** (manual).
-- anything else the user calls. Do NOT open anything blind.
+### Commit shape (≤2; Commit-1 green in isolation)
+
+- **Commit-1:** Quincy's `weights.textural_coherence_score` `0 → 0.6` +
+  `confidence_map` textural entry (`limited`); regenerate Quincy's sample tree
+  real-CLI-faithful (P-053/P-056 pattern); re-pin EVERY moved/weight-0 assertion
+  so C1 is green ALONE — `test_five_way_differential.py` (`_NON_ENO` set drops
+  Quincy → {Halee, Timbaland, CLA}; the weight-0 byte-identical proof re-pinned to
+  that shrunk set; `FIVE_WAY_OVERALLS` re-pins Quincy's moved overall),
+  `test_four_way_differential.py` (Quincy's four-way overall), `test_quincy_profile.py`
+  (weight pin `0→0.6`; the "sole weight-0 axis is textural_coherence" assertions
+  flip — Quincy now has NO weight-0 axis; confidence-map pin gains the entry),
+  `test_sample_refresh.py` (HEADLINES), `test_doctrine_profile_sourced.py`,
+  `test_producer_profile.py`, and `README.md` (the five-producer table + prose
+  cell for Quincy — the P-054 numbers guard + P-055 prose guard will FORCE this;
+  a missed re-pin fails loudly). **`test_cla_profile.py` is UNTOUCHED** (CLA
+  deferred). Green in isolation.
+- **Commit-2 (purely additive proof):** the permanent P-057 differential —
+  `test_five_way_differential.py` (+ `test_quincy_profile.py` if a dedicated home
+  fits): Quincy's overall MOVED vs the pre-P-057 (post-P-056) committed baseline,
+  per fixture (dense-largest); the shrunk weight-0 set {Halee, Timbaland, CLA}
+  byte-identical; Eno unchanged; the axis key present in all five; a
+  zero-weight sabotage bite (zeroing Quincy's textural weight reverts his overall
+  to the pre-P-057 value; deleting the key → KeyError).
+
+### Required proof (qa, before close)
+
+Full suite counts (new total; +N from C2); regression **93/93**; Commit-1 iso
+count; the MOVE differential (Quincy's overall moves, dense-largest); the
+**four→three** byte-identical proof (Halee/Timbaland/CLA overall + `mix_verdict.md`
++ `mix_plan.json` + `dashboard.html` byte-identical to their committed P-057
+baselines); Eno unchanged (weight 1.2 / confidence / overall byte-identical); the
+axis key present + measured in all five; the sabotage bite; safety grep of the
+source diff = 0 reach (diff is JSON + tests + regenerated Quincy tree + README);
+diff-proof that `governance.py`, `creative.py`, the kill-switches, veto, and
+`protect_iconic_loops` are byte-untouched. No new dependency.
+
+### Non-scope (binding)
+
+No new axis/scorer; **no engine `.py` change** (flag if forced); no
+governance/kill-switch/veto/`protect_iconic_loops` change; no sixth producer; no
+apply-to-Logic; no dropout-reach / ambient-patience / generative-process; Eno's
+weight untouched; CLA's profile untouched (deferred). Textural-coherence
+WEIGHTING only.
+
+- **Receipt (on close):** `build-os/receipts/P-057-non-eno-textural-weighting.md`.
 
 ---
-_Cleared by the archivist on the P-056 close (2026-07-06). One packet at a time:
-builder → qa + reviewer → archivist → receipt. The next packet opens only on an
-explicit user go._
+_Set active by the orchestrator + confirmed on the user's "ok go" (2026-07-06,
+Quincy 0.6 / CLA defer), after the P-056 merge (PR #34 → `1ab5878`). One packet
+at a time: builder → qa + reviewer → archivist → receipt._
