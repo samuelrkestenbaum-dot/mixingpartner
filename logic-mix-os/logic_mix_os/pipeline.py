@@ -27,6 +27,7 @@ from .analyzers.provenance import analyze_provenance
 from .analyzers.reference_comparator import compare_to_reference
 from .analyzers.render_graph import build_render_graph
 from .analyzers.section_analyzer import analyze_sections
+from .analyzers.section_detector import annotate_inferred, detect_sections
 from .analyzers.source_auditors import audit_all
 from .analyzers.source_material_detector import detect_source_material
 from .analyzers.track_identity_detector import detect_track_identity
@@ -173,7 +174,24 @@ def analyze(
     mixdown = project.build_mixdown(bounce_path)
     if mixdown is not None:
         result.mix_metrics = compute_metrics(mixdown.samples, mixdown.sample_rate)
-        result.section_analysis = analyze_sections(project.sections, mixdown, lead_vocal_loaded)
+        # P-059 — the byte-stability guard. A manifest that already supplies >=2
+        # sections is analysed EXACTLY as before (the detector is never entered),
+        # so every pinned fixture / sample tree is byte-identical. Only when the
+        # manifest gives fewer than two sections (a real first-audio session, or
+        # a header-only scaffold) do we infer the sections from the audio — from
+        # each stem's entry/exit events — and feed that list into the SAME
+        # ``analyze_sections``. The inferred / energy_tag stamps live on THIS
+        # branch alone; the supplied-section output shape is untouched.
+        if len(project.sections) >= 2:
+            result.section_analysis = analyze_sections(
+                project.sections, mixdown, lead_vocal_loaded
+            )
+        else:
+            detected = detect_sections(loaded_by_id, mixdown, mixdown.duration)
+            result.section_analysis = analyze_sections(
+                detected, mixdown, lead_vocal_loaded
+            )
+            annotate_inferred(result.section_analysis, detected)
 
     # Masking, then fold per-track masking risk back into track_analysis.
     result.masking_report = analyze_masking(records, result.section_analysis)

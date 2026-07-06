@@ -60,6 +60,11 @@ class Section:
     start: float
     end: Optional[float]
     emotional_goal: Optional[str] = None
+    # P-059: set ONLY by the audio-driven detector (auto-detect path). Supplied
+    # (manifest) sections always leave these at their defaults, so the supplied
+    # section-analysis output is byte-identical.
+    energy_tag: Optional[str] = None
+    inferred: bool = False
 
 
 @dataclass
