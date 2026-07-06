@@ -4,6 +4,120 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
+## ★★★ STATUS (P-059 close, 2026-07-06): residue = accepted standing notes only — THE ENGINE NOW DETECTS SECTION STRUCTURE FROM THE AUDIO WHEN A MANIFEST SUPPLIES NONE (guarded, byte-stable for the whole scoring corpus; honest structural+energy labels); THE HAPPY MAN RE-RUN (AUTO-SECTIONS) IS THE IMMEDIATE NEXT REAL VALIDATION STEP — NEEDS THE USER TO PULL P-059 + RE-RUN (the standing TOP open item)
+
+- **P-059 (AUDIO-DRIVEN SECTION DETECTION — the fix for the Happy Man "whole song
+  as one block" false verdict; the engine only *analyzed* the sections it was
+  *given* and never *detected* them, so a real 49-track song with a 1-section
+  manifest stub read as `Section contrast: n/a` / `Dynamic mix: 40` / "not alive";
+  the user's directive: infer the sections from the audio, "based on what's added
+  at various points"; opened on the user's "go" 2026-07-06 — honest
+  structural+energy labels, P-058 merged first via PR #36 → default `32d7f47`)
+  closed 2026-07-06:** qa GREEN (suite 1390 → **1405 / 0 / 0 warnings**; +15 = 10
+  detector + 5 onramp; regression **93/93** with 0 warnings; Commit-1 iso **1400**)
+  + reviewer PASS (no must-fix; single-model — Codex not separately reported).
+  Both gates independently re-ran the suite. Commits `c44f11c` (Commit-1,
+  load-bearing — NEW `logic_mix_os/analyzers/section_detector.py` [+288, the
+  deterministic detector — numpy + first-party `dsp` only, ZERO new dependency];
+  the guarded `pipeline.analyze` auto-detect wire [+20/−1]; two optional
+  default-off `Section` fields [`energy_tag`, `inferred`; `project.py` +5]; NEW
+  `tests/test_section_detector.py` [+214, 10 tests]; 4 files, +526/−1; **GREEN IN
+  ISOLATION at 1400**) + `9d1a6a2` (Commit-2, additive UX — the scaffolder
+  `--detect-sections` opt-in [default OFF, sharing the ONE detector;
+  `onramp.py`/`cli.py`] + `test_onramp_scaffold.py` [+5 → 29] + a
+  `docs/REAL_SESSION.md` note; 4 files, +206/−18) on parent `57ab73d`
+  (set-active), atop merge base with default `32d7f47` (= PR #36 — P-058 merged to
+  default; the dev branch is fast-forwarded onto it, so a P-059 PR carries only
+  these two commits + the close commit — a clean single-packet PR). Parent chain:
+  `9d1a6a2` → `c44f11c` → `57ab73d` → `32d7f47`; verified
+  `git merge-base HEAD 32d7f47` = `32d7f47`. **THE ALGORITHM:** per-stem
+  active-region on a common frame grid (H=0.25s), a two-part silence gate
+  `max(ABS_FLOOR_DB=-50, peak−REL_RANGE_DB=40)`, debounce/hysteresis → a boolean
+  activity matrix → arrangement novelty = Hamming distance of the active-set
+  bitmask (entrances AND exits) → boundaries where novelty≥1, clustered ~1.0s →
+  `Section` objects; guardrails MIN_SECTION_SEC=4.0 (merge sub-min) +
+  MAX_SECTIONS=12 (keep top-novelty); mixdown energy/density novelty is a
+  TIE-BREAKER ONLY (never creates/caps a boundary — the guard against re-creating
+  the false-dynamics artifact); always-on tracks (a full-mix bus / an eternal pad)
+  toggle never → ZERO boundaries by construction; deterministic (fixed
+  grid/constants, sorted stem order, no RNG, times rounded 3 decimals). **HONEST
+  LABELS:** structural `section_1..N` + relative `energy_tag` {high/med/low} +
+  `inferred=True`, `emotional_goal=None`; NO semantic verse/chorus/bridge naming
+  (function is not honestly inferable from audio). **THE GUARDED INTEGRATION (the
+  byte-stability boundary):** `pipeline.analyze` branches on
+  `len(project.sections)` — `>=2` runs the UNCHANGED `analyze_sections` (the
+  detector NEVER entered); `<=1` runs `detect_sections(loaded_by_id, mixdown,
+  duration)` fed into the SAME `analyze_sections`, with `inferred`/`energy_tag`
+  stamped on THAT branch only. **BYTE-STABILITY PROVEN 4 INDEPENDENT WAYS:** (a)
+  `git diff 32d7f47..HEAD -- examples/ fixtures/` EMPTY; (b) a detector-call SPY =
+  `detect_sections` invoked **0 times** across all 4 fixtures + all 5 producer runs
+  (every corpus `supplied_sections=2` → ≥2 → the unchanged path; zero
+  `inferred`/`energy_tag` key-leak); (c) a fresh `write_artifacts` byte-diff =
+  **150/150 sample-tree files (5×30) byte-identical**; (d) an in-test guard mocks
+  `detect_sections` to raise + asserts `assert_not_called()`. Regression invariant
+  #7 holds (supplied corpora keep ≥2 sections → `section_contrast_score`
+  non-None). **SYNTHETIC DETECTION TEST:** pad-throughout + drums in@8/out@32 +
+  bass in@16 + vocal in@24 → boundaries at exactly **[0,8,16,24,32]**, no spurious,
+  always-on pad → 1 section, MIN_SECTION_SEC merge + MAX_SECTIONS≤12 bite,
+  deterministic. Safety grep 0 reach (no push/deploy/secret, no audio-write, no
+  new import beyond numpy + first-party); no new dependency (`pyproject.toml`
+  blob-identical); doctrine engine / 5 profiles / governance / creative /
+  kill-switches / dropout filter / `analyzers/section_analyzer.py` UNTOUCHED (the
+  detector is a NEW file feeding the existing `analyze_sections`). **Reviewer:** the
+  detector structurally CANNOT re-create the false-dynamics artifact (mixdown
+  energy is a tie-breaker only; always-on tracks contribute zero boundaries; the
+  guarded branch keeps it out of every supplied corpus); key insight — the
+  constants (H=0.25s, ABS_FLOOR_DB=-50, REL_RANGE_DB=40) err toward UNDER-detection
+  (bleed above -50dB MERGES sections rather than hallucinating them), so it FAILS
+  SAFE (worst case degrades to today's single-block status quo, never a false
+  boundary). **Codex not separately reported — single-model review.** Receipt:
+  `build-os/receipts/P-059-audio-driven-section-detection.md`.
+- **★ THE HAPPY MAN RE-RUN (round two, auto-sections) IS THE STANDING TOP OPEN
+  ITEM.** P-059 unblocks it: a re-run of `analyze` on the user's real song now
+  AUTO-DETECTS sections (the manifest's 1-section stub → `len<=1` → the detector
+  fires), so the false "Section contrast n/a / Dynamic mix 40 / not alive" verdict
+  should collapse and the automation plan's blind "open in choruses" rides become
+  song-specific. **This needs the USER to update their local clone (pull P-059) and
+  re-run** — the real validation of whether auto-detected sections sharpen the
+  read.
+- **NEW accepted notes (P-059, recorded not fixed — non-blocking):**
+  1. **★ THE HAPPY MAN RE-RUN is the standing TOP open item** (see above) —
+     unblocked by auto-sections, but not yet closed; awaits the user pulling P-059
+     + re-running.
+  2. **The detector's constants are validated on SYNTHETIC audio only** (the
+     in-memory test + 32kHz fixtures); they have NOT been tuned on real 44.1/48k
+     full-length material. They FAIL SAFE toward under-detection (see the reviewer
+     insight above). A real-audio CALIBRATION candidate: when the Happy Man re-run
+     comes back, check whether detection is granular enough; the constants
+     (H, ABS_FLOOR_DB, REL_RANGE_DB) are the tuning knob (a code-change, not a
+     redesign). **The first thing to check on that re-run.**
+  3. **Cosmetic nit (reviewer, non-blocking):** an unused
+     `rng = np.random.default_rng(0)` in the `test_onramp_scaffold.py`
+     `_write_arrangement_stems` helper (each stem makes its own generator) — a
+     dead line, drop in a future cleanup.
+  4. **Prior standing notes + named lessons retained** (the banners below): the
+     P-058 real-audio gap is now further advanced by auto-sections; the Eno/Quincy
+     `<2 beds` neutral-fallback calibration knob; the two remaining Eno-deferral
+     analyzers (ambient patience #2, generative process #3); CLA-deferred textural
+     (Halee/Timbaland textural still needs grounding); the real Cowork host
+     connection (manual); the ★★ groove-carrier trajectory watch-item; the safety
+     line.
+- **Open boundary:** P-059's commits pushed to the dev branch BEFORE qa/reviewer
+  under the orchestrator's standing go; **the MERGE of P-059 (`c44f11c` +
+  `9d1a6a2` + the close commit) atop `32d7f47` (= PR #36) — a clean single-packet
+  PR (the branch is fast-forwarded onto default) — is the OPEN USER GATE**,
+  awaiting the user's explicit word. No deploy/publish/secrets touched.
+- **NEXT: NOTHING STAGED — nothing opened blind.** The orchestrator PRESENTS the
+  open directions, ALL user-gated, with the **HAPPY MAN RE-RUN (pull P-059, re-run
+  `analyze` → auto-sections)** now the highest-value item, then the real-audio
+  constant calibration (note 2): the P-059 merge · ambient patience (Eno-deferral
+  #2) · generative process (Eno-deferral #3) · CLA textural opt-in ·
+  Halee/Timbaland textural weighting (needs grounding) · the Eno/Quincy `<2 beds`
+  neutral-fallback calibration · the real Cowork host connection (manual) · a sixth
+  producer (roster frozen at five — WHO + grounding) · apply-to-Logic (FUTURE,
+  EXPLICITLY re-gated — never auto; the safety line stands) · a real MCP-SDK
+  transport swap · anything else the user calls. Do NOT open anything blind.
+
 ## ★★★ STATUS (P-058 close, 2026-07-06): residue = accepted standing notes only — THE ENGINE IS NOW REACHABLE FOR A REAL SESSION (on-ramp + capture + docs landed); THE REAL-AUDIO VALIDATION GAP IS UNBLOCKED BUT OPEN — AWAITING THE USER'S REAL STEMS (the standing TOP open item)
 
 - **P-058 (REAL-SESSION ON-RAMP — the pivot from "the engine runs on synthetic
