@@ -34,9 +34,43 @@ _KEYWORD_RULES: List[tuple] = [
     (("stem", "print", "bounce"), "bounced_stem"),
 ]
 
+# Coarse fallback name-cues used after the keyword rules miss (identity-style
+# defaults from the track name alone).
+_VOCAL_NAME_CUES = ("vox", "vocal", "lead", "bgv", "harm")
+_LIVE_INSTRUMENT_NAME_CUES = (
+    "kick", "snare", "drum", "tom", "hat", "perc", "gtr", "guitar",
+    "bass", "piano", "keys",
+)
+
 # Editable domains keyed by source kind.
 _AUDIO_BASE = ["gain", "eq", "dynamics", "reverb_send", "automation", "region_editing", "fade"]
 _SAMPLE_EXTRA = ["stereo_width", "pitch_shift", "time_stretch", "chop", "reverse"]
+
+
+def guess_source_kind(name: str):
+    """Guess a ``source_kind`` from a track/file name alone.
+
+    THE shared, profile-blind name->kind heuristic: the ordered
+    ``_KEYWORD_RULES`` table first (most specific phrase wins), then the coarse
+    vocal / live-instrument fallbacks, else ``unknown``. Returns
+    ``(kind, confidence, evidence)`` with ``kind`` always a member of
+    ``constants.SOURCE_KINDS``.
+
+    Pure and deterministic. This is the SINGLE source of the name heuristic —
+    both the source-material detector (below) and the manifest scaffolder
+    (``logic_mix_os.onramp``) call it, so the table can never fork into two
+    drifting copies.
+    """
+    lowered = name.lower()
+    for keywords, kind in _KEYWORD_RULES:
+        for kw in keywords:
+            if kw in lowered:
+                return kind, 0.82, {"filename_clue": kw}
+    if any(k in lowered for k in _VOCAL_NAME_CUES):
+        return "comped_audio_track", 0.6, {"filename_clue": "vocal-like name"}
+    if any(k in lowered for k in _LIVE_INSTRUMENT_NAME_CUES):
+        return "live_audio_recording", 0.55, {"filename_clue": "live-instrument name"}
+    return "unknown", 0.4, {"note": "no manifest hint or recognised keyword"}
 
 
 def detect_source_material(track: Track, metrics: Optional[Dict]) -> Dict:
@@ -74,22 +108,11 @@ def _infer_kind(track: Track):
     if hint in SOURCE_KINDS:
         return hint, 0.95, {"manifest_hint": hint}
 
-    # Match on the track name + file *basename* only. The full path is excluded
-    # so a parent folder name (e.g. ".../with_loops/") can't pollute keywords.
+    # 2) Otherwise the shared name->kind heuristic decides, matching on the track
+    # name + file *basename* only. The full path is excluded so a parent folder
+    # name (e.g. ".../with_loops/") can't pollute keywords.
     basename = Path(track.file).name if track.file else ""
-    name = f"{track.name} {basename}".lower()
-    for keywords, kind in _KEYWORD_RULES:
-        for kw in keywords:
-            if kw in name:
-                return kind, 0.82, {"filename_clue": kw}
-
-    # 2) Fall back to identity-style defaults from the track name.
-    if any(k in name for k in ("vox", "vocal", "lead", "bgv", "harm")):
-        return "comped_audio_track", 0.6, {"filename_clue": "vocal-like name"}
-    if any(k in name for k in ("kick", "snare", "drum", "tom", "hat", "perc", "gtr", "guitar", "bass", "piano", "keys")):
-        return "live_audio_recording", 0.55, {"filename_clue": "live-instrument name"}
-
-    return "unknown", 0.4, {"note": "no manifest hint or recognised keyword"}
+    return guess_source_kind(f"{track.name} {basename}")
 
 
 def _warnings(source_kind: str, metrics: Optional[Dict]) -> List[str]:

@@ -10,6 +10,10 @@ callable AI mixing-decision surface.
 > **Logic actions remain checklist / plan artifacts.**
 > **Execution stays human/Cowork-in-the-loop.**
 
+For the end-to-end walkthrough — install, this MCP config, scaffolding a
+manifest from real stems, driving a session, and capturing it back — see
+[`REAL_SESSION.md`](REAL_SESSION.md).
+
 This is a **transport/adaptation** layer, not a new mixing engine and not a
 Logic execution backend. It never drives a DAW, never writes a Logic session or
 an audio file, and carries no execution backend. The only files any tool can
