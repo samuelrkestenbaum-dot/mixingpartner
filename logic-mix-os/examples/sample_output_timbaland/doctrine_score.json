@@ -13,6 +13,7 @@
   "low_end_motion_score": 60.0,
   "loop_context_score": 10.0,
   "vocal_role_fit_score": 85.0,
+  "textural_coherence_score": 55.0,
   "overall_mix_readiness_score": 60.9,
   "evidence": {
     "physical_space": [
@@ -69,6 +70,9 @@
       "Lead vocal 'Lead Vocal' sits forward and clear of masking conflicts — the lead owns the presence band.",
       "'BGV Chop' (vocal_percussive, confidence 0.95): 1 masking involvement(s) accepted as blend under profile policy.",
       "'Backing Vocals Stack' (vocal_stack, confidence 0.95): 1 masking involvement(s) accepted as blend under profile policy."
+    ],
+    "textural_coherence": [
+      "1 texture bed(s) present — a single or absent bed cannot be incoherent; neutral textural-coherence fallback."
     ]
   },
   "warnings": [

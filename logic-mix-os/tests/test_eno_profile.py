@@ -112,6 +112,7 @@ E_WEIGHTS = {
     "low_end_motion_score": 0.3,
     "loop_context_score": 0.4,
     "vocal_role_fit_score": 0.6,
+    "textural_coherence_score": 1.2,
 }
 
 # The axes where Eno is OUTSIDE the existing three's envelope — ABOVE all
@@ -229,8 +230,8 @@ E_AUTHORED_MAP = [
     },
     {
         "area": "textural coherence as its own measurement",
-        "level": "deferred",
-        "reason": "texture as composition is central to the documented practice, yet whether the beds cohere as one woven surface is not measurable as its own axis on exported stems at doctrine time — the negative-space, static-balance and depth axes are the closest shipped proxies",
+        "level": "high",
+        "reason": "hand-curated from documented Brian Eno technique — texture as composition is central to the documented practice (the treated, woven surfaces of the ambient records and the Another Green World-era beds), and it now ships as its OWN axis: a pure cross-bed dispersion statistic over the engine's texture-bed set (band_energy L1 spread + brightness, stereo_width and crest_factor stdev on the exported stems), weighted in this profile's high tier — low dispersion reads as one woven surface, high dispersion as a pile of unrelated layers; the reading is an acoustic dispersion proxy for the compositional sense of the phrase, never a claim on the composition itself",
     },
     {
         "area": "generative process",
@@ -739,13 +740,14 @@ def test_confidence_map_is_structurally_valid():
 
 
 def test_confidence_level_distribution():
-    """6 high (the five interpretation areas + the loop polarity) / 1 limited
-    (vocal blend — live, measured, coverage-bounded) / 8 deferred (the five
-    standing engine boundaries + Eno's own three honest deferrals)."""
+    """7 high (the five interpretation areas + the loop polarity + textural
+    coherence, flipped live by P-056) / 1 limited (vocal blend — live, measured,
+    coverage-bounded) / 7 deferred (the five standing engine boundaries + Eno's
+    own two remaining honest deferrals — generative process + ambient patience)."""
     levels = [e["level"] for e in load_profile("brian_eno").confidence_map]
-    assert levels.count("high") == 6
+    assert levels.count("high") == 7
     assert levels.count("limited") == 1
-    assert levels.count("deferred") == 8
+    assert levels.count("deferred") == 7
 
 
 def test_every_high_entry_names_its_documented_technique_basis():
@@ -778,26 +780,28 @@ def test_limited_blend_entry_matches_the_authored_policy():
                                     "confidence_floor": 0.85}
 
 
-def test_deferred_entries_carry_the_standing_boundaries_plus_his_own_three():
+def test_deferred_entries_carry_the_standing_boundaries_plus_his_own_two():
     """The five standing engine boundaries ship verbatim (they are engine
-    limits, not taste), PLUS Eno's own three honest deferrals — the concepts
-    the user named that have NO existing axis: textural coherence as its own
-    measurement, generative process, and ambient patience beyond the section
-    grain. Deferred, never faked from existing axes and never a schema
-    change (the packet's profile-only line)."""
+    limits, not taste), PLUS Eno's own two REMAINING honest deferrals —
+    generative process and ambient patience beyond the section grain. P-056
+    flipped his THIRD former deferral (textural coherence as its own
+    measurement) to a live, weighted HIGH axis, so it is no longer deferred.
+    Deferred, never faked from existing axes."""
     deferred = [e for e in load_profile("brian_eno").confidence_map
                 if e["level"] == "deferred"]
-    assert deferred == E_AUTHORED_MAP[7:]
+    assert deferred == E_AUTHORED_MAP[8:]
     areas = " | ".join(e["area"] for e in deferred)
-    for own in ("textural coherence", "generative process", "ambient patience"):
+    for own in ("generative process", "ambient patience"):
         assert own in areas, f"Eno's own deferral {own!r} missing"
+    # the flipped concept is no longer deferred — it is now a measured axis
+    assert "textural coherence" not in areas
     for standing in ("cultural loop recognizability", "true hook recurrence",
                      "motif provenance", "fingerprint typing",
                      "kick/sub temporal interlock", "per-section true-sub movement"):
         assert standing in areas, f"deferral {standing!r} missing"
     tim_deferred = [e for e in load_profile("timbaland").confidence_map
                     if e["level"] == "deferred"]
-    assert deferred[3:] == tim_deferred  # the shared engine boundaries, verbatim
+    assert deferred[2:] == tim_deferred  # the shared engine boundaries, verbatim
 
 
 def test_high_claims_are_consistent_with_the_machine_facts():

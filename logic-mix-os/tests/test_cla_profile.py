@@ -91,6 +91,7 @@ C_WEIGHTS = {
     "low_end_motion_score": 1.2,
     "loop_context_score": 0.5,
     "vocal_role_fit_score": 0.8,
+    "textural_coherence_score": 0,
 }
 
 # The axes where CLA is OUTSIDE the existing four's envelope — ABOVE all four
@@ -608,7 +609,13 @@ def test_coherent_pole_outside_the_existing_envelope():
             f"{key} is not a CLA pole (must sit below all four profiles)")
         outside += 1
     assert outside >= 2  # the requirement floor, cleared many times over
-    assert all(v > 0 for v in c.values())
+    # de-emphasis is never removal — every axis CLA OPTS INTO stays live; the
+    # sole weight-0 axis is textural_coherence, which P-056 ships at 0 for all
+    # four non-Eno producers (weighting it is a deferred taste call, EXPLICITLY
+    # out of this packet — only brian_eno opts in).
+    opted_in = {k: v for k, v in c.items() if k != "textural_coherence_score"}
+    assert all(v > 0 for v in opted_in.values())
+    assert c["textural_coherence_score"] == 0
 
 
 def test_argmax_no_existing_profile_has():
@@ -620,7 +627,10 @@ def test_argmax_no_existing_profile_has():
     c = load_profile("chris_lord_alge").doctrine["weights"]
     assert max(c, key=c.get) == "section_contrast_score"
     assert list(c.values()).count(max(c.values())) == 1  # unique argmax
-    assert min(c, key=c.get) == "negative_space_score"
+    # his lightest OPTED-IN axis is negative_space (he FILLS space) — the
+    # anti-Eno; textural_coherence is the not-yet-weighted axis at 0 (P-056).
+    opted_in = {k: v for k, v in c.items() if k != "textural_coherence_score"}
+    assert min(opted_in, key=opted_in.get) == "negative_space_score"
 
     for p in EXISTING:
         w = load_profile(p).doctrine["weights"]
@@ -802,7 +812,10 @@ def test_high_claims_are_consistent_with_the_machine_facts():
         assert all(c[key] > o[key] for o in others), key
     for key in ("physical_space_score", "depth_hierarchy_score"):         # entry 4
         assert all(c[key] < o[key] for o in others), key
-    assert c["negative_space_score"] == min(c.values())                   # entry 4
+    # negative_space is CLA's lightest OPTED-IN axis (he FILLS space); the
+    # not-yet-weighted textural_coherence axis ships at 0 (P-056).
+    opted_in = {k: v for k, v in c.items() if k != "textural_coherence_score"}
+    assert c["negative_space_score"] == min(opted_in.values())            # entry 4
     lc = load_profile("chris_lord_alge").doctrine["scorers"]["loop_context"]
     assert lc["static"] == 18.0 and lc["iconic"] == 92.0                  # entry 5
     assert load_profile("chris_lord_alge").protect_iconic_loops is True   # entry 5

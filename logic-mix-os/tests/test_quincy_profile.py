@@ -87,6 +87,7 @@ Q_WEIGHTS = {
     "low_end_motion_score": 0.5,
     "loop_context_score": 0.3,
     "vocal_role_fit_score": 0.7,
+    "textural_coherence_score": 0,
 }
 
 # The axes where Quincy is deliberately NOT between the other two — his own
@@ -319,7 +320,12 @@ def test_coherent_pole_not_averaged_mush():
     for key in GROOVE_SUPPORT:
         assert 0 < q[key] < tim[key], f"{key} not groove-support (below timbaland, > 0)"
         assert q[key] > ref[key], f"{key} not above the reference's 0"
-    assert all(w > 0 for w in q.values())
+    # support != removal — every axis Quincy OPTS INTO stays live; the sole
+    # weight-0 axis is textural_coherence, which P-056 ships at 0 for all four
+    # non-Eno producers (weighting it is a deferred taste call — only eno opts in).
+    opted_in = {k: v for k, v in q.items() if k != "textural_coherence_score"}
+    assert all(w > 0 for w in opted_in.values())
+    assert q["textural_coherence_score"] == 0
 
 
 def test_top_axis_emphasis_neither_profile_has():

@@ -115,6 +115,7 @@ CLA_COMPONENTS = {
         "negative_space_score": 62.3, "groove_coherence_score": 45.0,
         "rhythmic_surprise_score": 51.1, "low_end_motion_score": 60.0,
         "loop_context_score": 50.0, "vocal_role_fit_score": 85.0,
+        "textural_coherence_score": 55.0,
     },
     "dense_chorus_with_loops": {
         "physical_space_score": 67.6, "emotional_hierarchy_score": 86.0,
@@ -124,6 +125,7 @@ CLA_COMPONENTS = {
         "negative_space_score": 15.0, "groove_coherence_score": 99.1,
         "rhythmic_surprise_score": 20.0, "low_end_motion_score": 21.1,
         "loop_context_score": 18.0, "vocal_role_fit_score": 85.0,
+        "textural_coherence_score": 27.0,
     },
     "splice_loop_problem": {
         "physical_space_score": 81.3, "emotional_hierarchy_score": 86.0,
@@ -133,6 +135,7 @@ CLA_COMPONENTS = {
         "negative_space_score": 20.0, "groove_coherence_score": 45.0,
         "rhythmic_surprise_score": 27.8, "low_end_motion_score": 25.0,
         "loop_context_score": 18.0, "vocal_role_fit_score": 85.0,
+        "textural_coherence_score": 55.0,
     },
     "vocal_chop_groove": {
         "physical_space_score": 81.3, "emotional_hierarchy_score": 86.0,
@@ -142,6 +145,7 @@ CLA_COMPONENTS = {
         "negative_space_score": 19.4, "groove_coherence_score": 99.4,
         "rhythmic_surprise_score": 35.6, "low_end_motion_score": 60.0,
         "loop_context_score": 18.0, "vocal_role_fit_score": 85.0,
+        "textural_coherence_score": 55.0,
     },
 }
 
@@ -251,15 +255,18 @@ EXPERIMENTAL_CHORUS_SETS = {
 
 # REQUIREMENT 7, byte-level: the FOUR shipped JSONs are BLOB-UNCHANGED — the
 # three P-045 pins (fe8d947 base) plus the brian_eno hash at the P-050 base.
+# P-056 CONSCIOUSLY re-pinned these (every profile JSON gained the additive
+# textural_coherence scorer block + weight; brian_eno additionally opts into the
+# axis and flips its confidence entry). A test-visible decision, never drift.
 EXISTING_JSON_SHA256 = {
     "halee_ramone":
-        "de171b8ca6fc3abda3550abcb319dbfe789e4c14f997ce2999a68ce43d1d8074",
+        "fd99d9f1e31400c3c4c764e2bc3a1c7d185fb3d69292c98641170548838df25d",
     "timbaland":
-        "b8047afb299c83787d77000eca28908453a630ea5cf0b5afd994895566547b49",
+        "8715541491253d4376ea5b0132e5a5d96c16710f180e1d49df1cd4affe5d04d9",
     "quincy_jones":
-        "20ae6824a0b0f2b7ec583047f8ad55244daf3006421170ffd4e844fe27363bd3",
+        "2c1dead63c8da8b2c68d29676002f9e9c4d37193ade32ccdd264569d28ddb4e8",
     "brian_eno":
-        "f2211c8da1b56769fdb37e32495018bd4d7f4f2b749cd583be19c904b8f38cae",
+        "95407ae7ca8056665f58cf5356a8cd98e750ece33333a24386c01b955def256d",
 }
 
 

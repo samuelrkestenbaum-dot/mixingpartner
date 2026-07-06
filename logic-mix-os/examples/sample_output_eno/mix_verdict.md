@@ -6,13 +6,13 @@
 
 ## Overall Diagnosis
 
-Overall mix readiness 65.5/100. Static balance 80.0/100; dynamic movement 28.2/100. The mix is more balanced than it is alive — invest in section contrast and rides, not more EQ.
+Overall mix readiness 64.3/100. Static balance 80.0/100; dynamic movement 28.2/100. The mix is more balanced than it is alive — invest in section contrast and rides, not more EQ.
 
 ## Scores
 
 | Dimension | Score | |
 |---|---|---|
-| Overall mix readiness | 65.5/100 | `█████████████░░░░░░░` |
+| Overall mix readiness | 64.3/100 | `█████████████░░░░░░░` |
 | Physical space / depth | 81.3/100 | `████████████████░░░░` |
 | Emotional hierarchy / vocal belief | 86.0/100 | `█████████████████░░░` |
 | Vocal centrality | 90.0/100 | `██████████████████░░` |
@@ -36,6 +36,7 @@ _Per-area trust labels from the producer profile: which parts of this judgment c
 - the voice as a texture in the field (vocal centrality, emotional hierarchy as retained measurement) — hand-curated from documented Brian Eno technique — the treated, instrument-like vocal practice of the Another Green World-era records and the looped wordless voices of Music for Airports: the voice sits inside the environment rather than in front of it, so these axes stay live at weights below every existing profile — a taste-layer de-emphasis only, while every engine-side vocal safety protection stays intact
 - loop context interpretation (static vs iconic) — hand-curated from documented Brian Eno practice — the tape-loop systems of Discreet Music and the Frippertronics-era work treat a loop as generative material, and the found voices of My Life in the Bush of Ghosts function as the record's identity: a static dominant loop reads as unrealized material rather than as an arrested arrangement (authored 35.0, above every existing profile), an iconic-functioning loop is protected as identity (authored 88.0, protect_iconic_loops: true), and every detection floor stays on the shared basis
 - groove as field texture (beat identity, groove coherence, rhythmic surprise, low-end motion as retained measurement) — hand-curated from documented Brian Eno technique — on the ambient records and in the generative writings the pulse sits inside the environment rather than carrying the record's identity: these axes stay live at this profile's lowest weights — texture, never engine
+- textural coherence as its own measurement — hand-curated from documented Brian Eno technique — texture as composition is central to the documented practice (the treated, woven surfaces of the ambient records and the Another Green World-era beds), and it now ships as its OWN axis: a pure cross-bed dispersion statistic over the engine's texture-bed set (band_energy L1 spread + brightness, stereo_width and crest_factor stdev on the exported stems), weighted in this profile's high tier — low dispersion reads as one woven surface, high dispersion as a pile of unrelated layers; the reading is an acoustic dispersion proxy for the compositional sense of the phrase, never a claim on the composition itself
 
 **Limited**
 
@@ -43,7 +44,6 @@ _Per-area trust labels from the producer profile: which parts of this judgment c
 
 **Deferred**
 
-- textural coherence as its own measurement — texture as composition is central to the documented practice, yet whether the beds cohere as one woven surface is not measurable as its own axis on exported stems at doctrine time — the negative-space, static-balance and depth axes are the closest shipped proxies
 - generative process — whether the material behaves as a system — rules, drift, self-variation, the Oblique Strategies working method — is a process property of the session, not measurable on exported stems at doctrine time; the loop-context evolution reading is the closest shipped proxy
 - ambient patience (time-domain evolution beyond section grain) — change on the time scale the documented practice composes for spans whole records, and section analysis is the engine's finest committed time grain — slow evolution beyond that grain is not measurable at doctrine time
 - cultural loop recognizability — iconic-ness as cultural recognition needs provenance/manifest signals not measurable on exported stems at doctrine time; the acoustic loop-context proxy is what ships

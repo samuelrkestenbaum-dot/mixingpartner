@@ -113,7 +113,7 @@ pinned in the test suite:
 
 | Reading | Halee/Ramone (reference) | Timbaland | Quincy Jones | Brian Eno | Chris Lord-Alge |
 |---|---|---|---|---|---|
-| Overall mix readiness | **76.3** | **60.9** | **68.8** | **65.5** | **67.8** |
+| Overall mix readiness | **76.3** | **60.9** | **68.8** | **64.3** | **67.8** |
 | Vocal role fit | 65.0 | 85.0 | 85.0 | 85.0 | 85.0 |
 | Loop context | 15.0 | 10.0 | 12.0 | 35.0 | 18.0 |
 

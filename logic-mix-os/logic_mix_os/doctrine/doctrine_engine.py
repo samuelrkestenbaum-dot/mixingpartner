@@ -134,6 +134,15 @@ def score_doctrine(
     # ``acceptable_blend: false``, so the gated path is unreachable under
     # defaults and the reading is byte-identical to the policy-free form.
     vrf, vrf_ev = _vocal_role_fit(records, events, doctrine, prof.vocal_blend_policy)
+    # P-056: the FIFTEENTH axis and the first ENGINE-DEEPENING axis since the
+    # producer arc — TEXTURAL COHERENCE, a PURE cross-bed dispersion statistic
+    # over the engine-owned texture-bed surface (how much the record's texture
+    # beds RESEMBLE one another). Appended LAST (after vocal_role_fit) so the
+    # pre-existing 14-term summation order is preserved and ``overall`` stays
+    # bit-identical for the four non-Eno producers (their textural_coherence
+    # weight is 0); brian_eno weights it in his high tier so his overall MOVES
+    # on a new measured signal, not a re-weighting of old ones.
+    tc, tc_ev = _textural_coherence(records, doctrine)
 
     component_scores = {
         "physical_space_score": physical_space,
@@ -150,6 +159,7 @@ def score_doctrine(
         "low_end_motion_score": lem,
         "loop_context_score": lc,
         "vocal_role_fit_score": vrf,
+        "textural_coherence_score": tc,
     }
     weights = doctrine["weights"]
     present = {k: v for k, v in component_scores.items() if v is not None}
@@ -177,6 +187,7 @@ def score_doctrine(
             "low_end_motion": lem_ev,
             "loop_context": lc_ev,
             "vocal_role_fit": vrf_ev,
+            "textural_coherence": tc_ev,
         },
         "warnings": warnings,
         # P-031: the per-area honesty map, copied VERBATIM from the PASSED
@@ -1363,3 +1374,117 @@ def _vocal_role_fit(records: List[Dict], events: List[Dict],
                     )
 
     return _clamp(score), ev
+
+
+# The five spectral bands ``audio_metrics`` exposes on ``metrics.band_energy``
+# (constants.BANDS), read as a fixed 5-vector for the tonal dispersion term.
+_TEXTURAL_BANDS = ("low", "low_mid", "mid", "presence", "high")
+
+
+def _textural_bed_set(records: List[Dict]) -> List[Dict]:
+    """The TEXTURE-BED surface, replicated from ``creative._dropout_texture_beds``
+    (felt midground/background layers + imported loop/sample beds), returning the
+    RECORDS (not names) so the axis can read their per-stem metrics. Profile-blind
+    and pinned equal to that engine-owned surface in
+    ``tests/test_textural_coherence.py`` so the two can never silently fork —
+    replicated (not imported) to keep the doctrine → creative dependency direction
+    clean (creative already imports doctrine's ``read_loop_context``)."""
+    return [
+        r for r in records
+        if (r.get("perceptual_role") == "felt"
+            and r.get("depth_default") in {"midground", "background"})
+        or r.get("source_kind") in LOOP_SAMPLE_KINDS
+    ]
+
+
+def _coherence_from_dispersion(baseline: float, dispersion: float) -> float:
+    """Textural coherence is the INVERSE of cross-bed dispersion: the baseline
+    minus the total (sub-weighted, normalized) dispersion penalty. Factored to a
+    single module-level seam so the dispersion SIGN is ONE mutation-testable
+    point (P-056 sabotage proof: flipping it swaps the coherent/incoherent
+    synthetic cases). Not clamped here — the caller clamps."""
+    return baseline - dispersion
+
+
+def _textural_coherence(records: List[Dict], doctrine: Dict = _DOCTRINE):
+    """Producer-AGNOSTIC scorer for TEXTURAL COHERENCE — how much the record's
+    TEXTURE BEDS RESEMBLE one another (P-056, the FIFTEENTH axis and the first
+    engine-deepening axis since the producer arc).
+
+    THE DEFINITION (the user's confirmed D1=A): coherence is a PURE cross-bed
+    DISPERSION statistic over the bed set ``B`` (the engine-owned
+    ``creative._dropout_texture_beds`` surface, replicated in
+    ``_textural_bed_set``): low cross-bed dispersion → HIGH coherence (the beds
+    read as one woven surface); high dispersion → LOW coherence (a pile of
+    unrelated layers). ``score = baseline - total_dispersion``, clamped 0..100.
+
+    THREE EQUALLY-WEIGHTED FEATURE FAMILIES (sub-weights + normalization scales
+    live in ``doctrine["scorers"]["textural_coherence"]`` so they are per-profile
+    tunable WITHOUT a code change):
+      * **tonal** — the cross-bed dispersion of each bed's 5-band ``band_energy``
+        vector (L1 aggregation over bands of the per-band ``pstdev``) PLUS the
+        ``pstdev`` of ``brightness``.
+      * **spatial** — the ``pstdev`` of ``stereo_width``.
+      * **dynamic** — the ``pstdev`` of ``crest_factor_db``.
+
+    It reads NOTHING else — never room, occupancy-mean, depth-count, foreground
+    salience or rhythm — so distinctness from ``negative_space`` /
+    ``physical_space`` / ``depth_hierarchy`` / ``groove_coherence`` is PROVABLE,
+    not asserted (pinned in ``tests/test_textural_coherence.py``).
+
+    ALWAYS-FLOAT FALLBACK (mirrors ``_negative_space`` / ``_groove_coherence``):
+    fewer than two beds → the documented NEUTRAL float (a single or absent bed
+    cannot be 'incoherent'); never None, never a crash.
+
+    HONEST BOUNDARY — this measures cross-bed feature dispersion on exported
+    stems as a PROXY for 'the beds cohere as one woven surface'; it does not read
+    the compositional sense of the phrase (that stays a producer-profile taste
+    label, not an engine claim). Zero new DSP, zero new dependency: every feature
+    is already extracted per stem.
+    """
+    c = doctrine["scorers"]["textural_coherence"]
+    ev: List[str] = []
+
+    beds = _textural_bed_set(records)
+    if len(beds) < 2:
+        ev.append(
+            f"{len(beds)} texture bed(s) present — a single or absent bed cannot "
+            f"be incoherent; neutral textural-coherence fallback."
+        )
+        return _clamp(c["neutral"]), ev
+
+    def _band(r: Dict, k: str) -> float:
+        return float((r.get("metrics", {}).get("band_energy") or {}).get(k, 0.0) or 0.0)
+
+    def _feat(r: Dict, k: str) -> float:
+        return float(r.get("metrics", {}).get(k, 0.0) or 0.0)
+
+    # tonal: L1 spread of the band vectors (sum of per-band pstdev) + brightness
+    # pstdev. brightness/band are both 0..1-scaled, so a single family scale each.
+    band_spread = sum(
+        statistics.pstdev([_band(r, k) for r in beds]) for k in _TEXTURAL_BANDS
+    )
+    bright_spread = statistics.pstdev([_feat(r, "brightness") for r in beds])
+    width_spread = statistics.pstdev([_feat(r, "stereo_width") for r in beds])
+    crest_spread = statistics.pstdev([_feat(r, "crest_factor_db") for r in beds])
+
+    tonal = (band_spread * c["band_spread_scale"]
+             + bright_spread * c["brightness_spread_scale"])
+    spatial = width_spread * c["stereo_width_spread_scale"]
+    dynamic = crest_spread * c["crest_spread_scale"]
+
+    dispersion = (c["tonal_weight"] * tonal
+                  + c["spatial_weight"] * spatial
+                  + c["dynamic_weight"] * dynamic)
+    score = _clamp(_coherence_from_dispersion(c["baseline"], dispersion))
+
+    ev.append(
+        f"{len(beds)} texture beds compared: tonal dispersion {tonal:.1f} "
+        f"(band L1 spread {band_spread:.3f}, brightness spread {bright_spread:.3f}), "
+        f"spatial dispersion {spatial:.1f} (stereo-width spread {width_spread:.3f}), "
+        f"dynamic dispersion {dynamic:.1f} (crest spread {crest_spread:.2f} dB) — "
+        f"coherence {score:.1f} = {c['baseline']:.0f} minus total cross-bed "
+        f"dispersion (low dispersion → one woven surface; high → a pile of "
+        f"unrelated layers)."
+    )
+    return score, ev

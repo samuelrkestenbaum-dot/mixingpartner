@@ -112,7 +112,8 @@
       "rhythmic_surprise_score": 0.2,
       "low_end_motion_score": 0.3,
       "loop_context_score": 0.4,
-      "vocal_role_fit_score": 0.6
+      "vocal_role_fit_score": 0.6,
+      "textural_coherence_score": 1.2
     },
     "baselines": {
       "physical_space": 86.0,
@@ -236,6 +237,17 @@
         "baseline": 70.0,
         "lead_forward_bonus": 15,
         "masked_penalty": 10
+      },
+      "textural_coherence": {
+        "neutral": 55.0,
+        "baseline": 100.0,
+        "tonal_weight": 1.0,
+        "spatial_weight": 1.0,
+        "dynamic_weight": 1.0,
+        "band_spread_scale": 45.0,
+        "brightness_spread_scale": 45.0,
+        "stereo_width_spread_scale": 45.0,
+        "crest_spread_scale": 2.0
       }
     }
   },
@@ -291,8 +303,8 @@
     },
     {
       "area": "textural coherence as its own measurement",
-      "level": "deferred",
-      "reason": "texture as composition is central to the documented practice, yet whether the beds cohere as one woven surface is not measurable as its own axis on exported stems at doctrine time — the negative-space, static-balance and depth axes are the closest shipped proxies"
+      "level": "high",
+      "reason": "hand-curated from documented Brian Eno technique — texture as composition is central to the documented practice (the treated, woven surfaces of the ambient records and the Another Green World-era beds), and it now ships as its OWN axis: a pure cross-bed dispersion statistic over the engine's texture-bed set (band_energy L1 spread + brightness, stereo_width and crest_factor stdev on the exported stems), weighted in this profile's high tier — low dispersion reads as one woven surface, high dispersion as a pile of unrelated layers; the reading is an acoustic dispersion proxy for the compositional sense of the phrase, never a claim on the composition itself"
     },
     {
       "area": "generative process",
