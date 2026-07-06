@@ -21,7 +21,7 @@ from .bridge.executor import dry_run
 from .bridge.exporter import export_actions
 from .doctrine.producer_profile import _PRODUCERS_DIR, ProducerProfile, load_profile
 from .memory import ProjectMemory
-from .onramp import bundle_field_session, scaffold_manifest, write_manifest_draft
+from .onramp import bundle_field_session, write_manifest_draft
 from .pipeline import analyze, write_artifacts
 from .planners.next_pass_planner import generate_creative_hypotheses
 from .project import load_manifest
@@ -419,16 +419,21 @@ def _run_album(args) -> int:
 def _run_scaffold_manifest(args) -> int:
     stems = Path(args.stems)
     out = Path(args.out) if args.out else stems.resolve().parent / "project_manifest.json"
+    detect = getattr(args, "detect_sections", False)
     try:
-        path = write_manifest_draft(stems, out, force=args.force)
+        path = write_manifest_draft(stems, out, force=args.force, detect_sections=detect)
     except FileExistsError:
         print(f"Refusing to overwrite existing manifest: {out} (use --force).",
               file=sys.stderr)
         return 2
-    manifest = scaffold_manifest(stems)
+    manifest = load_manifest(path)
     print(f"Wrote draft manifest: {path}")
     print(f"  tracks: {len(manifest['tracks'])} | "
+          f"sections: {len(manifest['sections'])} | "
           f"needs review: {len(manifest['_needs_review'])}")
+    if detect and any(s.get("inferred") for s in manifest["sections"]):
+        print("  sections were inferred from the audio (marked inferred) — "
+              "review the boundaries and rename/adjust them.")
     for name in manifest["_needs_review"]:
         print(f"    - {name} (confirm source_kind)")
     print("Next: edit the _needs_review guesses, fill sections/intent, "
@@ -595,6 +600,9 @@ def build_parser() -> argparse.ArgumentParser:
     smf.add_argument("--stems", required=True, help="Folder of exported stems")
     smf.add_argument("--out", help="Output path (default: <stems>/../project_manifest.json)")
     smf.add_argument("--force", action="store_true", help="Overwrite an existing manifest")
+    smf.add_argument("--detect-sections", action="store_true",
+                     help="Infer draft sections from the stems' arrangement events "
+                          "(audio-driven, opt-in; default off = one header-only stub)")
     smf.set_defaults(func=_run_scaffold_manifest)
 
     cps = sub.add_parser("capture-session",

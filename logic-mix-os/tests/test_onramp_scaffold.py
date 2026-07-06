@@ -16,9 +16,11 @@ from __future__ import annotations
 
 import json
 
+import numpy as np
 import pytest
 
 from conftest import FIXTURE_NAMES, ROOT, VOCAL_CHOP_FIXTURE
+from fixtures.generate_fixtures import SR as FIXTURE_SR, write_wav
 
 from logic_mix_os.analyzers.source_material_detector import (
     detect_source_material,
@@ -145,6 +147,94 @@ class TestForceGuard:
         out.write_text("{}\n", encoding="utf-8")
         write_manifest_draft(stems, out, force=True)
         assert load_manifest(out)["_draft"] is True
+
+
+def _write_arrangement_stems(folder):
+    """A synthetic multi-section arrangement written to ``folder`` as WAV stems:
+    a pad THROUGHOUT (always-on -> no boundary), drums in @8 out @32, bass in
+    @16, vocal in @24 -> entrances/exits the detector reads as boundaries."""
+    folder.mkdir(parents=True, exist_ok=True)
+    dur = 40.0
+    n = int(dur * FIXTURE_SR)
+    rng = np.random.default_rng(0)
+
+    def stem(windows, seed):
+        r = np.random.default_rng(seed)
+        x = np.zeros(n, dtype=np.float64)
+        for s, e in windows:
+            a, b = int(s * FIXTURE_SR), min(n, int(e * FIXTURE_SR))
+            x[a:b] = r.standard_normal(b - a) * 0.1
+        return x
+
+    write_wav(folder / "Pad.wav", stem([(0, dur)], 0))
+    write_wav(folder / "Drums.wav", stem([(8, 32)], 1))
+    write_wav(folder / "Bass.wav", stem([(16, dur)], 2))
+    write_wav(folder / "Lead Vocal.wav", stem([(24, dur)], 3))
+    return folder
+
+
+@pytest.mark.usefixtures("_ensure_fixtures")
+class TestDetectSectionsOptIn:
+    """P-059: the scaffolder's audio-driven section detection is STRICTLY opt-in
+    and shares the ONE detector — default OFF stays the header-only single stub."""
+
+    def test_default_path_is_single_section_stub_even_with_arrangement(self, tmp_path):
+        # A folder with real arrangement events, but the flag OFF: the draft
+        # stays the byte-identical header-only single stub (reads no audio).
+        stems = _write_arrangement_stems(tmp_path / "stems")
+        m = scaffold_manifest(stems)
+        assert len(m["sections"]) == 1
+        assert m["sections"][0]["section_id"] == "section_1"
+        assert m["sections"][0]["start_time"] == "0:00"
+        assert m["sections"][0]["end_time"] == ""
+        assert not any(s.get("inferred") for s in m["sections"])
+
+    def test_opt_in_infers_multiple_inferred_sections(self, tmp_path):
+        stems = _write_arrangement_stems(tmp_path / "stems")
+        m = scaffold_manifest(stems, detect_sections=True)
+
+        assert len(m["sections"]) >= 2, m["sections"]
+        for sec in m["sections"]:
+            assert sec["inferred"] is True
+            assert sec["energy_tag"] in {"high", "med", "low"}
+            # honest structural labels — never verse/chorus/bridge naming.
+            assert sec["name"].startswith("Section ")
+        # the always-on pad added no boundary; the three entrances + one exit did.
+        assert len(m["sections"]) == 5, [s["start_time"] for s in m["sections"]]
+        # the tracks + draft annotations are unchanged by the flag.
+        assert {t["file"] for t in m["tracks"]} == {
+            "Pad.wav", "Drums.wav", "Bass.wav", "Lead Vocal.wav"
+        }
+        assert m["_draft"] is True
+
+    def test_opt_in_is_deterministic(self, tmp_path):
+        stems = _write_arrangement_stems(tmp_path / "stems")
+        assert scaffold_manifest(stems, detect_sections=True) == \
+               scaffold_manifest(stems, detect_sections=True)
+
+    def test_opt_in_draft_round_trips_through_analyze(self, tmp_path):
+        stems = _write_arrangement_stems(tmp_path / "stems")
+        out = tmp_path / "project_manifest.json"
+        write_manifest_draft(stems, out, detect_sections=True)
+
+        loaded = load_manifest(out)
+        assert len(loaded["sections"]) >= 2
+        # >=2 supplied (now-detected) sections drive the pipeline's supplied
+        # path: analyze runs and the section analysis carries no detector keys
+        # (the inferred markers live on the manifest draft, for the human).
+        result = analyze(str(stems), loaded)
+        assert result.section_analysis
+        assert len(result.section_analysis) == len(loaded["sections"])
+        for entry in result.section_analysis:
+            assert "inferred" not in entry
+
+    def test_written_opt_in_file_is_byte_identical_on_rerun(self, tmp_path):
+        stems = _write_arrangement_stems(tmp_path / "stems")
+        a = tmp_path / "a.json"
+        b = tmp_path / "b.json"
+        write_manifest_draft(stems, a, detect_sections=True)
+        write_manifest_draft(stems, b, detect_sections=True)
+        assert a.read_bytes() == b.read_bytes()
 
 
 @pytest.mark.usefixtures("_ensure_fixtures")

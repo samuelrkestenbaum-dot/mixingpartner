@@ -64,8 +64,34 @@ existing manifest). The draft carries one track per stem with a guessed
 Open the draft and finish it: confirm the `_needs_review` guesses, fill in the
 `sections` (start/end timecodes + `emotional_goal`) and the `intent`
 (`singular_emotional_truth`, `references`, `negative_constraints`), set
-`tempo` / `key`, and remove `_draft` when it is real. The scaffolder never
-invents section timecodes from the audio — that judgment stays yours.
+`tempo` / `key`, and remove `_draft` when it is real. By default the scaffolder
+never invents section timecodes from the audio — that judgment stays yours.
+
+### Optional: infer draft sections from the audio (`--detect-sections`)
+
+If you would rather start from a machine's best guess at the arrangement than a
+single blank section, add `--detect-sections`:
+
+```
+python -m logic_mix_os.cli scaffold-manifest \
+  --stems ~/Music/MySong/stems --detect-sections
+```
+
+This runs the same audio-driven detector the engine uses when a manifest gives
+it fewer than two sections. It reads each stem's **entry/exit events over time**
+— "based on what's added at various points" — and writes the inferred
+boundaries into `sections`, each marked `"inferred": true` with a relative
+`"energy_tag"` (`high` / `med` / `low`) and an honest structural label
+(`Section 1`, `Section 2`, … — never a claimed verse/chorus). An always-on
+element (a full-mix bus, an eternal pad) never counts as a boundary. Treat these
+as a **starting point to review and rename**, not ground truth: adjust the
+timecodes, add `emotional_goal`s, and drop the `inferred` markers when you have
+confirmed them. The default (flag omitted) is unchanged — a single header-only
+section stub, no audio read.
+
+> Why it exists: when a whole song is handed to the engine as one block, it sees
+> no section contrast at all (a false "no dynamics" reading). Detected sections
+> give the doctrine engine the distinct, contrasting sections it needs.
 
 ## 4. Drive a first session with an explicit `memory_dir`
 
