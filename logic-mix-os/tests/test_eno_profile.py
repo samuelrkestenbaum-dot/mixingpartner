@@ -835,6 +835,34 @@ def test_whole_profile_language_is_observational():
 
 
 # --------------------------------------------------------------------------- #
+# P-056 — THE CONFIDENCE-FLIP PROOF (textural coherence: deferred -> high).
+# --------------------------------------------------------------------------- #
+def test_p056_textural_coherence_deferral_flipped_to_high_and_measured():
+    """P-056 flipped Eno's own former deferral — 'textural coherence as its own
+    measurement' — from ``deferred`` to a live, weighted ``high`` axis: the
+    entry now reads high, names its documented-technique basis (the grounding
+    standard) AND states the new measurement (bed-similarity DISPERSION on the
+    exported stems), and the axis is weighted in his high tier (opted in),
+    below his poles."""
+    p = load_profile("brian_eno")
+    entry = next(e for e in p.confidence_map
+                 if e["area"] == "textural coherence as its own measurement")
+    assert entry["level"] == "high"                       # flipped from deferred
+    assert DOCUMENTED_STAMP in entry["reason"]            # the grounding standard
+    assert "dispersion" in entry["reason"]                # names the new measurement
+    # no producer still marks this concept deferred (it is now a real axis)
+    for name in ("brian_eno",) + EXISTING:
+        for e in load_profile(name).confidence_map:
+            if e["area"] == "textural coherence as its own measurement":
+                assert e["level"] != "deferred", name
+    # the axis is genuinely OPTED INTO (weighted), in his high tier, below poles
+    w = p.doctrine["weights"]
+    assert w["textural_coherence_score"] == 1.2
+    assert 0 < w["textural_coherence_score"] < w["negative_space_score"]
+    assert w["textural_coherence_score"] < w["physical_space_score"]
+
+
+# --------------------------------------------------------------------------- #
 # 7. HIS OWN VOICE — the authored evidence lines.
 # --------------------------------------------------------------------------- #
 def test_promotion_reason_is_his_own_authored_voice():
