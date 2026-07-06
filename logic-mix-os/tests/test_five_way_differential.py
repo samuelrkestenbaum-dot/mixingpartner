@@ -261,14 +261,17 @@ EXPERIMENTAL_CHORUS_SETS = {
 # three P-045 pins (fe8d947 base) plus the brian_eno hash at the P-050 base.
 # P-056 CONSCIOUSLY re-pinned these (every profile JSON gained the additive
 # textural_coherence scorer block + weight; brian_eno additionally opts into the
-# axis and flips its confidence entry). A test-visible decision, never drift.
+# axis and flips its confidence entry). P-057 CONSCIOUSLY re-pinned the
+# quincy_jones hash again (he opts the axis into weight 0.6 + gains a textural
+# confidence entry); halee_ramone/timbaland/brian_eno are byte-unchanged from
+# P-056. A test-visible decision, never drift.
 EXISTING_JSON_SHA256 = {
     "halee_ramone":
         "fd99d9f1e31400c3c4c764e2bc3a1c7d185fb3d69292c98641170548838df25d",
     "timbaland":
         "8715541491253d4376ea5b0132e5a5d96c16710f180e1d49df1cd4affe5d04d9",
     "quincy_jones":
-        "2c1dead63c8da8b2c68d29676002f9e9c4d37193ade32ccdd264569d28ddb4e8",
+        "0b28f144f93b481d32a5a4608f13ab370435c421137a79c854874adcd99fc6ec",
     "brian_eno":
         "95407ae7ca8056665f58cf5356a8cd98e750ece33333a24386c01b955def256d",
 }
@@ -663,11 +666,16 @@ def test_divergence_audit_vs_the_opt_in_producers(name, five_analyzed):
 # P-056 — THE FIFTEENTH-AXIS PERMANENT PROOF (textural_coherence).
 #
 # The engine-deepening packet's binding differential: Eno's overall MOVED on a
-# new measured signal; the four non-Eno producers are byte-identical (the
-# weight-0 proof); the axis key is present + measured in ALL FIVE artifacts;
-# Eno's confidence-map deferral flipped live; and the axis is load-bearing —
-# zeroing his weight reverts his overall and flipping the dispersion sign swaps
-# the coherent/incoherent synthetic cases.
+# new measured signal; the non-Eno producers weighting the axis at 0 are
+# byte-identical (the weight-0 proof); the axis key is present + measured in ALL
+# FIVE artifacts; Eno's confidence-map deferral flipped live; and the axis is
+# load-bearing — zeroing his weight reverts his overall and flipping the
+# dispersion sign swaps the coherent/incoherent synthetic cases.
+#
+# P-057 SHRANK the weight-0 set from four to THREE: quincy_jones now opts the
+# axis into weight 0.6 (his own P-057 MOVE + sabotage proof lives in the
+# dedicated block at the end of this file), leaving {halee_ramone, timbaland,
+# chris_lord_alge} as the byte-identical weight-0 set below.
 # =========================================================================== #
 
 # Eno's PRE-AXIS overalls — his standing pre-P-056 four-way values (the 14-term
@@ -678,7 +686,9 @@ PRE_AXIS_ENO_OVERALLS = {
     "splice_loop_problem": 59.3,
     "vocal_chop_groove": 65.5,
 }
-_NON_ENO = ("halee_ramone", "timbaland", "quincy_jones", "chris_lord_alge")
+# P-057: quincy_jones dropped from this set (he now weights the axis 0.6); the
+# byte-identical weight-0 set is the remaining three.
+_NON_ENO = ("halee_ramone", "timbaland", "chris_lord_alge")
 _TEXTURAL = "textural_coherence_score"
 
 
@@ -722,10 +732,12 @@ def test_p056_move_is_largest_on_the_bed_carrying_fixture(five_analyzed):
 
 @pytest.mark.parametrize("name", ALL_FIXTURES)
 def test_p056_four_non_eno_byte_identical_the_weight_zero_proof(name, five_analyzed):
-    """(b) The four non-Eno producers are BYTE-IDENTICAL: adding the 15th axis
-    at weight 0 leaves both the numerator and the denominator untouched, so the
-    15-term mean equals the 14-term mean equals the live overall — while the
-    axis is still present and measured (a 0..100 number), just unweighted."""
+    """(b) The weight-0 non-Eno producers are BYTE-IDENTICAL: adding the 15th
+    axis at weight 0 leaves both the numerator and the denominator untouched, so
+    the 15-term mean equals the 14-term mean equals the live overall — while the
+    axis is still present and measured (a 0..100 number), just unweighted.
+    P-057 shrank ``_NON_ENO`` from four to three (quincy_jones now weights the
+    axis 0.6); this proof holds for the remaining {halee, timbaland, cla}."""
     for producer in _NON_ENO:
         ds = five_analyzed[name][producer].doctrine_score
         comps_15 = {k: ds[k] for k in COMPONENT_KEYS}

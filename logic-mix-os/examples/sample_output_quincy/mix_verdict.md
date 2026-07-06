@@ -6,13 +6,13 @@
 
 ## Overall Diagnosis
 
-Overall mix readiness 68.8/100. Static balance 80.0/100; dynamic movement 28.2/100. The mix is more balanced than it is alive — invest in section contrast and rides, not more EQ.
+Overall mix readiness 68.2/100. Static balance 80.0/100; dynamic movement 28.2/100. The mix is more balanced than it is alive — invest in section contrast and rides, not more EQ.
 
 ## Scores
 
 | Dimension | Score | |
 |---|---|---|
-| Overall mix readiness | 68.8/100 | `██████████████░░░░░░` |
+| Overall mix readiness | 68.2/100 | `██████████████░░░░░░` |
 | Physical space / depth | 81.3/100 | `████████████████░░░░` |
 | Emotional hierarchy / vocal belief | 86.0/100 | `█████████████████░░░` |
 | Vocal centrality | 90.0/100 | `██████████████████░░` |
@@ -40,6 +40,7 @@ _Per-area trust labels from the producer profile: which parts of this judgment c
 **Limited**
 
 - vocal blend interpretation — the opt-in is authored from documented technique — Bruce Swedien's stacked background-vocal ensembles in the documented Jones/Swedien engineering partnership (the Acusonic recording process: a prominent lead atop an arranged vocal ensemble) — and the gate is live and measured on real exported-stem data: a qualified vocal chop and stack under masking read 85.0 on vocal_role_fit against the reference's 65.0 at this profile's authored 0.8 confidence floor; the level stays limited because coverage is bounded: events arise only from the masker-instrument set, info-tier events are emitted but not consumed, and vocal-band events carry no per-track masking risk
+- textural coherence as its own measurement — the opt-in is authored from documented Quincy Jones technique — big-band and orchestral arranging keeps the ensemble's texture beds sharing one coherent surface (the section timbres blend into a single arranged voice rather than reading as a pile of unrelated layers), and it ships as a pure cross-bed dispersion statistic over the engine's texture-bed set (band_energy L1 spread + brightness, stereo_width and crest_factor stdev on the exported stems); the level stays limited, NOT high, because this reading is a SECONDARY support-tier concern that runs partly counter to this profile's center of gravity — the distinct, readable ensemble layer (depth_hierarchy weighted 1.4, above this axis's authored 0.6): the arrangement keeps every part in its own readable place first, so the one-woven-surface framing is a support reading, never the arrangement-led practice's engine
 
 **Deferred**
 

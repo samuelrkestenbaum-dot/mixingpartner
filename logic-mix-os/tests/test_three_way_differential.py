@@ -85,25 +85,33 @@ COMPONENT_KEYS = [
     "dynamic_mix_score", "beat_identity_score", "negative_space_score",
     "groove_coherence_score", "rhythmic_surprise_score",
     "low_end_motion_score", "loop_context_score", "vocal_role_fit_score",
+    # P-057 — the 15th axis (bed-similarity dispersion) now WEIGHTED for Quincy
+    # (0.6), so his overall reconstruction must include it (Halee/Timbaland keep
+    # it at weight 0, so their overalls are unmoved).
+    "textural_coherence_score",
 ]
 
 # Same stems, THREE judgments — every overall pinned to the decimal (the
 # halee_ramone / timbaland columns are the standing P-032h/P-035 pins,
 # re-asserted with the third profile live = requirement 6; the quincy_jones
 # column was measured by running the engine, then pinned = the packet's
-# deterministic discipline).
+# deterministic discipline). P-057 MOVED the quincy_jones column (70.0 -> 69.2 /
+# 62.1 -> 60.4 / 61.9 -> 61.6 / 68.8 -> 68.2): he opts into the 15th axis,
+# textural_coherence_score, at a support-tier 0.6, which reads 55/27/55/55 and
+# pulls his weighted mean down (halee/timbaland keep the axis at weight 0, so
+# their columns are byte-identical).
 THREE_WAY_OVERALLS = {
     "simple_vocal_piano_song": {
-        "halee_ramone": 73.8, "timbaland": 68.4, "quincy_jones": 70.0,
+        "halee_ramone": 73.8, "timbaland": 68.4, "quincy_jones": 69.2,
     },
     "dense_chorus_with_loops": {
-        "halee_ramone": 70.7, "timbaland": 52.6, "quincy_jones": 62.1,
+        "halee_ramone": 70.7, "timbaland": 52.6, "quincy_jones": 60.4,
     },
     "splice_loop_problem": {
-        "halee_ramone": 74.3, "timbaland": 49.7, "quincy_jones": 61.9,
+        "halee_ramone": 74.3, "timbaland": 49.7, "quincy_jones": 61.6,
     },
     "vocal_chop_groove": {
-        "halee_ramone": 76.3, "timbaland": 60.9, "quincy_jones": 68.8,
+        "halee_ramone": 76.3, "timbaland": 60.9, "quincy_jones": 68.2,
     },
 }
 
@@ -129,6 +137,7 @@ QUINCY_COMPONENTS = {
         "low_end_motion_score": 60.0,
         "loop_context_score": 50.0,
         "vocal_role_fit_score": 85.0,
+        "textural_coherence_score": 55.0,  # <2 beds → the neutral fallback (P-057)
     },
     "dense_chorus_with_loops": {
         "physical_space_score": 67.6,
@@ -145,6 +154,7 @@ QUINCY_COMPONENTS = {
         "low_end_motion_score": 21.1,
         "loop_context_score": 12.0,
         "vocal_role_fit_score": 85.0,
+        "textural_coherence_score": 27.0,  # 2 beds — incoherent (P-057)
     },
     "splice_loop_problem": {
         "physical_space_score": 81.3,
@@ -161,6 +171,7 @@ QUINCY_COMPONENTS = {
         "low_end_motion_score": 25.0,
         "loop_context_score": 12.0,
         "vocal_role_fit_score": 85.0,
+        "textural_coherence_score": 55.0,  # <2 beds → the neutral fallback (P-057)
     },
     "vocal_chop_groove": {
         "physical_space_score": 81.3,
@@ -177,6 +188,7 @@ QUINCY_COMPONENTS = {
         "low_end_motion_score": 60.0,
         "loop_context_score": 12.0,
         "vocal_role_fit_score": 85.0,
+        "textural_coherence_score": 55.0,  # <2 beds → the neutral fallback (P-057)
     },
 }
 
@@ -579,13 +591,14 @@ def test_quincy_reconstructs_from_the_references_measurements(ref_analyzed):
 def test_blend_gate_counterfactual_is_worth_a_traceable_delta(q_analyzed):
     """The chop fixture's blend gate is WORTH a traceable overall delta under
     Quincy's 0.7 weight: with the reference's protected 65.0 substituted into
-    his own components the overall reads 67.6 (vs the live 68.8 — +1.2 from
-    the authored opt-in); and the static-polarity term genuinely presses the
-    overall DOWN (removing loop_context from his mean raises it)."""
+    his own components the overall reads 67.0 (vs the live 68.2 — +1.2 from
+    the authored opt-in; both values moved -0.6 from P-057's textural opt-in,
+    the delta itself unchanged); and the static-polarity term genuinely presses
+    the overall DOWN (removing loop_context from his mean raises it)."""
     ds = q_analyzed[VOCAL_CHOP_FIXTURE].doctrine_score
     protected = {k: ds[k] for k in COMPONENT_KEYS}
     protected["vocal_role_fit_score"] = 65.0
-    assert _weighted_overall("quincy_jones", protected) == 67.6
+    assert _weighted_overall("quincy_jones", protected) == 67.0
 
     without_lc = {k: ds[k] for k in COMPONENT_KEYS if k != "loop_context_score"}
     assert _weighted_overall("quincy_jones", without_lc) \

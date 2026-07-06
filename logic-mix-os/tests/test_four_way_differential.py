@@ -141,24 +141,27 @@ COMPONENT_KEYS = [
 # re-asserted with the fourth profile live = requirement 6; the brian_eno
 # column was measured by running the engine, then pinned.
 # P-056: brian_eno's column MOVED (he opts into the 15th axis,
-# textural_coherence_score, in his high tier); the other three columns are
-# BYTE-IDENTICAL to their pre-P-056 values (their textural weight is 0 — the
-# weight-0 proof). His new overalls were measured, then pinned.
+# textural_coherence_score, in his high tier); the other three columns were
+# BYTE-IDENTICAL to their pre-P-056 values (their textural weight was 0 — the
+# weight-0 proof). P-057: quincy_jones's column MOVED TOO (70.0 -> 69.2 /
+# 62.1 -> 60.4 / 61.9 -> 61.6 / 68.8 -> 68.2) — he now opts into the same axis
+# at a support-tier 0.6; halee_ramone and timbaland alone stay weight-0
+# byte-identical. His new overalls were measured, then pinned.
 FOUR_WAY_OVERALLS = {
     "simple_vocal_piano_song": {
-        "halee_ramone": 73.8, "timbaland": 68.4, "quincy_jones": 70.0,
+        "halee_ramone": 73.8, "timbaland": 68.4, "quincy_jones": 69.2,
         "brian_eno": 64.2,
     },
     "dense_chorus_with_loops": {
-        "halee_ramone": 70.7, "timbaland": 52.6, "quincy_jones": 62.1,
+        "halee_ramone": 70.7, "timbaland": 52.6, "quincy_jones": 60.4,
         "brian_eno": 54.2,
     },
     "splice_loop_problem": {
-        "halee_ramone": 74.3, "timbaland": 49.7, "quincy_jones": 61.9,
+        "halee_ramone": 74.3, "timbaland": 49.7, "quincy_jones": 61.6,
         "brian_eno": 58.8,
     },
     "vocal_chop_groove": {
-        "halee_ramone": 76.3, "timbaland": 60.9, "quincy_jones": 68.8,
+        "halee_ramone": 76.3, "timbaland": 60.9, "quincy_jones": 68.2,
         "brian_eno": 64.3,
     },
 }
@@ -379,15 +382,17 @@ ENO_DROPOUT_OVERALL = 78.9
 # sha256. P-056 CONSCIOUSLY re-pinned these (a test-visible decision, never
 # silent drift): every profile JSON gained the additive
 # ``doctrine.scorers.textural_coherence`` block + a ``textural_coherence_score``
-# weight of 0 (the four non-Eno producers keep OVERALL byte-stability, not FILE
-# byte-stability — the packet's explicit distinction).
+# weight of 0 (the four non-Eno producers kept OVERALL byte-stability, not FILE
+# byte-stability — the packet's explicit distinction). P-057 re-pinned the
+# quincy_jones hash again — CONSCIOUSLY: he opts the axis into weight 0.6 and
+# gains a textural confidence entry (halee_ramone and timbaland are unchanged).
 EXISTING_JSON_SHA256 = {
     "halee_ramone":
         "fd99d9f1e31400c3c4c764e2bc3a1c7d185fb3d69292c98641170548838df25d",
     "timbaland":
         "8715541491253d4376ea5b0132e5a5d96c16710f180e1d49df1cd4affe5d04d9",
     "quincy_jones":
-        "2c1dead63c8da8b2c68d29676002f9e9c4d37193ade32ccdd264569d28ddb4e8",
+        "0b28f144f93b481d32a5a4608f13ab370435c421137a79c854874adcd99fc6ec",
 }
 
 # Two of the FOUR committed sample trees' headline values (the reference and
