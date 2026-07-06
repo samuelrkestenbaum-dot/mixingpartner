@@ -507,6 +507,41 @@
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
+- **Green baseline (verified 2026-07-06, P-058 — the Real-Session On-Ramp
+  baseline):** suite **1390 passed** (0 failed / skipped); regression **93/93**
+  with **0 warnings** — the corpus is **4 fixtures**. A PLAN-ONLY on-ramp +
+  capture + docs packet — **NO scoring change**. Two commits `6f25360` (Commit-1
+  — NEW `logic_mix_os/onramp.py` [D1 scaffolder + D2 capture]; the detector
+  refactor [`guess_source_kind` extracted from
+  `analyzers/source_material_detector.py` into a SHARED pure helper both use — ONE
+  table, `_infer_kind` delegates, `_KEYWORD_RULES` byte-unchanged]; the two CLI
+  subcommands [`scaffold-manifest`, `capture-session`]; `field_sessions/` [README
+  + inner `.gitignore`, 13 audio exts]; NEW `tests/test_onramp_scaffold.py` [24] +
+  `tests/test_field_session_capture.py` [7]; 7 files, +724/−15; **GREEN IN
+  ISOLATION at 1390**) + `1671c0c` (Commit-2 — docs only: NEW
+  `docs/REAL_SESSION.md` [120, the 5-step walkthrough] + `docs/COWORK_MCP.md`
+  cross-link [+4]; 2 files, +124) on parent `4ad08f0` (set-active), atop merge base
+  with default `6355743` (= PR #35 — P-057 merged to default; the dev branch is
+  fast-forwarded onto it, so a P-058 PR carries only these two commits + the close
+  commit — a clean single-packet PR). **The engine is now REACHABLE for a real
+  session:** the scaffolder turns exported WAV stems → a valid draft manifest
+  (guessed `source_kind` grounded in `SOURCE_KINDS`, `_draft`+`_needs_review`,
+  deterministic, `--force`-guarded) that
+  `load_manifest`+`Project.from_inputs`+`analyze()` accepts on all 4 fixtures;
+  `capture-session` bundles a session's decisions+analysis (raw audio
+  double-excluded) for commit-back; `REAL_SESSION.md` documents the Cowork host
+  connection. The detector refactor is PROVEN pure (80 consumer tests unchanged; a
+  38-name old-vs-new equivalence battery = 0 mismatches; the golden snapshot
+  unmoved). `doctrine_engine.py`/`governance.py`/`creative.py`/`constants.py` vocab
+  + the five producer JSONs + all sample trees + mode demos + fixture stems
+  byte-identical (diff-proven); imports stdlib + first-party only (not even numpy)
+  — **no new dependency** (`pyproject.toml` blob-identical, absent from the diff);
+  safety grep 0 reach (no osascript/subprocess/.logicx/audio-write/DAW;
+  `wave.open` read-only `"rb"`). **PUSHED to the dev branch BEFORE qa/reviewer
+  under the standing go; NOT merged — the P-058 merge is a user gate.** **★ PR #35
+  recorded: P-057 merged to default = `6355743`.** (History: 1359 -> **1390** at
+  P-058 — +31, all Commit-1 [test_onramp_scaffold.py=24 +
+  test_field_session_capture.py=7]; Commit-1 iso **1390**.)
 - **Green baseline (verified 2026-07-06, P-057 — the Non-Eno Textural Weighting
   baseline):** suite **1359 passed** (0 failed / skipped); regression **93/93** —
   the corpus is **4 fixtures**. A PROFILE-DATA packet — **ZERO `.py` under
@@ -719,6 +754,89 @@
   331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-058 MAKES THE ENGINE REACHABLE FOR A REAL SESSION — THE ON-RAMP +
+  CAPTURE + DOCS LAND; THE REAL-AUDIO VALIDATION GAP IS UNBLOCKED (BUT OPEN,
+  AWAITING THE USER'S REAL STEMS) (Real-Session On-Ramp; a PLAN-ONLY packet, NO
+  scoring change; opened on the user's "go with recs", 2026-07-06, after the P-057
+  merge [PR #35 -> default `6355743`], all four design forks resolved: A=exclude
+  raw audio + no audio-write, B=guess into `source_kind`+`_needs_review`, C=new
+  `docs/REAL_SESSION.md`, D=one `onramp.py`). qa GREEN (suite 1359 -> 1390 / 0;
+  regression 93/93 with 0 warnings; Commit-1 iso 1390) + reviewer PASS (no
+  must-fix; single-model). Both gates independently re-ran the suite. Last-closed =
+  P-058.**
+  - **Two commits** on parent `4ad08f0` (set-active), atop merge base with default
+    `6355743` (= PR #35): `6f25360` (Commit-1 — NEW `logic_mix_os/onramp.py` [D1
+    scaffolder + D2 capture] + the detector refactor [`guess_source_kind` extracted
+    to a SHARED pure helper both the detector and scaffolder use — ONE table,
+    `_infer_kind` delegates, `_KEYWORD_RULES` byte-unchanged] + the two CLI
+    subcommands + `field_sessions/` [README + inner `.gitignore`] + NEW
+    `tests/test_onramp_scaffold.py` [24] + `tests/test_field_session_capture.py`
+    [7]; 7 files, +724/−15; **GREEN IN ISOLATION at 1390**) + `1671c0c` (Commit-2
+    — docs only: `docs/REAL_SESSION.md` [5-step walkthrough] + `docs/COWORK_MCP.md`
+    cross-link; 2 files, +124). Verified `git merge-base HEAD 6355743` = `6355743`
+    (fast-forwarded — a clean single-packet PR). **PUSHED to the dev branch BEFORE
+    qa/reviewer under the standing go; NOT merged — the P-058 merge is the OPEN
+    USER GATE.**
+  - **The three deliverables:** **D1** —
+    `scaffold_manifest`/`write_manifest_draft` + CLI `scaffold-manifest`: a folder
+    of exported WAV stems → a VALID draft `project_manifest.json` (title from
+    folder; `sample_rate`/`bit_depth` probed read-only via `wave.open("rb")`; one
+    `tracks[]` per file with a GUESSED `source_kind` grounded in `SOURCE_KINDS`
+    [defensive `unknown` fallback]; a fillable one-section stub; an `intent` stub;
+    `_draft: true` + a `_needs_review` list). Deterministic; refuses to overwrite
+    without `--force`. **D2** — `bundle_field_session` + CLI `capture-session`:
+    READ/COPY only — the 3 memory JSONs
+    (`mix_pass_history`/`decision_ledger`/`taste_profile`) + plan/verdict artifacts
+    (allow-list `.json/.md/.html`) + a `session_summary.json`; raw audio EXCLUDED
+    (double-guarded: copy-time extension filter over 13 audio exts + the
+    `field_sessions/.gitignore`); idempotent. **D3** — `docs/REAL_SESSION.md` (5
+    steps: install → MCP `{command,args}` config → scaffold → first session with an
+    explicit `memory_dir` → optional bounce re-analysis → capture → commit-back) +
+    a `docs/COWORK_MCP.md` cross-link.
+  - **★ qa GREEN (both gates re-ran):** suite 1359 -> **1390 passed, 0 failed**
+    (+31, ALL Commit-1: test_onramp_scaffold.py=**24** +
+    test_field_session_capture.py=**7**); regression **93/93** with **0 warnings**
+    (no score/confidence drift); Commit-1 iso **1390**. **The detector refactor is
+    PROVEN pure** (the one real risk — it feeds `source_kind` → doctrine): same
+    kinds/confidences (0.82/0.6/0.55/0.4)/evidence/lowercase-substring semantics;
+    `_KEYWORD_RULES` byte-unchanged; 80 consumer tests unchanged; a 38-name
+    old-vs-new equivalence battery = 0 mismatches; the golden snapshot unmoved.
+    Scaffold → `analyze()` succeeds on all 4 fixtures (deterministic; `--force`
+    guarded); capture excludes a planted `.wav` from BOTH the artifacts dir AND the
+    memory dir, idempotent. Safety grep 0 reach (no
+    osascript/subprocess/.logicx/audio-write/DAW; `wave.open` read-only `"rb"`);
+    stdlib + first-party only — no new dependency (`pyproject.toml` blob-identical,
+    absent from the diff). Byte-stability: the diff is 10 files (9 product/docs +
+    active_packet.md);
+    `doctrine_engine.py`/`governance.py`/`creative.py`/`constants.py` vocab + the
+    five producer JSONs + all sample trees + mode demos + fixture stems
+    blob-identical.
+  - **★ reviewer PASS (no must-fix; single-model — Codex not separately
+    reported):** the detector refactor is genuinely pure (one shared table,
+    delegating `_infer_kind`, the equivalence battery clean, the golden unmoved);
+    the scaffolder never invents a kind + is deterministic + `--force`-guarded;
+    capture is READ/COPY-only with raw-audio double-excluded; Fork A held (no
+    audio-write/DAW reach); the `REAL_SESSION.md` commands verified line-by-line
+    against the live CLI parser (no phantom flags). Process notes (non-blocking):
+    `scaffold_manifest`'s `force` param is inert (signature parity, no write);
+    Commit-1 squashed product+tests so test-first isn't diff-verifiable (the tests
+    are substantive/non-vacuous). Residue -> residue.md: (1) ★ the FIRST
+    REAL-AUDIO SESSION [user exports real stems] is the standing TOP open item —
+    the gap is UNBLOCKED but OPEN; (2) the real Cowork host connection is documented
+    but a manual user step; (3) the inert `force` param; (4) the test-first
+    provenance caveat; (5) prior standing notes retained.
+  - **★ NEXT: NOTHING STAGED — opened blind is forbidden.** The orchestrator
+    PRESENTS the user-gated directions, with the **FIRST REAL-AUDIO SESSION (the
+    user exports real stems)** now the highest-value item, alongside: the real
+    Cowork host connection (manual) · ambient patience (Eno-deferral #2) ·
+    generative process (Eno-deferral #3) · CLA/Halee/Timbaland textural weighting ·
+    the `<2 beds` neutral-fallback calibration · a sixth producer (roster frozen at
+    five) · apply-to-Logic (FUTURE, re-gated — never auto; the safety line stands) ·
+    anything else the user calls. Do NOT open anything blind. **THE OPEN USER GATE:
+    the merge of P-058 (`6f25360` + `1671c0c` + the close commit) atop `6355743` (=
+    PR #35) — a clean single-packet PR.** Receipt:
+    `build-os/receipts/P-058-real-session-on-ramp.md`.
 
 - **★★★ P-057 MAKES THE 15th DOCTRINE AXIS COUNT FOR A SECOND PRODUCER — QUINCY
   OPTS INTO `textural_coherence_score` AT 0.6 (`limited`, SUPPORT-TIER) WHILE CLA
