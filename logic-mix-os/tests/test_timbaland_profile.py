@@ -100,6 +100,7 @@ TIM_WEIGHTS = {
     "low_end_motion_score": 0.9,
     "loop_context_score": 0.8,
     "vocal_role_fit_score": 0.4,
+    "textural_coherence_score": 0,
 }
 
 # The seven axes the profile weights UP (vs the reference) and the five it
@@ -286,7 +287,12 @@ def test_weight_relations_protect_up_relax_down_never_remove():
         assert tim[key] > ref[key], f"{key} not weighted up vs the reference"
     for key in RELAXED:
         assert 0 < tim[key] < ref[key], f"{key} not relaxed-but-present"
-    assert all(w > 0 for w in tim.values())
+    # relax != remove — every axis Timbaland OPTS INTO stays live; the sole
+    # weight-0 axis is textural_coherence, which P-056 ships at 0 for all four
+    # non-Eno producers (weighting it is a deferred taste call — only eno opts in).
+    opted_in = {k: v for k, v in tim.items() if k != "textural_coherence_score"}
+    assert all(w > 0 for w in opted_in.values())
+    assert tim["textural_coherence_score"] == 0
 
 
 def test_loop_context_polarity_is_authored_and_detection_is_shared():

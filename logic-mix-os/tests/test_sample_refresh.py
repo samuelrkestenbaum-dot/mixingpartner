@@ -112,7 +112,7 @@ HEADLINES = {
         "loop_context_score": 12.0,
     },
     "brian_eno": {
-        "overall_mix_readiness_score": 65.5,
+        "overall_mix_readiness_score": 64.3,
         "vocal_role_fit_score": 85.0,
         "loop_context_score": 35.0,
     },

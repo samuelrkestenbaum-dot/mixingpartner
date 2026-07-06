@@ -13,7 +13,8 @@
   "low_end_motion_score": 60.0,
   "loop_context_score": 35.0,
   "vocal_role_fit_score": 85.0,
-  "overall_mix_readiness_score": 65.5,
+  "textural_coherence_score": 55.0,
+  "overall_mix_readiness_score": 64.3,
   "evidence": {
     "physical_space": [
       "67% of elements sit in forward layers; depth is collapsing."
@@ -69,6 +70,9 @@
       "Lead vocal 'Lead Vocal' sits forward and clear of masking conflicts — the lead owns the presence band.",
       "'BGV Chop' (vocal_percussive, confidence 0.95): 1 masking involvement(s) accepted as blend under profile policy.",
       "'Backing Vocals Stack' (vocal_stack, confidence 0.95): 1 masking involvement(s) accepted as blend under profile policy."
+    ],
+    "textural_coherence": [
+      "1 texture bed(s) present — a single or absent bed cannot be incoherent; neutral textural-coherence fallback."
     ]
   },
   "warnings": [
@@ -117,8 +121,8 @@
     },
     {
       "area": "textural coherence as its own measurement",
-      "level": "deferred",
-      "reason": "texture as composition is central to the documented practice, yet whether the beds cohere as one woven surface is not measurable as its own axis on exported stems at doctrine time — the negative-space, static-balance and depth axes are the closest shipped proxies"
+      "level": "high",
+      "reason": "hand-curated from documented Brian Eno technique — texture as composition is central to the documented practice (the treated, woven surfaces of the ambient records and the Another Green World-era beds), and it now ships as its OWN axis: a pure cross-bed dispersion statistic over the engine's texture-bed set (band_energy L1 spread + brightness, stereo_width and crest_factor stdev on the exported stems), weighted in this profile's high tier — low dispersion reads as one woven surface, high dispersion as a pile of unrelated layers; the reading is an acoustic dispersion proxy for the compositional sense of the phrase, never a claim on the composition itself"
     },
     {
       "area": "generative process",

@@ -202,7 +202,7 @@ def _validate(raw: Dict[str, Any], name: str) -> None:
     for fn in ("vocal_centrality", "depth_hierarchy", "section_contrast",
                "static_mix", "dynamic_mix", "beat_identity", "negative_space",
                "groove_coherence", "rhythmic_surprise", "low_end_motion",
-               "loop_context", "vocal_role_fit"):
+               "loop_context", "vocal_role_fit", "textural_coherence"):
         if fn not in doctrine["scorers"]:
             raise ValueError(f"profile {name!r}: doctrine.scorers missing {fn!r}")
     # P-037: search_modes must be a non-empty object — a zero-mode profile

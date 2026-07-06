@@ -40,6 +40,8 @@ pairwise-distinct chorus_lift sets on the same stems.
 
 from __future__ import annotations
 
+import copy
+import dataclasses
 import hashlib
 import json
 
@@ -48,6 +50,7 @@ import pytest
 from logic_mix_os import governance, pipeline
 from logic_mix_os.constants import RISK_CLASSES
 from logic_mix_os.creative import generate_variants, run_creative_engine
+from logic_mix_os.doctrine import doctrine_engine
 from logic_mix_os.doctrine.producer_profile import load_profile
 from logic_mix_os.pipeline import analyze, write_artifacts
 from logic_mix_os.project import load_manifest
@@ -74,6 +77,7 @@ from test_cla_profile import (
     LOUDNESS_KILL_SWITCH,
 )
 from test_mode_forking import PROBLEM_IDS, _ids, _kinds
+from test_textural_coherence import _coherent_beds, _incoherent_beds
 
 PRODUCERS = ("halee_ramone", "timbaland", "quincy_jones", "brian_eno",
              "chris_lord_alge")
@@ -115,6 +119,7 @@ CLA_COMPONENTS = {
         "negative_space_score": 62.3, "groove_coherence_score": 45.0,
         "rhythmic_surprise_score": 51.1, "low_end_motion_score": 60.0,
         "loop_context_score": 50.0, "vocal_role_fit_score": 85.0,
+        "textural_coherence_score": 55.0,
     },
     "dense_chorus_with_loops": {
         "physical_space_score": 67.6, "emotional_hierarchy_score": 86.0,
@@ -124,6 +129,7 @@ CLA_COMPONENTS = {
         "negative_space_score": 15.0, "groove_coherence_score": 99.1,
         "rhythmic_surprise_score": 20.0, "low_end_motion_score": 21.1,
         "loop_context_score": 18.0, "vocal_role_fit_score": 85.0,
+        "textural_coherence_score": 27.0,
     },
     "splice_loop_problem": {
         "physical_space_score": 81.3, "emotional_hierarchy_score": 86.0,
@@ -133,6 +139,7 @@ CLA_COMPONENTS = {
         "negative_space_score": 20.0, "groove_coherence_score": 45.0,
         "rhythmic_surprise_score": 27.8, "low_end_motion_score": 25.0,
         "loop_context_score": 18.0, "vocal_role_fit_score": 85.0,
+        "textural_coherence_score": 55.0,
     },
     "vocal_chop_groove": {
         "physical_space_score": 81.3, "emotional_hierarchy_score": 86.0,
@@ -142,6 +149,7 @@ CLA_COMPONENTS = {
         "negative_space_score": 19.4, "groove_coherence_score": 99.4,
         "rhythmic_surprise_score": 35.6, "low_end_motion_score": 60.0,
         "loop_context_score": 18.0, "vocal_role_fit_score": 85.0,
+        "textural_coherence_score": 55.0,
     },
 }
 
@@ -251,15 +259,18 @@ EXPERIMENTAL_CHORUS_SETS = {
 
 # REQUIREMENT 7, byte-level: the FOUR shipped JSONs are BLOB-UNCHANGED — the
 # three P-045 pins (fe8d947 base) plus the brian_eno hash at the P-050 base.
+# P-056 CONSCIOUSLY re-pinned these (every profile JSON gained the additive
+# textural_coherence scorer block + weight; brian_eno additionally opts into the
+# axis and flips its confidence entry). A test-visible decision, never drift.
 EXISTING_JSON_SHA256 = {
     "halee_ramone":
-        "de171b8ca6fc3abda3550abcb319dbfe789e4c14f997ce2999a68ce43d1d8074",
+        "fd99d9f1e31400c3c4c764e2bc3a1c7d185fb3d69292c98641170548838df25d",
     "timbaland":
-        "b8047afb299c83787d77000eca28908453a630ea5cf0b5afd994895566547b49",
+        "8715541491253d4376ea5b0132e5a5d96c16710f180e1d49df1cd4affe5d04d9",
     "quincy_jones":
-        "20ae6824a0b0f2b7ec583047f8ad55244daf3006421170ffd4e844fe27363bd3",
+        "2c1dead63c8da8b2c68d29676002f9e9c4d37193ade32ccdd264569d28ddb4e8",
     "brian_eno":
-        "f2211c8da1b56769fdb37e32495018bd4d7f4f2b749cd583be19c904b8f38cae",
+        "95407ae7ca8056665f58cf5356a8cd98e750ece33333a24386c01b955def256d",
 }
 
 
@@ -646,3 +657,150 @@ def test_divergence_audit_vs_the_opt_in_producers(name, five_analyzed):
         assert diverged == DIVERGENT_VS_OPT_IN_PRODUCERS[name], \
             (name, producer, diverged)
         assert other_ds["evidence"] == c_ds["evidence"], (name, producer)
+
+
+# =========================================================================== #
+# P-056 — THE FIFTEENTH-AXIS PERMANENT PROOF (textural_coherence).
+#
+# The engine-deepening packet's binding differential: Eno's overall MOVED on a
+# new measured signal; the four non-Eno producers are byte-identical (the
+# weight-0 proof); the axis key is present + measured in ALL FIVE artifacts;
+# Eno's confidence-map deferral flipped live; and the axis is load-bearing —
+# zeroing his weight reverts his overall and flipping the dispersion sign swaps
+# the coherent/incoherent synthetic cases.
+# =========================================================================== #
+
+# Eno's PRE-AXIS overalls — his standing pre-P-056 four-way values (the 14-term
+# weighted mean, textural excluded). The axis moved every one of them.
+PRE_AXIS_ENO_OVERALLS = {
+    "simple_vocal_piano_song": 65.4,
+    "dense_chorus_with_loops": 57.8,
+    "splice_loop_problem": 59.3,
+    "vocal_chop_groove": 65.5,
+}
+_NON_ENO = ("halee_ramone", "timbaland", "quincy_jones", "chris_lord_alge")
+_TEXTURAL = "textural_coherence_score"
+
+
+def _mean_excluding(producer, components, drop):
+    """The weighted mean over ``components`` with ``drop`` removed — a
+    reference-style weight-0 view of that axis (it leaves both the numerator and
+    the denominator)."""
+    return _weighted_overall(producer, {k: v for k, v in components.items()
+                                        if k != drop})
+
+
+@pytest.mark.parametrize("name", ALL_FIXTURES)
+def test_p056_eno_overall_moved_vs_pre_axis_baseline(name, five_analyzed):
+    """(a) Eno's overall CHANGES vs his pre-axis baseline: the 14-term mean
+    (textural excluded) reproduces his standing pre-P-056 value, the live
+    15-term overall is his pinned five-way value, and the two DIFFER — the axis
+    is a new measured signal, not a re-weighting of old ones."""
+    ds = five_analyzed[name]["brian_eno"].doctrine_score
+    comps = {k: ds[k] for k in COMPONENT_KEYS}
+    pre_axis = _mean_excluding("brian_eno", comps, _TEXTURAL)
+    assert pre_axis == PRE_AXIS_ENO_OVERALLS[name], name          # the 14-term baseline
+    assert ds["overall_mix_readiness_score"] \
+        == FIVE_WAY_OVERALLS[name]["brian_eno"], name             # the live 15-term
+    assert ds["overall_mix_readiness_score"] != pre_axis, name    # the axis MOVED him
+
+
+def test_p056_move_is_largest_on_the_bed_carrying_fixture(five_analyzed):
+    """The move is genuinely bed-driven: the dense fixture (the only one with
+    >=2 texture beds — an INCOHERENT pair at 27.0) moves Eno's overall more than
+    the <2-bed fixtures, which read the neutral fallback."""
+    def move(name):
+        ds = five_analyzed[name]["brian_eno"].doctrine_score
+        comps = {k: ds[k] for k in COMPONENT_KEYS}
+        return abs(ds["overall_mix_readiness_score"]
+                   - _mean_excluding("brian_eno", comps, _TEXTURAL))
+    dense = move("dense_chorus_with_loops")
+    assert dense > 3.0
+    for lone in ("splice_loop_problem", "vocal_chop_groove"):
+        assert dense > move(lone)
+
+
+@pytest.mark.parametrize("name", ALL_FIXTURES)
+def test_p056_four_non_eno_byte_identical_the_weight_zero_proof(name, five_analyzed):
+    """(b) The four non-Eno producers are BYTE-IDENTICAL: adding the 15th axis
+    at weight 0 leaves both the numerator and the denominator untouched, so the
+    15-term mean equals the 14-term mean equals the live overall — while the
+    axis is still present and measured (a 0..100 number), just unweighted."""
+    for producer in _NON_ENO:
+        ds = five_analyzed[name][producer].doctrine_score
+        comps_15 = {k: ds[k] for k in COMPONENT_KEYS}
+        assert load_profile(producer).doctrine["weights"][_TEXTURAL] == 0
+        assert ds[_TEXTURAL] is not None and 0.0 <= ds[_TEXTURAL] <= 100.0
+        assert _weighted_overall(producer, comps_15) \
+            == _mean_excluding(producer, comps_15, _TEXTURAL) \
+            == ds["overall_mix_readiness_score"], (name, producer)
+
+
+@pytest.mark.parametrize("name", ALL_FIXTURES)
+def test_p056_axis_key_present_and_measured_in_all_five_artifacts(name, five_analyzed):
+    """(c) The ``textural_coherence_score`` key + its evidence line are present
+    in ALL FIVE producers' artifacts (measured for all; weighted only by Eno)."""
+    for producer in PRODUCERS:
+        ds = five_analyzed[name][producer].doctrine_score
+        assert _TEXTURAL in ds and ds[_TEXTURAL] is not None
+        assert 0.0 <= ds[_TEXTURAL] <= 100.0
+        assert ds["evidence"]["textural_coherence"], (name, producer)
+    # measured identically across producers (the constants block is shared) —
+    # the per-fixture reading does not depend on the profile's weight.
+    vals = {five_analyzed[name][p].doctrine_score[_TEXTURAL] for p in PRODUCERS}
+    assert len(vals) == 1, (name, vals)
+
+
+def test_p056_zeroing_enos_weight_reverts_his_overall_to_the_pre_axis_value(five_analyzed):
+    """(e-i) The weight is LOAD-BEARING, not decorative: re-scoring with Eno's
+    weight zeroed (what the four non-Eno producers ship) reverts his overall to
+    his pre-axis value on every fixture; DELETING the weight entirely is caught
+    LOUDLY (the aggregate genuinely dereferences it), never silently ignored."""
+    base = load_profile("brian_eno")
+    zeroed_doc = copy.deepcopy(base.doctrine)
+    zeroed_doc["weights"][_TEXTURAL] = 0
+    zeroed = dataclasses.replace(base, doctrine=zeroed_doc)
+
+    deleted_doc = copy.deepcopy(base.doctrine)
+    del deleted_doc["weights"][_TEXTURAL]
+    deleted = dataclasses.replace(base, doctrine=deleted_doc)
+
+    for name in ALL_FIXTURES:
+        res = five_analyzed[name]["brian_eno"]
+        # thread the SAME groove snapshot the pipeline fed doctrine, so the
+        # re-score reproduces the pipeline exactly (only the weight differs)
+        groove = res.expanded.get("groove")
+        args = (res.records, res.section_analysis, res.masking_report,
+                res.mix_metrics, res.project.intent)
+        reverted = doctrine_engine.score_doctrine(*args, profile=zeroed, groove=groove)
+        assert reverted["overall_mix_readiness_score"] \
+            == PRE_AXIS_ENO_OVERALLS[name], name
+        # still present + measured, just unweighted (the reference posture)
+        assert reverted[_TEXTURAL] is not None
+        # a control: his LIVE weight (1.2) reproduces his moved five-way overall
+        live = doctrine_engine.score_doctrine(*args, profile=base, groove=groove)
+        assert live["overall_mix_readiness_score"] \
+            == FIVE_WAY_OVERALLS[name]["brian_eno"], name
+        # deleting the weight entirely is caught loudly (genuinely dereferenced)
+        with pytest.raises(KeyError):
+            doctrine_engine.score_doctrine(*args, profile=deleted, groove=groove)
+
+
+def test_p056_flipping_the_dispersion_sign_swaps_the_distinctness_cases(monkeypatch):
+    """(e-ii) The metric TRULY reads dispersion: with the real scorer a coherent
+    bed set outscores an incoherent one; monkeypatching the single sign seam
+    (``_coherence_from_dispersion`` -> the dispersion itself, dropping the
+    ``baseline -`` inversion) SWAPS them — the coherent set now scores below the
+    incoherent one. Only possible if coherence is genuinely anti-dispersion."""
+    doctrine = load_profile("halee_ramone").doctrine
+
+    def tc(beds):
+        return doctrine_engine._textural_coherence(beds, doctrine)[0]
+
+    coherent_real, incoherent_real = tc(_coherent_beds()), tc(_incoherent_beds())
+    assert coherent_real > incoherent_real  # the real reading
+
+    monkeypatch.setattr(doctrine_engine, "_coherence_from_dispersion",
+                        lambda baseline, dispersion: dispersion)
+    coherent_flip, incoherent_flip = tc(_coherent_beds()), tc(_incoherent_beds())
+    assert coherent_flip < incoherent_flip  # the sign flip swaps the ordering

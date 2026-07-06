@@ -507,6 +507,35 @@
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
+- **Green baseline (verified 2026-07-06, P-056 — the Textural Coherence
+  Analyzer / the 15th doctrine axis baseline):** suite **1347 passed** (0 failed /
+  skipped); regression **93/93** — the corpus is **4 fixtures**. Two commits
+  `acd9a3e` (Commit-1 — the `_textural_coherence` scorer + `_textural_bed_set` +
+  `_coherence_from_dispersion` [the mutation-testable sign seam] wired **LAST**
+  into `doctrine_engine.score_doctrine`; `producer_profile._validate` scorer-list;
+  all five profile JSONs [identical additive `doctrine.scorers.textural_coherence`
+  block; Eno weight **1.2** + confidence flip deferred→high, the other four weight
+  **0**]; `schemas/doctrine_score.schema.json`; the five regenerated sample trees;
+  NEW `tests/test_textural_coherence.py` [25] + the existing-test re-pins; 28
+  files, +707/−59; **GREEN IN ISOLATION at 1331**) + `d6f9b0b` (Commit-2 — purely
+  additive proof: `tests/test_five_way_differential.py` +
+  `tests/test_eno_profile.py`, exactly 2 files, +179, +16 → 1347) on parent
+  `81494c2` (set-active), atop merge base with default `b03f388` (= PR #33 — P-055
+  merged to default; the dev branch is fast-forwarded onto it, so a P-056 PR
+  carries only these two commits + the close commit — a clean single-packet PR).
+  **Eno's committed overall MOVED 65.5 → 64.3** (per-fixture simple 65.4→64.2,
+  dense 57.8→54.2, splice 59.3→58.8, chop 65.5→64.3); the four non-Eno overalls
+  BYTE-IDENTICAL base↔HEAD (Halee 76.3, CLA 67.8, Quincy 68.8, Timbaland 60.9)
+  with their `mix_verdict.md`/`mix_plan.json`/`dashboard.html` byte-identical
+  (only `doctrine_score.json` gained the additive labeled key + evidence line).
+  **Zero new DSP, zero new dependency** (`statistics` stdlib; deps stay
+  numpy>=1.21); `governance.py` + `creative.py` + the dropout protection filter
+  byte-untouched (ABSENT from the diff). **PUSHED to the dev branch BEFORE
+  qa/reviewer under the standing go; NOT merged — the P-056 merge is a user gate.**
+  **★ PR #33 recorded: P-055 merged to default = `b03f388`.** (History: 1306 ->
+  **1347** at P-056 — +41: +25 at Commit-1 [the NEW
+  `tests/test_textural_coherence.py`; Commit-1 iso **1331**] + 16 at Commit-2
+  [`test_five_way_differential.py` → 57, `test_eno_profile.py` → 37].)
 - **Green baseline (verified 2026-07-05, P-055 — the README prose-count
   guard baseline):** suite **1306 passed** (0 failed / skipped); regression
   **93/93** — the corpus is **4 fixtures**. Single commit `8b3adec` (the README
@@ -656,6 +685,80 @@
   331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-056 IS THE FIRST ENGINE-DEEPENING PACKET SINCE THE PRODUCER ARC — THE
+  15th DOCTRINE AXIS `textural_coherence_score` (bed-similarity DISPERSION, Option
+  A / user D1=A) IS NOW MEASURED FOR ALL FIVE PRODUCERS AND WEIGHTED ONLY BY ENO,
+  WHOSE OVERALL GENUINELY MOVES (Textural Coherence Analyzer; opened on the user's
+  "go", 2026-07-06, after the P-055 merge [PR #33 -> default `b03f388`], with D1=A
+  confirmed). qa GREEN (suite 1347 / 0; regression 93/93; Commit-1 iso 1331) +
+  reviewer PASS (no must-fix; single-model — Codex unavailable). Both gates
+  independently re-ran the suite. Last-closed = P-056.**
+  - **Two commits** on parent `81494c2` (set-active), atop merge base with default
+    `b03f388` (= PR #33): `acd9a3e` (Commit-1 — the axis: `_textural_coherence` +
+    `_textural_bed_set` + `_coherence_from_dispersion` [the sign seam] wired LAST
+    into `score_doctrine`; `_validate` scorer-list; all five profile JSONs
+    [identical additive `doctrine.scorers.textural_coherence` block; Eno **1.2** +
+    confidence flip deferred→high, four at **0**]; the schema; the five regenerated
+    sample trees; NEW `tests/test_textural_coherence.py` [25] + the existing-test
+    re-pins; 28 files, +707/−59; **GREEN IN ISOLATION at 1331**) + `d6f9b0b`
+    (Commit-2 — additive proof: `tests/test_five_way_differential.py` +
+    `tests/test_eno_profile.py`, exactly 2 files, +179 → 1347). Verified
+    `git merge-base HEAD b03f388` = `b03f388` (fast-forwarded — a clean
+    single-packet PR). **PUSHED to the dev branch BEFORE qa/reviewer under the
+    standing go; NOT merged — the P-056 merge is the OPEN USER GATE.**
+  - **The axis** `textural_coherence_score` (0–100) = 100 − dispersion of the
+    texture beds (the engine-owned `_dropout_texture_beds` surface, replicated as
+    `_textural_bed_set`, pinned equal) across three equally-weighted sub-terms:
+    tonal (`band_energy` 5-band L1 spread + `brightness` stdev), spatial
+    (`stereo_width` stdev), dynamic (`crest_factor_db` stdev). A PURE cross-bed
+    dispersion statistic — never reads room/occupancy-mean/depth-count/foreground/
+    rhythm, so distinctness from negative_space/physical_space/depth_hierarchy/
+    groove_coherence is PROVEN (disjoint-input tests), not asserted. `<2` beds →
+    **neutral 55.0 float** (never None/crash; mirrors negative_space 40 / groove 45
+    fallbacks). Sub-weights/scale live in the tunable constants block
+    (code-change-free per-profile calibration). Per-fixture `textural_coherence_score`
+    (measured identically for all five): simple/splice/chop **55.0** (<2 beds),
+    dense **27.0** (2 dissimilar beds).
+  - **★ qa GREEN (both gates re-ran):** suite 1306 -> **1347 passed, 0 failed**
+    (+41: +25 C1 axis tests, +16 C2 proof); regression **93/93**; Commit-1 iso
+    **1331**; per-file collect test_textural_coherence.py=**25**,
+    test_five_way_differential.py=**57**, test_eno_profile.py=**37**. The weight-0
+    invariant byte-proven (aggregate `sum(w·s)/sum(w)` — a 0-weight term is
+    arithmetically inert; the four non-Eno overalls + decision artifacts
+    byte-identical base↔HEAD). Distinctness PROVEN both directions (dense-coherent
+    → low negative_space / high textural_coherence, and the inverse;
+    constant-section scattered beds leave rhythm/section axes fixed). Sabotage
+    non-vacuous: zero weight reverts Eno to the pre-axis value; DELETE weight →
+    KeyError (genuinely dereferenced); sign-flip swaps the coherent/incoherent
+    ordering. Determinism identical JSON. Safety grep clean (0 reach —
+    osascript/subprocess/.logicx/exec/apply/socket/urllib/requests). No new DSP,
+    no new dependency; governance.py + creative.py + the dropout filter
+    byte-untouched.
+  - **★ reviewer PASS (no must-fix; Codex unavailable — single-model):** the axis
+    load-bearing (Eno's overall genuinely moves; the sabotage bites prove it is
+    dereferenced, not decorative) and PROVABLY distinct (disjoint inputs); the
+    weight-0 byte-stability honest (arithmetic inertness, not curation); the `<2
+    beds → 55.0` neutral fallback the HONEST choice (dispersion unmeasurable with
+    <2 beds; claiming HIGH would be unearned), mirroring the sibling fallbacks.
+    Latent-trajectory note raised (the neutral-fallback taste knob) — NOT a
+    correctness bug, NOT a merge blocker. Residue -> residue.md: (1) the `<2 beds →
+    55.0` neutral fallback is a taste knob for the NEXT Eno-calibration pass; (2)
+    the two non-Eno beneficiaries (Quincy ensemble cohesion / CLA wall-cohesion)
+    staged MEASURED-but-weight-0, a one-line future taste call; (3) ambient
+    patience + generative process stay deferred (this packet was textural
+    coherence ONLY).
+  - **★ NEXT: NOTHING STAGED — opened blind is forbidden.** The orchestrator
+    PRESENTS the user-gated directions (all need a genuine user decision): ambient
+    patience (Eno-deferral #2, overlap-risk to separate) · generative process
+    (Eno-deferral #3, needs new signals) · the non-Eno textural weighting taste
+    call (Quincy/CLA, one-line) · the Eno `<2 beds` neutral-fallback calibration ·
+    a sixth producer (WHO + grounding) · apply-to-Logic (FUTURE, re-gated — never
+    auto; the safety line stands) · a real external host driving the MCP server
+    (manual) · a real MCP-SDK transport swap · anything else the user calls. Do NOT
+    open anything blind. **THE OPEN USER GATE: the merge of P-056 (`acd9a3e` +
+    `d6f9b0b` + the close commit) atop `b03f388` (= PR #33) — a clean single-packet
+    PR.** Receipt: `build-os/receipts/P-056-textural-coherence-analyzer.md`.
 
 - **★★★ P-055 COMPLETES THE README-DRIFT-GUARD FAMILY — THE README's SPELLED-OUT
   PROSE COUNTS ARE NOW MACHINE-PINNED (README Prose-Count Guard — a test + docs

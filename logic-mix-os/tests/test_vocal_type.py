@@ -426,14 +426,18 @@ def test_vocal_role_fit_weight_is_zero_for_halee_ramone():
 
 
 def test_vocal_role_fit_appended_last_preserves_summation_order(analyzed):
-    """The new term is LAST in ``component_scores`` (the 14th) and every
-    PRE-EXISTING key (the 13 anchors) keeps its exact value + position."""
+    """vocal_role_fit was the 14th term at its position (index 13), the 13
+    anchors keeping their exact value + position. P-056 then appended the 15th
+    axis (``textural_coherence_score``) after it, so vocal_role_fit is no longer
+    the final key — but its position (index 13, right after the 13 anchors) is
+    unchanged, which is what preserves the summation order."""
     for name in FIXTURE_NAMES:
         ds = analyzed[name].doctrine_score
         keys = [k for k in ds if k.endswith("_score") and k != "overall_mix_readiness_score"]
         assert keys[:13] == EXISTING_COMPONENT_KEYS
-        assert keys[-1] == "vocal_role_fit_score"
-        assert len(keys) == 14
+        assert keys[13] == "vocal_role_fit_score"
+        assert keys[14] == "textural_coherence_score"
+        assert len(keys) == 15
 
 
 def test_every_preexisting_component_score_is_byte_identical(analyzed):

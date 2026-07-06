@@ -133,28 +133,33 @@ COMPONENT_KEYS = [
     "dynamic_mix_score", "beat_identity_score", "negative_space_score",
     "groove_coherence_score", "rhythmic_surprise_score",
     "low_end_motion_score", "loop_context_score", "vocal_role_fit_score",
+    "textural_coherence_score",  # P-056 — the 15th axis (bed-similarity dispersion)
 ]
 
 # Same stems, FOUR judgments — every overall pinned to the decimal. The
 # three existing columns are the standing P-041 pins (THREE_WAY_OVERALLS),
 # re-asserted with the fourth profile live = requirement 6; the brian_eno
 # column was measured by running the engine, then pinned.
+# P-056: brian_eno's column MOVED (he opts into the 15th axis,
+# textural_coherence_score, in his high tier); the other three columns are
+# BYTE-IDENTICAL to their pre-P-056 values (their textural weight is 0 — the
+# weight-0 proof). His new overalls were measured, then pinned.
 FOUR_WAY_OVERALLS = {
     "simple_vocal_piano_song": {
         "halee_ramone": 73.8, "timbaland": 68.4, "quincy_jones": 70.0,
-        "brian_eno": 65.4,
+        "brian_eno": 64.2,
     },
     "dense_chorus_with_loops": {
         "halee_ramone": 70.7, "timbaland": 52.6, "quincy_jones": 62.1,
-        "brian_eno": 57.8,
+        "brian_eno": 54.2,
     },
     "splice_loop_problem": {
         "halee_ramone": 74.3, "timbaland": 49.7, "quincy_jones": 61.9,
-        "brian_eno": 59.3,
+        "brian_eno": 58.8,
     },
     "vocal_chop_groove": {
         "halee_ramone": 76.3, "timbaland": 60.9, "quincy_jones": 68.8,
-        "brian_eno": 65.5,
+        "brian_eno": 64.3,
     },
 }
 
@@ -180,6 +185,7 @@ ENO_COMPONENTS = {
         "low_end_motion_score": 60.0,
         "loop_context_score": 50.0,
         "vocal_role_fit_score": 85.0,
+        "textural_coherence_score": 55.0,  # <2 beds → the neutral fallback
     },
     "dense_chorus_with_loops": {
         "physical_space_score": 67.6,
@@ -196,6 +202,7 @@ ENO_COMPONENTS = {
         "low_end_motion_score": 21.1,
         "loop_context_score": 35.0,
         "vocal_role_fit_score": 85.0,
+        "textural_coherence_score": 27.0,  # 2 beds (synth pad vs texture loop) — incoherent
     },
     "splice_loop_problem": {
         "physical_space_score": 81.3,
@@ -212,6 +219,7 @@ ENO_COMPONENTS = {
         "low_end_motion_score": 25.0,
         "loop_context_score": 35.0,
         "vocal_role_fit_score": 85.0,
+        "textural_coherence_score": 55.0,  # <2 beds → the neutral fallback
     },
     "vocal_chop_groove": {
         "physical_space_score": 81.3,
@@ -228,6 +236,7 @@ ENO_COMPONENTS = {
         "low_end_motion_score": 60.0,
         "loop_context_score": 35.0,
         "vocal_role_fit_score": 85.0,
+        "textural_coherence_score": 55.0,  # <2 beds → the neutral fallback
     },
 }
 
@@ -366,16 +375,19 @@ ENO_DROPOUT_EMISSION = {
 # dims minus his medium translation penalty) — asserted against the JSON.
 ENO_DROPOUT_OVERALL = 78.9
 
-# REQUIREMENT 6, byte-level: the three shipped JSONs are BLOB-UNCHANGED —
-# sha256 pins taken at the P-045 packet base (fe8d947). Any future edit to
-# an existing producer is a conscious, test-visible decision, never drift.
+# REQUIREMENT 6, byte-level: the three shipped JSONs hash to their pinned
+# sha256. P-056 CONSCIOUSLY re-pinned these (a test-visible decision, never
+# silent drift): every profile JSON gained the additive
+# ``doctrine.scorers.textural_coherence`` block + a ``textural_coherence_score``
+# weight of 0 (the four non-Eno producers keep OVERALL byte-stability, not FILE
+# byte-stability — the packet's explicit distinction).
 EXISTING_JSON_SHA256 = {
     "halee_ramone":
-        "de171b8ca6fc3abda3550abcb319dbfe789e4c14f997ce2999a68ce43d1d8074",
+        "fd99d9f1e31400c3c4c764e2bc3a1c7d185fb3d69292c98641170548838df25d",
     "timbaland":
-        "b8047afb299c83787d77000eca28908453a630ea5cf0b5afd994895566547b49",
+        "8715541491253d4376ea5b0132e5a5d96c16710f180e1d49df1cd4affe5d04d9",
     "quincy_jones":
-        "20ae6824a0b0f2b7ec583047f8ad55244daf3006421170ffd4e844fe27363bd3",
+        "2c1dead63c8da8b2c68d29676002f9e9c4d37193ade32ccdd264569d28ddb4e8",
 }
 
 # Two of the FOUR committed sample trees' headline values (the reference and

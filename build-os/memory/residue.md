@@ -4,6 +4,120 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
+## ★★★ STATUS (P-056 close, 2026-07-06): residue = accepted standing notes only — THE 15th DOCTRINE AXIS IS LIVE; TEXTURAL COHERENCE IS MEASURED FOR ALL FIVE, WEIGHTED ONLY BY ENO; THE ENGINE DEEPENED WITHOUT RE-WEIGHTING
+
+- **P-056 (TEXTURAL COHERENCE ANALYZER — the 15th producer-agnostic doctrine
+  axis `textural_coherence_score`; code-bearing, real Python under
+  `logic_mix_os/`; opened on the user's "go" 2026-07-06 after the P-055 merge
+  [PR #33 → default `b03f388`], with D1=A confirmed [textural coherence =
+  bed-similarity DISPERSION, Option A]; the FIRST engine-deepening packet since
+  the producer arc — a real per-record number wired into `score_doctrine`,
+  weighted non-zero ONLY by Eno so his overall genuinely MOVES, flipping his own
+  confidence_map deferral) closed 2026-07-06:** qa GREEN (suite **1347 / 0**;
+  regression **93/93**; Commit-1 iso **1331**) + reviewer PASS (no must-fix;
+  single-model — Codex unavailable). Both gates independently re-ran the suite.
+  Commits `acd9a3e` (Commit-1 — the `_textural_coherence` scorer +
+  `_textural_bed_set` + `_coherence_from_dispersion` [the mutation-testable sign
+  seam] wired **LAST** into `doctrine_engine.score_doctrine`;
+  `producer_profile._validate` scorer-list; all five profile JSONs [identical
+  additive `doctrine.scorers.textural_coherence` constants block; Eno weight
+  **1.2** + confidence flip deferred→high, the other four weight **0**];
+  `schemas/doctrine_score.schema.json`; the five regenerated sample trees
+  [real-CLI-faithful, P-053 pattern]; NEW `tests/test_textural_coherence.py` [25]
+  + the existing-test re-pins [test_sample_refresh, test_eno_profile,
+  test_cla_profile, test_quincy_profile, test_timbaland_profile,
+  test_four_way_differential, test_five_way_differential,
+  test_doctrine_profile_sourced, test_producer_profile, test_vocal_type] +
+  README's pinned Eno cell; 28 files, +707/−59; **GREEN IN ISOLATION at 1331**) +
+  `d6f9b0b` (Commit-2 — purely additive proof: `tests/test_five_way_differential.py`
+  + `tests/test_eno_profile.py`, exactly 2 files, +179, +16 → **1347** — the
+  differential + sabotage/mutation coverage) on parent `81494c2` (set-active),
+  atop merge base with default `b03f388` (= PR #33 — P-055 merged to default; the
+  dev branch is fast-forwarded onto it, so a P-056 PR carries only these two
+  commits + the close commit — a clean single-packet PR). Parent chain: `d6f9b0b`
+  → `acd9a3e` → `81494c2` → `b03f388`; verified `git merge-base HEAD b03f388` =
+  `b03f388`. **THE AXIS** = 100 − dispersion of the texture beds (the engine-owned
+  `_dropout_texture_beds` surface, replicated as `_textural_bed_set`, pinned
+  equal) across three equally-weighted sub-terms: tonal (`band_energy` 5-band L1
+  spread + `brightness` stdev), spatial (`stereo_width` stdev), dynamic
+  (`crest_factor_db` stdev). PURE cross-bed dispersion — never reads
+  room/occupancy-mean/depth-count/foreground/rhythm, so distinctness from
+  negative_space/physical_space/depth_hierarchy/groove_coherence is PROVEN
+  (disjoint-input tests), not asserted. `<2` beds → **neutral 55.0 float** (never
+  None/crash; mirrors negative_space 40 / groove 45). Per-fixture score (measured
+  identically for all five): simple/splice/chop **55.0**, dense **27.0**. **Eno's
+  committed overall MOVED 65.5 → 64.3** (simple 65.4→64.2, dense 57.8→54.2, splice
+  59.3→58.8, chop 65.5→64.3); the four non-Eno overalls BYTE-IDENTICAL base↔HEAD
+  (Halee 76.3, CLA 67.8, Quincy 68.8, Timbaland 60.9), their
+  `mix_verdict.md`/`mix_plan.json`/`dashboard.html` byte-identical (only
+  `doctrine_score.json` gained the additive labeled key + evidence). The weight-0
+  four-way invariant BYTE-PROVEN (aggregate `sum(w·s)/sum(w)` — a 0-weight term is
+  arithmetically inert). Distinctness PROVEN both directions; sabotage non-vacuous
+  (zero weight reverts Eno to the pre-axis value; DELETE weight → KeyError,
+  genuinely dereferenced; sign-flip swaps the coherent/incoherent ordering).
+  **Zero new DSP, zero new dependency** (`statistics` stdlib; deps stay
+  numpy>=1.21); `governance.py` + `creative.py` + the dropout protection filter
+  byte-untouched (ABSENT from the diff); the five JSONs' aesthetic + loudness
+  kill-switches, `veto_thresholds`, `protect_iconic_loops` byte-unchanged. Safety
+  grep of the source diff: **0 reach**
+  (osascript/subprocess/.logicx/exec/apply/socket/urllib/requests). **Codex
+  unavailable — single-model review.** Reviewer: the axis load-bearing (Eno's
+  overall genuinely moves; the sabotage bites prove it is dereferenced, not
+  decorative) and PROVABLY distinct; the weight-0 byte-stability honest (arithmetic
+  inertness, not curation); the `<2 beds → 55.0` neutral fallback the HONEST choice
+  (dispersion unmeasurable with <2 beds). Receipt:
+  `build-os/receipts/P-056-textural-coherence-analyzer.md`.
+- **★ ENO'S OWN CONFIDENCE DEFERRAL IS FLIPPED:** "textural coherence as its own
+  measurement" (deferred at doctrine time) → **high**, with an honest reason
+  stamp containing "dispersion", weight 1.2 — asserted in the differential. This
+  is the doctrine deepening itself: the engine now measures what Eno's own map
+  said it could not yet measure.
+- **NEW accepted notes (P-056, recorded not fixed — non-blocking):**
+  1. **The `<2 beds → 55.0` neutral fallback is a taste knob, not a bug**
+     (reviewer's latent-trajectory note): bed-light / single-sustained-bed ambient
+     material — the most literally "one woven surface" case — injects 55.0 into
+     Eno's weighted mean at weight 1.2, so it reads as MEDIOCRE rather than high
+     and nudges his overall down (the 1-bed sample: 65.5→64.3). This is the HONEST
+     choice (dispersion is unmeasurable with <2 beds; claiming HIGH would be
+     unearned), it mirrors the sibling fallbacks (negative_space 40 / groove 45),
+     and the value is an explicitly-deferred, code-change-free calibration knob in
+     the constants block. Flag for the NEXT Eno-calibration pass — NOT a
+     correctness bug, NOT a merge blocker.
+  2. **The two non-Eno beneficiaries are staged, not wired:** Quincy (ensemble
+     cohesion) and CLA (does the wall cohere or merely pile up) are MEASURED-but-
+     weight-0 — a future taste call is a one-line weight change. Deferred.
+  3. **The two remaining Eno-deferral analyzers stay deferred:** ambient patience
+     (user rank #2 — flagged for the negative-space overlap risk that must be
+     carefully separated) and generative process (rank #3 — flagged as hand-wavy
+     without arrangement-time/provenance signals; its confidence entry is
+     untouched). This packet was textural coherence ONLY.
+- **All prior standing notes RETAINED** (the banners below), incl. the P-055
+  content-dependent prose-count residues, the ★★ groove-carrier trajectory
+  watch-item, the CLA sha256-self-pin-on-sixth-producer note, the P-050…P-055
+  accepted notes, the safety line, and the named lessons.
+- **Open boundary:** P-056's commits pushed to the dev branch BEFORE qa/reviewer
+  under the orchestrator's standing go; **the MERGE of P-056 (`acd9a3e` +
+  `d6f9b0b` + the close commit) atop `b03f388` (= PR #33) — a clean single-packet
+  PR (the branch is fast-forwarded onto default) — is the OPEN USER GATE**,
+  awaiting the user's explicit word. No deploy/publish/secrets touched.
+- **NEXT: NOTHING STAGED — nothing opened blind.** The orchestrator PRESENTS the
+  open directions, ALL user-gated: the P-056 merge · ambient patience
+  (Eno-deferral #2, overlap-risk to separate) · generative process (Eno-deferral
+  #3, needs new signals) · the non-Eno textural weighting taste call (Quincy/CLA,
+  one-line) · the Eno `<2 beds` neutral-fallback calibration · a sixth producer
+  (WHO + grounding) · the apply-to-Logic backend (FUTURE, EXPLICITLY re-gated —
+  never auto; the safety line stands) · a real external host driving the MCP
+  server (a MANUAL user step) · a real MCP-SDK transport swap · the
+  content-dependent prose-count residue (low priority) · anything else the user
+  calls. Do NOT open anything blind.
+- **THE NAMED LESSONS (standing, retained):** (1) raw-dict NaN comparisons FAIL
+  OPEN; (2) defense claims need MUTATION TESTS, not placement faith (P-056
+  re-exercised this — the delete/zero-weight + sign-flip bites are the proof the
+  axis is load-bearing); (3) flag PRESENCE is not flag THREADING — levers need
+  reaches-the-destination guards; (4, ENFORCED) for "fix every occurrence of X"
+  deliverables, prove with a whole-file/whole-repo check returning ZERO and PIN it
+  as a live test where feasible, not a diff-region spot-check.
+
 ## ★★★ STATUS (P-055 close, 2026-07-05): residue = accepted standing notes only — THE README-DRIFT-GUARD FAMILY IS COMPLETE; THE SPELLED-OUT PROSE COUNTS ARE NOW MACHINE-PINNED; THE SELF-SERVE HYGIENE WELL IS DRY
 
 - **P-055 (README PROSE-COUNT GUARD — a test + docs packet, ZERO

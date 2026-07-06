@@ -101,6 +101,10 @@ def test_weights_value_pins():
         # the engine detects, the profile authors masking philosophy), weight
         # 0 for the reference producer (the byte-identical anchor).
         "vocal_role_fit_score": 0,
+        # P-056 — the producer-agnostic textural_coherence axis (the 15th;
+        # bed-similarity dispersion), weight 0 for the reference producer
+        # (the byte-identical anchor).
+        "textural_coherence_score": 0,
     }
 
 

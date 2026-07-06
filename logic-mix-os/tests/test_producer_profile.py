@@ -576,11 +576,14 @@ def test_doctrine_subfields_present():
     # P-032f added the twelfth: the producer-agnostic ``vocal_role_fit`` axis
     # (vocal function: the engine detects lead/hook_candidate/percussive/
     # stack/uncertain; the profile authors masking philosophy).
+    # P-056 added the thirteenth scorer group: ``textural_coherence`` (the
+    # 15th doctrine axis — bed-similarity dispersion; sub-weights + scales
+    # tunable per profile).
     assert set(d["scorers"]) == {
         "vocal_centrality", "depth_hierarchy", "section_contrast",
         "static_mix", "dynamic_mix", "beat_identity", "negative_space",
         "groove_coherence", "rhythmic_surprise", "low_end_motion",
-        "loop_context", "vocal_role_fit",
+        "loop_context", "vocal_role_fit", "textural_coherence",
     }
 
 
