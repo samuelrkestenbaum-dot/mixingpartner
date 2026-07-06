@@ -1,0 +1,16 @@
+# Belt-and-suspenders: a captured field-session bundle is memory JSON + plan/
+# verdict artifacts ONLY. Raw audio must never be committed here — a stray
+# exported stem is ignored even if someone drops one into a bundle by mistake.
+# (`capture-session` already refuses to copy audio; this is the second lock.)
+*.wav
+*.wave
+*.aif
+*.aiff
+*.flac
+*.caf
+*.ogg
+*.mp3
+*.m4a
+*.aac
+*.wma
+*.opus

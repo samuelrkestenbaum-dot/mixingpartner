@@ -21,6 +21,7 @@ from .bridge.executor import dry_run
 from .bridge.exporter import export_actions
 from .doctrine.producer_profile import _PRODUCERS_DIR, ProducerProfile, load_profile
 from .memory import ProjectMemory
+from .onramp import bundle_field_session, scaffold_manifest, write_manifest_draft
 from .pipeline import analyze, write_artifacts
 from .planners.next_pass_planner import generate_creative_hypotheses
 from .project import load_manifest
@@ -415,6 +416,36 @@ def _run_album(args) -> int:
     return 0
 
 
+def _run_scaffold_manifest(args) -> int:
+    stems = Path(args.stems)
+    out = Path(args.out) if args.out else stems.resolve().parent / "project_manifest.json"
+    try:
+        path = write_manifest_draft(stems, out, force=args.force)
+    except FileExistsError:
+        print(f"Refusing to overwrite existing manifest: {out} (use --force).",
+              file=sys.stderr)
+        return 2
+    manifest = scaffold_manifest(stems)
+    print(f"Wrote draft manifest: {path}")
+    print(f"  tracks: {len(manifest['tracks'])} | "
+          f"needs review: {len(manifest['_needs_review'])}")
+    for name in manifest["_needs_review"]:
+        print(f"    - {name} (confirm source_kind)")
+    print("Next: edit the _needs_review guesses, fill sections/intent, "
+          "then remove the _draft flag.")
+    return 0
+
+
+def _run_capture_session(args) -> int:
+    info = bundle_field_session(args.memory_dir, args.out, artifacts_dir=args.artifacts)
+    print(f"Captured field session to {info['bundle_dir']}")
+    print(f"  memory files: {len(info['memory_files'])} | "
+          f"artifacts: {len(info['artifacts'])}")
+    for f in info["memory_files"] + info["artifacts"]:
+        print(f"    - {f}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="logic-mix-os", description="Local-first Logic Pro mix decision system.")
     p.add_argument("--version", action="version", version=f"logic-mix-os {__version__}")
@@ -558,6 +589,20 @@ def build_parser() -> argparse.ArgumentParser:
     add_common(db)
     db.add_argument("--bounce", help="Optional stereo bounce")
     db.set_defaults(func=_run_dashboard)
+
+    smf = sub.add_parser("scaffold-manifest",
+                         help="Scaffold a draft project_manifest.json from a folder of stems")
+    smf.add_argument("--stems", required=True, help="Folder of exported stems")
+    smf.add_argument("--out", help="Output path (default: <stems>/../project_manifest.json)")
+    smf.add_argument("--force", action="store_true", help="Overwrite an existing manifest")
+    smf.set_defaults(func=_run_scaffold_manifest)
+
+    cps = sub.add_parser("capture-session",
+                         help="Bundle a field session's memory + artifacts for commit-back")
+    cps.add_argument("--memory-dir", required=True, help="Project memory directory")
+    cps.add_argument("--out", required=True, help="Output bundle directory")
+    cps.add_argument("--artifacts", help="Optional analysis output dir (plan/verdict artifacts)")
+    cps.set_defaults(func=_run_capture_session)
 
     cw = sub.add_parser("cowork", help="Claude Cowork command surface (registry of bounded commands)")
     cw.add_argument("--list", action="store_true", help="List available commands")
