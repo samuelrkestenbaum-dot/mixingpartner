@@ -11,14 +11,16 @@ stdev), spatial (``stereo_width`` stdev) and dynamic (``crest_factor_db`` stdev)
 — and NOTHING else: never room, occupancy-mean, depth-count, foreground salience
 or rhythm, so distinctness from ``negative_space`` / ``physical_space`` /
 ``depth_hierarchy`` / ``groove_coherence`` is PROVABLE, not asserted. It is wired
-into ``score_doctrine`` LAST with a weight of 0 for the four non-Eno producers
-(byte-identical overalls) and a real high-tier weight for brian_eno.
+into ``score_doctrine`` LAST with a weight of 0 for the weight-0 producers
+(byte-identical overalls) and a real weight for the profiles that opt in
+(brian_eno at 1.2 in P-056; quincy_jones at a support-tier 0.6 in P-057).
 
 Guards (mirroring the P-032a/P-032f agnostic-axis pattern):
 
-1. **Byte-identical anchor** — the four non-Eno producers weight the axis 0, so
-   the weighted mean is arithmetically untouched; the axis is appended LAST so
-   the pre-existing 14-term summation order is preserved.
+1. **Byte-identical anchor** — the weight-0 producers (halee_ramone, timbaland,
+   chris_lord_alge — P-057 dropped quincy_jones, who now opts in at 0.6) weight
+   the axis 0, so the weighted mean is arithmetically untouched; the axis is
+   appended LAST so the pre-existing 14-term summation order is preserved.
 2. **Value-discrimination (unit)** — a coherent bed set (beds that resemble each
    other) scores HIGH; an incoherent bed set (beds that do not) scores LOW; <2
    beds → a documented NEUTRAL float; the score is always a clamped 0..100 float.
@@ -118,12 +120,13 @@ def _tc(records, doctrine=None):
 
 
 # --------------------------------------------------------------------------- #
-# 1. BYTE-IDENTICAL ANCHOR — the four non-Eno producers weight the axis 0.
+# 1. BYTE-IDENTICAL ANCHOR — the weight-0 producers weight the axis 0.
+# P-057 dropped quincy_jones from this set (he opts in at 0.6); the byte-
+# identical weight-0 set is now the three below.
 # --------------------------------------------------------------------------- #
 @pytest.mark.parametrize("producer",
-                         ["halee_ramone", "timbaland", "quincy_jones",
-                          "chris_lord_alge"])
-def test_textural_coherence_weight_is_zero_for_the_four_non_eno_producers(producer):
+                         ["halee_ramone", "timbaland", "chris_lord_alge"])
+def test_textural_coherence_weight_is_zero_for_the_weight_zero_producers(producer):
     """The byte-identical anchor: weight 0 => ``tc*0`` numerator, ``+0``
     denominator => the weighted mean is arithmetically untouched."""
     assert load_profile(producer).doctrine["weights"]["textural_coherence_score"] == 0
@@ -137,6 +140,16 @@ def test_textural_coherence_weight_is_nonzero_for_brian_eno():
     assert w["textural_coherence_score"] > 0
     assert w["textural_coherence_score"] < w["physical_space_score"]
     assert w["textural_coherence_score"] < w["negative_space_score"]
+
+
+def test_textural_coherence_weight_is_support_tier_for_quincy_jones():
+    """P-057: quincy_jones opts the axis into a SUPPORT-TIER weight (0.6) — a
+    genuine measured signal, below his center-of-gravity poles (depth_hierarchy /
+    section_contrast) and level with his retained support/hygiene cluster."""
+    w = load_profile("quincy_jones").doctrine["weights"]
+    assert w["textural_coherence_score"] == 0.6
+    assert w["textural_coherence_score"] < w["depth_hierarchy_score"]
+    assert w["textural_coherence_score"] < w["section_contrast_score"]
 
 
 def test_axis_appended_last_preserves_summation_order(analyzed):

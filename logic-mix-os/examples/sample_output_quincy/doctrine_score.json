@@ -14,7 +14,7 @@
   "loop_context_score": 12.0,
   "vocal_role_fit_score": 85.0,
   "textural_coherence_score": 55.0,
-  "overall_mix_readiness_score": 68.8,
+  "overall_mix_readiness_score": 68.2,
   "evidence": {
     "physical_space": [
       "67% of elements sit in forward layers; depth is collapsing."
@@ -118,6 +118,11 @@
       "area": "vocal blend interpretation",
       "level": "limited",
       "reason": "the opt-in is authored from documented technique — Bruce Swedien's stacked background-vocal ensembles in the documented Jones/Swedien engineering partnership (the Acusonic recording process: a prominent lead atop an arranged vocal ensemble) — and the gate is live and measured on real exported-stem data: a qualified vocal chop and stack under masking read 85.0 on vocal_role_fit against the reference's 65.0 at this profile's authored 0.8 confidence floor; the level stays limited because coverage is bounded: events arise only from the masker-instrument set, info-tier events are emitted but not consumed, and vocal-band events carry no per-track masking risk"
+    },
+    {
+      "area": "textural coherence as its own measurement",
+      "level": "limited",
+      "reason": "the opt-in is authored from documented Quincy Jones technique — big-band and orchestral arranging keeps the ensemble's texture beds sharing one coherent surface (the section timbres blend into a single arranged voice rather than reading as a pile of unrelated layers), and it ships as a pure cross-bed dispersion statistic over the engine's texture-bed set (band_energy L1 spread + brightness, stereo_width and crest_factor stdev on the exported stems); the level stays limited, NOT high, because this reading is a SECONDARY support-tier concern that runs partly counter to this profile's center of gravity — the distinct, readable ensemble layer (depth_hierarchy weighted 1.4, above this axis's authored 0.6): the arrangement keeps every part in its own readable place first, so the one-woven-surface framing is a support reading, never the arrangement-led practice's engine"
     },
     {
       "area": "harmonic and instrumental conversation (voicing, counterlines, call-and-response)",

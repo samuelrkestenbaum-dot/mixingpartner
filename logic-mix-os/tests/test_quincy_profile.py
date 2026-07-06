@@ -87,7 +87,7 @@ Q_WEIGHTS = {
     "low_end_motion_score": 0.5,
     "loop_context_score": 0.3,
     "vocal_role_fit_score": 0.7,
-    "textural_coherence_score": 0,
+    "textural_coherence_score": 0.6,
 }
 
 # The axes where Quincy is deliberately NOT between the other two — his own
@@ -160,6 +160,11 @@ Q_AUTHORED_MAP = [
         "area": "vocal blend interpretation",
         "level": "limited",
         "reason": "the opt-in is authored from documented technique — Bruce Swedien's stacked background-vocal ensembles in the documented Jones/Swedien engineering partnership (the Acusonic recording process: a prominent lead atop an arranged vocal ensemble) — and the gate is live and measured on real exported-stem data: a qualified vocal chop and stack under masking read 85.0 on vocal_role_fit against the reference's 65.0 at this profile's authored 0.8 confidence floor; the level stays limited because coverage is bounded: events arise only from the masker-instrument set, info-tier events are emitted but not consumed, and vocal-band events carry no per-track masking risk",
+    },
+    {
+        "area": "textural coherence as its own measurement",
+        "level": "limited",
+        "reason": "the opt-in is authored from documented Quincy Jones technique — big-band and orchestral arranging keeps the ensemble's texture beds sharing one coherent surface (the section timbres blend into a single arranged voice rather than reading as a pile of unrelated layers), and it ships as a pure cross-bed dispersion statistic over the engine's texture-bed set (band_energy L1 spread + brightness, stereo_width and crest_factor stdev on the exported stems); the level stays limited, NOT high, because this reading is a SECONDARY support-tier concern that runs partly counter to this profile's center of gravity — the distinct, readable ensemble layer (depth_hierarchy weighted 1.4, above this axis's authored 0.6): the arrangement keeps every part in its own readable place first, so the one-woven-surface framing is a support reading, never the arrangement-led practice's engine",
     },
     {
         "area": "harmonic and instrumental conversation (voicing, counterlines, call-and-response)",
@@ -320,12 +325,12 @@ def test_coherent_pole_not_averaged_mush():
     for key in GROOVE_SUPPORT:
         assert 0 < q[key] < tim[key], f"{key} not groove-support (below timbaland, > 0)"
         assert q[key] > ref[key], f"{key} not above the reference's 0"
-    # support != removal — every axis Quincy OPTS INTO stays live; the sole
-    # weight-0 axis is textural_coherence, which P-056 ships at 0 for all four
-    # non-Eno producers (weighting it is a deferred taste call — only eno opts in).
-    opted_in = {k: v for k, v in q.items() if k != "textural_coherence_score"}
-    assert all(w > 0 for w in opted_in.values())
-    assert q["textural_coherence_score"] == 0
+    # support != removal — every axis Quincy OPTS INTO stays live; P-057 opts
+    # him into textural_coherence at a support-tier 0.6 (documented big-band
+    # ensemble cohesion — see the confidence map), so he now has NO weight-0
+    # axis: every one of his 15 weights is strictly positive.
+    assert all(w > 0 for w in q.values())
+    assert q["textural_coherence_score"] == 0.6
 
 
 def test_top_axis_emphasis_neither_profile_has():
@@ -410,13 +415,14 @@ def test_quincy_confidence_map_verbatim():
 
 
 def test_confidence_level_distribution():
-    """6 high (the five interpretation areas + the loop polarity) / 1 limited
-    (vocal blend — live, measured, coverage-bounded) / 6 deferred (the five
+    """6 high (the five interpretation areas + the loop polarity) / 2 limited
+    (vocal blend + P-057's textural coherence — both live, measured,
+    support-tier and coverage/center-of-gravity bounded) / 6 deferred (the five
     standing engine boundaries + Quincy's own harmonic-conversation
     deferral)."""
     levels = [e["level"] for e in load_profile("quincy_jones").confidence_map]
     assert levels.count("high") == 6
-    assert levels.count("limited") == 1
+    assert levels.count("limited") == 2
     assert levels.count("deferred") == 6
 
 
@@ -432,14 +438,18 @@ def test_every_high_entry_names_its_documented_technique_basis():
 
 
 def test_limited_blend_entry_matches_the_authored_policy():
-    """The limited entry states its documented basis (Swedien stacked BGVs),
-    its live measurement (85.0 vs 65.0 on real exported-stem data), its OWN
-    authored floor (0.8) and the real coverage bounds — and it corresponds to
-    the policy the profile actually authors."""
+    """The blend limited entry states its documented basis (Swedien stacked
+    BGVs), its live measurement (85.0 vs 65.0 on real exported-stem data), its
+    OWN authored floor (0.8) and the real coverage bounds — and it corresponds
+    to the policy the profile actually authors. P-057 added a SECOND limited
+    entry (textural coherence), so the two limited entries are exactly the blend
+    (index 6) and the textural axis (index 7); the blend is limited[0]."""
     p = load_profile("quincy_jones")
     limited = [e for e in p.confidence_map if e["level"] == "limited"]
-    assert limited == [Q_AUTHORED_MAP[6]]
-    reason = limited[0]["reason"]
+    assert limited == [Q_AUTHORED_MAP[6], Q_AUTHORED_MAP[7]]
+    blend = limited[0]
+    assert blend["area"] == "vocal blend interpretation"
+    reason = blend["reason"]
     assert "Bruce Swedien" in reason
     assert "measured on real exported-stem data" in reason
     assert "85.0" in reason and "65.0" in reason
@@ -454,7 +464,10 @@ def test_deferred_entries_carry_the_standing_boundaries_plus_his_own():
     not measurable by this engine — stays deferred rather than overclaimed."""
     deferred = [e for e in load_profile("quincy_jones").confidence_map
                 if e["level"] == "deferred"]
-    assert deferred == [Q_AUTHORED_MAP[7]] + Q_AUTHORED_MAP[8:]
+    # P-057 inserted the textural-coherence limited entry at index 7, shifting
+    # the deferred block down by one: the six deferred entries are now the tail
+    # of the map from index 8 (harmonic conversation) onward.
+    assert deferred == Q_AUTHORED_MAP[8:]
     areas = " | ".join(e["area"] for e in deferred)
     for standing in ("harmonic and instrumental conversation",
                      "cultural loop recognizability", "true hook recurrence",

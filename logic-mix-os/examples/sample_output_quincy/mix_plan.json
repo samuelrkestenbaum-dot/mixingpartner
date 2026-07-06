@@ -5,7 +5,7 @@
     "Do not bury the lead vocal.",
     "Do not let the chopped vocals lose their rhythmic identity."
   ],
-  "overall_diagnosis": "Overall mix readiness 68.8/100. Static balance 80.0/100; dynamic movement 28.2/100. The mix is more balanced than it is alive — invest in section contrast and rides, not more EQ.",
+  "overall_diagnosis": "Overall mix readiness 68.2/100. Static balance 80.0/100; dynamic movement 28.2/100. The mix is more balanced than it is alive — invest in section contrast and rides, not more EQ.",
   "physical_space_score": 81.3,
   "emotional_hierarchy_score": 86.0,
   "section_contrast_score": 82,
@@ -13,7 +13,7 @@
   "vocal_centrality_score": 90.0,
   "static_mix_score": 80.0,
   "dynamic_mix_score": 28.2,
-  "overall_mix_readiness_score": 68.8,
+  "overall_mix_readiness_score": 68.2,
   "biggest_risks": [
     "Chorus 1 may not lift enough relative to the previous section (only +1.4 dB and -0.03 width). Target roughly +3 to +5 dB and +0.05 to +0.10 width via supporting elements and automation, not master level.",
     "Dynamic movement is weak (28.2/100)."

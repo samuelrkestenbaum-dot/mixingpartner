@@ -507,6 +507,40 @@
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
+- **Green baseline (verified 2026-07-06, P-057 — the Non-Eno Textural Weighting
+  baseline):** suite **1359 passed** (0 failed / skipped); regression **93/93** —
+  the corpus is **4 fixtures**. A PROFILE-DATA packet — **ZERO `.py` under
+  `logic_mix_os/`**. Two commits `f2d2efb` (Commit-1 — `quincy_jones.json`
+  `weights.textural_coherence_score` **0 → 0.6** + a `confidence_map` entry at
+  level **`limited`**; Quincy's sample tree regenerated real-CLI-faithful [his 4
+  decision artifacts moved]; the re-pins test_quincy_profile,
+  test_three_way_differential, test_four_way_differential,
+  test_five_way_differential, test_textural_coherence, test_sample_refresh
+  [HEADLINES], README Quincy cell; 12 files, +133/−66; **GREEN IN ISOLATION at
+  1347**) + `2d83987` (Commit-2 — purely additive proof:
+  `tests/test_five_way_differential.py` ONLY, +146, +12 → 1359) on parent
+  `91726c2` (set-active), atop merge base with default `1ab5878` (= PR #34 — P-056
+  merged to default; the dev branch is fast-forwarded onto it, so a P-057 PR
+  carries only these two commits + the close commit — a clean single-packet PR).
+  **The 15th doctrine axis `textural_coherence_score` is now WEIGHTED by TWO
+  producers: Eno 1.2 `high` (his center) + Quincy 0.6 `limited` (support-tier);
+  the weight-0 set shrinks four → three {Halee, Timbaland, CLA}; Quincy now has
+  all 15 weights > 0.** Quincy's overall moved DOWN (simple 70.0→69.2, dense
+  62.1→**60.4** largest, splice 61.9→61.6, chop headline **68.8→68.2**); the
+  per-fixture axis value profile-blind + unchanged (55/27/55/55). Eno (64.3, wt
+  1.2), Halee (76.3), Timbaland (60.9), CLA (67.8) profiles AND sample trees
+  byte-identical `1ab5878`↔HEAD (sha256) — only Quincy's tree moved; CLA DEFERRED
+  (byte-untouched). Sabotage bites (zero weight reverts; delete key → KeyError).
+  `governance.py`/`creative.py`/`doctrine_engine.py`/`producer_profile.py` ABSENT
+  from the diff; kill-switches, veto, `protect_iconic_loops` byte-unchanged; no
+  new dependency; safety grep 0 reach. **PUSHED to the dev branch BEFORE
+  qa/reviewer under the standing go; NOT merged — the P-057 merge is a user gate.**
+  **★ PR #34 recorded: P-056 merged to default = `1ab5878`.** (History: 1347 ->
+  **1359** at P-057 — +12, all Commit-2 [test_five_way_differential.py → 69];
+  Commit-1 iso **1347**. Per-file collect: test_five_way_differential.py=69,
+  test_four_way_differential.py=64, test_quincy_profile.py=27,
+  test_three_way_differential.py=40, test_textural_coherence.py=25,
+  test_sample_refresh.py=16.)
 - **Green baseline (verified 2026-07-06, P-056 — the Textural Coherence
   Analyzer / the 15th doctrine axis baseline):** suite **1347 passed** (0 failed /
   skipped); regression **93/93** — the corpus is **4 fixtures**. Two commits
@@ -685,6 +719,82 @@
   331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-057 MAKES THE 15th DOCTRINE AXIS COUNT FOR A SECOND PRODUCER — QUINCY
+  OPTS INTO `textural_coherence_score` AT 0.6 (`limited`, SUPPORT-TIER) WHILE CLA
+  STAYS DEFERRED (BYTE-IDENTICAL) (Non-Eno Textural Weighting; a PROFILE-DATA
+  packet, ZERO `.py` under `logic_mix_os/`; opened on the user's "ok go",
+  2026-07-06, after the P-056 merge [PR #34 -> default `1ab5878`], decision
+  user-confirmed: Quincy 0.6, CLA DEFER). qa GREEN (suite 1359 / 0; regression
+  93/93; Commit-1 iso 1347) + reviewer PASS (no must-fix; single-model — Codex
+  unavailable). Both gates independently re-ran the suite. Last-closed = P-057.**
+  - **Two commits** on parent `91726c2` (set-active), atop merge base with default
+    `1ab5878` (= PR #34): `f2d2efb` (Commit-1 — `quincy_jones.json` weight
+    **0 → 0.6** + a `confidence_map` `limited` entry [honest support-tier reason
+    disclosing the tension with his distinct-layer center]; Quincy's sample tree
+    regenerated real-CLI-faithful [4 decision artifacts moved]; the re-pins
+    test_quincy_profile / test_three_way_differential / test_four_way_differential
+    / test_five_way_differential / test_textural_coherence / test_sample_refresh
+    [HEADLINES] + README Quincy cell; 12 files, +133/−66; **GREEN IN ISOLATION at
+    1347**) + `2d83987` (Commit-2 — additive proof:
+    `tests/test_five_way_differential.py` ONLY, +146 → 1359). Verified
+    `git merge-base HEAD 1ab5878` = `1ab5878` (fast-forwarded — a clean
+    single-packet PR). **PUSHED to the dev branch BEFORE qa/reviewer under the
+    standing go; NOT merged — the P-057 merge is the OPEN USER GATE.**
+  - **The weighting (grounded, honest):** Quincy 0.6 = exactly level with his
+    support/hygiene cluster (`beat_identity`/`negative_space`/`groove_coherence`
+    0.6), BELOW his `depth_hierarchy` 1.4 center + `section_contrast` 1.3 — a
+    support-tier reading, never his center. Confidence `limited` (NOT `high` —
+    `high` would over-claim; Eno earns `high` because texture-as-composition is
+    HIS center; Quincy's is distinct layering). The axis is provably DISJOINT from
+    `depth_hierarchy` (bed timbral/spatial/dynamic dispersion vs placement/room),
+    so no double-counting. **The axis now carries TWO honestly-differentiated
+    convictions: Eno `high`/1.2 (center) + Quincy `limited`/0.6 (support).**
+  - **★ qa GREEN (both gates re-ran):** suite 1347 -> **1359 passed, 0 failed**
+    (+12, ALL Commit-2 proof); regression **93/93**; Commit-1 iso **1347**;
+    per-file collect test_five_way_differential.py=**69**,
+    test_four_way_differential.py=**64**, test_quincy_profile.py=**27**,
+    test_three_way_differential.py=**40**, test_textural_coherence.py=**25**,
+    test_sample_refresh.py=**16**. Quincy's overall moved DOWN (the honest
+    direction): simple 70.0→69.2, dense 62.1→**60.4** (largest, −1.7 — the only
+    ≥2-bed fixture reading the incoherent 27.0), splice 61.9→61.6, chop headline
+    **68.8→68.2**; the per-fixture axis value profile-blind + unchanged
+    (55/27/55/55). The weight-0 set shrinks four → three {Halee, Timbaland, CLA};
+    Quincy now has all 15 weights > 0 (the "sole weight-0 axis" assertion
+    TIGHTENED to "all 15 > 0"); his `limited`-confidence count 1→2. Eno (64.3, wt
+    1.2), Halee (76.3), Timbaland (60.9), CLA (67.8) profiles AND sample trees
+    byte-identical `1ab5878`↔HEAD (sha256) — only Quincy's tree moved. Sabotage
+    non-vacuous (zero weight reverts Quincy to the pre-P-057 value; delete key →
+    KeyError). ZERO `.py` under `logic_mix_os/`
+    (governance.py/creative.py/doctrine_engine.py/producer_profile.py ABSENT from
+    the diff); kill-switches, veto, `protect_iconic_loops` byte-unchanged; no new
+    dependency; safety grep 0 reach. README's P-054 numbers + P-055 prose guards
+    both GREEN (they'd fail on a missed Quincy re-pin — earned their keep).
+  - **★ reviewer PASS (no must-fix; Codex unavailable — single-model):** the
+    weighting grounded + honest (Quincy level with his support cluster + below his
+    center; `limited` the correctly humble tier; the axis provably disjoint from
+    `depth_hierarchy`; Quincy moving DOWN the honest direction); CLA deferring the
+    consistent honest posture (mirrors his loudness/saturation/translation
+    deferrals; byte-identical); the builder re-pinned ONLY what moved. Process
+    note (non-blocking): the Commit-1 re-pin prediction was slightly over-broad
+    (test_doctrine_profile_sourced/test_producer_profile did not need touching).
+    Residue -> residue.md: (1) CLA textural stays DEFERRED — an optional future
+    taste call (~0.4); (2) Halee/Timbaland textural untouched, needs grounding;
+    (3) the Eno/Quincy `<2 beds → 55.0` neutral-fallback calibration now touches
+    TWO producers; (4) the packet-prediction-precision process note; (5) ambient
+    patience + generative process stay deferred.
+  - **★ NEXT: NOTHING STAGED — opened blind is forbidden.** The orchestrator
+    PRESENTS the user-gated directions: the P-057 merge · CLA textural opt-in
+    (optional taste call) · Halee/Timbaland textural weighting (needs grounding) ·
+    ambient patience (Eno-deferral #2, overlap-risk to separate) · generative
+    process (Eno-deferral #3, needs new signals) · the Eno/Quincy `<2 beds`
+    neutral-fallback calibration · a sixth producer (roster frozen at five — WHO +
+    grounding) · apply-to-Logic (FUTURE, re-gated — never auto; the safety line
+    stands) · a real external host driving the MCP server (manual) · a real
+    MCP-SDK transport swap · anything else the user calls. Do NOT open anything
+    blind. **THE OPEN USER GATE: the merge of P-057 (`f2d2efb` + `2d83987` + the
+    close commit) atop `1ab5878` (= PR #34) — a clean single-packet PR.** Receipt:
+    `build-os/receipts/P-057-non-eno-textural-weighting.md`.
 
 - **★★★ P-056 IS THE FIRST ENGINE-DEEPENING PACKET SINCE THE PRODUCER ARC — THE
   15th DOCTRINE AXIS `textural_coherence_score` (bed-similarity DISPERSION, Option

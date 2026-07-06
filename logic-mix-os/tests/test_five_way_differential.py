@@ -261,14 +261,17 @@ EXPERIMENTAL_CHORUS_SETS = {
 # three P-045 pins (fe8d947 base) plus the brian_eno hash at the P-050 base.
 # P-056 CONSCIOUSLY re-pinned these (every profile JSON gained the additive
 # textural_coherence scorer block + weight; brian_eno additionally opts into the
-# axis and flips its confidence entry). A test-visible decision, never drift.
+# axis and flips its confidence entry). P-057 CONSCIOUSLY re-pinned the
+# quincy_jones hash again (he opts the axis into weight 0.6 + gains a textural
+# confidence entry); halee_ramone/timbaland/brian_eno are byte-unchanged from
+# P-056. A test-visible decision, never drift.
 EXISTING_JSON_SHA256 = {
     "halee_ramone":
         "fd99d9f1e31400c3c4c764e2bc3a1c7d185fb3d69292c98641170548838df25d",
     "timbaland":
         "8715541491253d4376ea5b0132e5a5d96c16710f180e1d49df1cd4affe5d04d9",
     "quincy_jones":
-        "2c1dead63c8da8b2c68d29676002f9e9c4d37193ade32ccdd264569d28ddb4e8",
+        "0b28f144f93b481d32a5a4608f13ab370435c421137a79c854874adcd99fc6ec",
     "brian_eno":
         "95407ae7ca8056665f58cf5356a8cd98e750ece33333a24386c01b955def256d",
 }
@@ -663,11 +666,16 @@ def test_divergence_audit_vs_the_opt_in_producers(name, five_analyzed):
 # P-056 — THE FIFTEENTH-AXIS PERMANENT PROOF (textural_coherence).
 #
 # The engine-deepening packet's binding differential: Eno's overall MOVED on a
-# new measured signal; the four non-Eno producers are byte-identical (the
-# weight-0 proof); the axis key is present + measured in ALL FIVE artifacts;
-# Eno's confidence-map deferral flipped live; and the axis is load-bearing —
-# zeroing his weight reverts his overall and flipping the dispersion sign swaps
-# the coherent/incoherent synthetic cases.
+# new measured signal; the non-Eno producers weighting the axis at 0 are
+# byte-identical (the weight-0 proof); the axis key is present + measured in ALL
+# FIVE artifacts; Eno's confidence-map deferral flipped live; and the axis is
+# load-bearing — zeroing his weight reverts his overall and flipping the
+# dispersion sign swaps the coherent/incoherent synthetic cases.
+#
+# P-057 SHRANK the weight-0 set from four to THREE: quincy_jones now opts the
+# axis into weight 0.6 (his own P-057 MOVE + sabotage proof lives in the
+# dedicated block at the end of this file), leaving {halee_ramone, timbaland,
+# chris_lord_alge} as the byte-identical weight-0 set below.
 # =========================================================================== #
 
 # Eno's PRE-AXIS overalls — his standing pre-P-056 four-way values (the 14-term
@@ -678,7 +686,9 @@ PRE_AXIS_ENO_OVERALLS = {
     "splice_loop_problem": 59.3,
     "vocal_chop_groove": 65.5,
 }
-_NON_ENO = ("halee_ramone", "timbaland", "quincy_jones", "chris_lord_alge")
+# P-057: quincy_jones dropped from this set (he now weights the axis 0.6); the
+# byte-identical weight-0 set is the remaining three.
+_NON_ENO = ("halee_ramone", "timbaland", "chris_lord_alge")
 _TEXTURAL = "textural_coherence_score"
 
 
@@ -722,10 +732,12 @@ def test_p056_move_is_largest_on_the_bed_carrying_fixture(five_analyzed):
 
 @pytest.mark.parametrize("name", ALL_FIXTURES)
 def test_p056_four_non_eno_byte_identical_the_weight_zero_proof(name, five_analyzed):
-    """(b) The four non-Eno producers are BYTE-IDENTICAL: adding the 15th axis
-    at weight 0 leaves both the numerator and the denominator untouched, so the
-    15-term mean equals the 14-term mean equals the live overall — while the
-    axis is still present and measured (a 0..100 number), just unweighted."""
+    """(b) The weight-0 non-Eno producers are BYTE-IDENTICAL: adding the 15th
+    axis at weight 0 leaves both the numerator and the denominator untouched, so
+    the 15-term mean equals the 14-term mean equals the live overall — while the
+    axis is still present and measured (a 0..100 number), just unweighted.
+    P-057 shrank ``_NON_ENO`` from four to three (quincy_jones now weights the
+    axis 0.6); this proof holds for the remaining {halee, timbaland, cla}."""
     for producer in _NON_ENO:
         ds = five_analyzed[name][producer].doctrine_score
         comps_15 = {k: ds[k] for k in COMPONENT_KEYS}
@@ -804,3 +816,149 @@ def test_p056_flipping_the_dispersion_sign_swaps_the_distinctness_cases(monkeypa
                         lambda baseline, dispersion: dispersion)
     coherent_flip, incoherent_flip = tc(_coherent_beds()), tc(_incoherent_beds())
     assert coherent_flip < incoherent_flip  # the sign flip swaps the ordering
+
+
+# =========================================================================== #
+# P-057 — THE NON-ENO TEXTURAL WEIGHTING PERMANENT PROOF (Quincy Jones).
+#
+# The profile-data packet's binding differential: Quincy is the SECOND producer
+# (after Eno) to opt into the 15th axis — at a support-tier 0.6 with an honest
+# ``limited`` confidence entry (documented big-band/ensemble arranging, secondary
+# to his distinct-readable-layer center of gravity). His overall MOVED on the
+# same measured signal; the move is bed-driven (largest on the only >=2-bed
+# fixture); the SHRUNK weight-0 set {halee, timbaland, cla} stays byte-identical;
+# Eno is unchanged; the axis is present + measured in all five; and Quincy's
+# weight is load-bearing — zeroing it reverts his overall to his pre-P-057 value,
+# deleting it is caught loudly. Mirrors the P-056 Eno differential/sabotage.
+# =========================================================================== #
+
+# Quincy's PRE-P-057 overalls — his standing post-P-056 five-way values (the
+# 14-term weighted mean, textural weighted 0). His 0.6 opt-in moved every one.
+PRE_P057_QUINCY_OVERALLS = {
+    "simple_vocal_piano_song": 70.0,
+    "dense_chorus_with_loops": 62.1,
+    "splice_loop_problem": 61.9,
+    "vocal_chop_groove": 68.8,
+}
+
+
+@pytest.mark.parametrize("name", ALL_FIXTURES)
+def test_p057_quincy_overall_moved_vs_pre_p057_baseline(name, five_analyzed):
+    """(a) Quincy's overall CHANGES vs his pre-P-057 baseline: the 14-term mean
+    (textural excluded) reproduces his standing post-P-056 value, the live
+    15-term overall is his pinned five-way value, and the two DIFFER — the 0.6
+    opt-in is a new measured signal pressing his mean, not a re-weighting."""
+    ds = five_analyzed[name]["quincy_jones"].doctrine_score
+    comps = {k: ds[k] for k in COMPONENT_KEYS}
+    pre = _mean_excluding("quincy_jones", comps, _TEXTURAL)
+    assert pre == PRE_P057_QUINCY_OVERALLS[name], name          # the 14-term baseline
+    assert ds["overall_mix_readiness_score"] \
+        == FIVE_WAY_OVERALLS[name]["quincy_jones"], name         # the live 15-term
+    assert ds["overall_mix_readiness_score"] != pre, name        # the axis MOVED him
+
+
+def test_p057_quincy_move_is_largest_on_the_bed_carrying_fixture(five_analyzed):
+    """The move is genuinely bed-driven: the dense fixture (the only one with
+    >=2 texture beds — an INCOHERENT pair at 27.0) moves Quincy's overall more
+    than every <2-bed fixture (each reading the neutral 55.0 fallback)."""
+    def move(name):
+        ds = five_analyzed[name]["quincy_jones"].doctrine_score
+        comps = {k: ds[k] for k in COMPONENT_KEYS}
+        return abs(ds["overall_mix_readiness_score"]
+                   - _mean_excluding("quincy_jones", comps, _TEXTURAL))
+    dense = move(DENSE)
+    assert dense > 1.0
+    for lone in ("simple_vocal_piano_song", "splice_loop_problem",
+                 "vocal_chop_groove"):
+        assert dense > move(lone), lone
+
+
+@pytest.mark.parametrize("name", ALL_FIXTURES)
+def test_p057_three_weight_zero_non_eno_stay_byte_identical(name, five_analyzed):
+    """(b) The SHRUNK weight-0 set {halee, timbaland, cla} stays BYTE-IDENTICAL
+    after Quincy's opt-in: each weights the axis 0, so the 15-term mean equals
+    the 14-term mean equals the live overall, and the live overall equals its
+    standing four-way pin — Quincy's move did not leak into the weight-0 set."""
+    assert set(_NON_ENO) == {"halee_ramone", "timbaland", "chris_lord_alge"}
+    for producer in _NON_ENO:
+        ds = five_analyzed[name][producer].doctrine_score
+        comps = {k: ds[k] for k in COMPONENT_KEYS}
+        assert load_profile(producer).doctrine["weights"][_TEXTURAL] == 0
+        assert _weighted_overall(producer, comps) \
+            == _mean_excluding(producer, comps, _TEXTURAL) \
+            == ds["overall_mix_readiness_score"], (name, producer)
+
+
+def test_p057_eno_unchanged_and_axis_weighted_by_eno_and_quincy(five_analyzed):
+    """(c/d) Eno is UNCHANGED (weight 1.2 + his pinned five-way overalls), and
+    the axis is now weighted by TWO producers — Eno (1.2) and Quincy (0.6) — yet
+    still present + measured (a 0..100 number, an evidence line) in ALL FIVE
+    artifacts, read IDENTICALLY across producers (the constants block is shared;
+    the per-fixture value does not depend on the weight)."""
+    assert load_profile("brian_eno").doctrine["weights"][_TEXTURAL] == 1.2
+    assert load_profile("quincy_jones").doctrine["weights"][_TEXTURAL] == 0.6
+    for name in ALL_FIXTURES:
+        assert five_analyzed[name]["brian_eno"].doctrine_score[
+            "overall_mix_readiness_score"] == FIVE_WAY_OVERALLS[name]["brian_eno"], name
+        vals = set()
+        for producer in PRODUCERS:
+            ds = five_analyzed[name][producer].doctrine_score
+            assert ds[_TEXTURAL] is not None and 0.0 <= ds[_TEXTURAL] <= 100.0
+            assert ds["evidence"]["textural_coherence"], (name, producer)
+            vals.add(ds[_TEXTURAL])
+        assert len(vals) == 1, (name, vals)
+
+
+def test_p057_quincy_confidence_entry_is_honest_limited(five_analyzed):
+    """(d) Quincy's live artifact carries his P-057 textural entry at level
+    ``limited`` (NOT ``high`` — the honest support-tier reading that runs partly
+    counter to his center of gravity), naming its documented arranging basis and
+    the dispersion measurement; Eno's SAME-area entry stays ``high`` (his center)
+    — the two producers weight one axis from two honestly-labelled convictions."""
+    conf = five_analyzed[DENSE]["quincy_jones"].doctrine_score["confidence"]
+    entry = next(e for e in conf
+                 if e["area"] == "textural coherence as its own measurement")
+    assert entry["level"] == "limited"
+    assert "documented Quincy Jones technique" in entry["reason"]
+    assert "cross-bed dispersion statistic" in entry["reason"]
+    eno_conf = five_analyzed[DENSE]["brian_eno"].doctrine_score["confidence"]
+    eno_entry = next(e for e in eno_conf
+                     if e["area"] == "textural coherence as its own measurement")
+    assert eno_entry["level"] == "high"
+    assert entry["reason"] != eno_entry["reason"]
+
+
+def test_p057_zeroing_quincys_weight_reverts_his_overall_to_pre_p057(five_analyzed):
+    """(e) Quincy's weight is LOAD-BEARING, not decorative: re-scoring with his
+    weight zeroed (what the three weight-0 producers ship) reverts his overall to
+    his pre-P-057 value on every fixture; his LIVE 0.6 weight reproduces his
+    moved five-way overall; DELETING the weight entirely is caught LOUDLY (the
+    aggregate genuinely dereferences it), never silently ignored."""
+    base = load_profile("quincy_jones")
+    zeroed_doc = copy.deepcopy(base.doctrine)
+    zeroed_doc["weights"][_TEXTURAL] = 0
+    zeroed = dataclasses.replace(base, doctrine=zeroed_doc)
+
+    deleted_doc = copy.deepcopy(base.doctrine)
+    del deleted_doc["weights"][_TEXTURAL]
+    deleted = dataclasses.replace(base, doctrine=deleted_doc)
+
+    for name in ALL_FIXTURES:
+        res = five_analyzed[name]["quincy_jones"]
+        # thread the SAME groove snapshot the pipeline fed doctrine, so the
+        # re-score reproduces the pipeline exactly (only the weight differs)
+        groove = res.expanded.get("groove")
+        args = (res.records, res.section_analysis, res.masking_report,
+                res.mix_metrics, res.project.intent)
+        reverted = doctrine_engine.score_doctrine(*args, profile=zeroed, groove=groove)
+        assert reverted["overall_mix_readiness_score"] \
+            == PRE_P057_QUINCY_OVERALLS[name], name
+        # still present + measured, just unweighted (the reference posture)
+        assert reverted[_TEXTURAL] is not None
+        # a control: his LIVE weight (0.6) reproduces his moved five-way overall
+        live = doctrine_engine.score_doctrine(*args, profile=base, groove=groove)
+        assert live["overall_mix_readiness_score"] \
+            == FIVE_WAY_OVERALLS[name]["quincy_jones"], name
+        # deleting the weight entirely is caught loudly (genuinely dereferenced)
+        with pytest.raises(KeyError):
+            doctrine_engine.score_doctrine(*args, profile=deleted, groove=groove)

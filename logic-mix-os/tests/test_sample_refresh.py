@@ -107,7 +107,7 @@ HEADLINES = {
         "loop_context_score": 10.0,
     },
     "quincy_jones": {
-        "overall_mix_readiness_score": 68.8,
+        "overall_mix_readiness_score": 68.2,
         "vocal_role_fit_score": 85.0,
         "loop_context_score": 12.0,
     },
