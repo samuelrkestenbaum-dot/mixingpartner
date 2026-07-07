@@ -507,6 +507,49 @@
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
+- **Green baseline (verified 2026-07-07, P-060 — the Section-Count-Invariant
+  Doctrine Scoring baseline):** suite **1414 passed** (0 failed / skipped / **0
+  warnings**); regression **93/93, critical_failures == [], 0 warnings** — the
+  corpus is **4 fixtures**. **THE FIRST INTENTIONAL MOVE OF THE COMMITTED SCORING
+  CORPUS.** `analyze_masking` emits each masking conflict ONCE PER SECTION and six
+  doctrine scorers counted `len(per-section events)` raw, so a conflict duplicated
+  across N sections was penalized N× — a real 49-track song ("Happy Man", 12
+  detected sections) cratered ("masked by 48" = 4×12 → emotional_hierarchy /
+  vocal_centrality → 0, physical_space → 2). FORK A fix: a shared
+  `_distinct_conflict_count` helper (`len({frozenset(e["elements"]) …})`) applied
+  AFTER each scorer's EXISTING severity/classification predicate (filter-THEN-dedup)
+  in six scorers (`_physical_space`, `_emotional_hierarchy`, `_vocal_centrality`,
+  `_static_mix`, `_low_end_motion` crit+mod, `_vocal_role_fit`). COEFFICIENTS
+  UNCHANGED — only the COUNT they multiply is deduped. `_beat_identity` +
+  `_loop_context`/`read_loop_context` UNTOUCHED (already boolean `any()`);
+  `masking_analyzer.py` UNTOUCHED (`masking_report.events` stay per-section).
+  **SINGLE ATOMIC commit** `ae0b9fc` — fix + all re-pins INSEPARABLE → one commit,
+  full suite green at HEAD = the isolation proof — **39 files, +327/−78** (1 source
+  `doctrine_engine.py` + 1 new test `tests/test_section_count_invariance.py` [9
+  tests] + 1 golden + 22 mode-demo files + 14 re-pinned test files), atop set-active
+  `8034289` (metadata-only), atop merge base with default `9cfe990` (= PR #37 —
+  P-059 merged to default; the dev branch is fast-forwarded onto it, so a P-060 PR
+  carries only `ae0b9fc` + the close commit — a clean single-packet PR). Verified
+  `git merge-base HEAD 9cfe990` = `9cfe990`. **THE AUTHORIZED CORPUS MOVE — ALL ONE
+  CORRECTION** (dense's `(Kick, Bass)` critical low-end emitted identically in both
+  sections → distinct-count 2×→1×): dense golden static_mix 64.0→72.0 / overall
+  70.7→71.8 (physical_space 67.6 / emotional 86.0 / vocal_centrality 90.0 /
+  vocal_role_fit 85.0 / winners / search_mode UNCHANGED); low_end_motion 21.1→35.1
+  (5 differential/context pins); the **11 dense-DERIVED mode-demo pairs** (22 files,
+  `static_mix_score 64→72` ONLY — zero decision change); the differential
+  dense-column overalls for all 5 producers (halee_ramone 70.7→71.8, timbaland
+  52.6→54.2, quincy 60.4→61.6, eno 54.2→55.5, cla 59.6→61.5 + eno/quincy pre-axis
+  14-term baselines). **PROVEN BYTE-IDENTICAL:** all 5 sample trees (vocal_chop-derived;
+  `test_sample_refresh` regen 0 mismatches across 30×5) + the other 3 fixtures
+  (simple/splice/vocal_chop). `test_producer_profile.py` fixup: degenerate synthetic
+  events (dup/missing `elements`) replaced with realistic distinct pairs so
+  `coeff × 2` RHS UNCHANGED. Safety grep 0 reach — NO producer-profile JSON /
+  governance / kill-switch / dropout / doctrine-weight change; NO new dependency;
+  `masking_analyzer.py` untouched. **PUSHED to the dev branch BEFORE qa/reviewer
+  under the standing go; NOT merged — the P-060 merge is a user gate.** **★ PR #37
+  recorded: P-059 merged to default = `9cfe990`.** (History: 1405 -> **1414** at
+  P-060 — +9 [test_section_count_invariance.py=9]; single atomic commit = the
+  isolation proof.)
 - **Green baseline (verified 2026-07-06, P-059 — the Audio-Driven Section
   Detection baseline):** suite **1405 passed** (0 failed / skipped / **0
   warnings**); regression **93/93** with **0 warnings** — the corpus is **4
@@ -793,6 +836,91 @@
   331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-060 MAKES THE DOCTRINE SCORING SECTION-COUNT-INVARIANT — THE FIX FOR THE
+  "MASKED BY 48" CRATER (`analyze_masking` emits each masking conflict ONCE PER
+  SECTION and six doctrine scorers counted the raw per-section total, so a conflict
+  duplicated across N sections was penalized N×; a real 49-track song ["Happy Man",
+  12 detected sections] cratered — emotional_hierarchy/vocal_centrality → 0,
+  physical_space → 2). THE FIRST INTENTIONAL MOVE OF THE COMMITTED SCORING CORPUS
+  (Section-Count-Invariant Doctrine Scoring; opened on the user's "ok go", 2026-07-06
+  — dedup distinct conflicts [FORK A] + the authorized surgical dense corpus move;
+  P-061 for detector calibration next). qa GREEN (suite 1405 -> 1414 / 0 / 0
+  warnings; +9 invariance tests; regression 93/93, critical_failures == [], 0
+  warnings; full suite green at HEAD = the isolation proof) + reviewer PASS (no
+  must-fix; single-model — non-vacuity PROVEN by monkeypatching the helper back to
+  `len()` → the exact crater reproduces). Both gates independently re-ran the suite.
+  Last-closed = P-060.**
+  - **Why (a REAL 49-track session surfaced it):** the user re-ran real "Happy Man"
+    after P-059 (auto-detected 12 sections) and the verdict CRATERED —
+    emotional_hierarchy/vocal_centrality → 0, physical_space → 2, "masked by 48
+    forward elements" (was 4 = 4×12). Root cause: `analyze_masking` emits each
+    conflict ONCE PER SECTION; six scorers counted `len(per-section events)` raw.
+    Hidden by the 2-section fixtures; craters real many-section songs. Proven even
+    at 2 sections: `dense`'s Kick/Bass critical low-end is counted 2× today.
+  - **The fix (FORK A = dedup distinct element-pairs, scorer-side, filter-THEN-dedup):**
+    a shared helper `_distinct_conflict_count(filtered) = len({frozenset(e["elements"])
+    for e in filtered})` applied AFTER each scorer's EXISTING classification/severity
+    predicate, in six scorers — `_physical_space` (width_crowding),
+    `_emotional_hierarchy` + `_vocal_centrality` (bad_masking incl. lead),
+    `_static_mix` (critical low_end_conflict), `_low_end_motion` (crit + mod — the
+    boolean `crit or mod` PRESENCE reads stay on the raw lists; only the multiplied
+    COUNTS dedup), `_vocal_role_fit` (`_lead_band_masking`/`_own_band_masking`).
+    Penalty COEFFICIENTS UNCHANGED. `_beat_identity` +
+    `read_loop_context`/`_loop_context` LEFT UNTOUCHED (already boolean `any(...)`);
+    `masking_analyzer.py` UNTOUCHED — `masking_report.events` STAY per-section (plan
+    detail preserved). The `vocal_chop_groove` moderate/info ordering guardrail
+    holds (severity filter FIRST, then dedup).
+  - **Commit / base:** SINGLE ATOMIC commit `ae0b9fc` — "P-060: section-count-invariant
+    doctrine scoring (dedup distinct conflicts)" — **39 files, +327/−78** (1 source
+    + 1 new test [9 tests] + 1 golden + 22 mode-demo files + 14 re-pinned test
+    files); fix + all re-pins INSEPARABLE → one commit, HEAD is the isolation proof.
+    Atop set-active `8034289` (metadata-only) atop merge base `9cfe990` (= PR #37 —
+    P-059 merged to default). Verified `git merge-base HEAD 9cfe990` = `9cfe990`.
+    **PUSHED to the dev branch under the standing go (pre-gate); NOT merged — the
+    P-060 merge is the OPEN USER GATE.**
+  - **The NEW invariance guard** (`tests/test_section_count_invariance.py`, 9
+    tests): the SAME records scored at 1 vs 6 vs 12 sections → every masking-driven
+    component IDENTICAL across all three; a sanity test that `analyze_masking`
+    really emits N duplicate events yet distinct-count == 1; the "masked by N"
+    evidence uses distinct maskers (not maskers×sections); an over-correction guard
+    (a masker forward in only 1 of 12 sections still registers ONCE).
+  - **The authorized corpus move — ALL ONE correction** (dense's `(Kick, Bass)`
+    critical low-end emitted identically in both sections → distinct-count 2×→1×):
+    dense golden static_mix 64.0→72.0 / overall 70.7→71.8 (physical_space 67.6 /
+    emotional 86.0 / vocal_centrality 90.0 / vocal_role_fit 85.0 / winners /
+    search_mode UNCHANGED); low_end_motion 21.1→35.1 (5 differential/context pins);
+    the **11 dense-DERIVED mode-demo pairs** (22 files, `static_mix_score 64→72`
+    ONLY — zero decision change); the differential dense-column overalls for all 5
+    producers (halee_ramone 70.7→71.8, timbaland 52.6→54.2, quincy 60.4→61.6, eno
+    54.2→55.5, cla 59.6→61.5). PROVEN BYTE-IDENTICAL: all 5 sample trees + the
+    other 3 fixtures. `test_producer_profile.py` fixup: degenerate synthetic events
+    (dup/missing `elements`) replaced with realistic distinct pairs so `coeff × 2`
+    RHS UNCHANGED — no behavior change concealed.
+  - **★ HONEST DEVIATION recorded (reviewer):** the packet said "mode demos
+    UNCHANGED" — but the 11 mode demos are DENSE-DERIVED, so they CORRECTLY moved
+    (`static_mix_score` only, zero decision/structural change). The scope
+    under-counted the dense-derived artifacts (mode demos + differential columns);
+    they move by the SAME one correction. Recorded so the corpus scope is honest.
+  - **Residue (accepted standing notes):** (1) **THE HAPPY MAN RE-RUN #2** — the
+    crater is FIXED (the vocal/emotional/space axes no longer scale with section
+    count), the user should pull P-060 + re-run to confirm; BUT `section_contrast`/
+    `dynamic_mix` STILL read a ceiling-pinned 100/100 because the detector still
+    over-segments to 12 sections — that is BUG 2, fixed by **P-061** (P-060 fixes
+    the crater; P-061 fixes the fake-100s); (2) **P-061 — detector over-segmentation
+    calibration is the immediate next packet** (already scoped: raise
+    MIN_SECTION_SEC/MIN_RUN, widen CLUSTER, lower MAX_SECTIONS; byte-stable for the
+    scoring corpus, re-pins only the ~10 detector tests); (3) a latent
+    breadth/severity-weighting note (the score no longer distinguishes a whole-song
+    conflict from a single-section one — NOT lossy at the data level, per-section
+    events preserved; low priority); the P-059 detector-fails-safe note is now
+    SUPERSEDED by the real-audio OVER-segmentation finding.
+  - **Open user gate:** the MERGE of P-060 (`ae0b9fc` + the close commit) atop
+    `9cfe990` (= PR #37) — a clean single-packet PR (the branch is fast-forwarded
+    onto default) — awaits the user's explicit word. **STAGED next: P-061 (detector
+    over-segmentation calibration)** is the highest-value item, alongside the Happy
+    Man re-run #2. Receipt:
+    `build-os/receipts/P-060-section-count-invariant-scoring.md`.
 
 - **★★★ P-059 MAKES THE ENGINE DETECT SECTION STRUCTURE FROM THE AUDIO WHEN A
   MANIFEST SUPPLIES NONE — THE FIX FOR THE HAPPY MAN "WHOLE SONG AS ONE BLOCK"
