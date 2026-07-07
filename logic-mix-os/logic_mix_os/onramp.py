@@ -30,8 +30,11 @@ import wave
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
+from .analyzers.audio_loader import load_audio
+from .analyzers.section_detector import detect_sections as _detect_sections
 from .analyzers.source_material_detector import guess_source_kind
 from .constants import SOURCE_KINDS
+from .project import Project
 
 # --------------------------------------------------------------------------- #
 # Extension tables.
@@ -66,7 +69,9 @@ _MEMORY_JSONS = ("mix_pass_history.json", "decision_ledger.json", "taste_profile
 # --------------------------------------------------------------------------- #
 # D1 — manifest scaffolder.
 # --------------------------------------------------------------------------- #
-def scaffold_manifest(stems_dir: str | Path, *, force: bool = False) -> Dict:
+def scaffold_manifest(
+    stems_dir: str | Path, *, force: bool = False, detect_sections: bool = False
+) -> Dict:
     """Build a VALID draft ``project_manifest.json`` dict from a stems folder.
 
     One track per audio file (sorted by filename) carrying the shared name->kind
@@ -79,6 +84,14 @@ def scaffold_manifest(stems_dir: str | Path, *, force: bool = False) -> Dict:
 
     ``force`` is accepted for parity with :func:`write_manifest_draft`; this
     builder performs no filesystem write, so it has no effect here.
+
+    ``detect_sections`` (opt-in, default OFF) runs the SAME audio-driven detector
+    the pipeline uses (``analyzers.section_detector.detect_sections`` — one
+    shared implementation, no second copy): it loads the stems, infers section
+    boundaries from each stem's entry/exit events, and writes them into
+    ``sections`` marked ``inferred: true`` (with a relative ``energy_tag``) for
+    the user to review + adjust. Default OFF keeps the byte-identical header-only
+    single-section stub and reads no audio.
     """
     stems_path = Path(stems_dir)
     if not stems_path.is_dir():
@@ -103,6 +116,12 @@ def scaffold_manifest(stems_dir: str | Path, *, force: bool = False) -> Dict:
         if confidence < _REVIEW_CONFIDENCE:
             needs_review.append(name)
 
+    sections = _SINGLE_SECTION_STUB()
+    if detect_sections:
+        inferred = _infer_sections(stems_path)
+        if inferred:
+            sections = inferred
+
     return {
         "project": {
             "song_title": _title_from_dir(stems_path),
@@ -116,28 +135,71 @@ def scaffold_manifest(stems_dir: str | Path, *, force: bool = False) -> Dict:
             "references": [],
             "negative_constraints": [],
         },
-        "sections": [
-            {
-                "section_id": "section_1",
-                "name": "Section 1",
-                "start_time": "0:00",
-                "end_time": "",
-                "emotional_goal": "",
-            }
-        ],
+        "sections": sections,
         "tracks": tracks,
         "_draft": True,
         "_needs_review": needs_review,
     }
 
 
+def _SINGLE_SECTION_STUB() -> List[Dict]:
+    """The default header-only section: one fillable ``0:00`` stub."""
+    return [
+        {
+            "section_id": "section_1",
+            "name": "Section 1",
+            "start_time": "0:00",
+            "end_time": "",
+            "emotional_goal": "",
+        }
+    ]
+
+
+def _infer_sections(stems_path: Path) -> Optional[List[Dict]]:
+    """Run the ONE shared detector over the stems -> inferred section dicts.
+
+    Returns ``None`` (caller keeps the header-only stub) when no stem loads.
+    Builds a ``Project`` from an empty manifest so the disk-merge picks up every
+    audio file, reuses ``build_mixdown`` for the grid + tie-breaker signal, and
+    marks each written section ``inferred: true`` with its ``energy_tag``.
+    """
+    project = Project.from_inputs(str(stems_path), {})
+    loaded_by_id = {}
+    for t in project.resolved_tracks():
+        try:
+            loaded_by_id[t.track_id] = load_audio(t.file)
+        except Exception:
+            continue
+    mixdown = project.build_mixdown()
+    if mixdown is None or not loaded_by_id:
+        return None
+    detected = _detect_sections(loaded_by_id, mixdown, mixdown.duration)
+    return [
+        {
+            "section_id": sec.section_id,
+            "name": sec.name,
+            "start_time": sec.start,
+            "end_time": sec.end,
+            "emotional_goal": "",
+            "inferred": True,
+            "energy_tag": sec.energy_tag,
+        }
+        for sec in detected
+    ]
+
+
 def write_manifest_draft(
-    stems_dir: str | Path, out_path: str | Path, *, force: bool = False
+    stems_dir: str | Path,
+    out_path: str | Path,
+    *,
+    force: bool = False,
+    detect_sections: bool = False,
 ) -> Path:
     """Scaffold a draft manifest and write it to ``out_path`` (pretty JSON).
 
     Refuses to overwrite an existing file unless ``force`` is set, raising
-    :class:`FileExistsError`. Returns the written path.
+    :class:`FileExistsError`. Returns the written path. ``detect_sections`` is
+    threaded straight to :func:`scaffold_manifest` (opt-in, default OFF).
     """
     out = Path(out_path)
     if out.exists() and not force:
@@ -145,7 +207,9 @@ def write_manifest_draft(
             f"Refusing to overwrite existing manifest: {out}. "
             f"Pass force=True (or --force) to overwrite."
         )
-    manifest = scaffold_manifest(stems_dir, force=force)
+    manifest = scaffold_manifest(
+        stems_dir, force=force, detect_sections=detect_sections
+    )
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     return out

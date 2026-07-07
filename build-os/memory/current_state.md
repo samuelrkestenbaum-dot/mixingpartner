@@ -507,6 +507,45 @@
   `python -m logic_mix_os.cli regression` — **NOTE: run `fixtures/generate_fixtures.py`
   (or pytest via conftest) first in a fresh checkout; `fixtures/` content is
   GENERATED, not committed, so a bare worktree shows FALSE critical failures.**
+- **Green baseline (verified 2026-07-06, P-059 — the Audio-Driven Section
+  Detection baseline):** suite **1405 passed** (0 failed / skipped / **0
+  warnings**); regression **93/93** with **0 warnings** — the corpus is **4
+  fixtures**. The engine now DETECTS section structure from per-stem arrangement
+  activity when a manifest supplies none — deterministic, numpy + first-party
+  `dsp` only, **ZERO new dependency**. Two commits `c44f11c` (Commit-1,
+  load-bearing — NEW `logic_mix_os/analyzers/section_detector.py` [+288, the
+  detector]; the guarded `pipeline.analyze` auto-detect wire [+20/−1, branch on
+  `len(project.sections)`: `>=2` runs the UNCHANGED `analyze_sections`, `<=1`
+  runs `detect_sections`]; two optional default-off `Section` fields [`energy_tag`,
+  `inferred`; `project.py` +5]; NEW `tests/test_section_detector.py` [+214, 10
+  tests]; 4 files, +526/−1; **GREEN IN ISOLATION at 1400**) + `9d1a6a2`
+  (Commit-2, additive UX — the scaffolder `--detect-sections` opt-in [default
+  OFF, sharing the ONE detector; `onramp.py`/`cli.py`] + `test_onramp_scaffold.py`
+  [+5 → 29] + a `docs/REAL_SESSION.md` note; 4 files, +206/−18) on parent
+  `57ab73d` (set-active), atop merge base with default `32d7f47` (= PR #36 —
+  P-058 merged to default; the dev branch is fast-forwarded onto it, so a P-059 PR
+  carries only these two commits + the close commit — a clean single-packet PR).
+  **The algorithm:** per-stem active-region on a common frame grid (H=0.25s), a
+  two-part silence gate `max(ABS_FLOOR_DB=-50, peak−REL_RANGE_DB=40)`,
+  debounce/hysteresis → a boolean activity matrix → arrangement novelty = Hamming
+  distance of the active-set bitmask (entrances AND exits) → boundaries where
+  novelty≥1, clustered ~1.0s → `Section` objects; guardrails MIN_SECTION_SEC=4.0
+  (merge sub-min) + MAX_SECTIONS=12 (keep top-novelty); mixdown energy/density
+  novelty is a TIE-BREAKER ONLY (never creates/caps a boundary — the guard
+  against re-creating the false-dynamics artifact); always-on tracks toggle never
+  → ZERO boundaries. Honest labels: structural `section_1..N` + relative
+  `energy_tag` {high/med/low} + `inferred=True`, NO semantic verse/chorus/bridge
+  naming. **Byte-stability PROVEN 4 ways** (empty examples/fixtures diff; a
+  0-invocation detector spy across all 4 fixtures + 5 producer runs; 150/150
+  sample-tree files byte-identical; a mock-to-raise in-test guard) — the WHOLE
+  scoring corpus is untouched (the detector fires only on `len<=1`). doctrine
+  engine / 5 profiles / governance / creative / kill-switches / dropout filter /
+  `section_analyzer.py` UNTOUCHED; no new dependency (`pyproject.toml`
+  blob-identical, absent from the diff); safety grep 0 reach. **PUSHED to the dev
+  branch BEFORE qa/reviewer under the standing go; NOT merged — the P-059 merge is
+  a user gate.** **★ PR #36 recorded: P-058 merged to default = `32d7f47`.**
+  (History: 1390 -> **1405** at P-059 — +15 [test_section_detector.py=10 +
+  test_onramp_scaffold.py +5]; Commit-1 iso **1400**.)
 - **Green baseline (verified 2026-07-06, P-058 — the Real-Session On-Ramp
   baseline):** suite **1390 passed** (0 failed / skipped); regression **93/93**
   with **0 warnings** — the corpus is **4 fixtures**. A PLAN-ONLY on-ramp +
@@ -754,6 +793,99 @@
   331 → 351 at P-027; 319 → 331 at P-026; 293 → 319 at P-025.)
 
 ## Where we are
+
+- **★★★ P-059 MAKES THE ENGINE DETECT SECTION STRUCTURE FROM THE AUDIO WHEN A
+  MANIFEST SUPPLIES NONE — THE FIX FOR THE HAPPY MAN "WHOLE SONG AS ONE BLOCK"
+  FALSE VERDICT; THE HAPPY MAN RE-RUN (AUTO-SECTIONS) IS NOW THE IMMEDIATE NEXT
+  REAL VALIDATION STEP (Audio-Driven Section Detection; opened on the user's "go",
+  2026-07-06 — honest structural+energy labels; P-058 merged first via PR #36 ->
+  default `32d7f47`). qa GREEN (suite 1390 -> 1405 / 0 / 0 warnings; regression
+  93/93 with 0 warnings; Commit-1 iso 1400) + reviewer PASS (no must-fix;
+  single-model). Both gates independently re-ran the suite. Last-closed = P-059.**
+  - **Why (a REAL first-audio session surfaced it):** the user ran P-058's
+    on-ramp on a real 49-track song ("Happy Man") and the engine analyzed the
+    WHOLE song as ONE block — it only *analyzed* the sections it was *given* and
+    never *detected* them — yielding a FALSE `Section contrast: n/a` /
+    `Dynamic mix: 40` / "not alive" verdict. The user's directive: infer the
+    sections from the audio, "based on what's added at various points."
+  - **Two commits** on parent `57ab73d` (set-active), atop merge base with default
+    `32d7f47` (= PR #36): `c44f11c` (Commit-1, load-bearing — NEW
+    `logic_mix_os/analyzers/section_detector.py` [+288]; the guarded
+    `pipeline.analyze` auto-detect wire [+20/−1]; two optional default-off
+    `Section` fields [`energy_tag`, `inferred`; `project.py` +5]; NEW
+    `tests/test_section_detector.py` [+214, 10 tests]; 4 files, +526/−1; **GREEN
+    IN ISOLATION at 1400**) + `9d1a6a2` (Commit-2, additive UX — the scaffolder
+    `--detect-sections` opt-in [default OFF, sharing the ONE detector] +
+    `test_onramp_scaffold.py` [+5 → 29] + a `docs/REAL_SESSION.md` note; 4 files,
+    +206/−18). Verified `git merge-base HEAD 32d7f47` = `32d7f47` (fast-forwarded
+    — a clean single-packet PR). **PUSHED to the dev branch BEFORE qa/reviewer
+    under the standing go; NOT merged — the P-059 merge is the OPEN USER GATE.**
+  - **The detector (deterministic, numpy + first-party `dsp` only, ZERO new
+    dependency):** per-stem active-region on a common frame grid (H=0.25s), a
+    two-part silence gate `max(ABS_FLOOR_DB=-50, peak−REL_RANGE_DB=40)`,
+    debounce/hysteresis → a boolean activity matrix → arrangement novelty =
+    Hamming distance of the active-set bitmask (entrances AND exits) → boundaries
+    where novelty≥1, clustered ~1.0s → `Section` objects. Guardrails
+    MIN_SECTION_SEC=4.0 (merge sub-min) + MAX_SECTIONS=12 (keep top-novelty).
+    Mixdown energy/density novelty is a TIE-BREAKER ONLY (never creates/caps a
+    boundary — the guard against re-creating the false-dynamics artifact);
+    always-on tracks (a full-mix bus / an eternal pad) toggle never → ZERO
+    boundaries by construction; deterministic (fixed grid/constants, sorted stem
+    order, no RNG, times rounded 3 decimals). **Honest labels:** structural
+    `section_1..N` + relative `energy_tag` {high/med/low} + `inferred=True`,
+    `emotional_goal=None`; NO semantic verse/chorus/bridge naming (function is not
+    honestly inferable from audio).
+  - **The guarded integration (the byte-stability boundary):** `pipeline.analyze`
+    branches on `len(project.sections)` — `>=2` runs the UNCHANGED
+    `analyze_sections(project.sections, ...)` (the detector NEVER entered); `<=1`
+    runs `detect_sections(loaded_by_id, mixdown, duration)` fed into the SAME
+    `analyze_sections`, with `inferred`/`energy_tag` stamped on THAT branch only.
+    The scaffolder `--detect-sections` opt-in (default OFF = the byte-identical
+    header-only stub) shares the ONE detector.
+  - **★ qa GREEN (both gates re-ran):** suite 1390 -> **1405 passed, 0 failed, 0
+    warnings** (+15 = 10 detector + 5 onramp); regression **93/93** with **0
+    warnings**; Commit-1 iso **1400**. Per-file collect:
+    test_section_detector.py=**10**, test_onramp_scaffold.py=**29** (+5).
+    **Byte-stability PROVEN 4 independent ways:** (a) `git diff 32d7f47..HEAD --
+    examples/ fixtures/` EMPTY; (b) a detector-call SPY = `detect_sections`
+    invoked **0 times** across all 4 fixtures + all 5 producer runs (every corpus
+    `supplied_sections=2` → ≥2 → the unchanged path; zero `inferred`/`energy_tag`
+    key-leak); (c) a fresh `write_artifacts` byte-diff = **150/150 sample-tree
+    files (5×30) byte-identical**; (d) an in-test guard mocks `detect_sections` to
+    raise + asserts `assert_not_called()`. Regression invariant #7 holds (supplied
+    corpora keep ≥2 sections). **Synthetic detection test:** pad-throughout +
+    drums in@8/out@32 + bass in@16 + vocal in@24 → boundaries at exactly
+    **[0,8,16,24,32]**, no spurious, always-on pad → 1 section, guardrails bite,
+    deterministic. Safety grep 0 reach; no audio-write; no new dependency;
+    doctrine engine / 5 profiles / governance / creative / kill-switches / dropout
+    filter / `section_analyzer.py` UNTOUCHED.
+  - **★ reviewer PASS (no must-fix; single-model — Codex not separately
+    reported):** the detector structurally CANNOT re-create the false-dynamics
+    artifact (mixdown energy is a tie-breaker only; always-on tracks contribute
+    zero boundaries; the guarded branch keeps it out of every supplied corpus).
+    Key insight: the constants (H=0.25s, ABS_FLOOR_DB=-50, REL_RANGE_DB=40) err
+    toward UNDER-detection — bleed/noise above -50dB MERGES sections rather than
+    hallucinating them, so it FAILS SAFE (worst case degrades to today's
+    single-block status quo, never a false boundary); they are validated on
+    SYNTHETIC audio only and are the tuning knob for the real-audio re-run.
+    Cosmetic nit (non-blocking): an unused `rng = np.random.default_rng(0)` in a
+    `test_onramp_scaffold.py` helper — dead line, future cleanup. Residue ->
+    residue.md: (1) ★ the HAPPY MAN RE-RUN (auto-sections; needs the user to pull
+    P-059 + re-run) is the standing TOP open item; (2) the real-audio constant
+    calibration is the first thing to check on that re-run; (3) the cosmetic nit;
+    (4) prior standing notes retained.
+  - **★ NEXT: NOTHING STAGED — opened blind is forbidden.** The orchestrator
+    PRESENTS the user-gated directions, with the **HAPPY MAN RE-RUN (pull P-059,
+    re-run `analyze` → auto-sections)** now the highest-value item, then the
+    real-audio constant calibration, alongside: ambient patience (Eno-deferral #2)
+    · generative process (Eno-deferral #3) · CLA/Halee/Timbaland textural
+    weighting · the `<2 beds` fallback calibration · the real Cowork host
+    connection (manual) · apply-to-Logic (FUTURE, re-gated — never auto; the
+    safety line stands) · a sixth producer (roster frozen at five) · anything else
+    the user calls. Do NOT open anything blind. **THE OPEN USER GATE: the merge of
+    P-059 (`c44f11c` + `9d1a6a2` + the close commit) atop `32d7f47` (= PR #36) — a
+    clean single-packet PR.** Receipt:
+    `build-os/receipts/P-059-audio-driven-section-detection.md`.
 
 - **★★★ P-058 MAKES THE ENGINE REACHABLE FOR A REAL SESSION — THE ON-RAMP +
   CAPTURE + DOCS LAND; THE REAL-AUDIO VALIDATION GAP IS UNBLOCKED (BUT OPEN,
