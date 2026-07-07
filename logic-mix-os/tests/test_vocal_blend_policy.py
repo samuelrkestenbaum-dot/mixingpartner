@@ -253,7 +253,7 @@ def test_attack_3_halee_ramone_defaults_no_drift(analyzed):
     the reference flag-false policy."""
     pinned_overall = {
         "simple_vocal_piano_song": 73.8,
-        "dense_chorus_with_loops": 70.7,
+        "dense_chorus_with_loops": 71.8,
         "splice_loop_problem": 74.3,
     }
     prof = load_profile("halee_ramone")

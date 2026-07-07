@@ -51,6 +51,26 @@ def _clamp(x: float) -> float:
     return round(max(0.0, min(100.0, x)), 1)
 
 
+def _distinct_conflict_count(filtered: List[Dict]) -> int:
+    """Count DISTINCT masking relationships in an ALREADY-FILTERED event list.
+
+    ``analyzers.masking_analyzer.analyze_masking`` emits one event PER SECTION,
+    so a single physical conflict duplicated across N sections appears N times.
+    A scorer must penalize the RELATIONSHIP once, not once-per-section — a
+    conflict identical in every section is ONE clarity problem, not N. The
+    identity of a relationship is its (unordered) element set, so distinctness
+    is ``len({frozenset(e["elements"]) ...})``.
+
+    FILTER FIRST, THEN DEDUP (never the reverse): callers pass the survivors of
+    their own classification/severity predicate here. Deduping BEFORE filtering
+    would collapse a pair that is a genuine conflict in one section and a
+    controlled blend (info) in another into a single bucket and could drop the
+    real conflict — the ``vocal_chop_groove`` ordering guardrail. This helper
+    only ever sees post-filter events, so a genuinely section-specific conflict
+    survives and still registers once."""
+    return len({frozenset(e["elements"]) for e in filtered})
+
+
 def score_doctrine(
     records: List[Dict],
     sections_analysis: List[Dict],
@@ -237,8 +257,9 @@ def _physical_space(records: List[Dict], events: List[Dict], doctrine: Dict = _D
 
     width_events = [e for e in events if e["classification"] == "width_crowding"]
     if width_events:
-        score -= c["width_crowding"] * len(width_events)
-        ev.append(f"{len(width_events)} section(s) show stereo-width crowding (artificial width).")
+        n_width = _distinct_conflict_count(width_events)
+        score -= c["width_crowding"] * n_width
+        ev.append(f"{n_width} section(s) show stereo-width crowding (artificial width).")
 
     loop_fg = [
         r for r in records
@@ -271,8 +292,9 @@ def _emotional_hierarchy(records: List[Dict], lead: Optional[Dict], events: List
     else:
         bad_vocal = [e for e in events if lead["name"] in e["elements"] and e["classification"] == "bad_masking"]
         if bad_vocal:
-            score -= c["vocal_masked"] * len(bad_vocal)
-            ev.append(f"Vocal masked by {len(bad_vocal)} forward element(s).")
+            n_bad = _distinct_conflict_count(bad_vocal)
+            score -= c["vocal_masked"] * n_bad
+            ev.append(f"Vocal masked by {n_bad} forward element(s).")
         else:
             ev.append("Vocal is not critically masked by forward elements.")
 
@@ -305,8 +327,9 @@ def _vocal_centrality(lead: Optional[Dict], events: List[Dict], doctrine: Dict =
         ev.append(f"Vocal sits in the {lead['depth_default']} layer.")
     bad = [e for e in events if lead["name"] in e["elements"] and e["classification"] == "bad_masking"]
     if bad:
-        score -= c["masked_coeff"] * len(bad)
-        ev.append(f"Vocal challenged by {len(bad)} masking conflict(s).")
+        n_bad = _distinct_conflict_count(bad)
+        score -= c["masked_coeff"] * n_bad
+        ev.append(f"Vocal challenged by {n_bad} masking conflict(s).")
     return _clamp(score), ev
 
 
@@ -359,8 +382,9 @@ def _static_mix(records: List[Dict], lead: Optional[Dict], events: List[Dict],
                 ev.append("Broad tonal balance is reasonable.")
     crit_low = [e for e in events if e["classification"] == "low_end_conflict" and e["severity"] == "critical"]
     if crit_low:
-        score -= c["crit_low_coeff"] * len(crit_low)
-        ev.append(f"{len(crit_low)} critical low-end (kick/bass) conflict(s).")
+        n_crit_low = _distinct_conflict_count(crit_low)
+        score -= c["crit_low_coeff"] * n_crit_low
+        ev.append(f"{n_crit_low} critical low-end (kick/bass) conflict(s).")
     if lead is None:
         score -= c["no_lead_penalty"]
         ev.append("No lead vocal to anchor intelligibility.")
@@ -833,6 +857,12 @@ def _low_end_motion(records: List[Dict], sections_analysis: List[Dict],
             if e.get("classification") == "low_end_conflict" and e.get("severity") == "critical"]
     mod = [e for e in events
            if e.get("classification") == "low_end_conflict" and e.get("severity") == "moderate"]
+    # P-060: penalize DISTINCT collisions, not per-section duplicates. The
+    # boolean reads below (``not crit``, ``crit or mod``) stay on the lists
+    # (presence is section-count-invariant); only the COUNTS the penalty and
+    # evidence multiply are deduped.
+    n_crit = _distinct_conflict_count(crit)
+    n_mod = _distinct_conflict_count(mod)
 
     # Reserved sub / room: the sub band carried by FEW stems is room around
     # the bass — but ONLY when those carriers behave like a pocket. Few-ness
@@ -880,9 +910,9 @@ def _low_end_motion(records: List[Dict], sections_analysis: List[Dict],
 
     # Relationship (weak form): existing kick/bass collisions break the pocket.
     if crit or mod:
-        score -= len(crit) * c["critical_conflict_penalty"] + len(mod) * c["moderate_conflict_penalty"]
+        score -= n_crit * c["critical_conflict_penalty"] + n_mod * c["moderate_conflict_penalty"]
         ev.append(
-            f"Kick/bass collision: {len(crit)} critical and {len(mod)} moderate "
+            f"Kick/bass collision: {n_crit} critical and {n_mod} moderate "
             f"low-end conflict(s) break the pocket."
         )
     elif n_stack >= 1:
@@ -1334,9 +1364,10 @@ def _vocal_role_fit(records: List[Dict], events: List[Dict],
         if r["vocal_type"] == "vocal_lead":
             involved = _lead_band_masking(name)
             if involved:
-                score -= c["masked_penalty"] * len(involved)
+                n_involved = _distinct_conflict_count(involved)
+                score -= c["masked_penalty"] * n_involved
                 ev.append(
-                    f"Lead vocal '{name}' is challenged by {len(involved)} "
+                    f"Lead vocal '{name}' is challenged by {n_involved} "
                     f"forward element(s) in the presence band — reduced role fit."
                 )
             elif r.get("depth_default") in FORWARD:
@@ -1357,19 +1388,24 @@ def _vocal_role_fit(records: List[Dict], events: List[Dict],
             # own non-lead classification.
             own = _own_band_masking(name)
             if own:
+                # P-060: dedup AFTER the severity filter above (the
+                # ``vocal_chop_groove`` ordering guardrail — a pair moderate in
+                # one section / info in another keeps its moderate survivor,
+                # then dedups to one distinct involvement).
+                n_own = _distinct_conflict_count(own)
                 # P-032f Commit-2: the ONE profile-authored decision point.
                 # Only the stem's OWN (lead-free) events ever reach the gate.
                 if accepted_blend_under_policy(r, blend_policy):
                     ev.append(
                         f"'{name}' ({r['vocal_type']}, confidence {_conf(r):.2f}): "
-                        f"{len(own)} masking involvement(s) accepted as blend "
+                        f"{n_own} masking involvement(s) accepted as blend "
                         f"under profile policy."
                     )
                 else:
-                    score -= c["masked_penalty"] * len(own)
+                    score -= c["masked_penalty"] * n_own
                     ev.append(
                         f"'{name}' ({r['vocal_type']}, confidence {_conf(r):.2f}) "
-                        f"overlaps {len(own)} forward element(s) in the vocal band "
+                        f"overlaps {n_own} forward element(s) in the vocal band "
                         f"— read under full clarity protection: reduced role fit."
                     )
 

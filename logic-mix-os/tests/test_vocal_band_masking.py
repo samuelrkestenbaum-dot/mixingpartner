@@ -103,7 +103,7 @@ BLEND_LINE = "accepted as blend under profile policy"
 # tree: the analyzer capacity moved neither producer's doctrine surface.
 PINNED_OVERALLS = {
     "simple_vocal_piano_song": {"halee_ramone": 73.8, "timbaland": 68.4},
-    "dense_chorus_with_loops": {"halee_ramone": 70.7, "timbaland": 52.6},
+    "dense_chorus_with_loops": {"halee_ramone": 71.8, "timbaland": 54.2},
     "splice_loop_problem": {"halee_ramone": 74.3, "timbaland": 49.7},
 }
 

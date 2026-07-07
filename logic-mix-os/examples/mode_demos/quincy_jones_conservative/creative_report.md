@@ -6,7 +6,7 @@
 
 ## Static vs. Dynamic
 
-- Static mix: 64.0/100
+- Static mix: 72.0/100
 - Dynamic mix: 23.4/100
 - Stop EQ-ing the static mix. Build dynamic movement: pre-chorus narrowing, chorus bloom, final-chorus width release, vocal phrase rides.
 

@@ -291,9 +291,14 @@ def test_doctrine_physical_space_penalty_coeffs_round_trip_indirect():
     score, _ = doctrine_engine._physical_space(felt, [])
     assert score == doctrine_engine._clamp(baseline - c["felt_forward"] * 1)
 
-    # width-crowding events: score -= width_coeff * count (count=2)
+    # width-crowding events: score -= width_coeff * count (count=2). P-060: the
+    # count is DISTINCT relationships, so the two events carry distinct element
+    # sets (real per-section duplicates of ONE crowding would dedup to 1).
     plain = [_record(name=f"b{i}", depth_default="background") for i in range(4)]
-    events = [{"classification": "width_crowding"}, {"classification": "width_crowding"}]
+    events = [
+        {"classification": "width_crowding", "elements": ["A", "B", "C"]},
+        {"classification": "width_crowding", "elements": ["D", "E", "F"]},
+    ]
     score, _ = doctrine_engine._physical_space(plain, events)
     assert score == doctrine_engine._clamp(baseline - c["width_crowding"] * 2)
 
@@ -328,9 +333,11 @@ def test_doctrine_emotional_hierarchy_penalty_coeffs_round_trip_indirect():
                    identity_family="vocal", depth_default="foreground",
                    sacredness="sacred")
     recs = [lead, _record(name="Gtr")]
+    # P-060: N=2 means two DISTINCT lead-masking relationships (distinct element
+    # sets), not one conflict duplicated across sections — which would dedup to 1.
     events = [
-        {"elements": ["Lead"], "classification": "bad_masking"},
-        {"elements": ["Lead"], "classification": "bad_masking"},
+        {"elements": ["Lead", "Gtr"], "classification": "bad_masking"},
+        {"elements": ["Lead", "Synth"], "classification": "bad_masking"},
     ]
     score, _ = doctrine_engine._emotional_hierarchy(recs, lead, events, [])
     assert score == doctrine_engine._clamp(baseline - c["vocal_masked"] * 2)
@@ -409,9 +416,11 @@ def test_doctrine_vocal_centrality_round_trip_indirect():
     plain = _record(name="V", instrument_identity="lead_vocal",
                     identity_family="vocal", depth_default="background",
                     sacredness="core")
+    # P-060: N=2 means two DISTINCT masking relationships (distinct element
+    # sets); one conflict duplicated across sections would dedup to 1.
     events = [
-        {"elements": ["V"], "classification": "bad_masking"},
-        {"elements": ["V"], "classification": "bad_masking"},
+        {"elements": ["V", "Gtr"], "classification": "bad_masking"},
+        {"elements": ["V", "Synth"], "classification": "bad_masking"},
     ]
     assert doctrine_engine._vocal_centrality(plain, events)[0] == \
         doctrine_engine._clamp(c["baseline"] - c["masked_coeff"] * 2)
@@ -482,9 +491,13 @@ def test_doctrine_static_mix_round_trip_indirect():
         doctrine_engine._clamp(c["baseline"] - c["dominant_band_penalty"])
 
     # Critical low-end conflicts => crit_low_coeff * N (N=2), no mix_metrics.
+    # P-060: N=2 means two DISTINCT low-end conflicts (distinct element sets),
+    # not one kick/bass collision duplicated across sections (which dedups to 1).
     events = [
-        {"classification": "low_end_conflict", "severity": "critical"},
-        {"classification": "low_end_conflict", "severity": "critical"},
+        {"classification": "low_end_conflict", "severity": "critical",
+         "elements": ["Kick", "Bass"]},
+        {"classification": "low_end_conflict", "severity": "critical",
+         "elements": ["Kick 2", "Sub Bass"]},
     ]
     assert doctrine_engine._static_mix([lead], lead, events, None)[0] == \
         doctrine_engine._clamp(c["baseline"] - c["crit_low_coeff"] * 2)

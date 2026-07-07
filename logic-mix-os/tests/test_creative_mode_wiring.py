@@ -84,7 +84,7 @@ TIMBALAND_RESOLVED_MODES = {
 
 REFERENCE_OVERALLS = {
     "simple_vocal_piano_song": 73.8,
-    "dense_chorus_with_loops": 70.7,
+    "dense_chorus_with_loops": 71.8,
     "splice_loop_problem": 74.3,
 }
 
