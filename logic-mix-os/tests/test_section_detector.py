@@ -61,8 +61,8 @@ def _mixdown(stems, duration, sr=SR):
     return LoadedAudio(samples=np.column_stack([acc, acc]), sample_rate=sr, path=None)
 
 
-def _detect(loaded_by_id, duration):
-    mix = _mixdown(list(loaded_by_id.values()), duration)
+def _detect(loaded_by_id, duration, sr=SR):
+    mix = _mixdown(list(loaded_by_id.values()), duration, sr)
     return detect_sections(loaded_by_id, mix, duration)
 
 
@@ -124,28 +124,130 @@ class TestArrangementDetection:
 
 class TestGuardrails:
     def test_sub_min_section_is_merged(self):
-        duration = 20.0
+        # P-061: the merge is exercised by a short section between two REAL
+        # arrangement events, not by a sub-persistence blip. Two staggered
+        # entrances 4s apart (both stems then play to the end, so both are well
+        # past the persistence floor and neither is debounced away) carve a 4s
+        # middle section, which is < MIN_SECTION_SEC and must merge leftward.
+        duration = 40.0
         loaded = {
             "t0_pad": _stem([(0, duration)], duration, seed=0),
-            # a 3s blip (< MIN_SECTION_SEC) between two long stretches.
-            "t1_blip": _stem([(8, 11)], duration, seed=1),
+            "t1_early": _stem([(8, duration)], duration, seed=1),
+            "t2_late": _stem([(12, duration)], duration, seed=2),
         }
         sections = _detect(loaded, duration)
         lengths = [s.end - s.start for s in sections]
         assert lengths, sections
         assert min(lengths) >= MIN_SECTION_SEC - 1e-6, lengths
+        # NON-VACUITY: three raw boundaries (0 / 8 / 12) collapse to exactly two
+        # sections. Without the merge this would be 3; a wholesale collapse
+        # would be 1. Only a real single merge yields 2.
+        assert len(sections) == 2, [(s.start, s.end) for s in sections]
+        assert [s.start for s in sections] == [0.0, 12.0], sections
 
     def test_max_sections_cap(self):
-        duration = 84.0
-        # 13 staircase entrances (6s apart) -> 14 boundaries with t=0, over the
-        # MAX_SECTIONS cap; each section is >= 6s so nothing is merged first.
+        # P-061: RE-SPACED so the cap is genuinely the binding guardrail. The
+        # old spacing (13 entrances 6s apart) is below the raised
+        # MIN_SECTION_SEC, so the merge would consume the boundaries BEFORE
+        # _cap_sections ever ran and the test would pass vacuously.
+        duration = 160.0
+        # 15 staircase entrances 10s apart -> 16 boundaries with t=0. Every
+        # section is 10s > MIN_SECTION_SEC, so the merge is a no-op and the cap
+        # alone does the work.
         loaded = {"t00_pad": _stem([(0, duration)], duration, sr=8000, seed=99)}
-        for i in range(13):
+        for i in range(15):
             loaded[f"t{i + 1:02d}"] = _stem(
-                [(6 * (i + 1), duration)], duration, sr=8000, seed=i
+                [(10 * (i + 1), duration)], duration, sr=8000, seed=i
             )
-        sections = _detect(loaded, duration)
-        assert len(sections) <= MAX_SECTIONS, len(sections)
+        sections = _detect(loaded, duration, sr=8000)
+        # NON-VACUITY: an EXACT count, not an inequality. 16 boundaries survive
+        # the merge, so a neutered _cap_sections yields 16 and fails here; only
+        # a firing cap yields exactly MAX_SECTIONS.
+        assert len(sections) == MAX_SECTIONS, len(sections)
+
+
+class TestOverSegmentationCalibration:
+    """P-061 — the detector must not shred a song into ornament-sized pieces.
+
+    A ~200s arrangement whose only sub-sectional material is a set of 3-4s
+    guitar stabs and percussion fills. Under the P-059 constants this produced
+    **12 sections** — hitting MAX_SECTIONS — with 4.00s / 4.00s / 7.00s
+    micro-sections carved out purely by those stabs, and (because the cap then
+    had to drop boundaries) a single 64s super-block from 104s to 168s: the
+    middle shredded while the tail was under-segmented. That per-section
+    rms/width/crest spread is exactly what pinned the doctrine engine's
+    ``_dynamic_mix`` and ``_section_contrast`` at a fake 100/100.
+
+    The honest reading of this arrangement is the 9 blocks bounded by the real
+    entrances/exits; the stabs and fills are ORNAMENTS inside them.
+    """
+
+    DURATION = 200.0
+    SR = 8000
+
+    # The real arrangement events — and the ONLY legitimate boundaries.
+    TRUE_STARTS = [0.0, 16.0, 32.0, 72.0, 88.0, 120.0, 136.0, 168.0, 184.0]
+    # Ornament centres: 3-4s stabs/fills that must NOT create a boundary.
+    ORNAMENTS = [40.0, 44.0, 56.0, 60.0, 92.0, 95.0, 104.0, 108.0, 150.0, 153.0,
+                 160.0, 163.0]
+
+    def _song(self):
+        d = self.DURATION
+        s = self.SR
+        return {
+            "a_pad": _stem([(0, 200)], d, sr=s, seed=1),
+            "b_drums": _stem([(16, 72), (88, 168), (184, 200)], d, sr=s, seed=2),
+            "c_bass": _stem([(16, 200)], d, sr=s, seed=3),
+            "d_vox": _stem([(32, 72), (88, 120), (136, 168)], d, sr=s, seed=4),
+            # 3-4s ornaments — the over-segmentation trigger.
+            "e_gtr": _stem([(56, 60), (104, 108), (150, 153)], d, sr=s, seed=5),
+            "f_perc": _stem([(40, 44), (92, 95), (160, 163)], d, sr=s, seed=6),
+        }
+
+    def test_no_micro_sections(self):
+        sections = _detect(self._song(), self.DURATION, sr=self.SR)
+        lengths = [s.end - s.start for s in sections]
+        assert min(lengths) >= MIN_SECTION_SEC - 1e-6, lengths
+        # the specific regression: the old 4.00s / 4.00s / 7.00s slivers.
+        assert all(length >= 8.0 for length in lengths), lengths
+
+    def test_ornaments_create_no_boundary(self):
+        """The heart of it: a 3-4s stab is not an arrangement event."""
+        sections = _detect(self._song(), self.DURATION, sr=self.SR)
+        starts = [s.start for s in sections]
+        for orn in self.ORNAMENTS:
+            assert all(abs(st - orn) > 1.0 for st in starts), (orn, starts)
+
+    def test_boundaries_are_the_real_arrangement_events(self):
+        sections = _detect(self._song(), self.DURATION, sr=self.SR)
+        starts = [s.start for s in sections]
+        assert len(sections) == len(self.TRUE_STARTS), starts
+        for got, want in zip(starts, self.TRUE_STARTS):
+            assert abs(got - want) <= 0.5, (starts, self.TRUE_STARTS)
+
+    def test_section_count_is_materially_lower_and_not_cap_clipped(self):
+        sections = _detect(self._song(), self.DURATION, sr=self.SR)
+        # was 12 (= MAX_SECTIONS) under the P-059 constants.
+        assert len(sections) == 9, len(sections)
+        # Structure is arrangement-driven, NOT cap-clipped: the cap never binds,
+        # so no boundary was dropped for being "low novelty".
+        assert len(sections) < MAX_SECTIONS, len(sections)
+
+    def test_no_cap_induced_super_block(self):
+        """The tail must not collapse into one giant block."""
+        sections = _detect(self._song(), self.DURATION, sr=self.SR)
+        lengths = [s.end - s.start for s in sections]
+        # the old bug produced a single 64s block spanning 104s -> 168s while
+        # the middle was shredded. The longest HONEST block here is 32s->72s.
+        assert max(lengths) <= 40.0 + 1e-6, lengths
+        for s in sections:
+            assert not (s.start <= 104.0 and s.end >= 168.0), (s.start, s.end)
+
+    def test_calibration_is_deterministic(self):
+        a = _detect(self._song(), self.DURATION, sr=self.SR)
+        b = _detect(self._song(), self.DURATION, sr=self.SR)
+        assert [(s.start, s.end, s.energy_tag) for s in a] == \
+               [(s.start, s.end, s.energy_tag) for s in b]
 
 
 class TestPipelineByteStability:
