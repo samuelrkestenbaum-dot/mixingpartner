@@ -4,82 +4,188 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** NONE ACTIVE — **P-060 CLOSED** (2026-07-07). Awaiting the user's
-  next direction / go. The orchestrator PRESENTS options; nothing is opened blind.
+- **Status:** ACTIVE — **P-061 — Detector Over-Segmentation Calibration**
+  (opened on the user's explicit go via the P-060 HANDOFF, 2026-07-25). Base =
+  `e3d633c` (the P-060 close + HANDOFF tip). Verified `git merge-base HEAD
+  9cfe990` = `9cfe990` (= PR #37 / P-059 merged to default) — the correct base.
+- **Baseline to protect (measured on THIS env at `e3d633c`):** full suite **1414
+  passed / 0 failed / 0 warnings**; regression **93/93, `critical_failures ==
+  []`, 0 warnings**. The ENTIRE scoring corpus stays **byte-identical** — this
+  packet moves NO golden, NO sample tree, NO mode demo.
+- **This is the OTHER HALF of the Happy Man fix.** P-060 fixed the crater
+  (per-section masking double-count). P-061 fixes the **fake-100s**.
 
-## Last closed — P-060 — Section-Count-Invariant Doctrine Scoring (CLOSED 2026-07-07)
+## ★ BASE CORRECTION (recorded — this session)
 
-- **Verdict:** qa GREEN (suite 1405 → **1414 / 0 failed / 0 warnings**; +9
-  invariance tests; regression **93/93, critical_failures == [], 0 warnings**;
-  full suite green at HEAD = the isolation proof) + reviewer **PASS (no must-fix;
-  single-model; non-vacuity proven — the helper monkeypatched back to `len()`
-  reproduces the exact crater)**. Both gates independently re-ran the suite.
-- **What it did — THE FIRST INTENTIONAL CORPUS MOVE.** `analyze_masking` emits each
-  masking conflict once PER SECTION; six doctrine scorers counted the raw
-  per-section total, so a conflict duplicated across N sections was penalized N× —
-  a real 49-track song ("Happy Man", 12 sections) cratered ("masked by 48" = 4×12
-  → emotional_hierarchy/vocal_centrality → 0, physical_space → 2). FORK A fix: a
-  shared `_distinct_conflict_count` helper (`len({frozenset(e["elements"]) …})`)
-  applied AFTER each scorer's existing severity/classification predicate
-  (filter-THEN-dedup) in six scorers (`_physical_space`, `_emotional_hierarchy`,
-  `_vocal_centrality`, `_static_mix`, `_low_end_motion` crit+mod, `_vocal_role_fit`).
-  Coefficients UNCHANGED — only the COUNT they multiply is deduped. `_beat_identity`
-  + `_loop_context`/`read_loop_context` UNTOUCHED (already boolean `any()`);
-  `masking_analyzer.py` UNTOUCHED (events stay per-section).
-- **Single ATOMIC commit** `ae0b9fc` — "P-060: section-count-invariant doctrine
-  scoring (dedup distinct conflicts)" — **39 files, +327/−78** (1 source
-  `doctrine_engine.py` + 1 new test `tests/test_section_count_invariance.py` [9
-  tests] + 1 golden + 22 mode-demo files + 14 re-pinned test files) — fix + all
-  re-pins INSEPARABLE → one commit; HEAD is the isolation proof. Atop set-active
-  `8034289` (metadata-only) atop merge base `9cfe990` (= PR #37 / P-059 merged to
-  default). Verified `git merge-base HEAD 9cfe990` = `9cfe990`.
-- **PUSHED to the dev branch (standing pre-gate go); NOT merged.**
-- **The authorized corpus move — ALL ONE correction** (dense's `(Kick, Bass)`
-  critical low-end emitted identically in both sections → distinct-count 2×→1×):
-  dense golden static_mix 64.0→72.0 / overall 70.7→71.8 (physical_space 67.6 /
-  emotional 86.0 / vocal_centrality 90.0 / vocal_role_fit 85.0 / winners / search_mode
-  UNCHANGED); low_end_motion 21.1→35.1 (5 differential/context pins); the **11
-  dense-DERIVED mode-demo pairs** (22 files, `static_mix_score 64→72` ONLY — zero
-  decision change); the differential dense-column overalls for all 5 producers
-  (halee_ramone 70.7→71.8, timbaland 52.6→54.2, quincy 60.4→61.6, eno 54.2→55.5,
-  cla 59.6→61.5). PROVEN BYTE-IDENTICAL: the 5 sample trees + the other 3 fixtures.
-  `test_producer_profile.py` fixup: degenerate synthetic events (dup/missing
-  `elements`) replaced with realistic distinct pairs so `coeff × 2` RHS UNCHANGED.
-- **★ HONEST DEVIATION recorded (see receipt):** the packet said "mode demos
-  UNCHANGED" — but they are dense-DERIVED and CORRECTLY moved (static_mix only,
-  zero decision/structural change). The scope under-counted the dense-derived
-  artifacts; they move by the SAME one correction. No decision/winner/structure
-  changed anywhere.
-- **Receipt:** `build-os/receipts/P-060-section-count-invariant-scoring.md`.
+This session's designated branch `claude/logic-mix-os-p061-detector-0dvr2t`
+originally pointed at **`9cfe990`** (default head, **WITHOUT P-060**). It was
+**rebased onto `e3d633c`** so P-061 builds on the **post-P-060 corpus**. Any
+number in this packet that touches doctrine scoring is a post-P-060 number. Do
+not re-litigate against a pre-P-060 baseline.
 
-## OPEN USER GATE
+## ★ ENVIRONMENT FACT (newly established this session — qa MUST reproduce on it)
 
-- **The merge of P-060** — `ae0b9fc` (+ the close commit) atop `9cfe990` (= PR
-  #37) — a clean single-packet PR (the branch is fast-forwarded onto default).
-  Awaits the user's explicit word. PUSHED to the dev branch (pre-gate go); NOT
-  merged; no deploy/publish/secrets touched.
+The canonical corpus environment is **numpy + scipy + soundfile installed, and
+`pyloudnorm` NOT installed.** `logic_mix_os/dsp.py:319` `integrated_loudness()`
+prefers **pyloudnorm → scipy → FFT**; the committed corpus was produced on the
+**SCIPY tier**. **With `pyloudnorm` installed, 5 `test_sample_refresh` tests FAIL**
+on `lufs` / `estimated_lufs` deltas (~0.5 dB). That is an ENVIRONMENT artifact,
+NOT a regression — do not "fix" the corpus for it. Verified baseline on the
+correct env at `e3d633c`: **1414 / 0 / 0**, regression **93/93**, 0 warnings.
 
-## Staged next (the orchestrator PRESENTS — user-gated; nothing opened blind)
+## Why (the fake-100s on a real 49-track song)
 
-- **★ P-061 — detector over-segmentation calibration** (the OTHER half of the
-  Happy Man fix; already scoped: raise `MIN_SECTION_SEC` ~8-10s, raise `MIN_RUN`
-  ~1.5s, widen `CLUSTER` ~2s, lower `MAX_SECTIONS` ~8; adaptive novelty floor only
-  if needed; byte-stable for the whole scoring corpus, re-pins only the ~10
-  detector tests) — the HIGHEST-VALUE item, alongside the **HAPPY MAN RE-RUN #2**
-  (pull P-060 → confirm the crater is GONE; note contrast/dynamics still read a
-  fake-100 until P-061). Expectation: **P-060 fixes the crater; P-061 fixes the
-  fake-100s.**
-- Then the remaining user-gated directions: ambient patience (Eno-deferral #2) ·
-  generative process (Eno-deferral #3) · CLA/Halee/Timbaland textural weighting ·
-  the `<2 beds` neutral-fallback calibration · the real Cowork host connection
-  (manual) · apply-to-Logic (FUTURE, re-gated — never auto; the safety line stands)
-  · a sixth producer (roster frozen at five) · a breadth/severity-weighting pass
-  from the still-available per-section masking events (residue #3, low priority) ·
-  anything else the user calls. Do NOT open anything blind.
+On real "Happy Man" (49 tracks) the audio-driven section detector emitted **12
+micro-sections**. Two doctrine scorers read per-section dispersion and therefore
+INFLATE with section count:
+
+| Scorer | line | reads |
+|---|---|---|
+| `_dynamic_mix` | `doctrine/doctrine_engine.py:394` | `pstdev` of per-section rms / width / crest |
+| `_section_contrast` | `doctrine/doctrine_engine.py:351` | `contrast_vs_previous` lift-fail counting |
+
+More (spurious) sections → more dispersion and more "contrast" events → a **FAKE
+100/100 contrast/dynamics**. The sections are not real, so neither is the score.
+The fix is to make the DETECTOR emit honest musical sections.
+
+## Real constants (verified in source — `analyzers/section_detector.py`)
+
+**The frame integers are DERIVED from the `_*_SEC` constants by design. Move the
+SECONDS-level constants, never the frame integers.**
+
+```
+H = 0.25                 # line 38  frame-grid hop, seconds
+ABS_FLOOR_DB = -50.0     # line 42
+REL_RANGE_DB = 40.0      # line 43
+_MIN_RUN_SEC = 0.5       # line 48  -> MIN_RUN     = 2 frames   [target ~1.5s]
+_GAP_SEC     = 0.5       # line 49  -> GAP         = 2 frames
+_CLUSTER_SEC = 1.0       # line 50  -> CLUSTER_WIN = 4 frames   [target ~2.0s]
+MIN_SECTION_SEC = 4.0    # line 56                              [target ~8-10s — SEE HAZARD 1]
+MAX_SECTIONS = 12        # line 57                              [target ~8]
+_TAG_LOW  = 1.0 / 3.0    # line 59
+_TAG_HIGH = 2.0 / 3.0    # line 60
+```
+
+Consumers: `MIN_RUN` at line 168, `CLUSTER_WIN` at line 207, `min_frames =
+MIN_SECTION_SEC / H` at line 227, `MAX_SECTIONS` at lines 241/244, the tag
+thresholds at line 266.
+
+## Byte-stability — CONFIRMED, not assumed
+
+- The guard at `pipeline.py:185` is the **POSITIVE** form `if
+  len(project.sections) >= 2:` → supplied path; **else** detect. **All 4 fixture
+  manifests supply exactly 2 sections**, so **no golden / sample / mode-demo ever
+  enters the detector.**
+- **Safety grep re-run this session:** `grep -rln '"inferred"' --include=*.json`
+  over `logic-mix-os/` returns **ZERO files**. Nothing committed carries detector
+  output.
+- Other call site: `onramp.py:176` (`_detect_sections`), reachable only via
+  `scaffold_manifest(detect_sections=True)` — **default OFF**.
+
+qa must re-run this grep and re-assert the golden/sample/mode-demo trees are
+byte-identical after the change.
+
+## ★ RE-PIN SURFACE — the packet's OLD "~10 detector tests" claim is REFUTED
+
+The staged shorthand under-counted the surface. **Record this correction
+explicitly: this is the P-060 scope-under-count pattern REPEATING** (P-060's
+"mode demos UNCHANGED" was likewise an under-count). Assume the shorthand is
+under-counted until re-measured.
+
+| File | Tests | Detail |
+|---|---|---|
+| `tests/test_section_detector.py` | **10** | `TestArrangementDetection` 4 · `TestGuardrails` 2 · `TestPipelineByteStability` 3 · `TestSuppliedSectionShapeUnchanged` 1 |
+| `tests/test_onramp_scaffold.py::TestDetectSectionsOptIn` | **5** | two HARD-PIN detector output on the same 40s synthetic arrangement — **line 203** `assert len(m["sections"]) == 5`, **line 221** `assert len(loaded["sections"]) >= 2` |
+
+**TRUE surface: up to 15 tests across 2 files.** The builder re-measures with a
+per-file collect before and after.
+
+## ★ THREE NUMERIC HAZARDS — resolve NUMERICALLY, never by assumption
+
+**1. `MIN_SECTION_SEC` ~8-10 is NOT free.** Both synthetic arrangements produce
+sections of exactly **8.0s** (boundaries 0/8/16/24/32 over 40s). At **8.0** the
+guard is **knife-edge**: `min_frames = 8.0 / 0.25 = 32` vs a 32-frame section —
+debounce jitter can merge a REAL section at 31 frames. At **9.0 / 10.0 EVERY
+section merges**, breaking `test_boundaries_at_arrangement_events_only`,
+`test_energy_tags_are_relative_and_honest` (pins `tags[0] == "low"`, `tags[3] ==
+"high"`, names `"Section 1..5"`) and the onramp `== 5` pin. Pick the value from
+measured frame counts, and state the jitter margin.
+
+**2. `test_max_sections_cap` GOES VACUOUS.** It builds **13 entrances 6s apart**
+(`duration = 84.0`) on the stated premise at **line 141**: *"each section is >= 6s
+so nothing is merged first."* Any `MIN_SECTION_SEC > 6.0` merges them BEFORE the
+cap engages — the test then passes **trivially without ever exercising
+`_cap_sections`**. It must be **RE-SPACED** (wider entrances + longer duration),
+**not merely re-pinned**. **A non-vacuity proof is REQUIRED at review** (P-060
+precedent: the reviewer proved non-vacuity by reproducing the failure with the
+fix reverted).
+
+**2b. Secondary vacuity watch (archivist observation, verified in source, NOT new
+scope):** `test_sub_min_section_is_merged` uses `duration = 20.0` and asserts
+`min(lengths) >= MIN_SECTION_SEC`. At a raised floor the whole 20s can collapse
+to ONE section, satisfying the assertion trivially. The builder should confirm
+this test still exercises a real merge, or widen its duration in the same spirit
+as hazard 2.
+
+**3. `MIN_RUN` 0.5 → 1.5s (2 → 6 frames) and `_CLUSTER_SEC` 1.0 → 2.0s (4 → 8
+frames) APPEAR safe** — the 3s blip in `test_sub_min_section_is_merged` is 12
+frames, and events are 8s apart — **but the builder must PROVE this, not inherit
+it.** Print the actual frame runs.
+
+## In scope
+
+- `analyzers/section_detector.py` **constants** (the seconds-level ones).
+- An **adaptive novelty floor ONLY if constants alone are insufficient** — and
+  that is a **SCOPE DECISION that must route back through the orchestrator
+  BEFORE being written.** Do not write it silently.
+- **Re-pins in the two named test files only** (including the hazard-2 re-spacing).
+
+## Out of scope — BINDING, DO NOT TOUCH
+
+`pipeline.py`'s guard · `doctrine_engine.py` · `masking_analyzer.py` · ALL
+goldens / samples / mode-demos · `onramp.py` **behavior** (its TESTS may re-pin).
+No new dependency (numpy + first-party only). Plan-only — no apply-to-Logic.
+Roster frozen at five.
+
+## Commit shape (≤2; expect ONE)
+
+**Expect ONE ATOMIC commit** — constants + re-pins are **INSEPARABLE** (per the
+P-060 precedent: split them and either half is red). Therefore **HEAD is the
+Commit-1 isolation proof.** No push / merge / deploy / secrets.
+
+## Required proof (qa reports EXACT)
+
+1. Full suite on the **pyloudnorm-ABSENT** env: **1414** → exact new count, 0
+   failed, 0 warnings.
+2. Regression **93/93, `critical_failures == []`, 0 warnings**.
+3. **Commit-1 isolation** = HEAD (single atomic commit).
+4. **Safety grep:** `grep -rln '"inferred"' --include=*.json` → **0 files**; the 4
+   goldens + 5 sample trees + all mode demos **byte-identical**; no
+   `pipeline.py` / `doctrine_engine.py` / `masking_analyzer.py` diff; no new dep.
+5. **Per-file collect** for both re-pinned test files (the TRUE 15-test surface).
+6. **Hazard resolution table** — the chosen `MIN_SECTION_SEC` with its measured
+   frame margin, the `MIN_RUN` / `CLUSTER_WIN` frame proof, and the
+   **`test_max_sections_cap` NON-VACUITY proof** (evidence `_cap_sections`
+   actually engages).
+
+## Route after builder
+
+builder (atomic Commit-1) → qa → reviewer (non-vacuity proof REQUIRED) →
+archivist (receipt `build-os/receipts/P-061-detector-over-segmentation-calibration.md`).
+**Commit only.**
+
+## OPEN USER GATE (carried, UNTOUCHED by this packet)
+
+- **The merge of P-060 to default** — `ae0b9fc` (+ close `bb126cc`) atop
+  `9cfe990` (= PR #37). Pushed to the dev branch under the standing pre-gate go;
+  **NOT merged.** It remains a **SEPARATE open user gate** and this packet does
+  not advance, bundle, or resolve it.
+- Also carried: the **HAPPY MAN RE-RUN #2** (user-run; confirm the P-060 crater is
+  gone). After P-061 lands, a re-run should also show the contrast/dynamics
+  fake-100s corrected.
 
 ---
-_Cleared by the archivist on P-060 close (2026-07-07). One packet at a time:
-builder → qa + reviewer → archivist → receipt. P-060 was the FIRST intentional
-scoring-corpus move — a surgical section-count-invariance correctness fix. P-061
-(detector over-segmentation calibration) is the staged, highest-value next packet;
-the merge of P-060 is the open user gate._
+_Set active by the archivist on the user's explicit go via the P-060 HANDOFF
+(2026-07-25). SET-ACTIVE is metadata only — `build-os/` files, ONE commit, no
+product code, no push. P-060 fixed the crater; **P-061 fixes the fake-100s.** One
+packet at a time: builder → qa + reviewer → archivist → receipt._
