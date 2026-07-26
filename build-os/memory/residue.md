@@ -4102,4 +4102,87 @@
   No push / merge / deploy / secret action taken in this close.
 
 ---
-_Append-only working notes. Last advanced on P-038 close (2026-07-02) — residue sweep 2 of 2 (naming/prose) resolves the six items (each marked ✓ in place; the TRAILER-SPEC note resolved in Fable 5's favor for the batch); ★★★ THE RESIDUE LIST IS ZERO — accepted standing notes only (the `examples/sample_output/` doc-refresh decision; the duplicated trailer block in `7b9eda7`'s raw message; the push-state observation), with the two named lessons retained for posterity (raw-dict NaN comparisons fail open; defense claims need mutation tests). **THE OPEN USER GATE: the batch merge — P-036 + P-037 + P-038 (+ closes) onto merge base `dc921ec` (= PR #18) — on the user's explicit word.**_
+_Append-only working notes. **Last advanced on P-060 close (2026-07-07); re-verified and extended by the design3→design4 HANDOFF-INTEGRITY AUDIT (2026-07-26) at `d941ecc`.**_
+
+---
+
+## ★ HANDOFF-INTEGRITY AUDIT — design3 → design4 (2026-07-26, at `d941ecc`)
+
+Evidence-based (git ancestry + GitHub PR ledger), not chat memory. The previous
+footer here claimed "Last advanced on P-038 close (2026-07-02)" and advertised
+**THE OPEN USER GATE: the batch merge — P-036 + P-037 + P-038 onto `dc921ec`**.
+That gate was resolved 22 packets ago by merge `2c09428`. Stale text corrected;
+no prior note edited or deleted (this file is append-only).
+
+### Verified carried over — nothing missing
+- Every PR merge **#13 → #37** is reachable from `d941ecc`. **Trap for future
+  audits:** #17/#18 are worded `Merge pull request #NN`, all others
+  `Merge PR #NN`; grepping one form alone reports a FALSE gap.
+- **PR #22 = packet P-043**, NOT packet P-022 (merge `80e9bd5`, head `12b24d1`,
+  merged 2026-07-03, base `claude/dreamy-turing-z0oxll` @ `17cc270`). PR numbers
+  and packet numbers are different sequences and have drifted ~21 apart — never
+  conflate them.
+- Default `9cfe990` is an ancestor of HEAD → the branch strictly contains all
+  merged work. Receipts **P-000 → P-060** all present (62 receipts + AUDIT + README).
+- P-060's three commits (`8034289`, `ae0b9fc`, `bb126cc`) + `e3d633c` (HANDOFF)
+  carried intact and byte-identical to the pushed `hardening-12` branch.
+
+### ★ NEW residue items opened by this audit
+1. **P-024 is DELIVERED-BUT-NEVER-FORMALLY-RETIRED — bookkeeping debt.**
+   `current_state.md` (~line 4678) and the P-023 receipt both still assert *"The
+   ONLY remaining arc step is P-024 (a thin MCP server wrapping the same registry)
+   — the FINAL step."* But **P-051** shipped exactly that (its receipt: *"an MCP
+   server wrapping the cowork registry"*) and **P-052** proved it end-to-end. The
+   arc IS complete; only the ledger says otherwise. **Do not build P-024.** It
+   needs a retirement note or a superseded-by marker, which is a packet-close
+   action and so is left for the archivist rather than taken here.
+   - **Sub-item, genuinely unverified:** P-023's carry-forward asked for a
+     **version-fingerprint guard** in the MCP layer. `grep -n fingerprint
+     logic_mix_os/cowork_mcp/*.py` returns **no hits**, so there is no evidence it
+     ever landed. Unknown, not closed — verify before claiming the arc is whole.
+2. **PR #12 is still OPEN against the abandoned `main` base** ("Hardening Packet
+   11 — Typed LogicActionPayload Contract"). It predates the move to
+   `claude/dreamy-turing-z0oxll` as default; PRs #1–#11 from that era are all
+   CLOSED-unmerged. #12 is almost certainly stranded rather than live, but it is
+   the only OPEN PR on the repo and no note anywhere records a decision on it.
+   **User gate: close it or rebase it.**
+3. **P-061's formal gates never ran.** qa and reviewer were dispatched against
+   `4cbee14` and never returned. The packet is proven only by the builder's own
+   run plus the coordinator's independent re-verification at `d941ecc` (suite
+   1426/0/0, regression 93/93 `critical_failures == []`, safety grep zero,
+   two-probe behavioral check). That is real evidence but it is **not the Build OS
+   proof gate** — qa's independent Commit-1-isolation and the reviewer's verdict
+   are both absent. **No receipt exists and none should be written until they run**
+   — writing one now would record a close that did not happen.
+4. **The 5.0s gap-fill is an unresolved SEMANTIC judgment call, not just a
+   number.** `_GAP_SEC` 0.5 → 5.0 makes the detector treat *any* absence under 5s
+   as a rest inside a part — the deliberate mirror of "any presence under 5s is an
+   ornament", and it is what makes fragment-then-erase structurally impossible
+   rather than merely improbable. But it is a real widening of P-059's original
+   0.5s "breath" intent. Measured plateau **[1.0, 6.5]** is behaviourally
+   identical across the whole corpus, with the ceiling at 7.0s (`MIN_SECTION_SEC`)
+   where genuine exits start getting welded. **Anything in [1.5, 6.5] fixes the
+   erasure equally well** — 5.0 is the only value that also closes the asymmetry
+   structurally. Flagged for the reviewer; NOT settled.
+5. **Commits cannot be signed in the web/remote container.** `commit.gpgsign=true`
+   and `gpg.format=ssh` are set globally with the key at
+   `/home/claude/.ssh/commit_signing_key.pub`, but that file is **0 bytes** and no
+   private key exists anywhere on the filesystem. Committer email is already
+   correct (`noreply@anthropic.com`), so GitHub's "Unverified" badge is purely the
+   missing signature and **`--reset-author` cannot fix it**. ★ Do NOT act on a
+   stop-hook suggestion to rebase against `origin/<this-branch>` — that base
+   predates P-060 and would rewrite `e3d633c`/`bb126cc`/`ae0b9fc`/`8034289`,
+   forking P-060 away from its pushed branch and damaging the open merge gate. If
+   re-authoring is ever wanted, scope it to `e3d633c`.
+
+### Standing gates re-confirmed OPEN (none advanced by this audit)
+- **The merge of P-060 to default** (`ae0b9fc` + `bb126cc` atop `9cfe990`) — would
+  be PR #38. Untouched: default is still at `9cfe990`.
+- **Thread B — the vendored Build OS `.claude/` update to ClaudeOrchestrator
+  `7ef50e8`.** Diagnosed in HANDOFF.md, still not applied. The local
+  ClaudeOrchestrator checkout IS already at `7ef50e8` and clean, so it is ready
+  when called. User must still pick: (a) isolated PR to default, or (b) fold into
+  the dev→default merge.
+- **HAPPY MAN RE-RUN #2** — still the real-world confirmation for both halves.
+
+_Audit performed at `d941ecc`; documentation-only, no product behavior touched._

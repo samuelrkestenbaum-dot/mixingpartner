@@ -184,6 +184,94 @@ archivist (receipt `build-os/receipts/P-061-detector-over-segmentation-calibrati
   gone). After P-061 lands, a re-run should also show the contrast/dynamics
   fake-100s corrected.
 
+## ★★★ BUILT — STATUS UPDATE (HANDOFF-INTEGRITY AUDIT, 2026-07-26)
+
+P-061 is **IMPLEMENTED AND PUSHED, BUT NOT CLOSED.** The scope above is the
+SET-ACTIVE text and is preserved verbatim for the record — **several of its
+numeric targets were measured to be WRONG and were deliberately overridden.**
+Read this section, not the targets above, for what actually shipped.
+
+### The two commits (packet is AT its ≤2 implementation-commit limit)
+
+| Commit | What |
+|---|---|
+| `4cbee14` | Commit-1 — the calibration. Green in isolation. |
+| `d941ecc` | Commit-2 — the gap-fill fix (a regression Commit-1 introduced). |
+
+Both pushed to `claude/logic-mix-os-p061-detector-0dvr2t` (fast-forward, no
+history rewritten). **No PR opened. Default untouched at `9cfe990`.**
+
+### Constants as SHIPPED — vs the targets above
+
+| Constant | Was | Target above | **SHIPPED** | Why the deviation |
+|---|---|---|---|---|
+| `_MIN_RUN_SEC` | 0.5 | ~1.5 | **5.0** | 1.5s is provably INERT — the ornaments are 3–4s, so the packet's target would not have fixed the bug at all. This is the change that does the work. Plateau [4.5, 8.0] identical. |
+| `_GAP_SEC` | 0.5 | (not targeted) | **5.0** | Commit-2. NOT in the original scope — see the regression below. |
+| `_CLUSTER_SEC` | 1.0 | ~2.0 | **2.0** | As targeted. Proven a no-op on all scenarios (closest surviving boundary pair 12 frames vs 8). |
+| `MIN_SECTION_SEC` | 4.0 | ~8–10 | **7.0** | **Target refuted.** 8.0 is knife-edge (measured jitter tolerance **0.00s** against the 32-frame synthetic sections); 9/10 destroy the arrangement tests. 7.0 is the largest value with real margin (0.40s). |
+| `MAX_SECTIONS` | 12 | ~8 | **12 (unchanged)** | **Target refuted by measurement.** `_cap_sections` drops boundaries by novelty with no regard for spacing, so whenever it binds it MANUFACTURES the very artifact this packet removes: MAX=8 produced an **80s** super-block, MAX=10 a **60s** one — both worse than the 64s bug. The floor should do the work; the cap stays a safety valve. Lowering it needs a spacing-aware `_cap_sections` = separate packet. |
+
+Live invariant, asserted by `test_gap_fill_does_not_outgrow_the_section_floor`:
+`_MIN_RUN_SEC <= _GAP_SEC < MIN_SECTION_SEC` (5.0 <= 5.0 < 7.0).
+
+### ★ The regression Commit-1 introduced, and Commit-2's fix
+
+Commit-1 raised the persistence floor to 5.0s but left gap-fill at 0.5s. A
+lead vocal in 4.0s phrases with 1.2s breaths then fragments into 16-frame runs,
+every one of which dies under the 20-frame floor — **the vocal is erased from
+arrangement detection entirely.** Found by coordinator probe, not by the suite.
+
+| `_MIN_RUN_SEC`/`_GAP_SEC` | vox frames after debounce | sections | entrance @32s |
+|---|---|---|---|
+| 0.5 / 0.5 (pre-P-061) | 235 | 6 | NO |
+| 5.0 / 0.5 (`4cbee14`) | **0 — ERASED** | 2 | NO |
+| 5.0 / 5.0 (`d941ecc`) | **287** | 4 | **YES** |
+
+Note the last column: the fix does not merely undo the damage, it produces a
+TRUE vocal-entrance boundary that **neither the old nor the Commit-1 constants
+achieved**. Pre-P-061 emitted phrase confetti at 52.75/67.25/78.75s.
+
+### Proof status — REAL, but NOT the formal gate
+
+Independently re-verified by the coordinator at `d941ecc`: suite **1426 passed /
+0 failed / 0 warnings** (1414 baseline + 12 new), regression **93/93,
+`critical_failures == []`**, safety grep `"inferred"` **zero files**, diff exactly
+2 files, no golden/sample-tree/mode-demo/`pipeline.py`/`doctrine_engine.py`/
+`masking_analyzer.py`/dependency change. 200s repro: 12 sections with 4/4/7s
+slivers + a 64s cap block → **9 sections, no slivers, cap never binds**.
+
+**★ BUT: qa and reviewer were dispatched against `4cbee14` and NEVER RETURNED.**
+So qa's independent Commit-1-isolation proof and the reviewer's verdict are both
+MISSING, and **the required non-vacuity review of `test_max_sections_cap` was
+never formally signed off** (the builder did prove it red/green: neutering
+`_cap_sections` fails `16 != 12` and nothing else).
+
+### Why there is NO receipt
+
+**Deliberate.** `build-os/receipts/P-061-*.md` does not exist because the packet
+is NOT closed. Writing one now would record a close that did not happen. The
+receipt is the archivist's to write **after** qa + reviewer actually run.
+
+### Open judgment call for the reviewer
+
+`_GAP_SEC = 5.0` widens P-059's original 0.5s "breath" intent into "any absence
+under 5s is a rest inside a part". Measured plateau **[1.0, 6.5]** is
+behaviourally identical corpus-wide; ceiling 7.0s. **Anything in [1.5, 6.5] fixes
+the erasure** — 5.0 is the only value that also makes fragment-then-erase
+structurally impossible. Not settled.
+
+### Environment (reproduce on this or the corpus will appear to fail)
+
+numpy + scipy + soundfile installed, **pyloudnorm NOT installed** — the corpus was
+produced on the scipy tier of `dsp.integrated_loudness()`'s
+pyloudnorm→scipy→FFT ladder. With pyloudnorm present, 5 `test_sample_refresh`
+tests fail on ~0.5dB lufs deltas. Verify: `_HAVE_PYLN=False, _HAVE_SCIPY=True`.
+
+### Exact next action
+
+Run **qa** then **reviewer** against `d941ecc` (not `4cbee14`), settle the
+`_GAP_SEC` semantic call, then archivist → receipt → close.
+
 ---
 _Set active by the archivist on the user's explicit go via the P-060 HANDOFF
 (2026-07-25). SET-ACTIVE is metadata only — `build-os/` files, ONE commit, no
