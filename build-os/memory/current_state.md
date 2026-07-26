@@ -837,6 +837,135 @@
 
 ## Where we are
 
+- **★★★ P-061 CALIBRATES THE DETECTOR AND KILLS THE FAKE 100/100 — THE OTHER HALF
+  OF THE HAPPY MAN FIX (P-060 fixed the masking crater; P-061 fixes the fake
+  contrast/dynamics). On a real 49-track song the audio-driven detector emitted
+  **12 micro-sections**, and the two scorers that read per-section dispersion
+  therefore INFLATED with section count — `_dynamic_mix`
+  (`doctrine/doctrine_engine.py:394`, `pstdev` of per-section rms/width/crest) and
+  `_section_contrast` (`:351`, `contrast_vs_previous` lift-fail counting) — to a
+  ceiling-pinned **fake 100/100**. The sections were not real, so neither was the
+  score; the fix makes the DETECTOR emit honest musical sections. **BOTH FORMAL
+  GATES GREEN:** qa (suite **1426 / 0 failed / 0 warnings** = 1414 baseline + 12
+  net-new; regression **93/93, `critical_failures == []`, warnings `[]`**;
+  **INDEPENDENT detached Commit-1 isolation at `4cbee14` → 1420 / 0 / 0**,
+  regression 93/93 — the item an earlier stalled dispatch never delivered) +
+  reviewer **PASS, no must-fix** (**single-reviewer only — `command -v codex`
+  returns nothing, so NO second model reviewed this diff**). **Last-closed =
+  P-061.**
+  - **Constants as SHIPPED** (seconds-level ONLY — the frame integers stay
+    DERIVED via `max(1, round(_X_SEC/H))`, `H = 0.25`): `_MIN_RUN_SEC` **0.5 →
+    5.0** (`MIN_RUN` 2 → 20 frames — **THE load-bearing change**); `_GAP_SEC`
+    **0.5 → 5.0** (`GAP` 2 → 20, Commit-2); `_CLUSTER_SEC` **1.0 → 2.0**
+    (`CLUSTER_WIN` 4 → 8, **proven inert**); `MIN_SECTION_SEC` **4.0 → 7.0** (16 →
+    28); `MAX_SECTIONS` **12 → 12, UNCHANGED**. Live invariant asserted by test:
+    **`_MIN_RUN_SEC <= _GAP_SEC < MIN_SECTION_SEC`** (5.0 <= 5.0 < 7.0).
+  - **★★★ THREE PACKET TARGETS WERE REFUTED BY MEASUREMENT and deliberately
+    overridden (recorded loudly in source, commit, and packet):** (1)
+    `MIN_SECTION_SEC` ~8–10 → **shipped 7.0** — 8.0 is knife-edge with a measured
+    jitter tolerance of **0.00s** against the 32-frame (8.0s) synthetic sections,
+    and 9/10 **destroy** the arrangement tests; 7.0 gives **0.40s** margin. (2)
+    `_MIN_RUN_SEC` ~1.5 → **shipped 5.0** — 1.5s is **provably INERT** (ornaments
+    are 3–4s), so the packet's own target **would not have fixed the bug at all**.
+    (3) `MAX_SECTIONS` ~8 → **left at 12** — `_cap_sections` sorts survivors by
+    novelty with **NO spacing term**, so whenever it binds it **MANUFACTURES the
+    very artifact the packet removes**: MAX=8 produced an **80s** super-block,
+    MAX=10 a **60s** one, both **worse than the 64s bug being fixed**. The correct
+    fix is a **spacing-aware `_cap_sections` = a SEPARATE FUTURE PACKET**, named
+    and deferred rather than smuggled in. The reviewer ruled holding the cap
+    **CORRECT ENGINEERING, not scope evasion** (it also REDUCES the change
+    surface).
+  - **★★★ COMMIT-1 SHIPPED A LIVE REGRESSION THAT COMMIT-2 FIXED — recorded
+    honestly.** Commit-1 raised the persistence floor to 5.0s but left gap-fill at
+    0.5s: a lead vocal in **4.0s phrases with 1.2s breaths** fragments into
+    16-frame runs, every one dying under the 20-frame floor — **the vocal is
+    ERASED from arrangement detection entirely** (235 active frames → **0**).
+    **Found by coordinator probe, NOT by the suite** — Commit-1 was green in
+    isolation only because no test covered the phrased-part shape; the reviewer's
+    phrasing: **"Commit-1's isolation-greenness was true but blind."** Commit-2
+    does not merely undo the damage: at 5.0/5.0 the vocal survives (**287**
+    frames) **AND** produces a **TRUE vocal-entrance boundary at 32s that NEITHER
+    the pre-P-061 constants NOR Commit-1 achieved**, while removing pre-P-061
+    phrase confetti at 52.75/67.25/78.75s. Table — 0.5/0.5 (pre-P-061): 235
+    frames, 6 sections, entrance NO · 5.0/0.5 (`4cbee14`): **0 frames ERASED**, 2
+    sections, entrance NO · 5.0/5.0 (`d941ecc`): 287 frames, 4 sections, entrance
+    **YES**. 200s over-segmentation repro: 12 sections with 4.0/4.0/7.0s slivers +
+    a cap-induced 64s super-block → **9 sections, no slivers, cap never binds**
+    (identical at Commit-1 and Commit-2).
+  - **Commits / base:** **TWO implementation commits — AT the ≤2 contract limit**:
+    `4cbee14` (Commit-1 — the calibration; 2 files, +133/−16) + `d941ecc`
+    (Commit-2 — the gap-fill floor; 2 files, +130/−2), atop set-active `6c81090`
+    (metadata-only) atop `e3d633c` (the P-060 close + HANDOFF tip). HEAD =
+    `a96a4cc` (docs: design3→design4 handoff-integrity audit, documentation only).
+    Branch `claude/logic-mix-os-p061-detector-0dvr2t`. Verified `git merge-base
+    HEAD 9cfe990` = **`9cfe990`**. **PUSHED to the dev branch under the standing
+    pre-gate go; NO PR exists; default UNTOUCHED at `9cfe990`.**
+  - **Proof detail:** safety grep `"inferred"` → **ZERO files**; the frozen set is
+    **byte-identical across `e3d633c..HEAD`** (`pipeline.py`,
+    `doctrine_engine.py`, `masking_analyzer.py`, `onramp.py`, `pyproject.toml`,
+    all `fixtures/*/golden`, all `examples/`); **no new dependency**
+    (`section_detector.py` imports only `typing`, `numpy`, first-party); no
+    dangerous patterns, no debug leftovers. **Non-vacuity by monkeypatch (no
+    committed edit):** neutering `_cap_sections` → `assert 16 == 12` **SOLE
+    failure**; neutering `_merge_short_sections` → `assert 4.0 >= 7.0-1e-6`
+    **SOLE failure**; reverting `_GAP_SEC` to 0.5 → **EXACTLY 4 failures in
+    `TestPhrasedPartSurvives`, nothing else**. **Re-pin surface: ONE file only** —
+    `test_section_detector.py` **10 → 22** (2 re-pinned, 12 net-new);
+    `test_onramp_scaffold.py` has **ZERO** re-pins (29 tests, untouched) — well
+    inside the packet's "up to 15 across 2 files" bound. UI smoke **N/A**
+    (analyzer/engine packet).
+  - **Reviewer's `_GAP_SEC = 5.0` adjudication (ACCEPTED, and it REFUTED the
+    "[1.5, 6.5] all fix it equally" framing):** `_debounce` fills **THEN** drops,
+    so erasure occurs exactly when **phrases < MIN_RUN and rests > GAP**. At
+    `_GAP_SEC = 1.5` an **erasure window stays OPEN** for rests in (1.5s, 5.0s) —
+    and a **1-bar rest at 120bpm is 2.0s, a 2-bar rest at 96bpm is 5.0s**. Lower
+    plateau values fix the **PROBE**; only **`_GAP_SEC >= _MIN_RUN_SEC` fixes the
+    CLASS**, making fragment-then-erase **structurally impossible**. **Accepted
+    cost, named:** the lost boundary class is the re-entry of a 1.5–5s dropout at
+    which NO other stem changes state (the classic drum-drop-before-chorus).
+    Accepted because the loss is **LOCAL under-segmentation** while erasure is
+    **GLOBAL and silent** (an erased stem corrupts every boundary and hits the
+    lead vocal precisely because phrasing-with-rests is what vocals do); in
+    practice other stems move at the same frame; and the residual boundary was an
+    artifact of `_merge_short_sections` dropping ONE boundary rather than two.
+    Coupling ruled **SOUND** (independent literals + test-enforced invariant;
+    `round()` is monotone so the seconds-level invariant holds at any `H`).
+    `test_max_sections_cap` **non-vacuity SIGNED OFF, re-derived by hand** (15
+    entrances 10s apart over 160.0s; runs ≥ 40 frames vs MIN_RUN 20; entrances 40
+    frames apart vs CLUSTER_WIN 8; sections 40 frames vs the 28-frame floor so the
+    merge is a genuine no-op; pre-cap 16 > MAX 12 so the **cap BINDS**; `==` is
+    the CORRECT assertion — `_cap_sections`'s post-condition — not a brittle
+    over-pin). **Product Trajectory: SERVES honest labelling** — labelling/tagging/
+    primacy untouched; the change is to **what COUNTS as an arrangement event**, a
+    principled definition rather than a knob; the tell is that Commit-2
+    **DISCOVERS a new correct boundary** rather than merely suppressing failures
+    ("tuning-until-quiet does not discover new correct boundaries").
+  - **Residue (three NON-BLOCKING reviewer items + two carry-forwards):** (1)
+    `section_detector.py:199`'s inline comment "a breath / rest must not toggle a
+    stem off" is **STALE** for a 5.0s window (lines 57–79 carry the real
+    semantics); (2) `test_gap_fill_does_not_outgrow_the_section_floor`'s companion
+    BEHAVIOURAL test uses `rest = MIN_SECTION_SEC + 1.0` so it guards ~8.0s rather
+    than the stated 7.0s ceiling (the invariant assertion covers the stated bound,
+    so the pair is adequate — but the behavioural test is looser than its
+    docstring); (3) **`MIN_SECTION_SEC = 7.0` carries only 1.0s margin** over a
+    genuine 4-bar section at 120bpm (7.0s ≈ 3.5 bars) — a **fixture-shaped
+    constant, the one most likely to need revisiting on real material with tempo
+    drift**. Carried forward: a **spacing-aware `_cap_sections`** is the named
+    future packet that would let `MAX_SECTIONS` drop; and **★ the pytest `-q`
+    trap** — `pyproject` sets `addopts = "-q"`, so invoking `pytest -q` **silently
+    suppresses the summary count line while still exiting 0** (use bare `python3
+    -m pytest` or `-o addopts=""`); this plausibly contributed to the earlier gate
+    producing no usable output.
+  - **Open gates (NONE advanced by this close):** **the merge of P-060 to default
+    is still THE open user gate** (default remains `9cfe990`; would be **PR #38**);
+    **P-061's own merge is a SEPARATE later gate — P-061 is CLOSED as a packet but
+    NOT merged, and no PR exists**; Thread B (vendored Build OS → ClaudeOrchestrator
+    `7ef50e8`) diagnosed, not applied, user picks (a) isolated PR or (b) fold into
+    the merge; **PR #12** still OPEN against the abandoned `main` base; **P-024**
+    delivered-but-never-formally-retired (P-051 shipped it, P-052 proved it E2E) —
+    **NOT retired here**; **HAPPY MAN RE-RUN #2** still the real-world confirmation
+    for **both** halves. Receipt:
+    `build-os/receipts/P-061-detector-over-segmentation-calibration.md`.
 - **★★★ P-060 MAKES THE DOCTRINE SCORING SECTION-COUNT-INVARIANT — THE FIX FOR THE
   "MASKED BY 48" CRATER (`analyze_masking` emits each masking conflict ONCE PER
   SECTION and six doctrine scorers counted the raw per-section total, so a conflict
@@ -5231,4 +5360,4 @@
   OWN map under this policy (hand-curated-documented → HIGH).
 
 ---
-_Updated by the archivist on close. **Last advanced on P-060 close (2026-07-07); state re-verified by the design3→design4 HANDOFF-INTEGRITY AUDIT (2026-07-26) at `d941ecc`.** ★ This footer previously read "Last advanced on P-038 close (2026-07-02)" and had gone STALE by 22 packets — it contradicted this file's own body (line ~853, "Last-closed = P-060") and advertised a long-resolved gate (the P-036/P-037/P-038 batch merge onto `dc921ec`, actually landed by merge `2c09428`). Corrected in place; no body content changed. **AUDITED ANCESTRY (evidence, not memory):** every PR merge #13–#37 is reachable from `d941ecc` (note #17/#18 use the wording "Merge pull request #NN", the rest "Merge PR #NN" — a grep for one form alone yields a FALSE gap); PR #22 = packet **P-043** (Curated Move Vocabulary Expansion, merge `80e9bd5`, head `12b24d1`) — PR-number ≠ packet-number, do not conflate; default `9cfe990` is an ancestor of HEAD, so this branch strictly contains all merged work. Receipts P-000→P-060 all present. **P-022 was deliberately never opened (recorded OPTIONAL/UNNEEDED).** **P-024 is delivered-but-never-formally-retired** — see residue. **IN FLIGHT: P-061** (see `build-os/packets/active_packet.md`) — built in 2 commits `4cbee14` + `d941ecc`, pushed to the dev branch, **NOT closed**: qa + reviewer never returned and there is **no receipt**. **OPEN USER GATE (unchanged): the merge of P-060 to default.**_
+_Updated by the archivist on close. **Last advanced on P-061 close (2026-07-26) at `a96a4cc` on branch `claude/logic-mix-os-p061-detector-0dvr2t`; the prior footer read "Last advanced on P-060 close (2026-07-07); state re-verified by the design3→design4 HANDOFF-INTEGRITY AUDIT (2026-07-26) at `d941ecc`" — the audit facts below are PRESERVED verbatim in substance and still hold.** P-061 closed with **BOTH formal gates GREEN**: qa (suite **1426 / 0 / 0**; regression **93/93, `critical_failures == []`**; **independent detached Commit-1 isolation at `4cbee14` → 1420 / 0 / 0** — the item the earlier stalled dispatch never delivered; safety grep `"inferred"` ZERO files) + reviewer **PASS, no must-fix (single-reviewer only — `codex` is NOT installed, so NO second model reviewed the diff)**. Two implementation commits `4cbee14` + `d941ecc` — **AT the ≤2 limit** — atop set-active `6c81090` atop `e3d633c`. **THREE PACKET TARGETS WERE REFUTED BY MEASUREMENT** (`MIN_SECTION_SEC` ~8–10 → 7.0; `_MIN_RUN_SEC` ~1.5 → 5.0 because 1.5s is provably INERT; `MAX_SECTIONS` ~8 → **left at 12** because a spacing-blind `_cap_sections` MANUFACTURES super-blocks when it binds) and **Commit-1 shipped a live regression (a phrased lead vocal ERASED, 235 frames → 0) that Commit-2 fixed, recorded honestly**. **AUDITED ANCESTRY (evidence, not memory — carried forward from the design3→design4 audit at `d941ecc`, still valid at `a96a4cc`):** every PR merge #13–#37 is reachable from HEAD (note #17/#18 use the wording "Merge pull request #NN", the rest "Merge PR #NN" — a grep for one form alone yields a **FALSE gap**); **PR #22 = packet P-043** (Curated Move Vocabulary Expansion, merge `80e9bd5`, head `12b24d1`) — **PR-number ≠ packet-number, do not conflate**; default `9cfe990` is an ancestor of HEAD, so this branch strictly contains all merged work. **Commit signing is IMPOSSIBLE in this container** (0-byte key, no private key anywhere) — any re-author must be scoped to `e3d633c`, **never** to `origin/<this-branch>`. Receipts P-000→**P-061** all present. **P-022 was deliberately never opened (recorded OPTIONAL/UNNEEDED).** **P-024 is delivered-but-never-formally-retired** — see residue; NOT retired by this close. **NO PACKET IN FLIGHT** — `build-os/packets/active_packet.md` is cleared; P-061 is CLOSED. **OPEN USER GATES (none advanced): the merge of P-060 to default** (default still `9cfe990`, would be **PR #38**); **P-061's own merge** (a SEPARATE later gate — closed as a packet, NOT merged, no PR exists); **Thread B** (vendored Build OS → ClaudeOrchestrator `7ef50e8`, diagnosed not applied); **PR #12** still OPEN against the abandoned `main` base; and the **HAPPY MAN RE-RUN #2**, still the real-world confirmation for BOTH halves of the fix._
