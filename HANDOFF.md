@@ -50,7 +50,8 @@ bugs the synthetic fixtures could not:
    **FIXED by P-060** (dual-green: suite 1414, regression 93/93). Closed, pushed,
    **merge still gated.**
 2. **Detector over-segmentation** (12 sections → fake `100/100`
-   contrast/dynamics) → **P-061, BUILT (not closed).**
+   contrast/dynamics) → **FIXED by P-061 — CLOSED 2026-07-26, dual-green.**
+   Pushed, **merge still gated** (a separate gate from P-060's).
 
 ### What P-061 actually shipped
 
@@ -73,18 +74,44 @@ boundary that neither the old nor the Commit-1 constants produced.
 Result on the 200s repro: **12 sections** (with 4s/4s/7s slivers and a cap-induced
 64s super-block) → **9 sections**, no slivers, cap never binds.
 
-### ★ P-061 is NOT closed
+### ★ P-061 is CLOSED — both gates green (2026-07-26)
 
-- **qa and reviewer never returned.** Dispatched against `4cbee14`, no verdict.
-- **There is no receipt, deliberately** — writing one would record a close that
-  did not happen.
-- Proof that DOES exist (coordinator, independently re-run at `d941ecc`): suite
-  **1426/0/0**, regression **93/93 `critical_failures == []`**, safety grep zero,
-  diff exactly 2 files, no golden/sample/mode-demo/core-logic/dependency change.
-- **Unsettled judgment call:** `_GAP_SEC = 5.0` widens P-059's original 0.5s
-  "breath" intent to "any absence under 5s is a rest inside a part". Plateau
-  **[1.0, 6.5]** is behaviourally identical; anything in **[1.5, 6.5]** fixes the
-  erasure. 5.0 is the only value that closes the asymmetry structurally.
+An earlier qa/reviewer dispatch against `4cbee14` stalled and never returned;
+both were re-run against the final implementation HEAD `d941ecc`.
+
+- **QA GREEN.** Suite **1426 passed / 0 failed / 0 warnings**; regression
+  **93/93, `critical_failures == []`**. **Commit-1 independently green in
+  isolation** (detached at `4cbee14`, fixtures regenerated: 1420 passed / 0
+  failed, regression 93/93) — the item the stalled gate never delivered. Safety
+  grep `"inferred"` zero files; frozen set byte-identical; no new dependency.
+  Non-vacuity proven by monkeypatch: neutering `_cap_sections` → `16 == 12` sole
+  failure; neutering `_merge_short_sections` → `4.0 >= 7.0` sole failure;
+  reverting `_GAP_SEC` → exactly 4 failures and nothing else.
+- **REVIEWER: pass**, no must-fix. **Single-reviewer only — `codex` is not
+  available, so no second model reviewed this diff.**
+- **Receipt:** `build-os/receipts/P-061-detector-over-segmentation-calibration.md`.
+
+### ★ The `_GAP_SEC = 5.0` ruling — ADJUDICATED AND ACCEPTED
+
+**A widely-repeated framing was wrong and is corrected here.** Earlier notes said
+"anything in [1.5, 6.5] fixes the erasure equally well." **It does not.**
+`_debounce` fills gaps THEN drops short runs, so erasure happens exactly when
+phrases `< MIN_RUN` **and** rests `> GAP`. At `_GAP_SEC = 1.5` an erasure window
+stays **open for rests in (1.5s, 5.0s)** — and a 1-bar rest at 120bpm is 2.0s, a
+2-bar rest at 96bpm is 5.0s. Lower plateau values fix the *probe*; only
+`_GAP_SEC >= _MIN_RUN_SEC` fixes the *class*, making fragment-then-erase
+structurally impossible (erasure would then require sub-floor bursts separated by
+super-floor rests — the definition of an ornament).
+
+**Accepted cost, named honestly:** the boundary class now lost is the re-entry
+point of a 1.5–5s dropout at which *no other stem changes state* — the classic
+drum-drop-before-chorus. Accepted because the loss is **local** under-segmentation
+whereas erasure is **global and silent** (an erased stem corrupts every boundary
+in the song, and hits the lead vocal precisely because phrasing-with-rests is what
+vocals do); because a real drop-before-chorus has other stems moving on the same
+frame so the boundary survives in practice; and because the residual boundary it
+replaces was an artifact of `_merge_short_sections` dropping one boundary rather
+than two.
 
 ### Environment — reproduce this or the corpus will appear broken
 
@@ -138,8 +165,9 @@ is already at `7ef50e8` and clean** — ready when called.
 ## Open decisions / founder gates
 
 1. **Merge P-060 to default?** Would be PR #38. (Recommended — it is the crater fix.)
-2. **Close out P-061** — run qa + reviewer against `d941ecc`, settle the `_GAP_SEC`
-   semantic call, then receipt. **Merge is a separate, later gate.**
+2. **Merge P-061 to default?** ✓ CLOSED 2026-07-26 (dual-green, receipt written);
+   **the merge itself is a separate, still-open gate.** It sits on top of P-060,
+   so merging P-060 first (or both together) is the natural sequence.
 3. **Orchestrator update** — isolated PR to default, or folded into the merge?
 4. **PR #12 is still OPEN against the abandoned `main` base** ("Hardening Packet
    11 — Typed LogicActionPayload Contract"). The only open PR on the repo; PRs
@@ -151,6 +179,23 @@ is already at `7ef50e8` and clean** — ready when called.
    P-023 asked for a **version-fingerprint guard** in the MCP layer and
    `grep fingerprint logic_mix_os/cowork_mcp/*.py` finds nothing.
 6. **HAPPY MAN RE-RUN #2** — the real-world confirmation for both halves.
+
+### Residue carried out of P-061 (non-blocking, recorded by the reviewer)
+
+- `section_detector.py:199` — the inline comment "a breath / rest must not toggle
+  a stem off" is **stale** for a 5.0s window; lines 57–79 carry the real semantics.
+- `test_gap_fill_does_not_outgrow_the_section_floor`'s companion *behavioural*
+  test uses `rest = MIN_SECTION_SEC + 1.0`, so it guards ~8.0s rather than the
+  stated 7.0s ceiling. The invariant assertion covers the stated bound.
+- **`MIN_SECTION_SEC = 7.0` has only 1.0s margin** over a genuine 4-bar section at
+  120bpm (7.0s ≈ 3.5 bars). A fixture-shaped constant — the one most likely to
+  need revisiting on real material with tempo drift.
+- **A spacing-aware `_cap_sections`** is the named future packet that would let
+  `MAX_SECTIONS` drop below 12.
+- ★ **The pytest `-q` trap:** `pyproject.toml` sets `addopts = "-q"`, so running
+  `pytest -q` silently suppresses the summary count line while still exiting 0.
+  Use bare `python3 -m pytest` (or `-o addopts=""`) to get counts. This plausibly
+  contributed to the earlier gate producing no usable output.
 
 Longer-horizon, all user-gated: ambient patience (Eno-deferral #2) · generative
 process (#3) · CLA/Halee/Timbaland textural weighting · the `<2 beds` fallback
