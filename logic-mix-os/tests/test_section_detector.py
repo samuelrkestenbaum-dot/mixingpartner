@@ -29,8 +29,12 @@ from conftest import ROOT
 
 from logic_mix_os.analyzers.audio_loader import LoadedAudio
 from logic_mix_os.analyzers.section_detector import (
+    H,
     MAX_SECTIONS,
     MIN_SECTION_SEC,
+    _GAP_SEC,
+    _MIN_RUN_SEC,
+    _activity_matrix,
     detect_sections,
 )
 from logic_mix_os.pipeline import analyze
@@ -248,6 +252,106 @@ class TestOverSegmentationCalibration:
         b = _detect(self._song(), self.DURATION, sr=self.SR)
         assert [(s.start, s.end, s.energy_tag) for s in a] == \
                [(s.start, s.end, s.energy_tag) for s in b]
+
+
+class TestPhrasedPartSurvives:
+    """P-061 Commit-2 — the persistence floor must not ERASE a phrased part.
+
+    The 5.0s persistence floor that removes 3-4s ornaments has a companion
+    hazard: ``_debounce`` fills short inactive gaps FIRST, then drops short
+    active runs. If the gap-fill is narrower than the persistence floor, a stem
+    that rests between phrases is fragmented into sub-floor runs and then every
+    run is dropped — the stem reads as NEVER ACTIVE and contributes nothing to
+    ``_novelty``.
+
+    A lead vocal singing 4.0s phrases separated by 1.2s breaths is exactly that
+    shape, and it is the single most structurally important element of a real
+    song. With a 0.5s gap-fill (2 frames) the 1.2s breaths (>2 frames) stay
+    open, the 4.0s phrases (16 frames) fall under the 20-frame floor, and the
+    vocal is erased entirely.
+
+    Closing the breaths is not damage control — it is the missing half of the
+    persistence floor. It makes the vocal ONE coherent run, which then clears
+    the floor and produces a TRUE boundary at the vocal entrance that neither
+    the pre-P-061 constants nor a narrow gap-fill ever found.
+    """
+
+    DURATION = 120.0
+    SR = 8000
+    PHRASE = 4.0
+    BREATH = 1.2
+    VOX_IN = 32.0
+    VOX_OUT = 104.0
+
+    def _vox_windows(self):
+        out, t = [], self.VOX_IN
+        while t + self.PHRASE <= self.VOX_OUT + 1e-9:
+            out.append((t, t + self.PHRASE))
+            t += self.PHRASE + self.BREATH
+        return out
+
+    def _song(self):
+        d, s = self.DURATION, self.SR
+        return {
+            "a_pad": _stem([(0, d)], d, sr=s, seed=1),
+            "b_drums": _stem([(16, d)], d, sr=s, seed=2),
+            "c_vox": _stem(self._vox_windows(), d, sr=s, seed=3),
+        }
+
+    def _vox_active_frames(self):
+        song = self._song()
+        n_frames = max(1, int(self.DURATION / H))
+        act = _activity_matrix([song[t] for t in sorted(song)], n_frames)
+        return int(act[sorted(song).index("c_vox")].sum())
+
+    def test_premise_this_stem_really_is_the_hazard_shape(self):
+        """NON-VACUITY GUARD: the fixture only exercises the erasure path while
+        each phrase is under the persistence floor and each breath is over the
+        gap-fill of the constants this test was written against (0.5s)."""
+        assert self.PHRASE < _MIN_RUN_SEC, (self.PHRASE, _MIN_RUN_SEC)
+        assert self.BREATH > 0.5, self.BREATH
+        assert len(self._vox_windows()) >= 10, self._vox_windows()
+
+    def test_phrased_vocal_is_not_erased(self):
+        """The regression: a phrased vocal must not read as never-active."""
+        frames = self._vox_active_frames()
+        assert frames > 0, "phrased vocal was erased entirely by the persistence floor"
+        # it should read as essentially the whole 32s -> 104s span, not scraps.
+        span = (self.VOX_OUT - self.VOX_IN) / H
+        assert frames >= 0.9 * span, (frames, span)
+
+    def test_phrased_vocal_entrance_is_a_boundary(self):
+        sections = _detect(self._song(), self.DURATION, sr=self.SR)
+        starts = [s.start for s in sections]
+        assert any(abs(st - self.VOX_IN) <= 1.0 for st in starts), starts
+
+    def test_phrased_vocal_is_one_block_not_phrase_confetti(self):
+        """The breaths must not become boundaries in their own right."""
+        sections = _detect(self._song(), self.DURATION, sr=self.SR)
+        entrance = [s for s in sections if abs(s.start - self.VOX_IN) <= 1.0]
+        assert entrance, [s.start for s in sections]
+        # the vocal block runs to its exit, not chopped at every breath.
+        assert entrance[0].end >= 100.0, (entrance[0].start, entrance[0].end)
+
+    def test_gap_fill_does_not_outgrow_the_section_floor(self):
+        """Upper bound: a gap-fill at/above MIN_SECTION_SEC would start welding
+        genuinely separate parts across real musical rests."""
+        assert _GAP_SEC < MIN_SECTION_SEC, (_GAP_SEC, MIN_SECTION_SEC)
+        # and the lower bound that makes fragment-then-erase impossible.
+        assert _GAP_SEC >= _MIN_RUN_SEC, (_GAP_SEC, _MIN_RUN_SEC)
+
+    def test_a_real_dropout_is_still_an_exit(self):
+        """The gap-fill must not swallow a genuine drop-out: a rest longer than
+        the section floor still produces a boundary."""
+        d = self.DURATION
+        rest = MIN_SECTION_SEC + 1.0
+        loaded = {
+            "a_pad": _stem([(0, d)], d, sr=self.SR, seed=1),
+            "b_vox": _stem([(20, 60), (60 + rest, d)], d, sr=self.SR, seed=3),
+        }
+        sections = _detect(loaded, d, sr=self.SR)
+        starts = [s.start for s in sections]
+        assert any(abs(st - 60.0) <= 1.0 for st in starts), starts
 
 
 class TestPipelineByteStability:

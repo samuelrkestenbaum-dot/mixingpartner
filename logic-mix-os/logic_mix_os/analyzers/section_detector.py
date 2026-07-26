@@ -43,7 +43,7 @@ ABS_FLOOR_DB = -50.0
 REL_RANGE_DB = 40.0
 
 # Debounce / hysteresis, expressed in seconds then resolved to frame counts so
-# the intent (~5.0s persistence, ~0.5s gap-fill, ~2.0s boundary cluster) is
+# the intent (~5.0s persistence, ~5.0s gap-fill, ~2.0s boundary cluster) is
 # legible and tracks H if H ever changes.
 #
 # P-061 — the persistence floor is the ORNAMENT/ARRANGEMENT line. At 0.5s a 3-4s
@@ -53,8 +53,32 @@ REL_RANGE_DB = 40.0
 # per-section dispersion the doctrine engine reads, pinned contrast/dynamics at
 # a fake 100/100. A stem presence too short to ever be its own section is not an
 # arrangement event — it is an ornament INSIDE one.
+#
+# _GAP_SEC IS THE COMPANION OF _MIN_RUN_SEC — DO NOT RAISE ONE WITHOUT THE OTHER.
+# ``_debounce`` fills short inactive gaps FIRST, then drops short active runs, so
+# a gap-fill NARROWER than the persistence floor creates a fragment-then-erase
+# asymmetry: a lead vocal singing 4.0s phrases separated by 1.2s breaths gets
+# fragmented into 16-frame runs, every run falls under the 20-frame floor, and
+# the vocal reads as NEVER ACTIVE. Measured on a 120s probe: at 5.0/0.5 the
+# vocal contributes 0 active frames and its entrance is invisible; at 5.0/5.0 it
+# is one coherent 287-frame run and its entrance becomes a true boundary.
+#
+# They are kept as INDEPENDENT literals rather than `_GAP_SEC = _MIN_RUN_SEC`
+# because _GAP_SEC is sandwiched by TWO bounds, and coupling it to only the
+# lower one would silently break the upper one:
+#
+#     _MIN_RUN_SEC  <=  _GAP_SEC  <  MIN_SECTION_SEC
+#          5.0            5.0            7.0
+#
+#   * lower  (>= _MIN_RUN_SEC): every rest too short to be a section boundary is
+#     filled, so fragment-then-erase is structurally impossible — a stem can only
+#     be erased if it truly appears in sub-floor bursts separated by super-floor
+#     rests, which is the definition of an ornament.
+#   * upper  (<  MIN_SECTION_SEC): gap-fill must not swallow a genuine drop-out.
+#     Measured — the shortest preserved exit holds at 7s for every gap-fill up to
+#     6.5s, then degrades to 8s at 7.0s and 9s at 8.0s as real exits get welded.
 _MIN_RUN_SEC = 5.0
-_GAP_SEC = 0.5
+_GAP_SEC = 5.0
 _CLUSTER_SEC = 2.0
 MIN_RUN = max(1, round(_MIN_RUN_SEC / H))       # a state change must persist >= this
 GAP = max(1, round(_GAP_SEC / H))               # inactive gaps <= this are filled
