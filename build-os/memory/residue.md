@@ -4369,3 +4369,90 @@ residue item 3 (“P-061's formal gates never ran / no receipt exists”) is
 now **SUPERSEDED**: both gates ran green against final HEAD and the receipt
 exists. Its item 4 (the `_GAP_SEC` semantic call) is now **RESOLVED** — see
 the adjudication above._
+
+
+---
+
+## ★ BOOKKEEPING PASS — P-024 retirement + PR #12 disposition (2026-07-26)
+
+Documentation-only. No product code touched, no packet opened, no PR created or
+closed, default unchanged. Follows the design3→design4 audit, which OPENED both
+of these as items; this pass RESOLVES one and records a recommendation on the
+other.
+
+### 1. P-024 — ★ RETIRED (superseded). Audit item 1 is now CLOSED.
+
+**Do not build P-024.** It was delivered in substance:
+- **P-051** shipped precisely what P-024 specified — its receipt reads *"an MCP
+  server wrapping the cowork registry"*.
+- **P-052** proved it end-to-end with a real MCP client session.
+- The adapter derives tool schemas from `describe_contract()`
+  (`cowork_mcp/adapter.py:158`) — exactly the reuse P-024 called for.
+
+The stale assertion in `current_state.md` (*"The ONLY remaining arc step is
+P-024 … the FINAL step"*) has been struck through in place with a retirement
+note. Struck, not deleted, so the audit trail survives.
+
+### 2. ★ BUT the version-fingerprint guard NEVER LANDED — this survives P-024's retirement as its own item
+
+P-023's reviewer watch-item asked for **"a hash of the contract surface"** so
+that contract drift would be detectable. **Verified absent, 2026-07-26:**
+
+```
+grep -rniE "sha256|hashlib|md5|blake2|fingerprint" \
+     logic_mix_os/cowork.py logic_mix_os/cowork_mcp/*.py \
+     tests/test_cowork_contract.py
+  -> ZERO hits
+```
+
+What exists instead is `API_VERSION = "1.0"` at `logic_mix_os/cowork.py:27` — a
+**hand-maintained literal**. Its only guard is
+`tests/test_cowork_contract.py::test_api_version_is_present_and_stable`:
+
+```python
+assert contract["api_version"] == API_VERSION
+assert isinstance(API_VERSION, str) and API_VERSION == "1.0"
+```
+
+**That is a TAUTOLOGY against the literal itself.** It pins the constant to its
+own value and the contract dict to that same constant — so it can never detect a
+change in the *contract surface*. Add a command, remove one, or change any
+command's params or `side_effect` classification, and `API_VERSION` remains
+`"1.0"` and the test still passes green.
+
+**Consequence: contract drift is currently UNDETECTED**, and the MCP tool
+schemas are derived from that same undetected-drift surface. Small blast radius
+today (the contract is stable and the roster is frozen), but it is a real hole in
+a guard the project believes it has.
+
+- **NOT covered by P-051/P-052** — they shipped the server, not the guard.
+- **Does NOT justify reviving P-024** — the arc is complete; this is a distinct,
+  much smaller concern.
+- **Candidate packet, user-gated, low priority:** replace the tautological
+  assertion with a stable hash over the sorted contract surface (command names +
+  params + side_effect), pinned as a golden. Failure mode becomes "you changed
+  the contract, bump `API_VERSION` and re-pin" — which is the guard P-023 asked
+  for.
+
+### 3. PR #12 — recommendation recorded, NOT actioned
+
+**Nothing was done to PR #12; it remains OPEN.** Deliberate: the real question is
+not *how* to close it but whether the typed `LogicActionPayload` work is still
+wanted, which is a product call for the founder, not bookkeeping.
+
+Facts: PR #12 ("Hardening Packet 11 — Typed LogicActionPayload Contract +
+Adapter") is the **only OPEN PR on the repo**, targets the **abandoned `main`
+base**, and predates the move to `claude/dreamy-turing-z0oxll` as default. Its
+siblings PRs #1–#11 from that era are **all CLOSED-unmerged**.
+
+**Recommendation: CLOSE it**, on the grounds that (a) every one of its
+contemporaries was closed unmerged, (b) its base branch is abandoned so it cannot
+merge as-is, and (c) the apply-to-Logic surface it serves is explicitly a
+re-gated FUTURE direction — the payload contract is not on any current path.
+**Counter-case:** if the typed-payload design is still wanted, rebase it onto the
+current default rather than closing, so the design work is not lost. Either way
+it should not simply keep sitting open.
+
+_Bookkeeping pass, documentation only. Audit item 1 resolved (P-024 retired, with
+the fingerprint guard split out as its own open item); audit item 2 (PR #12) left
+open with a recorded recommendation. No external mutation._

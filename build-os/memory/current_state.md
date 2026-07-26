@@ -4804,12 +4804,38 @@
   - **★ ARC STATUS:** P-019 ✓ (loop closeable inside cowork), P-020 ✓
     (self-describing session flow), **P-021 ✓ (MILESTONE — end-to-end drive +
     loop-close proven)**, **P-023 ✓ (option C step 1 — versioned self-describing
-    raw-CLI contract).** **The ONLY remaining arc step is P-024 (option C step 2 —
+    raw-CLI contract).** ~~**The ONLY remaining arc step is P-024 (option C step 2 —
     a thin MCP server wrapping the same registry, reusing `describe_contract`
-    metadata for tool schemas + the version-fingerprint guard) — the FINAL step.**
+    metadata for tool schemas + the version-fingerprint guard) — the FINAL step.**~~
     After P-024, the arc to the Cowork-usable final state is COMPLETE; landing the
     accumulated P-017-guard → P-024 work on default is the natural close
     (USER-GATED). **P-022 stays OPTIONAL / UNNEEDED.**
+
+    > **★★★ P-024 IS RETIRED — SUPERSEDED, NOT OUTSTANDING (2026-07-26).** The
+    > struck text above is STALE and misled the design3→design4 audit. **P-024 was
+    > DELIVERED IN SUBSTANCE and must NOT be built.** **P-051** shipped exactly what
+    > it specified — its receipt reads *"an MCP server wrapping the cowork
+    > registry"* — and **P-052** proved it end-to-end with a real MCP client
+    > session. The adapter derives its tool schemas from `describe_contract()`
+    > (`cowork_mcp/adapter.py:158`), which is the reuse P-024 called for. The arc
+    > IS complete; only this ledger said otherwise. Retired as bookkeeping, not as
+    > a packet — no code changed.
+    >
+    > **★ ONE GENUINE CARRY-FORWARD SURVIVES P-024's retirement — the
+    > version-fingerprint guard NEVER LANDED (verified 2026-07-26, evidence
+    > below).** P-023's reviewer watch-item asked for *"a hash of the contract
+    > surface"* so contract drift would be detectable. It does not exist:
+    > `grep -rniE "sha256|hashlib|md5|blake2|fingerprint"` over `cowork.py`,
+    > `cowork_mcp/*.py` and `tests/test_cowork_contract.py` returns **zero hits**.
+    > What exists instead is `API_VERSION = "1.0"`, a **hand-maintained literal**
+    > (`cowork.py:27`), guarded only by
+    > `test_cowork_contract.py::test_api_version_is_present_and_stable`, which
+    > asserts `contract["api_version"] == API_VERSION` and
+    > `API_VERSION == "1.0"` — **a TAUTOLOGY against the literal itself.** Add,
+    > remove, or change any command's params and `API_VERSION` stays `"1.0"` and
+    > that test still passes. **Contract drift is currently UNDETECTED.** This is a
+    > small, real, still-open item — it is NOT covered by P-051/P-052 and does not
+    > justify reviving P-024; it is a candidate packet of its own.
 
 
 - **★★ MILESTONE — P-021 PROVES THE COWORK SURFACE IS AGENT-DRIVABLE END-TO-END

@@ -171,13 +171,25 @@ is already at `7ef50e8` and clean** — ready when called.
 3. **Orchestrator update** — isolated PR to default, or folded into the merge?
 4. **PR #12 is still OPEN against the abandoned `main` base** ("Hardening Packet
    11 — Typed LogicActionPayload Contract"). The only open PR on the repo; PRs
-   #1–#11 from that era are all closed-unmerged. Almost certainly stranded —
-   **close it or rebase it.**
-5. **P-024 bookkeeping.** `current_state.md` and the P-023 receipt still call P-024
-   "the ONLY remaining arc step". **It was delivered by P-051 + P-052** and should
-   be formally retired. **Do not build it.** One genuinely unverified sub-item:
-   P-023 asked for a **version-fingerprint guard** in the MCP layer and
-   `grep fingerprint logic_mix_os/cowork_mcp/*.py` finds nothing.
+   #1–#11 from that era are all closed-unmerged. **Recommendation recorded, not
+   actioned** (2026-07-26): **close it** — every contemporary was closed unmerged,
+   its base is abandoned so it cannot merge as-is, and the apply-to-Logic surface
+   it serves is an explicitly re-gated FUTURE direction. **Counter-case:** if the
+   typed-payload design is still wanted, **rebase onto current default** rather
+   than closing, so the work isn't lost. Left open because this is a product call,
+   not bookkeeping.
+5. ~~**P-024 bookkeeping.**~~ ✓ **RETIRED 2026-07-26** — delivered by P-051
+   (the MCP server) + P-052 (E2E proof). **Do not build it.** The stale "ONLY
+   remaining arc step" claim is struck in `current_state.md`.
+   - ★ **But one item survived the retirement and is OPEN: the
+     version-fingerprint guard never landed.** Verified — zero hits for
+     `sha256|hashlib|md5|blake2|fingerprint` across `cowork.py`, `cowork_mcp/*.py`
+     and `tests/test_cowork_contract.py`. What exists is `API_VERSION = "1.0"`, a
+     hand-maintained literal whose only guard asserts `API_VERSION == "1.0"` —
+     **a tautology against itself.** Change any command's params and it still
+     passes, so **contract drift is currently undetected**, and the MCP tool
+     schemas derive from that same surface. Low priority, own packet: hash the
+     sorted contract surface and pin it as a golden.
 6. **HAPPY MAN RE-RUN #2** — the real-world confirmation for both halves.
 
 ### Residue carried out of P-061 (non-blocking, recorded by the reviewer)
