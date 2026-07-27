@@ -4456,3 +4456,93 @@ it should not simply keep sitting open.
 _Bookkeeping pass, documentation only. Audit item 1 resolved (P-024 retired, with
 the fingerprint guard split out as its own open item); audit item 2 (PR #12) left
 open with a recorded recommendation. No external mutation._
+
+
+---
+
+## ★ THREAD B CLOSED — vendored Build OS updated to ClaudeOrchestrator `7ef50e8` (2026-07-26)
+
+Applied via `install-project.sh` (the canonical path; **not** a hand-copy of the
+3 stale files, which would have broken on the missing `hook-once.sh` dependency).
+Config + docs only — **zero product code touched**.
+
+### ★ TWO HANDOFF CLAIMS DISPROVEN BY EVIDENCE
+
+1. **The "CLAUDE.md duplication" snag DOES NOT EXIST.** The handoff warned that
+   this repo's CLAUDE.md carries a hand-written Build OS section *without*
+   markers, so the installer would duplicate it. **False** — the markers are
+   present at CLAUDE.md lines 2 and 44 and the whole section sits inside them.
+   `install-project.sh` regex-strips the marked block and re-appends, reporting
+   `~ replaced CLAUDE.md Build OS block`. Verified after: exactly **1**
+   `BUILD-OS:START`, **1** `BUILD-OS:END`, **1** `## Build OS`. No dedupe was
+   needed and none was done.
+2. **The missing dependencies are NOT fatal — they degrade gracefully.** The
+   handoff implied copying the hooks would break on `install-accelerators.sh` /
+   `build-os/tools/specialist-handoff.sh`. Both call sites are **guarded**:
+   `prompt-router.sh` loops three candidate paths behind `[ -x ]` and is
+   documented "never fatal to the hook"; `session-start-build-os.sh` wraps the
+   accelerators call in `if [ -x "$ROOT/install-accelerators.sh" ]`. The ONLY
+   hard dependency is `hook-once.sh` (unconditionally `source`d) — and
+   `install-project.sh` **does** install it. That is precisely why the installer,
+   not a file copy, is the correct path.
+
+### Verified state-preservation (dry run into a scratch copy FIRST, then applied)
+
+All **70 receipts** intact; `current_state.md`, `residue.md`, `active_packet.md`
+and `tool_router.md` **byte-identical by MD5** before and after (the installer
+reports each as `= (exists, kept)`). P-041→P-061 history untouched.
+
+### What landed
+
+- **NEW** `.claude/hooks/hook-once.sh` — the hard dependency; per-session dedupe
+  guard for hook execution.
+- **NEW** `.claude/commands/capability-profile.md`.
+- **UPDATED** `.claude/agents/build-orchestrator.md` — the **capability-routing**
+  section: route to skills / `/` commands / MCP+connectors / other subagents as
+  first-class, treat the tool table as a *preference map not a whitelist*, and
+  the key refinement — **the orchestrator holds only Read/Grep/Glob/Bash, so it
+  must NAME the skill / command / `mcp__*` tool explicitly** for the main session
+  to run it. Also adds proportionate embedded lanes: a read-only answer or tiny
+  reversible edit "does not become a full packet merely because the orchestrator
+  exists."
+- **UPDATED** `.claude/hooks/session-start-build-os.sh` — prints an
+  **Available capabilities** inventory (MCP servers, plugins, skills, commands,
+  subagents) with an explicit *cache ≠ live* caveat.
+- **UPDATED** `.claude/hooks/prompt-router.sh` — specialist-handoff routing.
+- **UPDATED** CLAUDE.md managed block.
+
+Validated: all three hooks pass `bash -n`; `settings.json` is valid JSON with
+SessionStart + UserPromptSubmit wired; the session-start hook was smoke-run in
+this repo and emits the capability inventory correctly.
+
+### ★ NEW residue opened by this change
+
+1. **`/capability-profile` is DANGLING in this repo.** The command body says
+   *"Run `build-os/tools/capability-profile.sh` from the Build OS repository"* —
+   but `install-project.sh` does **not** install `build-os/tools/` (its four
+   scripts: `capability-profile.sh`, `skill-budget-audit.sh`,
+   `specialist-handoff.sh`, `supervise.sh`). So the command is only usable from a
+   ClaudeOrchestrator checkout, not from mixingpartner. Not breaking — nothing
+   auto-invokes it — but it is a `/` command that cannot run here. Decide later:
+   vendor `build-os/tools/`, or accept it as orchestrator-repo-only.
+2. **★ FIXED IN THIS PASS — an active-packet status-format mismatch.** The
+   session-start hook parses `grep -m1 '^- \*\*Status:\*\*'` — colon **outside**
+   the bold. The P-061 close wrote `- **Status: NONE ACTIVE.**` — colon **inside**
+   — so the hook reported `(status not declared)` and every session lost its
+   packet-state line. Corrected to `- **Status:** NONE ACTIVE.` and re-verified
+   the hook now prints it. **Archivist convention going forward: the status line
+   MUST be `- **Status:** <text>`** or session start goes blind to it. (P-060's
+   wording was correct; the P-061 close introduced the drift.)
+
+### ★ NOT YET IN EFFECT FOR FRESH SESSIONS
+
+This lands on the **dev branch only**. Fresh Claude Code web/remote tasks branch
+from **default** (`claude/dreamy-turing-z0oxll`), so the capability routing does
+NOT reach them until this is merged. Applying it here took the handoff's option
+**(b)** — folded into the dev branch — because the designated-branch constraint
+forbids pushing an isolated branch. Consequence to accept knowingly: a PR #38
+would now carry the P-060/P-061 product fix **and** this config update together.
+Splitting them is still possible on request.
+
+_Thread B applied 2026-07-26. Config + docs only; no product behavior touched; no
+PR created, no merge, default unchanged._

@@ -4,7 +4,7 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status: NONE ACTIVE.** **P-061 — Detector Over-Segmentation Calibration is
+- **Status:** NONE ACTIVE. **P-061 — Detector Over-Segmentation Calibration is
   CLOSED (2026-07-26)** with **BOTH formal gates GREEN**. Receipt:
   `build-os/receipts/P-061-detector-over-segmentation-calibration.md`.
 - **Do NOT open a new packet blind.** The next packet needs the user's explicit
