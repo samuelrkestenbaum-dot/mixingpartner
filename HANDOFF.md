@@ -197,7 +197,9 @@ is already at `7ef50e8` and clean** — ready when called.
 
 ## Open decisions / founder gates
 
-1. **Merge P-060 to default?** Would be PR #38. (Recommended — it is the crater fix.)
+1. ~~**Merge P-060 to default?**~~ ✓ **MERGED 2026-07-30** — PR #38 (`5d52253`)
+   carried P-060 + P-061 + P-062 + the Build OS capability-routing update to
+   default on the user's explicit "Both". Default is now `5d52253`.
 2. **Merge P-061 to default?** ✓ CLOSED 2026-07-26 (dual-green, receipt written);
    **the merge itself is a separate, still-open gate.** It sits on top of P-060,
    so merging P-060 first (or both together) is the natural sequence.
