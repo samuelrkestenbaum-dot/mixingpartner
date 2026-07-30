@@ -117,12 +117,13 @@ def test_proof01_initialize_handshake_over_the_wire(session):
 
 
 # =========================================================================== #
-# proof 2 — tools/list over the wire: 35 tools, each fully shaped.
+# proof 2 — tools/list over the wire: 36 tools, each fully shaped.
 # =========================================================================== #
 def test_proof02_tools_list_over_the_wire(session):
     resp = session.request("tools/list", {})
     tools = resp["result"]["tools"]
-    assert len(tools) == 35
+    # P-062 CONSCIOUS bump 35 -> 36 (render_execution_brief; derived tool).
+    assert len(tools) == 36
     for tool in tools:
         assert set(tool) == {"name", "description", "inputSchema"}
         assert tool["name"]

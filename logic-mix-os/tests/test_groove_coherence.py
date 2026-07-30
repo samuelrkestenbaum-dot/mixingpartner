@@ -99,11 +99,11 @@ BASE_COMPONENT_SCORES = {
         "vocal_centrality_score": 90.0,
         "depth_hierarchy_score": 65.3,
         "section_contrast_score": 82,
-        "static_mix_score": 64.0,
+        "static_mix_score": 72.0,
         "dynamic_mix_score": 23.4,
         "beat_identity_score": 52.7,
         "negative_space_score": 15.0,
-        "overall_mix_readiness_score": 70.7,
+        "overall_mix_readiness_score": 71.8,
     },
     "splice_loop_problem": {
         "physical_space_score": 81.3,

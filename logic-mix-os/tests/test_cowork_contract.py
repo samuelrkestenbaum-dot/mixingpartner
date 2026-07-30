@@ -6,7 +6,7 @@ instead of reverse-engineering an ad-hoc CLI. ``describe_contract`` returns a pu
 deterministic JSON document::
 
     {
-      "api_version": "1.0",
+      "api_version": "1.1",
       "invocation": "...",
       "commands": {
         "<name>": {"purpose", "phase", "params", "side_effect"}, ...
@@ -26,7 +26,8 @@ These tests are the binding guard for that contract:
     LIVE history channel; ``write_mix_decision`` writes the DEAD decision ledger).
   * Versioned + deterministic: ``api_version`` is a stable string; two calls are
     byte-identical.
-  * Registry count 34 -> 35 (no stale 34); ``describe_contract`` is registered.
+  * Registry count 35 -> 36 (P-062, CONSCIOUS: render_execution_brief);
+    ``describe_contract`` is registered.
 
 Pure in-memory data + JSON. No DAW / network / subprocess. Deterministic.
 """
@@ -218,7 +219,9 @@ def test_phase_is_session_flow_phase_or_auxiliary():
 def test_api_version_is_present_and_stable():
     contract = _contract()
     assert contract["api_version"] == API_VERSION
-    assert isinstance(API_VERSION, str) and API_VERSION == "1.0"
+    # P-062: MINOR bump 1.0 -> 1.1 per the registry's own semantic rule
+    # (additive change: render_execution_brief, 35 -> 36 commands).
+    assert isinstance(API_VERSION, str) and API_VERSION == "1.1"
 
 
 def test_invocation_string_is_present():
@@ -240,6 +243,8 @@ def test_describe_contract_output_is_jsonable():
 # --------------------------------------------------------------------------- #
 # Registry count.
 # --------------------------------------------------------------------------- #
-def test_registry_count_is_35():
-    assert len(COMMANDS) == 35
+def test_registry_count_is_36():
+    # P-062 CONSCIOUS bump 35 -> 36: render_execution_brief (read-only).
+    assert len(COMMANDS) == 36
     assert "describe_contract" in COMMANDS
+    assert "render_execution_brief" in COMMANDS

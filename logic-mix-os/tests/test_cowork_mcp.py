@@ -421,7 +421,9 @@ def test_dispatch_is_deterministic(base_args):
 # proof 17 — the existing Cowork registry is unchanged by the adapter.
 # =========================================================================== #
 def test_existing_cowork_registry_is_unchanged():
-    assert len(COMMANDS) == 35                            # no command added/removed
+    # P-062 CONSCIOUS bump 35 -> 36: render_execution_brief joined the registry
+    # (read-only, side_effect none); the adapter derives its tool automatically.
+    assert len(COMMANDS) == 36
     # the contract is still pure/deterministic and drives the whole surface
     c1 = run_command("describe_contract", {"result": None, "memory": None})
     c2 = run_command("describe_contract", {"result": None, "memory": None})

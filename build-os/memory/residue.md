@@ -4,6 +4,124 @@
 > the last packet but must not be forgotten. The orchestrator reads this to avoid
 > dropping threads; the archivist appends/clears it on close.
 
+## ★★★ STATUS (P-060 close, 2026-07-07): residue = accepted standing notes only — THE SCORING IS NOW SECTION-COUNT-INVARIANT (the "masked by 48" crater is FIXED: six doctrine scorers now dedup DISTINCT masking relationships instead of counting the raw per-section total); THIS WAS THE FIRST INTENTIONAL MOVE OF THE COMMITTED SCORING CORPUS (one authorized surgical dense correction, propagated to all dense-derived artifacts); P-061 (detector over-segmentation calibration) IS THE IMMEDIATE NEXT PACKET AND THE HAPPY MAN RE-RUN #2 CONFIRMS THE CRATER-FIX — BUT THE FAKE-100 CONTRAST/DYNAMICS PERSIST UNTIL P-061
+
+- **P-060 (SECTION-COUNT-INVARIANT DOCTRINE SCORING — the fix for the "masked by
+  48" crater a real 49-track session ["Happy Man", 12 detected sections] exposed:
+  `analyze_masking` emits each masking conflict ONCE PER SECTION and six doctrine
+  scorers counted `len(per-section events)` raw, so a conflict duplicated across N
+  sections was penalized N× — emotional_hierarchy/vocal_centrality → 0,
+  physical_space → 2, "masked by 48" = 4×12; opened on the user's "ok go"
+  2026-07-06: dedup distinct conflicts [FORK A] + accept the authorized surgical
+  dense corpus move; P-061 for detector calibration next) closed 2026-07-07:** qa
+  GREEN (suite 1405 → **1414 / 0 failed / 0 warnings**; +9 invariance tests;
+  regression **93/93, critical_failures == [], 0 warnings**; full suite green at
+  HEAD = the isolation proof) + reviewer PASS (no must-fix; single-model —
+  non-vacuity PROVEN by monkeypatching the helper back to `len()` → the exact
+  crater reproduces). Both gates independently re-ran the suite. **SINGLE ATOMIC
+  commit** `ae0b9fc` — "P-060: section-count-invariant doctrine scoring (dedup
+  distinct conflicts)" — **39 files, +327/−78** (1 source `doctrine_engine.py` +
+  1 new test `tests/test_section_count_invariance.py` [9 tests] + 1 golden + 22
+  mode-demo files + 14 re-pinned test files) — fix + all re-pins INSEPARABLE → one
+  commit, HEAD is the isolation proof; atop set-active `8034289` (metadata-only)
+  atop merge base `9cfe990` (= PR #37 — P-059 merged to default; the dev branch is
+  fast-forwarded onto it, so a P-060 PR carries only `ae0b9fc` + the close commit
+  — a clean single-packet PR). Verified `git merge-base HEAD 9cfe990` = `9cfe990`.
+  **THE FIX (FORK A = dedup distinct element-pairs, scorer-side, filter-THEN-dedup):**
+  a shared helper `_distinct_conflict_count(filtered) = len({frozenset(e["elements"])
+  for e in filtered})` applied AFTER each scorer's EXISTING classification/severity
+  predicate, in six scorers — `_physical_space` (width_crowding),
+  `_emotional_hierarchy` + `_vocal_centrality` (bad_masking incl. lead),
+  `_static_mix` (critical low_end_conflict), `_low_end_motion` (crit + mod — the
+  boolean `crit or mod` PRESENCE reads stay on the raw lists; only the multiplied
+  COUNTS dedup), `_vocal_role_fit` (`_lead_band_masking`/`_own_band_masking`).
+  Penalty COEFFICIENTS UNCHANGED — only the COUNT they multiply is deduped.
+  `_beat_identity` + `read_loop_context`/`_loop_context` LEFT UNTOUCHED (already
+  boolean `any(...)` — the correct pattern the fix emulates); `masking_analyzer.py`
+  UNTOUCHED — `masking_report.events` STAY per-section (plan detail preserved). The
+  `vocal_chop_groove` moderate/info ordering guardrail holds (severity filter runs
+  FIRST, then dedup). **THE NEW INVARIANCE GUARD** (`tests/test_section_count_invariance.py`,
+  9 tests): the SAME records scored at **1 vs 6 vs 12** sections → every
+  masking-driven component IDENTICAL across all three; a sanity test that
+  `analyze_masking` really emits N duplicate events yet distinct-count == 1; the
+  "masked by N" evidence uses distinct maskers (not maskers×sections); an
+  over-correction guard (a masker forward in only 1 of 12 sections still registers
+  ONCE — `specific < baseline` AND `specific == single-section`). **THE AUTHORIZED
+  CORPUS MOVE — ALL ONE CORRECTION** (dense's `(Kick, Bass)` critical low-end
+  emitted identically in both sections → distinct-count 2×→1×): dense golden
+  static_mix 64.0→72.0 / overall 70.7→71.8 (physical_space 67.6 / emotional 86.0 /
+  vocal_centrality 90.0 / vocal_role_fit 85.0 / winners / search_mode UNCHANGED);
+  low_end_motion 21.1→35.1 (5 differential/context pins); the **11 dense-DERIVED
+  mode-demo pairs** (22 files, `static_mix_score 64→72` ONLY — zero decision
+  change); the differential dense-column overalls for all 5 producers (halee_ramone
+  70.7→71.8, timbaland 52.6→54.2, quincy 60.4→61.6, eno 54.2→55.5, cla 59.6→61.5 +
+  eno/quincy pre-axis 14-term baselines). **PROVEN BYTE-IDENTICAL:** all 5 sample
+  trees (vocal_chop-derived; `test_sample_refresh` regen 0 mismatches across 30×5)
+  + the other 3 fixtures (simple/splice/vocal_chop — absent from the diff;
+  regression recomputes + compares). **`test_producer_profile.py` fixup (honest):**
+  four coefficient round-trips built DEGENERATE synthetic events (duplicate
+  `elements`, or width events with NO `elements` key — which would now KeyError);
+  replaced with realistic distinct element pairs so distinct-count == 2; every
+  `coeff × 2` assertion RHS UNCHANGED (real analyzer events always carry
+  `elements`). Safety grep 0 reach — NO producer-profile JSON / governance /
+  kill-switch / dropout / doctrine-weight change; NO new dependency;
+  `masking_analyzer.py` untouched. **PUSHED to the dev branch under the standing go
+  (pre-gate); NOT merged.** Receipt:
+  `build-os/receipts/P-060-section-count-invariant-scoring.md`.
+- **★ HONEST DEVIATION recorded (reviewer):** the packet's "Baseline to protect"
+  said **"mode demos UNCHANGED"** — but the 11 mode demos are DENSE-DERIVED, so
+  they CORRECTLY moved (`static_mix_score` only, zero decision/structural change).
+  This is the RIGHT behavior (stale-at-64 examples would be inconsistent with the
+  corrected pipeline) but is a DEVIATION from the packet's stated baseline. The
+  scope's "only dense moves / 5 sample trees don't move" was correct for the sample
+  trees + the other 3 fixtures; it simply UNDER-COUNTED the dense-DERIVED artifacts
+  (mode demos + differential dense-columns), which move by the SAME one correction.
+- **NEW accepted notes (P-060, recorded not fixed — non-blocking):**
+  1. **★ THE HAPPY MAN RE-RUN #2 (after P-060) — the crater is FIXED, but
+     over-segmentation REMAINS until P-061.** With P-060 the vocal/emotional/space
+     axes NO LONGER scale with section count (the "masked by 48" → "masked by 4"
+     correction). The user should pull P-060 + re-run to confirm the crater is
+     gone. BUT `section_contrast`/`dynamic_mix` will STILL read a ceiling-pinned
+     100/100 because the detector still over-segments to 12 sections — that is BUG
+     2, fixed by **P-061**. Expectation-set: **P-060 fixes the crater; P-061 fixes
+     the fake-100s.**
+  2. **P-061 — detector over-segmentation calibration is the immediate next
+     packet** (already scoped by the orchestrator: raise `MIN_SECTION_SEC` ~8-10s,
+     raise `MIN_RUN` ~1.5s, widen `CLUSTER` ~2s, lower `MAX_SECTIONS` ~8; adaptive
+     novelty floor only if needed; byte-stable for the whole scoring corpus,
+     re-pins only the ~10 detector tests).
+  3. **Latent semantic note (reviewer, non-blocking, NOT a defect):** the score no
+     longer distinguishes a conflict spanning the WHOLE song from one local to a
+     single section. NOT lossy at the data level — per-section
+     `masking_report.events` are preserved — so a future packet could add
+     breadth/severity weighting from the still-available events without
+     re-plumbing. Low priority.
+  4. **Prior standing notes + named lessons retained** (the banners below): the
+     P-059 detector-fails-safe note is now SUPERSEDED by the real-audio finding
+     that it OVER-segments (→ P-061); the Eno/Quincy `<2 beds` neutral-fallback
+     calibration knob; the two remaining Eno-deferral analyzers (ambient patience
+     #2, generative process #3); CLA-deferred textural (Halee/Timbaland textural
+     still needs grounding); the real Cowork host connection (manual); the ★★
+     groove-carrier trajectory watch-item; the safety line.
+- **Open boundary:** P-060's commit `ae0b9fc` pushed to the dev branch BEFORE
+  qa/reviewer under the orchestrator's standing go; **the MERGE of P-060 (`ae0b9fc`
+  + the close commit) atop `9cfe990` (= PR #37) — a clean single-packet PR (the
+  branch is fast-forwarded onto default) — is the OPEN USER GATE**, awaiting the
+  user's explicit word. No deploy/publish/secrets touched.
+- **NEXT: P-061 STAGED (scoped, not opened) — nothing else opened blind.** The
+  orchestrator PRESENTS the open directions, ALL user-gated, with **P-061 (detector
+  over-segmentation calibration)** now the highest-value item — the OTHER half of
+  the Happy Man fix — alongside the **HAPPY MAN RE-RUN #2 (pull P-060 → confirm the
+  crater is gone; contrast/dynamics still fake-100 until P-061)**: the P-060 merge ·
+  ambient patience (Eno-deferral #2) · generative process (Eno-deferral #3) · CLA
+  textural opt-in · Halee/Timbaland textural weighting (needs grounding) · the
+  Eno/Quincy `<2 beds` neutral-fallback calibration · a breadth/severity-weighting
+  pass from the still-available per-section masking events (note 3, low priority) ·
+  the real Cowork host connection (manual) · a sixth producer (roster frozen at
+  five — WHO + grounding) · apply-to-Logic (FUTURE, EXPLICITLY re-gated — never
+  auto; the safety line stands) · anything else the user calls. Do NOT open
+  anything blind.
+
 ## ★★★ STATUS (P-059 close, 2026-07-06): residue = accepted standing notes only — THE ENGINE NOW DETECTS SECTION STRUCTURE FROM THE AUDIO WHEN A MANIFEST SUPPLIES NONE (guarded, byte-stable for the whole scoring corpus; honest structural+energy labels); THE HAPPY MAN RE-RUN (AUTO-SECTIONS) IS THE IMMEDIATE NEXT REAL VALIDATION STEP — NEEDS THE USER TO PULL P-059 + RE-RUN (the standing TOP open item)
 
 - **P-059 (AUDIO-DRIVEN SECTION DETECTION — the fix for the Happy Man "whole song
@@ -3984,4 +4102,505 @@
   No push / merge / deploy / secret action taken in this close.
 
 ---
-_Append-only working notes. Last advanced on P-038 close (2026-07-02) — residue sweep 2 of 2 (naming/prose) resolves the six items (each marked ✓ in place; the TRAILER-SPEC note resolved in Fable 5's favor for the batch); ★★★ THE RESIDUE LIST IS ZERO — accepted standing notes only (the `examples/sample_output/` doc-refresh decision; the duplicated trailer block in `7b9eda7`'s raw message; the push-state observation), with the two named lessons retained for posterity (raw-dict NaN comparisons fail open; defense claims need mutation tests). **THE OPEN USER GATE: the batch merge — P-036 + P-037 + P-038 (+ closes) onto merge base `dc921ec` (= PR #18) — on the user's explicit word.**_
+_Append-only working notes. **Last advanced on P-060 close (2026-07-07); re-verified and extended by the design3→design4 HANDOFF-INTEGRITY AUDIT (2026-07-26) at `d941ecc`.**_
+
+---
+
+## ★ HANDOFF-INTEGRITY AUDIT — design3 → design4 (2026-07-26, at `d941ecc`)
+
+Evidence-based (git ancestry + GitHub PR ledger), not chat memory. The previous
+footer here claimed "Last advanced on P-038 close (2026-07-02)" and advertised
+**THE OPEN USER GATE: the batch merge — P-036 + P-037 + P-038 onto `dc921ec`**.
+That gate was resolved 22 packets ago by merge `2c09428`. Stale text corrected;
+no prior note edited or deleted (this file is append-only).
+
+### Verified carried over — nothing missing
+- Every PR merge **#13 → #37** is reachable from `d941ecc`. **Trap for future
+  audits:** #17/#18 are worded `Merge pull request #NN`, all others
+  `Merge PR #NN`; grepping one form alone reports a FALSE gap.
+- **PR #22 = packet P-043**, NOT packet P-022 (merge `80e9bd5`, head `12b24d1`,
+  merged 2026-07-03, base `claude/dreamy-turing-z0oxll` @ `17cc270`). PR numbers
+  and packet numbers are different sequences and have drifted ~21 apart — never
+  conflate them.
+- Default `9cfe990` is an ancestor of HEAD → the branch strictly contains all
+  merged work. Receipts **P-000 → P-060** all present (62 receipts + AUDIT + README).
+- P-060's three commits (`8034289`, `ae0b9fc`, `bb126cc`) + `e3d633c` (HANDOFF)
+  carried intact and byte-identical to the pushed `hardening-12` branch.
+
+### ★ NEW residue items opened by this audit
+1. **P-024 is DELIVERED-BUT-NEVER-FORMALLY-RETIRED — bookkeeping debt.**
+   `current_state.md` (~line 4678) and the P-023 receipt both still assert *"The
+   ONLY remaining arc step is P-024 (a thin MCP server wrapping the same registry)
+   — the FINAL step."* But **P-051** shipped exactly that (its receipt: *"an MCP
+   server wrapping the cowork registry"*) and **P-052** proved it end-to-end. The
+   arc IS complete; only the ledger says otherwise. **Do not build P-024.** It
+   needs a retirement note or a superseded-by marker, which is a packet-close
+   action and so is left for the archivist rather than taken here.
+   - **Sub-item, genuinely unverified:** P-023's carry-forward asked for a
+     **version-fingerprint guard** in the MCP layer. `grep -n fingerprint
+     logic_mix_os/cowork_mcp/*.py` returns **no hits**, so there is no evidence it
+     ever landed. Unknown, not closed — verify before claiming the arc is whole.
+2. **PR #12 is still OPEN against the abandoned `main` base** ("Hardening Packet
+   11 — Typed LogicActionPayload Contract"). It predates the move to
+   `claude/dreamy-turing-z0oxll` as default; PRs #1–#11 from that era are all
+   CLOSED-unmerged. #12 is almost certainly stranded rather than live, but it is
+   the only OPEN PR on the repo and no note anywhere records a decision on it.
+   **User gate: close it or rebase it.**
+3. **P-061's formal gates never ran.** qa and reviewer were dispatched against
+   `4cbee14` and never returned. The packet is proven only by the builder's own
+   run plus the coordinator's independent re-verification at `d941ecc` (suite
+   1426/0/0, regression 93/93 `critical_failures == []`, safety grep zero,
+   two-probe behavioral check). That is real evidence but it is **not the Build OS
+   proof gate** — qa's independent Commit-1-isolation and the reviewer's verdict
+   are both absent. **No receipt exists and none should be written until they run**
+   — writing one now would record a close that did not happen.
+4. **The 5.0s gap-fill is an unresolved SEMANTIC judgment call, not just a
+   number.** `_GAP_SEC` 0.5 → 5.0 makes the detector treat *any* absence under 5s
+   as a rest inside a part — the deliberate mirror of "any presence under 5s is an
+   ornament", and it is what makes fragment-then-erase structurally impossible
+   rather than merely improbable. But it is a real widening of P-059's original
+   0.5s "breath" intent. Measured plateau **[1.0, 6.5]** is behaviourally
+   identical across the whole corpus, with the ceiling at 7.0s (`MIN_SECTION_SEC`)
+   where genuine exits start getting welded. **Anything in [1.5, 6.5] fixes the
+   erasure equally well** — 5.0 is the only value that also closes the asymmetry
+   structurally. Flagged for the reviewer; NOT settled.
+5. **Commits cannot be signed in the web/remote container.** `commit.gpgsign=true`
+   and `gpg.format=ssh` are set globally with the key at
+   `/home/claude/.ssh/commit_signing_key.pub`, but that file is **0 bytes** and no
+   private key exists anywhere on the filesystem. Committer email is already
+   correct (`noreply@anthropic.com`), so GitHub's "Unverified" badge is purely the
+   missing signature and **`--reset-author` cannot fix it**. ★ Do NOT act on a
+   stop-hook suggestion to rebase against `origin/<this-branch>` — that base
+   predates P-060 and would rewrite `e3d633c`/`bb126cc`/`ae0b9fc`/`8034289`,
+   forking P-060 away from its pushed branch and damaging the open merge gate. If
+   re-authoring is ever wanted, scope it to `e3d633c`.
+
+### Standing gates re-confirmed OPEN (none advanced by this audit)
+- **The merge of P-060 to default** (`ae0b9fc` + `bb126cc` atop `9cfe990`) — would
+  be PR #38. Untouched: default is still at `9cfe990`.
+- **Thread B — the vendored Build OS `.claude/` update to ClaudeOrchestrator
+  `7ef50e8`.** Diagnosed in HANDOFF.md, still not applied. The local
+  ClaudeOrchestrator checkout IS already at `7ef50e8` and clean, so it is ready
+  when called. User must still pick: (a) isolated PR to default, or (b) fold into
+  the dev→default merge.
+- **HAPPY MAN RE-RUN #2** — still the real-world confirmation for both halves.
+
+_Audit performed at `d941ecc`; documentation-only, no product behavior touched._
+
+
+---
+
+## ★★★ STATUS (P-061 close, 2026-07-26): BOTH FORMAL GATES GREEN — THE DETECTOR NOW EMITS HONEST MUSICAL SECTIONS AND THE FAKE 100/100 CONTRAST/DYNAMICS IS DEAD (the OTHER HALF of the Happy Man fix; P-060 fixed the masking crater). THREE PACKET TARGETS WERE REFUTED BY MEASUREMENT. COMMIT-1 SHIPPED A LIVE REGRESSION THAT COMMIT-2 FIXED. NOTHING WAS MERGED — EVERY OPEN GATE BELOW REMAINS OPEN.
+
+- **P-061 (DETECTOR OVER-SEGMENTATION CALIBRATION) closed 2026-07-26 at `a96a4cc`
+  on branch `claude/logic-mix-os-p061-detector-0dvr2t`.** On a real 49-track song
+  the audio-driven detector emitted **12 micro-sections**, inflating `_dynamic_mix`
+  (`doctrine/doctrine_engine.py:394`, `pstdev` of per-section rms/width/crest) and
+  `_section_contrast` (`:351`, `contrast_vs_previous` lift-fail counting) to a
+  ceiling-pinned **fake 100/100**. **qa GREEN:** suite **1426 passed / 0 failed / 0
+  warnings** (1414 pre-P-061 baseline + **12 net-new**); regression **93/93,
+  `critical_failures == []`, `warnings == []`**; **★ INDEPENDENT COMMIT-1
+  ISOLATION** — detached at `4cbee14` from a clean tree with an empty stash,
+  fixtures regenerated per the P-025 env fact → **1420 passed / 0 failed / 0
+  warnings**, regression 93/93, returned to the branch cleanly (**this is the item
+  the earlier stalled dispatch never delivered**); safety grep `"inferred"`
+  → **ZERO files**; frozen set **byte-identical across `e3d633c..HEAD`**
+  (`pipeline.py`, `doctrine_engine.py`, `masking_analyzer.py`, `onramp.py`,
+  `pyproject.toml`, all `fixtures/*/golden`, all `examples/`); **no new dependency**;
+  no dangerous patterns, no debug leftovers. **Non-vacuity by monkeypatch (no
+  committed edit):** neutering `_cap_sections` → `assert 16 == 12` **SOLE
+  failure**; neutering `_merge_short_sections` → `assert 4.0 >= 7.0-1e-6`
+  **SOLE failure**; reverting `_GAP_SEC` to 0.5 → **EXACTLY 4 failures in
+  `TestPhrasedPartSurvives`, nothing else**. **Re-pin surface: ONE file** —
+  `test_section_detector.py` **10 → 22** (2 re-pinned, 12 net-new);
+  `test_onramp_scaffold.py` **ZERO** re-pins (29 tests, untouched). **reviewer
+  PASS, no must-fix — SINGLE-REVIEWER ONLY: `command -v codex` returns
+  nothing, so NO second model reviewed this diff.** Two implementation commits
+  `4cbee14` + `d941ecc` — **AT the ≤2 contract limit** — atop
+  set-active `6c81090` atop `e3d633c`; HEAD `a96a4cc` is the documentation-only
+  design3→design4 audit commit. `git merge-base HEAD 9cfe990` = **`9cfe990`**.
+  Pushed to the dev branch under the standing pre-gate go; **NO PR; default
+  UNTOUCHED.** Receipt:
+  `build-os/receipts/P-061-detector-over-segmentation-calibration.md`.
+  - **Constants as SHIPPED (seconds-level ONLY — frame integers stay DERIVED
+    via `max(1, round(_X_SEC/H))`, `H = 0.25`):** `_MIN_RUN_SEC` **0.5 → 5.0**
+    (`MIN_RUN` 2 → 20 — **THE load-bearing change**) · `_GAP_SEC`
+    **0.5 → 5.0** (`GAP` 2 → 20, Commit-2) · `_CLUSTER_SEC` **1.0
+    → 2.0** (`CLUSTER_WIN` 4 → 8, **proven inert**) ·
+    `MIN_SECTION_SEC` **4.0 → 7.0** (16 → 28) · `MAX_SECTIONS`
+    **12 → 12, UNCHANGED**. **Live invariant asserted by test:
+    `_MIN_RUN_SEC <= _GAP_SEC < MIN_SECTION_SEC` (5.0 <= 5.0 < 7.0).** 200s repro:
+    12 sections with 4.0/4.0/7.0s slivers + a cap-induced 64s super-block →
+    **9 sections, no slivers, cap never binds** (identical at both commits).
+
+### ★★★ THREE PACKET TARGETS REFUTED BY MEASUREMENT (the headline finding — treat every future packet's numeric targets as unmeasured shorthand)
+
+1. **`MIN_SECTION_SEC` ~8–10 → shipped 7.0.** 8.0 is **knife-edge**:
+   measured jitter tolerance **0.00s** against the 32-frame (8.0s) synthetic
+   sections; **9/10 destroy the arrangement tests**. 7.0 gives **0.40s** margin.
+2. **`_MIN_RUN_SEC` ~1.5 → shipped 5.0.** **1.5s is provably INERT** —
+   the ornaments are **3–4s** — so **the packet's own target would not
+   have fixed the bug at all.**
+3. **`MAX_SECTIONS` ~8 → LEFT AT 12.** `_cap_sections` sorts survivors by
+   novelty with **NO spacing term**, so whenever it binds it **MANUFACTURES the
+   very artifact the packet removes**: MAX=8 produced an **80s super-block**,
+   MAX=10 a **60s** one — both **worse than the 64s bug being fixed**. The
+   correct fix is a **spacing-aware `_cap_sections` = a SEPARATE FUTURE PACKET**.
+   Reviewer ruled holding the cap **CORRECT ENGINEERING, not scope evasion**.
+
+### ★★★ COMMIT-1 SHIPPED A LIVE REGRESSION THAT COMMIT-2 FIXED (recorded honestly)
+
+Commit-1 raised the persistence floor to 5.0s but **left gap-fill at 0.5s**. A
+lead vocal in **4.0s phrases with 1.2s breaths** fragments into 16-frame runs,
+every one dying under the 20-frame floor — **the vocal is ERASED from
+arrangement detection entirely** (235 active frames → **0**). **Found by
+coordinator probe, NOT by the suite**: Commit-1 was green in isolation only
+because **no test covered the phrased-part shape**. The reviewer's phrasing:
+**“Commit-1's isolation-greenness was true but blind.”** Commit-2 does
+**not** merely undo the damage — at 5.0/5.0 the vocal survives (**287**
+frames) **AND** yields a **TRUE vocal-entrance boundary at 32s that NEITHER the
+pre-P-061 constants NOR Commit-1 achieved**, while removing pre-P-061 phrase
+confetti at 52.75/67.25/78.75s.
+
+| `_MIN_RUN_SEC`/`_GAP_SEC` | vox frames after debounce | sections | entrance @32s |
+|---|---|---|---|
+| 0.5 / 0.5 (pre-P-061) | 235 | 6 | NO |
+| 5.0 / 0.5 (`4cbee14`) | **0 — ERASED** | 2 | NO |
+| 5.0 / 5.0 (`d941ecc`) | **287** | 4 | **YES** |
+
+**Lesson to carry:** an isolation-green Commit-1 proves only what the suite
+covers. When a packet changes a *threshold on a signal shape*, probe the shape the
+tests do not contain.
+
+### ★ `_GAP_SEC = 5.0` — ADJUDICATED AND SETTLED (residue item 4 of the design3→design4 audit is now RESOLVED, not deleted)
+
+The reviewer **REFUTED the earlier “[1.5, 6.5] all fix it equally”
+framing** that this file recorded as unsettled. `_debounce` fills **THEN** drops,
+so erasure occurs exactly when **phrases < MIN_RUN and rests > GAP**. At
+`_GAP_SEC = 1.5` an **erasure window stays OPEN** for rests in (1.5s, 5.0s) —
+and a **1-bar rest at 120bpm is 2.0s; a 2-bar rest at 96bpm is exactly 5.0s**.
+Lower plateau values fix the **PROBE**; only **`_GAP_SEC >= _MIN_RUN_SEC` fixes
+the CLASS**, making fragment-then-erase **structurally impossible** (erasure would
+then require sub-floor bursts separated by super-floor rests — the definition
+of an ornament). **ACCEPTED COST, named honestly:** the lost boundary class is the
+**re-entry point of a 1.5–5s dropout at which NO other stem changes state**
+(the classic drum-drop-before-chorus). Accepted because (1) the loss is **LOCAL
+under-segmentation** while erasure is **GLOBAL and silent** — an erased stem
+corrupts every boundary in the song and hits the **lead vocal** precisely because
+phrasing-with-rests is what vocals do; (2) in practice a real drop-before-chorus
+has other stems moving at the same frame, so the boundary survives, and the
+genuinely-lost case is an ornament inside a part; (3) the residual boundary was an
+artifact of `_merge_short_sections` dropping ONE boundary rather than two —
+leaning on it would be relying on an implementation accident. **Coupling ruled
+SOUND** (independent literals + test-enforced invariant): `_GAP_SEC =
+_MIN_RUN_SEC` would auto-satisfy the lower bound while **silently breaching the
+upper one** if `_MIN_RUN_SEC` were ever raised; and `round()` is **monotone**, so
+the seconds-level invariant guarantees `GAP >= MIN_RUN` at **any** `H`.
+`test_max_sections_cap` **non-vacuity SIGNED OFF, re-derived by hand**: 15
+entrances 10s apart over 160.0s; every run ≥ 40 frames vs MIN_RUN 20;
+entrances 40 frames apart vs CLUSTER_WIN 8; sections 40 frames vs the 28-frame
+floor so the merge is a **genuine no-op**; pre-cap boundary count **16 >
+MAX_SECTIONS 12** so the **cap BINDS**; `==` is the **CORRECT** assertion (it is
+`_cap_sections`'s post-condition, written in terms of the constant) — `<=` is
+exactly the shape that let this test rot silently once.
+
+### ★ NEW residue items opened by P-061 (all NON-BLOCKING — recorded, NOT a re-review loop)
+
+1. **Stale inline comment.** `logic_mix_os/analyzers/section_detector.py:199` —
+   “a breath / rest must not toggle a stem off” is **STALE for a 5.0s
+   window**; the block at lines **57–79** carries the real semantics.
+2. **Behavioural test looser than its docstring.**
+   `test_gap_fill_does_not_outgrow_the_section_floor`'s companion BEHAVIOURAL test
+   uses `rest = MIN_SECTION_SEC + 1.0`, so it guards **~8.0s** rather than the
+   stated **7.0s** ceiling. The invariant assertion covers the stated bound, so the
+   pair is adequate — but the behavioural test is looser than it reads.
+3. **`MIN_SECTION_SEC = 7.0` is a FIXTURE-SHAPED CONSTANT.** It carries only
+   **1.0s margin** over a genuine 4-bar section at 120bpm (7.0s ≈ 3.5 bars) —
+   **the constant most likely to need revisiting on real material with tempo
+   drift.**
+4. **A spacing-aware `_cap_sections` is the NAMED FUTURE PACKET** that would let
+   `MAX_SECTIONS` drop below 12. Until it exists, **lowering the cap actively
+   harms the output** (see refutation 3 above).
+5. **★ THE PYTEST `-q` TRAP.** `pyproject.toml` sets `addopts = "-q"`, so
+   invoking **`pytest -q` silently suppresses the summary count line while still
+   exiting 0**. Use **bare `python3 -m pytest`** or **`-o addopts=""`** to get
+   counts. **This plausibly contributed to the earlier P-061 gate producing no
+   usable output.**
+
+### ★ ENVIRONMENT FACT (must survive — restated, unchanged)
+
+Canonical corpus env: **numpy + scipy + soundfile installed, `pyloudnorm` NOT
+installed.** `dsp.integrated_loudness()` prefers **pyloudnorm → scipy →
+FFT**; the committed corpus was produced on the **SCIPY tier**. With `pyloudnorm`
+installed, **5 `test_sample_refresh` tests fail** on ~0.5dB `lufs` /
+`estimated_lufs` deltas — an **ENVIRONMENT artifact, NOT a regression**.
+Verify `_HAVE_PYLN=False, _HAVE_SCIPY=True`. The standing **P-025** fact still
+applies: **`fixtures/` is GENERATED** — run `fixtures/generate_fixtures.py`
+before regression in a fresh / detached checkout (exactly what the Commit-1
+isolation run had to do).
+
+### Standing gates re-confirmed OPEN at P-061 close (NONE advanced, NONE retired)
+
+- **The merge of P-060 to default** — **still THE open user gate.** Default
+  remains **`9cfe990`**. Would be **PR #38**.
+- **P-061's own merge** — a **SEPARATE later gate**. **P-061 is CLOSED as a
+  packet but NOT merged; no PR exists for it.**
+- **Thread B** — the vendored Build OS `.claude/` update to ClaudeOrchestrator
+  `7ef50e8`. **Diagnosed, not applied.** User decision: (a) isolated PR to default,
+  or (b) fold into the merge.
+- **PR #12** — still **OPEN** against the abandoned `main` base. **Do not
+  close it** here; kept recorded. User gate: close it or rebase it.
+- **P-024** — **delivered-but-never-formally-retired** (P-051 shipped the MCP
+  server it specified; P-052 proved it E2E). **NOT retired by this close** —
+  the note stands, including the unverified version-fingerprint sub-item.
+- **HAPPY MAN RE-RUN #2** — still the real-world confirmation for **both**
+  halves (P-060's crater fix and now P-061's fake-100s fix).
+- **Audit facts from `a96a4cc` (carried, still valid):** **PR #22 = packet
+  P-043** — PR numbers ≠ packet numbers; merge-commit wording is
+  **inconsistent** (#17/#18 “Merge pull request #NN”, the rest
+  “Merge PR #NN”) so grepping one form yields a **FALSE gap**;
+  **commit signing is impossible in this container** (0-byte key, no private key)
+  and **any re-author must be scoped to `e3d633c`, never to
+  `origin/<this-branch>`**.
+
+_P-061 residue appended by the archivist on close (2026-07-26). This file is
+APPEND-ONLY — nothing above was deleted; the design3→design4 audit's
+residue item 3 (“P-061's formal gates never ran / no receipt exists”) is
+now **SUPERSEDED**: both gates ran green against final HEAD and the receipt
+exists. Its item 4 (the `_GAP_SEC` semantic call) is now **RESOLVED** — see
+the adjudication above._
+
+
+---
+
+## ★ BOOKKEEPING PASS — P-024 retirement + PR #12 disposition (2026-07-26)
+
+Documentation-only. No product code touched, no packet opened, no PR created or
+closed, default unchanged. Follows the design3→design4 audit, which OPENED both
+of these as items; this pass RESOLVES one and records a recommendation on the
+other.
+
+### 1. P-024 — ★ RETIRED (superseded). Audit item 1 is now CLOSED.
+
+**Do not build P-024.** It was delivered in substance:
+- **P-051** shipped precisely what P-024 specified — its receipt reads *"an MCP
+  server wrapping the cowork registry"*.
+- **P-052** proved it end-to-end with a real MCP client session.
+- The adapter derives tool schemas from `describe_contract()`
+  (`cowork_mcp/adapter.py:158`) — exactly the reuse P-024 called for.
+
+The stale assertion in `current_state.md` (*"The ONLY remaining arc step is
+P-024 … the FINAL step"*) has been struck through in place with a retirement
+note. Struck, not deleted, so the audit trail survives.
+
+### 2. ★ BUT the version-fingerprint guard NEVER LANDED — this survives P-024's retirement as its own item
+
+P-023's reviewer watch-item asked for **"a hash of the contract surface"** so
+that contract drift would be detectable. **Verified absent, 2026-07-26:**
+
+```
+grep -rniE "sha256|hashlib|md5|blake2|fingerprint" \
+     logic_mix_os/cowork.py logic_mix_os/cowork_mcp/*.py \
+     tests/test_cowork_contract.py
+  -> ZERO hits
+```
+
+What exists instead is `API_VERSION = "1.0"` at `logic_mix_os/cowork.py:27` — a
+**hand-maintained literal**. Its only guard is
+`tests/test_cowork_contract.py::test_api_version_is_present_and_stable`:
+
+```python
+assert contract["api_version"] == API_VERSION
+assert isinstance(API_VERSION, str) and API_VERSION == "1.0"
+```
+
+**That is a TAUTOLOGY against the literal itself.** It pins the constant to its
+own value and the contract dict to that same constant — so it can never detect a
+change in the *contract surface*. Add a command, remove one, or change any
+command's params or `side_effect` classification, and `API_VERSION` remains
+`"1.0"` and the test still passes green.
+
+**Consequence: contract drift is currently UNDETECTED**, and the MCP tool
+schemas are derived from that same undetected-drift surface. Small blast radius
+today (the contract is stable and the roster is frozen), but it is a real hole in
+a guard the project believes it has.
+
+- **NOT covered by P-051/P-052** — they shipped the server, not the guard.
+- **Does NOT justify reviving P-024** — the arc is complete; this is a distinct,
+  much smaller concern.
+- **Candidate packet, user-gated, low priority:** replace the tautological
+  assertion with a stable hash over the sorted contract surface (command names +
+  params + side_effect), pinned as a golden. Failure mode becomes "you changed
+  the contract, bump `API_VERSION` and re-pin" — which is the guard P-023 asked
+  for.
+
+### 3. PR #12 — recommendation recorded, NOT actioned
+
+**Nothing was done to PR #12; it remains OPEN.** Deliberate: the real question is
+not *how* to close it but whether the typed `LogicActionPayload` work is still
+wanted, which is a product call for the founder, not bookkeeping.
+
+Facts: PR #12 ("Hardening Packet 11 — Typed LogicActionPayload Contract +
+Adapter") is the **only OPEN PR on the repo**, targets the **abandoned `main`
+base**, and predates the move to `claude/dreamy-turing-z0oxll` as default. Its
+siblings PRs #1–#11 from that era are **all CLOSED-unmerged**.
+
+**Recommendation: CLOSE it**, on the grounds that (a) every one of its
+contemporaries was closed unmerged, (b) its base branch is abandoned so it cannot
+merge as-is, and (c) the apply-to-Logic surface it serves is explicitly a
+re-gated FUTURE direction — the payload contract is not on any current path.
+**Counter-case:** if the typed-payload design is still wanted, rebase it onto the
+current default rather than closing, so the design work is not lost. Either way
+it should not simply keep sitting open.
+
+_Bookkeeping pass, documentation only. Audit item 1 resolved (P-024 retired, with
+the fingerprint guard split out as its own open item); audit item 2 (PR #12) left
+open with a recorded recommendation. No external mutation._
+
+
+---
+
+## ★ THREAD B CLOSED — vendored Build OS updated to ClaudeOrchestrator `7ef50e8` (2026-07-26)
+
+Applied via `install-project.sh` (the canonical path; **not** a hand-copy of the
+3 stale files, which would have broken on the missing `hook-once.sh` dependency).
+Config + docs only — **zero product code touched**.
+
+### ★ TWO HANDOFF CLAIMS DISPROVEN BY EVIDENCE
+
+1. **The "CLAUDE.md duplication" snag DOES NOT EXIST.** The handoff warned that
+   this repo's CLAUDE.md carries a hand-written Build OS section *without*
+   markers, so the installer would duplicate it. **False** — the markers are
+   present at CLAUDE.md lines 2 and 44 and the whole section sits inside them.
+   `install-project.sh` regex-strips the marked block and re-appends, reporting
+   `~ replaced CLAUDE.md Build OS block`. Verified after: exactly **1**
+   `BUILD-OS:START`, **1** `BUILD-OS:END`, **1** `## Build OS`. No dedupe was
+   needed and none was done.
+2. **The missing dependencies are NOT fatal — they degrade gracefully.** The
+   handoff implied copying the hooks would break on `install-accelerators.sh` /
+   `build-os/tools/specialist-handoff.sh`. Both call sites are **guarded**:
+   `prompt-router.sh` loops three candidate paths behind `[ -x ]` and is
+   documented "never fatal to the hook"; `session-start-build-os.sh` wraps the
+   accelerators call in `if [ -x "$ROOT/install-accelerators.sh" ]`. The ONLY
+   hard dependency is `hook-once.sh` (unconditionally `source`d) — and
+   `install-project.sh` **does** install it. That is precisely why the installer,
+   not a file copy, is the correct path.
+
+### Verified state-preservation (dry run into a scratch copy FIRST, then applied)
+
+All **70 receipts** intact; `current_state.md`, `residue.md`, `active_packet.md`
+and `tool_router.md` **byte-identical by MD5** before and after (the installer
+reports each as `= (exists, kept)`). P-041→P-061 history untouched.
+
+### What landed
+
+- **NEW** `.claude/hooks/hook-once.sh` — the hard dependency; per-session dedupe
+  guard for hook execution.
+- **NEW** `.claude/commands/capability-profile.md`.
+- **UPDATED** `.claude/agents/build-orchestrator.md` — the **capability-routing**
+  section: route to skills / `/` commands / MCP+connectors / other subagents as
+  first-class, treat the tool table as a *preference map not a whitelist*, and
+  the key refinement — **the orchestrator holds only Read/Grep/Glob/Bash, so it
+  must NAME the skill / command / `mcp__*` tool explicitly** for the main session
+  to run it. Also adds proportionate embedded lanes: a read-only answer or tiny
+  reversible edit "does not become a full packet merely because the orchestrator
+  exists."
+- **UPDATED** `.claude/hooks/session-start-build-os.sh` — prints an
+  **Available capabilities** inventory (MCP servers, plugins, skills, commands,
+  subagents) with an explicit *cache ≠ live* caveat.
+- **UPDATED** `.claude/hooks/prompt-router.sh` — specialist-handoff routing.
+- **UPDATED** CLAUDE.md managed block.
+
+Validated: all three hooks pass `bash -n`; `settings.json` is valid JSON with
+SessionStart + UserPromptSubmit wired; the session-start hook was smoke-run in
+this repo and emits the capability inventory correctly.
+
+### ★ NEW residue opened by this change
+
+1. **`/capability-profile` is DANGLING in this repo.** The command body says
+   *"Run `build-os/tools/capability-profile.sh` from the Build OS repository"* —
+   but `install-project.sh` does **not** install `build-os/tools/` (its four
+   scripts: `capability-profile.sh`, `skill-budget-audit.sh`,
+   `specialist-handoff.sh`, `supervise.sh`). So the command is only usable from a
+   ClaudeOrchestrator checkout, not from mixingpartner. Not breaking — nothing
+   auto-invokes it — but it is a `/` command that cannot run here. Decide later:
+   vendor `build-os/tools/`, or accept it as orchestrator-repo-only.
+2. **★ FIXED IN THIS PASS — an active-packet status-format mismatch.** The
+   session-start hook parses `grep -m1 '^- \*\*Status:\*\*'` — colon **outside**
+   the bold. The P-061 close wrote `- **Status: NONE ACTIVE.**` — colon **inside**
+   — so the hook reported `(status not declared)` and every session lost its
+   packet-state line. Corrected to `- **Status:** NONE ACTIVE.` and re-verified
+   the hook now prints it. **Archivist convention going forward: the status line
+   MUST be `- **Status:** <text>`** or session start goes blind to it. (P-060's
+   wording was correct; the P-061 close introduced the drift.)
+
+### ★ NOT YET IN EFFECT FOR FRESH SESSIONS
+
+This lands on the **dev branch only**. Fresh Claude Code web/remote tasks branch
+from **default** (`claude/dreamy-turing-z0oxll`), so the capability routing does
+NOT reach them until this is merged. Applying it here took the handoff's option
+**(b)** — folded into the dev branch — because the designated-branch constraint
+forbids pushing an isolated branch. Consequence to accept knowingly: a PR #38
+would now carry the P-060/P-061 product fix **and** this config update together.
+Splitting them is still possible on request.
+
+_Thread B applied 2026-07-26. Config + docs only; no product behavior touched; no
+PR created, no merge, default unchanged._
+
+## ★★★ STATUS (P-062 close, 2026-07-30): BOTH FORMAL GATES GREEN — THE "FROM EVERY ANGLE" PLANNING SURFACE IS LIVE (multi-lens execution brief: six verbatim lenses, five deterministic cross-lens contradiction rules, the mix plan re-cut into five execution phases, and a fenced DRAFT-ONLY host-synthesis seam — the Manus-pattern harness encoded as a DETERMINISTIC artifact, no hosted LLM in the engine). THE REVIEWER'S MUST-FIX MATTERED: the mono rule could have called the repo's own NARROWING language "widening" in a verbatim-honesty surface — caught, fixed, guarded both directions. NOTHING WAS MERGED — P-060/P-061/P-062 NOW STACK ON THE BRANCH AWAITING THE USER'S MERGE WORD.
+
+- **P-062 (Multi-Lens Execution Brief) closed 2026-07-30:** qa GREEN (suite
+  **1469 / 0 / 0** vs pre-amend `e8f2977` = baseline 1426 + 43; regression
+  **93/93, `critical_failures == []`**; **independent detached Commit-1
+  isolation at `3e7ccc9` → 1467 / 0** + 93/93) + reviewer **fix-then-pass →
+  must-fix applied → PASS on limited re-review** (single-reviewer BOTH rounds —
+  codex absent, stated plainly). **Final coordinator proof at `3a7144f`:
+  1470 / 0 / 0; regression 93/93; tree clean.** Two implementation commits
+  `3e7ccc9` (renderer + CLI + tests) + `3a7144f` (cowork surface 35→36 +
+  must-fix; **AMENDED from `e8f2977`** — nothing pushed, Commit-1 untouched,
+  delta = exactly the 2 must-fix files) atop set-active `1a7f4f4` atop
+  `ba127ff`; merge-base `9cfe990` verified. `write_artifacts` UNTOUCHED —
+  corpus byte-identical BY CONSTRUCTION (guard finding path (b)). Pins
+  consciously bumped: `COMMANDS` 35→36, README "36 commands", `API_VERSION`
+  1.0→1.1 (P-023's own additive rule). Receipt:
+  `build-os/receipts/P-062-multi-lens-execution-brief.md`.
+
+### NEW residue opened by P-062 (recorded, non-blocking)
+
+1. **Advisory (reviewer):** harden the host-synthesis prompt against invented
+   *parameters*, not just invented scores — future packet.
+2. **Advisory (reviewer):** two harmless dead branches in
+   `execution_brief_renderer.py` (section `energy_tag` ~485; contrast note
+   ~498) — cleanup candidate.
+3. **★ `_iter_plan_texts` coverage coupling (reviewer residual):** the safety
+   of keeping `"wider"` in `_WIDTH_KEYWORDS` depends on `_iter_plan_texts`
+   never growing to scan `diagnosis` or `reference_deltas`. **If that field
+   coverage expands, re-audit the keyword.**
+4. The contradictions preamble says "measurements alone" while
+   `mono_risk_while_widening` scans plan text — plan text is deterministic
+   engine output, so within the boundary (reviewer: slightly loose,
+   acceptable).
+5. **`API_VERSION` is now 1.1** — the contract-fingerprint guard candidate
+   (hash the contract surface) REMAINS OPEN and is now **mildly more urgent**:
+   two hand-bumps in the literal's lifetime.
+6. **Amend-vs-third-commit precedent:** a reviewer must-fix folded into an
+   UNPUSHED Commit-2 by amend (no remote rewrite, Commit-1 untouched, delta =
+   exactly the must-fix files) is legitimate under the ≤2-commit contract —
+   recorded so future sessions don't misread the ladder.
+7. **qa observation:** count-conservation on the committed trees alone would
+   NOT catch an unphased-bucket drop (no committed item lands unphased); the
+   synthetic mutation test covers it — keep both.
+
+### Open gates (carried, untouched by this close)
+
+- **P-060 merge (PR #38 candidate) · P-061 merge · P-062 merge — all three now
+  STACK on `claude/logic-mix-os-p061-detector-0dvr2t` awaiting the user's
+  merge word.** Default remains `9cfe990`.
+- **PR #12** — still open against the abandoned `main` base; close-or-rebase
+  recommendation recorded at `86a3242`.
+- **Contract-fingerprint guard candidate** — see item 5 above.
+- **HAPPY MAN RE-RUN #2** — the real-world confirmation for both halves of the
+  fix, **now with the execution brief available**: analyze, then
+  `execution-brief --dir <out>`.
+
+_Appended by the archivist on P-062 close (2026-07-30)._

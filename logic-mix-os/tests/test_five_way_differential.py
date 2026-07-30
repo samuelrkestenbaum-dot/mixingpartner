@@ -97,7 +97,7 @@ FIVE_WAY_OVERALLS = {
     "simple_vocal_piano_song": dict(
         FOUR_WAY_OVERALLS["simple_vocal_piano_song"], chris_lord_alge=74.8),
     "dense_chorus_with_loops": dict(
-        FOUR_WAY_OVERALLS["dense_chorus_with_loops"], chris_lord_alge=59.6),
+        FOUR_WAY_OVERALLS["dense_chorus_with_loops"], chris_lord_alge=61.5),
     "splice_loop_problem": dict(
         FOUR_WAY_OVERALLS["splice_loop_problem"], chris_lord_alge=58.1),
     "vocal_chop_groove": dict(
@@ -124,10 +124,10 @@ CLA_COMPONENTS = {
     "dense_chorus_with_loops": {
         "physical_space_score": 67.6, "emotional_hierarchy_score": 86.0,
         "vocal_centrality_score": 90.0, "depth_hierarchy_score": 65.3,
-        "section_contrast_score": 82, "static_mix_score": 64.0,
+        "section_contrast_score": 82, "static_mix_score": 72.0,
         "dynamic_mix_score": 23.4, "beat_identity_score": 52.7,
         "negative_space_score": 15.0, "groove_coherence_score": 99.1,
-        "rhythmic_surprise_score": 20.0, "low_end_motion_score": 21.1,
+        "rhythmic_surprise_score": 20.0, "low_end_motion_score": 35.1,
         "loop_context_score": 18.0, "vocal_role_fit_score": 85.0,
         "textural_coherence_score": 27.0,
     },
@@ -682,7 +682,7 @@ def test_divergence_audit_vs_the_opt_in_producers(name, five_analyzed):
 # weighted mean, textural excluded). The axis moved every one of them.
 PRE_AXIS_ENO_OVERALLS = {
     "simple_vocal_piano_song": 65.4,
-    "dense_chorus_with_loops": 57.8,
+    "dense_chorus_with_loops": 59.3,
     "splice_loop_problem": 59.3,
     "vocal_chop_groove": 65.5,
 }
@@ -836,7 +836,7 @@ def test_p056_flipping_the_dispersion_sign_swaps_the_distinctness_cases(monkeypa
 # 14-term weighted mean, textural weighted 0). His 0.6 opt-in moved every one.
 PRE_P057_QUINCY_OVERALLS = {
     "simple_vocal_piano_song": 70.0,
-    "dense_chorus_with_loops": 62.1,
+    "dense_chorus_with_loops": 63.4,
     "splice_loop_problem": 61.9,
     "vocal_chop_groove": 68.8,
 }

@@ -137,7 +137,10 @@ EXPECTED_OVERALLS = {"halee_ramone": 76.3, "timbaland": 60.9}
 # The original three fixtures' pinned judgments — unmoved (scope item 5).
 ORIGINAL_OVERALLS = {
     "simple_vocal_piano_song": {"halee_ramone": 73.8, "timbaland": 68.4},
-    "dense_chorus_with_loops": {"halee_ramone": 70.7, "timbaland": 52.6},
+    # dense's halee/timbaland overalls moved +1.1/+1.6 at P-060 (the authorized
+    # section-count-invariance corpus move: dense's Kick/Bass critical low-end
+    # counted 2x->1x); simple + splice unmoved.
+    "dense_chorus_with_loops": {"halee_ramone": 71.8, "timbaland": 54.2},
     "splice_loop_problem": {"halee_ramone": 74.3, "timbaland": 49.7},
 }
 

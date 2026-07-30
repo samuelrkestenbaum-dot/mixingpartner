@@ -105,7 +105,7 @@ THREE_WAY_OVERALLS = {
         "halee_ramone": 73.8, "timbaland": 68.4, "quincy_jones": 69.2,
     },
     "dense_chorus_with_loops": {
-        "halee_ramone": 70.7, "timbaland": 52.6, "quincy_jones": 60.4,
+        "halee_ramone": 71.8, "timbaland": 54.2, "quincy_jones": 61.6,
     },
     "splice_loop_problem": {
         "halee_ramone": 74.3, "timbaland": 49.7, "quincy_jones": 61.6,
@@ -145,13 +145,13 @@ QUINCY_COMPONENTS = {
         "vocal_centrality_score": 90.0,
         "depth_hierarchy_score": 65.3,
         "section_contrast_score": 82,
-        "static_mix_score": 64.0,
+        "static_mix_score": 72.0,
         "dynamic_mix_score": 23.4,
         "beat_identity_score": 52.7,
         "negative_space_score": 15.0,
         "groove_coherence_score": 99.1,
         "rhythmic_surprise_score": 20.0,
-        "low_end_motion_score": 21.1,
+        "low_end_motion_score": 35.1,
         "loop_context_score": 12.0,
         "vocal_role_fit_score": 85.0,
         "textural_coherence_score": 27.0,  # 2 beds — incoherent (P-057)

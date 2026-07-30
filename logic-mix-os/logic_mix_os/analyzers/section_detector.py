@@ -43,17 +43,56 @@ ABS_FLOOR_DB = -50.0
 REL_RANGE_DB = 40.0
 
 # Debounce / hysteresis, expressed in seconds then resolved to frame counts so
-# the intent (~0.5s persistence, ~0.5s gap-fill, ~1.0s boundary cluster) is
+# the intent (~5.0s persistence, ~5.0s gap-fill, ~2.0s boundary cluster) is
 # legible and tracks H if H ever changes.
-_MIN_RUN_SEC = 0.5
-_GAP_SEC = 0.5
-_CLUSTER_SEC = 1.0
+#
+# P-061 — the persistence floor is the ORNAMENT/ARRANGEMENT line. At 0.5s a 3-4s
+# guitar stab or percussion fill read as an entrance AND an exit, carving
+# ornament-sized sections out of the middle of a real block; on a real 49-track
+# song that shredded the arrangement into 12 micro-sections and, via the
+# per-section dispersion the doctrine engine reads, pinned contrast/dynamics at
+# a fake 100/100. A stem presence too short to ever be its own section is not an
+# arrangement event — it is an ornament INSIDE one.
+#
+# _GAP_SEC IS THE COMPANION OF _MIN_RUN_SEC — DO NOT RAISE ONE WITHOUT THE OTHER.
+# ``_debounce`` fills short inactive gaps FIRST, then drops short active runs, so
+# a gap-fill NARROWER than the persistence floor creates a fragment-then-erase
+# asymmetry: a lead vocal singing 4.0s phrases separated by 1.2s breaths gets
+# fragmented into 16-frame runs, every run falls under the 20-frame floor, and
+# the vocal reads as NEVER ACTIVE. Measured on a 120s probe: at 5.0/0.5 the
+# vocal contributes 0 active frames and its entrance is invisible; at 5.0/5.0 it
+# is one coherent 287-frame run and its entrance becomes a true boundary.
+#
+# They are kept as INDEPENDENT literals rather than `_GAP_SEC = _MIN_RUN_SEC`
+# because _GAP_SEC is sandwiched by TWO bounds, and coupling it to only the
+# lower one would silently break the upper one:
+#
+#     _MIN_RUN_SEC  <=  _GAP_SEC  <  MIN_SECTION_SEC
+#          5.0            5.0            7.0
+#
+#   * lower  (>= _MIN_RUN_SEC): every rest too short to be a section boundary is
+#     filled, so fragment-then-erase is structurally impossible — a stem can only
+#     be erased if it truly appears in sub-floor bursts separated by super-floor
+#     rests, which is the definition of an ornament.
+#   * upper  (<  MIN_SECTION_SEC): gap-fill must not swallow a genuine drop-out.
+#     Measured — the shortest preserved exit holds at 7s for every gap-fill up to
+#     6.5s, then degrades to 8s at 7.0s and 9s at 8.0s as real exits get welded.
+_MIN_RUN_SEC = 5.0
+_GAP_SEC = 5.0
+_CLUSTER_SEC = 2.0
 MIN_RUN = max(1, round(_MIN_RUN_SEC / H))       # a state change must persist >= this
 GAP = max(1, round(_GAP_SEC / H))               # inactive gaps <= this are filled
 CLUSTER_WIN = max(1, round(_CLUSTER_SEC / H))   # boundaries within this collapse to one
 
 # Guardrails.
-MIN_SECTION_SEC = 4.0   # sections shorter than this merge into a neighbour
+#
+# P-061 — MIN_SECTION_SEC is the section floor; MAX_SECTIONS is a pathological-
+# input safety valve, NOT a routine shaper. Whenever the cap binds it drops
+# boundaries by novelty alone, with no regard for spacing, which manufactures a
+# super-block next to short sections — the very artifact this constant set
+# exists to remove. So the floor does the work and the cap stays loose enough
+# that an honest arrangement passes through it untouched.
+MIN_SECTION_SEC = 7.0   # sections shorter than this merge into a neighbour
 MAX_SECTIONS = 12       # cap; keep the highest arrangement-novelty boundaries
 
 _TAG_LOW = 1.0 / 3.0

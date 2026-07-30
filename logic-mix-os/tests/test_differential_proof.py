@@ -92,7 +92,7 @@ COMPONENT_KEYS = [
 # to the decimal by hand-recomputing the weighted means).
 OVERALLS = {
     "simple_vocal_piano_song": {"halee_ramone": 73.8, "timbaland": 68.4},
-    "dense_chorus_with_loops": {"halee_ramone": 70.7, "timbaland": 52.6},
+    "dense_chorus_with_loops": {"halee_ramone": 71.8, "timbaland": 54.2},
     "splice_loop_problem": {"halee_ramone": 74.3, "timbaland": 49.7},
 }
 
@@ -207,7 +207,7 @@ EXPECTED_SNAPSHOT = {
     },
     "dense_chorus_with_loops": {
         "halee_ramone": {
-            "overall": 70.7,
+            "overall": 71.8,
             "lowest_components": [
                 ("loop_context_score", 15.0),
                 ("negative_space_score", 15.0),
@@ -220,7 +220,7 @@ EXPECTED_SNAPSHOT = {
             "search_mode": "dramatic_contrast",
         },
         "timbaland": {
-            "overall": 52.6,
+            "overall": 54.2,
             "lowest_components": [
                 ("loop_context_score", 10.0),
                 ("negative_space_score", 15.0),
