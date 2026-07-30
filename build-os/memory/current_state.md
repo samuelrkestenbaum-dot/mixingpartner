@@ -837,6 +837,107 @@
 
 ## Where we are
 
+- **★★★ P-062 SHIPS THE MULTI-LENS EXECUTION BRIEF — THE "FROM EVERY ANGLE"
+  PLANNING SURFACE (user direction: Manus-style multi-angle analysis as planning
+  for execution of the mix; Manus = harness over Claude, and the harness was
+  encoded as a DETERMINISTIC artifact instead of wiring any hosted LLM into the
+  engine — P-025/P-031 policy: LLM = draft-only, never high-confidence;
+  measurements decide, language explains). BOTH FORMAL GATES GREEN:** qa (suite
+  **1469 / 0 / 0** vs pre-amend `e8f2977` = baseline 1426 + 43; regression
+  **93/93, `critical_failures == []`**; **INDEPENDENT detached Commit-1
+  isolation at `3e7ccc9` → 1467 / 0** + regression 93/93, returned clean) +
+  reviewer **fix-then-pass → must-fix applied → PASS on limited re-review**
+  (**single-reviewer both rounds — codex absent, NO second model reviewed this
+  diff**). **FINAL coordinator proof at `3a7144f`: suite 1470 / 0 / 0;
+  regression 93/93, `critical_failures == []`; tree clean. Last-closed =
+  P-062.**
+  - **What shipped:** NEW `renderers/execution_brief_renderer.py` —
+    `render_execution_brief(dicts) -> str`: **SIX LENSES** quoting artifact
+    numbers **VERBATIM** (`_fmt` = `json.dumps` on scalars, zero recomputation
+    — reviewer-verified), honest `(artifact missing: <file>)` lines,
+    producer-voiced from `doctrine_score` incl. the confidence ledger verbatim;
+    **FIVE deterministic cross-lens contradiction rules** (data-driven table; a
+    meta-test pins shipped set == tested set; on the corpus
+    `central_vocal_masked` [90.0 / 4 events] + `balanced_but_static` [80.0 /
+    28.2] fire); **EXECUTION ORDER** — `mix_plan` re-cut into **5 phases**
+    (gain/static → masking carves → space/depth → section/automation →
+    creative variants) via a first-match ladder (origin → risk_class≥4 →
+    keywords → plugin fallback → explicit Unphased bucket, never silently
+    dropped; count conservation tested synthetically + on all 5 committed
+    trees), checklist cross-reference reusing `PREFERRED_ORDER` imported from
+    `checklist_renderer`; **HOST-SYNTHESIS PROMPT BLOCK** — fenced,
+    positionally last (tested), DRAFT-ONLY stamped 3×, forbids
+    re-scoring/inventing scores. `cli.py`: opt-in `execution-brief --dir
+    <artifacts> [--out]` — **`write_artifacts` UNTOUCHED, corpus byte-identical
+    BY CONSTRUCTION** (guard finding path (b); path (a) would have re-pinned 16
+    trees; the brief is NEVER committed into `examples/`). `cowork.py`:
+    registry row + `_SESSION_FLOW`; **CONSCIOUS pin bumps: `COMMANDS` 35 → 36**
+    (test_cowork_mcp / test_cowork / test_cowork_contract /
+    test_mcp_e2e_session), README "36 commands" (P-054 guard), **`API_VERSION`
+    1.0 → 1.1** per P-023's own minor-bump-on-additive rule (+
+    `COWORK_CONTRACT.md`).
+  - **Commits / base:** TWO implementation commits — **AT the ≤2 limit**:
+    `3e7ccc9` (Commit-1 — renderer + CLI + tests; 3 files, +1354; isolation
+    proof pinned here) + `3a7144f` (Commit-2 — cowork surface + reviewer
+    must-fix folded in; 10 files, +157/−24), atop set-active `1a7f4f4`
+    (metadata-only) atop `ba127ff` (P-061 + Thread B closed). Branch
+    `claude/logic-mix-os-p061-detector-0dvr2t`; verified `git merge-base HEAD
+    9cfe990` = **`9cfe990`**. **★ AMEND PRECEDENT:** Commit-2 was AMENDED from
+    `e8f2977` to fold in the must-fix — nothing was pushed (no remote rewrite),
+    Commit-1 untouched, amend delta = exactly the 2 must-fix files; legitimate
+    under ≤2, recorded so future sessions don't misread the ladder.
+  - **★ THE MUST-FIX (reviewer round 1, fixed, re-review verified):**
+    `mono_risk_while_widening`'s `_WIDTH_KEYWORDS` contained `"width"` /
+    `"widest"`, which appear in the repo's OWN **NARROWING** planner strings
+    ("Narrow stereo width to ~35-50%.", "reserve the widest placement for one
+    element") — the rule could assert "the plan recommends widening" when the
+    plan says NARROW: a factually false claim in a verbatim-honesty surface
+    (latent on the corpus, mono 92.0). FIX: `_WIDTH_KEYWORDS = ("widen",
+    "wider", "mid-side", "mid/side")` + a both-directions test at mono 55.0 +
+    an honest re-target of the facts test to a real planner widening string;
+    re-review traced every planner emission to `_iter_plan_texts`'s field
+    coverage (`diagnosis`/`reference_deltas` NOT scanned) and ruled the
+    `"wider"` retention safe and the re-target honest.
+  - **Proof detail:** diff exactly **11 in-scope files**, ZERO under
+    `examples/`/`fixtures/`/`analyzers/`/`doctrine/`/`planners/`;
+    `pipeline.py`/`masking_analyzer.py` untouched; no `execution_brief.md`
+    under `examples/`; pyproject unchanged; renderer imports stdlib +
+    `checklist_renderer` only; dangerous-pattern grep none. Pins live 36 /
+    "1.1" before AND after detach. Non-vacuity: 2 rules fire/quiet both
+    directions at render level; count conservation by TWO mutations (drop the
+    unphased append → its test red; drop a phase's items → conservation red on
+    5/5 producers); determinism sha256-proven (`d4f20ee438037f0a…`). Functional
+    smoke: CLI wrote a 17,639-byte brief (6 lenses + 5 phases + draft-only
+    fence) from a copied sample tree; cowork parity (`via_cowork == direct`)
+    in-suite. qa observation: committed-tree count-conservation alone would not
+    catch an unphased-bucket drop (no committed item lands unphased) — the
+    synthetic test covers it.
+  - **Reviewer round-1 (besides the must-fix):** draft-only boundary SOUND
+    (advisory: harden against invented *parameters*, future packet); lens
+    honesty CLEAN (two harmless dead branches — advisory cleanup); 4 of 5 rules
+    real signal, and the reviewer CORRECTED the "fires on all 5 trees" framing
+    (5 trees = ONE song under 5 profiles = one data point); phase ladder SOUND
+    (risk-4 mute lands Phase 1 not 5 — visible via risk tag); pin bumps
+    NECESSARY not creep; `API_VERSION` 1.1 CORRECT (fingerprint-guard residue
+    stays open — the bump neither fixes nor papers over it); trajectory
+    POSITIVE ("not a restatement with extra steps": contradictions, phase-cut,
+    and the policy-compliant LLM seam exist nowhere else).
+  - **Residue (six items, recorded):** (1) host-prompt hardening against
+    invented parameters — future packet; (2) dead branches (renderer ~485,
+    ~498) — cleanup candidate; (3) **★ `_iter_plan_texts` coverage coupling:
+    if it ever scans `diagnosis`/`reference_deltas`, re-audit `"wider"` in
+    `_WIDTH_KEYWORDS`**; (4) the contradictions preamble says "measurements
+    alone" while one rule scans plan text (deterministic engine output —
+    reviewer: slightly loose, acceptable); (5) `API_VERSION` 1.1 makes the
+    contract-fingerprint guard mildly more urgent (two hand-bumps in the
+    literal's lifetime); (6) the amend-vs-third-commit precedent above.
+  - **Open gates (NONE advanced by this close):** **P-060 merge (PR #38
+    candidate) · P-061 merge · P-062 merge — all three now STACK on this
+    branch awaiting the user's merge word**; PR #12 (close-or-rebase
+    recommendation recorded); the contract-fingerprint guard candidate;
+    **HAPPY MAN RE-RUN #2 — now with `execution-brief` available: analyze,
+    then `execution-brief --dir <out>`.** Receipt:
+    `build-os/receipts/P-062-multi-lens-execution-brief.md`.
 - **★★★ P-061 CALIBRATES THE DETECTOR AND KILLS THE FAKE 100/100 — THE OTHER HALF
   OF THE HAPPY MAN FIX (P-060 fixed the masking crater; P-061 fixes the fake
   contrast/dynamics). On a real 49-track song the audio-driven detector emitted
@@ -5386,4 +5487,4 @@
   OWN map under this policy (hand-curated-documented → HIGH).
 
 ---
-_Updated by the archivist on close. **Last advanced on P-061 close (2026-07-26) at `a96a4cc` on branch `claude/logic-mix-os-p061-detector-0dvr2t`; the prior footer read "Last advanced on P-060 close (2026-07-07); state re-verified by the design3→design4 HANDOFF-INTEGRITY AUDIT (2026-07-26) at `d941ecc`" — the audit facts below are PRESERVED verbatim in substance and still hold.** P-061 closed with **BOTH formal gates GREEN**: qa (suite **1426 / 0 / 0**; regression **93/93, `critical_failures == []`**; **independent detached Commit-1 isolation at `4cbee14` → 1420 / 0 / 0** — the item the earlier stalled dispatch never delivered; safety grep `"inferred"` ZERO files) + reviewer **PASS, no must-fix (single-reviewer only — `codex` is NOT installed, so NO second model reviewed the diff)**. Two implementation commits `4cbee14` + `d941ecc` — **AT the ≤2 limit** — atop set-active `6c81090` atop `e3d633c`. **THREE PACKET TARGETS WERE REFUTED BY MEASUREMENT** (`MIN_SECTION_SEC` ~8–10 → 7.0; `_MIN_RUN_SEC` ~1.5 → 5.0 because 1.5s is provably INERT; `MAX_SECTIONS` ~8 → **left at 12** because a spacing-blind `_cap_sections` MANUFACTURES super-blocks when it binds) and **Commit-1 shipped a live regression (a phrased lead vocal ERASED, 235 frames → 0) that Commit-2 fixed, recorded honestly**. **AUDITED ANCESTRY (evidence, not memory — carried forward from the design3→design4 audit at `d941ecc`, still valid at `a96a4cc`):** every PR merge #13–#37 is reachable from HEAD (note #17/#18 use the wording "Merge pull request #NN", the rest "Merge PR #NN" — a grep for one form alone yields a **FALSE gap**); **PR #22 = packet P-043** (Curated Move Vocabulary Expansion, merge `80e9bd5`, head `12b24d1`) — **PR-number ≠ packet-number, do not conflate**; default `9cfe990` is an ancestor of HEAD, so this branch strictly contains all merged work. **Commit signing is IMPOSSIBLE in this container** (0-byte key, no private key anywhere) — any re-author must be scoped to `e3d633c`, **never** to `origin/<this-branch>`. Receipts P-000→**P-061** all present. **P-022 was deliberately never opened (recorded OPTIONAL/UNNEEDED).** **P-024 is delivered-but-never-formally-retired** — see residue; NOT retired by this close. **NO PACKET IN FLIGHT** — `build-os/packets/active_packet.md` is cleared; P-061 is CLOSED. **OPEN USER GATES (none advanced): the merge of P-060 to default** (default still `9cfe990`, would be **PR #38**); **P-061's own merge** (a SEPARATE later gate — closed as a packet, NOT merged, no PR exists); **Thread B** (vendored Build OS → ClaudeOrchestrator `7ef50e8`, diagnosed not applied); **PR #12** still OPEN against the abandoned `main` base; and the **HAPPY MAN RE-RUN #2**, still the real-world confirmation for BOTH halves of the fix._
+_Updated by the archivist on close. **Last advanced on P-062 close (2026-07-30) at `3a7144f` on branch `claude/logic-mix-os-p061-detector-0dvr2t`, tree clean.** P-062 (Multi-Lens Execution Brief — the "from every angle" planning surface, the Manus-pattern harness encoded as a DETERMINISTIC artifact per the P-025/P-031 draft-only policy) closed with **BOTH formal gates GREEN**: qa (suite **1469 / 0 / 0** vs pre-amend `e8f2977`; regression **93/93, `critical_failures == []`**; **independent detached Commit-1 isolation at `3e7ccc9` → 1467 / 0** + 93/93; diff exactly 11 in-scope files; corpus byte-identical BY CONSTRUCTION; pins live `len(COMMANDS)==36` / `API_VERSION=="1.1"`) + reviewer **fix-then-pass → must-fix applied → PASS on limited re-review (single-reviewer BOTH rounds — codex absent, NO second model reviewed the diff)**; final coordinator proof at `3a7144f`: **1470 / 0 / 0**, regression **93/93**. The must-fix: `_WIDTH_KEYWORDS` contained "width"/"widest", which appear in the repo's own NARROWING planner strings — the mono rule could have called a narrowing plan "widening" in a verbatim-honesty surface; fixed to `("widen","wider","mid-side","mid/side")` + both-directions guard. Two implementation commits `3e7ccc9` + `3a7144f` — **AT the ≤2 limit**; **Commit-2 AMENDED from `e8f2977`** (nothing pushed, Commit-1 untouched, delta = the 2 must-fix files — legitimate, recorded). Chain: `3a7144f` → `3e7ccc9` → `1a7f4f4` (set-active) → `ba127ff` (P-061 + Thread B closed); verified `git merge-base HEAD 9cfe990` = `9cfe990`. **The prior footer's audited-ancestry facts (design3→design4 audit at `d941ecc`, re-affirmed at `a96a4cc`) are PRESERVED in substance and still hold:** every PR merge #13–#37 reachable from HEAD (#17/#18 use "Merge pull request #NN", the rest "Merge PR #NN" — grepping one form yields a FALSE gap); **PR #22 = packet P-043** (PR-number ≠ packet-number); default `9cfe990` is an ancestor of HEAD; **commit signing is IMPOSSIBLE in this container** (0-byte key) — any re-author must be scoped to the packet base, never to `origin/<branch>`; receipts P-000→**P-062** all present; P-022 deliberately never opened; **P-024 formally RETIRED (superseded)** with the PR #12 disposition recorded at `86a3242`. **NO PACKET IN FLIGHT** — `build-os/packets/active_packet.md` is cleared; P-062 is CLOSED. **OPEN USER GATES (none advanced): the merges of P-060 (would be PR #38), P-061, and P-062 — all three now STACK on this branch awaiting the user's merge word** (default still `9cfe990`); **PR #12** still OPEN against the abandoned `main` base (close-or-rebase recommendation recorded); the **contract-fingerprint guard candidate** (now mildly more urgent — `API_VERSION` has been hand-bumped twice); and the **HAPPY MAN RE-RUN #2** — still the real-world confirmation for both halves of the fix, **now with `execution-brief` available** (analyze, then `execution-brief --dir <out>`)._

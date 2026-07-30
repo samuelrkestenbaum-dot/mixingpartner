@@ -4546,3 +4546,61 @@ Splitting them is still possible on request.
 
 _Thread B applied 2026-07-26. Config + docs only; no product behavior touched; no
 PR created, no merge, default unchanged._
+
+## ★★★ STATUS (P-062 close, 2026-07-30): BOTH FORMAL GATES GREEN — THE "FROM EVERY ANGLE" PLANNING SURFACE IS LIVE (multi-lens execution brief: six verbatim lenses, five deterministic cross-lens contradiction rules, the mix plan re-cut into five execution phases, and a fenced DRAFT-ONLY host-synthesis seam — the Manus-pattern harness encoded as a DETERMINISTIC artifact, no hosted LLM in the engine). THE REVIEWER'S MUST-FIX MATTERED: the mono rule could have called the repo's own NARROWING language "widening" in a verbatim-honesty surface — caught, fixed, guarded both directions. NOTHING WAS MERGED — P-060/P-061/P-062 NOW STACK ON THE BRANCH AWAITING THE USER'S MERGE WORD.
+
+- **P-062 (Multi-Lens Execution Brief) closed 2026-07-30:** qa GREEN (suite
+  **1469 / 0 / 0** vs pre-amend `e8f2977` = baseline 1426 + 43; regression
+  **93/93, `critical_failures == []`**; **independent detached Commit-1
+  isolation at `3e7ccc9` → 1467 / 0** + 93/93) + reviewer **fix-then-pass →
+  must-fix applied → PASS on limited re-review** (single-reviewer BOTH rounds —
+  codex absent, stated plainly). **Final coordinator proof at `3a7144f`:
+  1470 / 0 / 0; regression 93/93; tree clean.** Two implementation commits
+  `3e7ccc9` (renderer + CLI + tests) + `3a7144f` (cowork surface 35→36 +
+  must-fix; **AMENDED from `e8f2977`** — nothing pushed, Commit-1 untouched,
+  delta = exactly the 2 must-fix files) atop set-active `1a7f4f4` atop
+  `ba127ff`; merge-base `9cfe990` verified. `write_artifacts` UNTOUCHED —
+  corpus byte-identical BY CONSTRUCTION (guard finding path (b)). Pins
+  consciously bumped: `COMMANDS` 35→36, README "36 commands", `API_VERSION`
+  1.0→1.1 (P-023's own additive rule). Receipt:
+  `build-os/receipts/P-062-multi-lens-execution-brief.md`.
+
+### NEW residue opened by P-062 (recorded, non-blocking)
+
+1. **Advisory (reviewer):** harden the host-synthesis prompt against invented
+   *parameters*, not just invented scores — future packet.
+2. **Advisory (reviewer):** two harmless dead branches in
+   `execution_brief_renderer.py` (section `energy_tag` ~485; contrast note
+   ~498) — cleanup candidate.
+3. **★ `_iter_plan_texts` coverage coupling (reviewer residual):** the safety
+   of keeping `"wider"` in `_WIDTH_KEYWORDS` depends on `_iter_plan_texts`
+   never growing to scan `diagnosis` or `reference_deltas`. **If that field
+   coverage expands, re-audit the keyword.**
+4. The contradictions preamble says "measurements alone" while
+   `mono_risk_while_widening` scans plan text — plan text is deterministic
+   engine output, so within the boundary (reviewer: slightly loose,
+   acceptable).
+5. **`API_VERSION` is now 1.1** — the contract-fingerprint guard candidate
+   (hash the contract surface) REMAINS OPEN and is now **mildly more urgent**:
+   two hand-bumps in the literal's lifetime.
+6. **Amend-vs-third-commit precedent:** a reviewer must-fix folded into an
+   UNPUSHED Commit-2 by amend (no remote rewrite, Commit-1 untouched, delta =
+   exactly the must-fix files) is legitimate under the ≤2-commit contract —
+   recorded so future sessions don't misread the ladder.
+7. **qa observation:** count-conservation on the committed trees alone would
+   NOT catch an unphased-bucket drop (no committed item lands unphased); the
+   synthetic mutation test covers it — keep both.
+
+### Open gates (carried, untouched by this close)
+
+- **P-060 merge (PR #38 candidate) · P-061 merge · P-062 merge — all three now
+  STACK on `claude/logic-mix-os-p061-detector-0dvr2t` awaiting the user's
+  merge word.** Default remains `9cfe990`.
+- **PR #12** — still open against the abandoned `main` base; close-or-rebase
+  recommendation recorded at `86a3242`.
+- **Contract-fingerprint guard candidate** — see item 5 above.
+- **HAPPY MAN RE-RUN #2** — the real-world confirmation for both halves of the
+  fix, **now with the execution brief available**: analyze, then
+  `execution-brief --dir <out>`.
+
+_Appended by the archivist on P-062 close (2026-07-30)._
