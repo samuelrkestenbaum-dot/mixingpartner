@@ -4,103 +4,147 @@
 > the builder implements exactly this and nothing else; the archivist clears it
 > on close. One packet at a time.
 
-- **Status:** NONE ACTIVE. **P-061 — Detector Over-Segmentation Calibration is
-  CLOSED (2026-07-26)** with **BOTH formal gates GREEN**. Receipt:
-  `build-os/receipts/P-061-detector-over-segmentation-calibration.md`.
-- **Do NOT open a new packet blind.** The next packet needs the user's explicit
-  go. Candidates are listed under "Staged / candidates" below.
+- **Status:** ACTIVE — **P-062 — Multi-Lens Execution Brief** (set active
+  2026-07-30, explicit user go). Branch
+  `claude/logic-mix-os-p061-detector-0dvr2t` @ set-active atop `ba127ff`;
+  `git merge-base HEAD 9cfe990` = **`9cfe990`** (verified at set-active).
+- Route: **builder → qa → reviewer → archivist**; receipt on close at
+  `build-os/receipts/P-062-multi-lens-execution-brief.md`.
 
-## What P-061 delivered (summary — full detail in the receipt)
+## P-062 — Multi-Lens Execution Brief
 
-**The OTHER HALF of the Happy Man fix.** P-060 fixed the masking crater; P-061
-kills the **fake 100/100 contrast/dynamics**. On a real 49-track song the
-audio-driven detector emitted **12 micro-sections**, inflating `_dynamic_mix`
-(`doctrine/doctrine_engine.py:394`) and `_section_contrast` (`:351`) to a
-ceiling-pinned fake 100/100. The fix makes the DETECTOR emit honest musical
-sections.
+**"From every angle" planning surface** — the Manus-pattern harness encoded as a
+**deterministic artifact**: harness ours, measurements ground truth, LLM
+narrates but **never scores**.
 
-| Constant | Was | **SHIPPED** | Frames (H=0.25) |
-|---|---|---|---|
-| `_MIN_RUN_SEC` | 0.5 | **5.0** — the load-bearing change | `MIN_RUN` 2 → 20 |
-| `_GAP_SEC` | 0.5 | **5.0** (Commit-2) | `GAP` 2 → 20 |
-| `_CLUSTER_SEC` | 1.0 | **2.0** (proven inert) | `CLUSTER_WIN` 4 → 8 |
-| `MIN_SECTION_SEC` | 4.0 | **7.0** | 16 → 28 |
-| `MAX_SECTIONS` | 12 | **12 — UNCHANGED** | — |
+### Why
 
-Seconds-level constants only; the frame integers stay **DERIVED** via
-`max(1, round(_X_SEC/H))`. Live invariant asserted by test:
-**`_MIN_RUN_SEC <= _GAP_SEC < MIN_SECTION_SEC`** (5.0 <= 5.0 < 7.0). 200s repro:
-12 sections with 4.0/4.0/7.0s slivers + a 64s cap block → **9 sections, no
-slivers, cap never binds**.
+The user wants Manus-style multi-angle song analysis as **planning for
+execution** of the actual mix. Manus = orchestration harness over Claude; the
+analysis quality is harness + Claude. **Decision (user-agreed): no hosted
+LLM/agent in the engine** — instead a deterministic multi-lens brief with a
+**draft-only host-synthesis prompt block**, per the standing P-025/P-031
+confidence policy (LLM = draft-only, NEVER high-confidence).
 
-**Two implementation commits — AT the ≤2 limit:** `4cbee14` (Commit-1) +
-`d941ecc` (Commit-2), atop set-active `6c81090` atop `e3d633c`. HEAD `a96a4cc`
-(documentation-only audit). `git merge-base HEAD 9cfe990` = **`9cfe990`**.
+### In scope
 
-**Gates:** qa **1426 / 0 / 0**, regression **93/93 `critical_failures == []`**,
-**independent detached Commit-1 isolation at `4cbee14` → 1420 / 0 / 0**,
-safety grep `"inferred"` **ZERO files**, three monkeypatch non-vacuity proofs each
-a **SOLE failure**. Reviewer **PASS, no must-fix** — **single-reviewer only;
-`codex` is NOT installed, so no second model reviewed the diff.**
+1. **NEW `logic_mix_os/renderers/execution_brief_renderer.py`** — core
+   `render_execution_brief(<parsed payload dicts>) -> str` producing ONE
+   markdown brief with:
+   - **SIX LENSES**, evidence numbers quoted **verbatim** from the payloads:
+     - *Arrangement/section*: `section_analysis.json` (list of {section_id,
+       name, start_time, end_time, emotional_goal, metrics,
+       contrast_vs_previous}) + `expanded_analysis.json["arrangement_density"]`.
+     - *Masking/spectral*: `masking_report.json` ({doctrine_rule, events[],
+       per_track_masking_risk, summary}; summary has critical_count /
+       moderate_count / blend_count / total_events / vocal_band_masking_count;
+       events have elements, frequency_range, section, severity, overlap,
+       reason, recommendation).
+     - *Dynamics/energy*: `doctrine_score.json` dynamic_mix_score /
+       section_contrast_score + evidence.dynamic_mix /
+       evidence.section_contrast; energy tags in
+       `expanded_analysis["listener_experience"]`.
+     - *Vocal*: vocal_centrality_score, vocal_role_fit_score + evidence,
+       summary.vocal_band_masking_count,
+       `expanded_analysis["vocal_performance"]`.
+     - *Space/depth*: physical_space_score, depth_hierarchy_score + evidence,
+       `depth_map.json`.
+     - *Translation/texture*: `expanded_analysis["translation"]` /
+       `["mono_compatibility"]` (also translation_score /
+       mono_compatibility_score on mix_plan), textural_coherence_score,
+       low_end_motion_score.
+   - **CROSS-LENS CONTRADICTIONS**: deterministic rule-based (e.g. high section
+     contrast but flat physical space), **no LLM**.
+   - **EXECUTION ORDER**: `mix_plan.json` per_track_actions ({diagnosis,
+     actions, automation, send_reverb, risk_class}), per_section_actions,
+     automation_plan, mute_candidates, next_pass ({priority, title, detail})
+     re-organized into ordered phases: gain/static balance → masking carves →
+     space/depth → section/automation → creative variants; cross-referenced to
+     `render_logic_checklist` items.
+   - **HOST-SYNTHESIS PROMPT BLOCK**: clearly fenced, instructs any LLM host
+     (Cowork/Claude session or pasted elsewhere) how to do the multi-angle
+     narrative synthesis ON TOP of the brief; **stamped DRAFT-ONLY** per
+     policy.
+   - **Producer-voiced** from `doctrine_score.json` producer + confidence
+     fields (no profile reload).
+2. **`cli.py`** — new `execution-brief` subparser: artifact-directory in, one
+   markdown out. **OPT-IN** — `write_artifacts` (pipeline.py:353) is NOT
+   touched. Precedent: `render-checklist` (cli.py:498) reads mix_plan.json
+   from disk.
+3. **`cowork.py`** — `render_execution_brief` registry row + `_SESSION_FLOW`
+   placement. In-session handler renders from ProjectAnalysis (pattern
+   cowork.py:351) via the dict-taking core.
+4. **Tests**: renderer determinism + per-producer rendering against the
+   COMMITTED sample trees (they are free fixtures — 5 producer trees under
+   `examples/`), contradiction-rule units, draft-only stamp assertion, CLI
+   smoke, and the CONSCIOUS cowork pin updates.
 
-**Two findings the next packet must inherit:** **(1) three packet targets were
-REFUTED BY MEASUREMENT** (`MIN_SECTION_SEC` ~8–10 → 7.0; `_MIN_RUN_SEC` ~1.5 →
-5.0 because 1.5s is provably INERT; `MAX_SECTIONS` ~8 → **left at 12** because a
-spacing-blind `_cap_sections` MANUFACTURES super-blocks when it binds — MAX=8 gave
-an 80s block, worse than the 64s bug). **(2) Commit-1 shipped a live regression**
-(a phrased lead vocal ERASED, 235 frames → 0) found by probe, not by the suite —
-*"Commit-1's isolation-greenness was true but blind."* Commit-2 fixed it and
-DISCOVERED a true vocal-entrance boundary at 32s.
+### ★ GUARD FINDING — the packet's central design constraint
 
-## ★ OPEN GATES — carried, NONE advanced by this close
+- Adding **ANY** file to `write_artifacts` breaks
+  `tests/test_sample_refresh.py:237-238` (`committed_files == fresh_files` AND
+  `len == 30`, over ALL 5 sample trees) and
+  `tests/test_mode_demo_refresh.py:349` (same comparison over 11 mode-demo
+  trees) — a **16-tree corpus re-pin for zero scoring benefit**. **REJECTED
+  (path a).**
+- **CHOSEN (path b): opt-in command reading a completed artifact dir** —
+  corpus byte-identical **BY CONSTRUCTION**; P-049 directory-set guard
+  (`test_sample_refresh.py:302`) and P-040/P-046 pins untouched. **The brief
+  must NEVER be committed into `examples/` trees.**
+- The cowork surface is ALSO pinned: `tests/test_cowork_mcp.py:424` asserts
+  `len(COMMANDS) == 35`; `tests/test_cowork_session_flow.py:70` asserts every
+  command in `_SESSION_FLOW`. **Commit-2 consciously bumps 35→36** + adds the
+  flow entry.
 
-- **★★ The merge of P-060 to default** — **still THE open user gate.** Default
-  remains **`9cfe990`**; would be **PR #38**.
-- **★ P-061's own merge** — a **SEPARATE later gate**. P-061 is **CLOSED as a
-  packet but NOT merged**; **no PR exists** for it.
-- **Thread B** — the vendored Build OS `.claude/` update to ClaudeOrchestrator
-  `7ef50e8`. Diagnosed, **not applied**. User picks: (a) isolated PR to default,
-  or (b) fold into the merge.
-- **PR #12** — still **OPEN** against the abandoned `main` base. Not closed;
-  recorded. User gate: close it or rebase it.
-- **P-024** — **delivered-but-never-formally-retired** (P-051 shipped the MCP
-  server it specified; P-052 proved it E2E). **NOT retired** — the note stands.
-- **HAPPY MAN RE-RUN #2** — still the real-world confirmation for **both** halves
-  (the crater fix AND the fake-100s fix).
+### Binding out-of-scope
 
-## Staged / candidates for the next packet (need an explicit user go)
+All `analyzers/*`, `doctrine_engine.py`, `masking_analyzer.py`, `pipeline.py`
+(**INCLUDING `write_artifacts`**), `planners/*`, goldens, `examples/` committed
+trees, fixtures, network, new dependency, apply-to-Logic. **Scoring corpus
+byte-identical.**
 
-1. **HAPPY MAN RE-RUN #2** (user-run, not a build packet) — the real-world
-   confirmation that the crater is gone AND contrast/dynamics are now honest.
-   Highest information value; costs no build.
-2. **Spacing-aware `_cap_sections`** — the packet P-061 named and deferred. It is
-   the prerequisite for ever lowering `MAX_SECTIONS` below 12.
-3. **The three non-blocking P-061 residue items** (stale comment at
-   `section_detector.py:199`; the behavioural test that guards ~8.0s rather than
-   the stated 7.0s; `MIN_SECTION_SEC = 7.0`'s thin 1.0s margin over a 120bpm 4-bar
-   section) — small, could ride along with (2).
-4. The standing user-gated directions: ambient patience (Eno-deferral #2) ·
-   generative process (Eno-deferral #3) · CLA/Halee/Timbaland textural weighting ·
-   the `<2 beds` fallback calibration · the real Cowork host connection (manual) ·
-   apply-to-Logic (FUTURE, re-gated — never auto; the safety line stands) · a
-   sixth producer (roster frozen at five).
+### Commit plan (≤2)
+
+- **Commit-1** = renderer + CLI + tests — **green in isolation, zero guard
+  files touched**.
+- **Commit-2** = cowork row + `_SESSION_FLOW` + the two pin bumps (35→36,
+  flow) + tests.
+
+### Baseline to protect (measured at `ba127ff`)
+
+Suite **1426 passed / 0 failed / 0 warnings**; regression **93/93,
+`critical_failures == []`**. Env: **pyloudnorm ABSENT** (`_HAVE_PYLN=False`,
+`_HAVE_SCIPY=True`), numpy + scipy + soundfile present; `fixtures/` is
+**GENERATED** (run `fixtures/generate_fixtures.py` or pytest-conftest first);
+run bare `python3 -m pytest` — **NOT `pytest -q`** (addopts trap: pyproject
+sets `-q` already, doubling it suppresses the count line).
+
+## ★ OPEN GATES — carried, untouched by this packet
+
+- **P-060 merge** (PR #38 candidate) — still THE open user gate; default
+  remains `9cfe990`.
+- **P-061 merge** — closed as a packet, NOT merged; no PR exists.
+- **PR #12** — still OPEN against the abandoned `main` base.
+- **Happy Man RE-RUN #2** — real-world confirmation for both halves.
+- **Contract-fingerprint guard candidate.**
+- **No push/merge/PR from this packet without separate explicit go.**
 
 ## Environment (reproduce on this or the corpus will appear to fail)
 
-numpy + scipy + soundfile installed, **`pyloudnorm` NOT installed** — the corpus
-was produced on the **scipy tier** of `dsp.integrated_loudness()`'s
+numpy + scipy + soundfile installed, **`pyloudnorm` NOT installed** — the
+corpus was produced on the **scipy tier** of `dsp.integrated_loudness()`'s
 pyloudnorm→scipy→FFT ladder. With pyloudnorm present, 5 `test_sample_refresh`
 tests fail on ~0.5dB lufs deltas (an ENVIRONMENT artifact, not a regression).
-Verify `_HAVE_PYLN=False, _HAVE_SCIPY=True`. **P-025 standing fact:** `fixtures/`
-is **GENERATED** — run `fixtures/generate_fixtures.py` before regression in a
-fresh / detached checkout. **★ The pytest `-q` trap:** `pyproject` sets
-`addopts = "-q"`, so `pytest -q` silently suppresses the summary count line while
-still exiting 0 — use bare `python3 -m pytest` or `-o addopts=""`.
+Verify `_HAVE_PYLN=False, _HAVE_SCIPY=True`. **P-025 standing fact:**
+`fixtures/` is **GENERATED** — run `fixtures/generate_fixtures.py` before
+regression in a fresh / detached checkout. **★ The pytest `-q` trap:**
+`pyproject` sets `addopts = "-q"`, so `pytest -q` silently suppresses the
+summary count line while still exiting 0 — use bare `python3 -m pytest` or
+`-o addopts=""`.
 
 ---
-_Cleared by the archivist on the P-061 close (2026-07-26). **No packet is in
-flight.** The full P-061 record — including the three refuted targets, the
-Commit-1 regression, the `_GAP_SEC` adjudication, and every open gate — lives in
+_Set ACTIVE by the archivist on 2026-07-30 (explicit user go; orchestrator
+scoped). Predecessor P-061 record lives in
 `build-os/receipts/P-061-detector-over-segmentation-calibration.md` and
-`build-os/memory/residue.md`. One packet at a time: builder → qa + reviewer →
+`build-os/memory/residue.md`. One packet at a time: builder → qa → reviewer →
 archivist → receipt._
