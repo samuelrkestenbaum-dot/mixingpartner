@@ -27,6 +27,7 @@ from .planners.next_pass_planner import generate_creative_hypotheses
 from .project import load_manifest
 from .regression import run_regression_suite
 from .renderers import checklist_renderer
+from .renderers.execution_brief_renderer import load_brief_payloads, render_execution_brief
 from .renderers.operator_view import render_status
 from .validation.output_validator import validate_output
 
@@ -136,6 +137,22 @@ def _run_render_checklist(args) -> int:
         print(f"Wrote {args.out}")
     else:
         print(md)
+    return 0
+
+
+def _run_execution_brief(args) -> int:
+    # P-062: OPT-IN reader over a completed artifact directory (the guard
+    # finding: the brief never joins ``write_artifacts``, so the pinned sample
+    # corpus stays byte-identical BY CONSTRUCTION). Missing files inside the
+    # directory degrade to honest "(artifact missing: …)" lines.
+    artifact_dir = Path(args.dir)
+    if not artifact_dir.is_dir():
+        print(f"Not a directory: {args.dir}", file=sys.stderr)
+        return 2
+    md = render_execution_brief(load_brief_payloads(artifact_dir))
+    out = Path(args.out) if args.out else artifact_dir / "execution_brief.md"
+    out.write_text(md + "\n", encoding="utf-8")
+    print(f"Wrote {out}")
     return 0
 
 
@@ -499,6 +516,12 @@ def build_parser() -> argparse.ArgumentParser:
     rc.add_argument("--plan", required=True, help="Path to mix_plan.json")
     rc.add_argument("--out", help="Optional output .md path (default: stdout)")
     rc.set_defaults(func=_run_render_checklist)
+
+    eb = sub.add_parser("execution-brief",
+                        help="Render the multi-lens execution brief from an analysis output directory")
+    eb.add_argument("--dir", required=True, help="Artifact directory (the output of analyze)")
+    eb.add_argument("--out", help="Optional output .md path (default: <dir>/execution_brief.md)")
+    eb.set_defaults(func=_run_execution_brief)
 
     vo = sub.add_parser("validate-output", help="Validate an output directory against the schemas")
     vo.add_argument("--output", required=True, help="Output directory to validate")
