@@ -4583,6 +4583,8 @@ PR created, no merge, default unchanged._
 5. **`API_VERSION` is now 1.1** — the contract-fingerprint guard candidate
    (hash the contract surface) REMAINS OPEN and is now **mildly more urgent**:
    two hand-bumps in the literal's lifetime.
+   **[RESOLVED by P-063, 2026-07-30 — `contract_fingerprint()` landed, golden
+   pinned, pair pin live. See the P-063 STATUS block below.]**
 6. **Amend-vs-third-commit precedent:** a reviewer must-fix folded into an
    UNPUSHED Commit-2 by amend (no remote rewrite, Commit-1 untouched, delta =
    exactly the must-fix files) is legitimate under the ≤2-commit contract —
@@ -4604,3 +4606,57 @@ PR created, no merge, default unchanged._
   `execution-brief --dir <out>`.
 
 _Appended by the archivist on P-062 close (2026-07-30)._
+
+## ★★★ STATUS (P-063 close, 2026-07-30): BOTH GATES GREEN — CONTRACT DRIFT IS NOW DETECTED. The P-023 reviewer watch-item ("a hash of the contract surface") is CLOSED: `contract_fingerprint()` (sha256 over the canonical per-command behavioral surface: name, params, side_effect, phase) is live in `describe_contract()`, the golden is pinned, the tautological version test is GONE, and the pair pin `(API_VERSION, fingerprint) == ("1.2", golden)` fails correctly in BOTH directions. P-062 residue item 5 is RESOLVED (marked inline above).
+
+- **P-063 (Contract-Surface Fingerprint Guard) closed 2026-07-30:** qa GREEN
+  (suite **1477 / 0 / 0** = baseline 1470 + 7; regression **93/93,
+  `critical_failures == []`**; single-commit ladder with code-tree hash
+  identity across `5d52253`/`4386a18`/`f4e26eb` so HEAD-green IS
+  Commit-1-green; scope exactly 3 files, zero corpus/analyzer/planner/renderer
+  diffs; safety grep clean; non-vacuity reproduced independently —
+  side_effect flip and synthetic command each moved the hash, prose reword did
+  NOT; determinism across two processes) + reviewer **PASS, no must-fix**
+  (single-reviewer — codex absent, stated plainly; surface definition verified
+  against real consumers: the adapter derives types from param defaults so
+  type drift IS captured; golden is a true literal pin with an independent
+  `_recompute_fingerprint`; stopping point ruled correct — automated
+  detection, manual bump). **ONE atomic commit `56b4051`** ("P-063:
+  contract-surface fingerprint guard (drift now detected)", 3 files,
+  +240/−12) atop set-active `f4e26eb` atop restart `4386a18` atop the NEW
+  default `5d52253` (PR #38 merge). Golden:
+  `1e712171d32a9bc240fc1a67c57a63b67accb7ca4086e32dfc035f7f8301442e`.
+  `API_VERSION` 1.1 → 1.2 (additive; P-023's MINOR rule applied to itself).
+  phase INCLUDED (machine-consumed flow guidance — a phase move alone moves
+  the hash); description/purpose EXCLUDED (prose — hash-stable under
+  rewording); api_version excluded (circularity); invocation excluded (fixed
+  template). Receipt:
+  `build-os/receipts/P-063-contract-fingerprint-guard.md`.
+
+### NEW residue opened by P-063 (recorded, non-blocking)
+
+1. **Per-command surface only:** top-level `describe_contract` additive fields
+   still rely on manual bump discipline (demonstrated by this very packet —
+   adding `contract_fingerprint` itself did not move the hash; the 1.2 bump
+   was manual). A strict top-level key-set pin is a possible tiny follow-up.
+2. **Cosmetic:** `_REPIN_PROTOCOL` wording is slightly off in the
+   bump-without-surface-change branch ("contract surface changed" opens the
+   message); remediation steps are correct.
+
+### Resolved by / around this close
+
+- **P-062 residue item 5** (contract-fingerprint guard candidate) — RESOLVED
+  by P-063.
+- **PR #12** — CLOSED this session (2026-07-30, on the user's go). No longer
+  an open gate.
+
+### Open gates (after this close)
+
+- **HAPPY MAN RE-RUN #2** — user-side, unblocked by the PR #38 merge:
+  analyze, then `execution-brief --dir <out>`.
+- **The merge of P-063** (+ the PR #38-merge-record doc commits on this
+  branch) to default — needs the user's explicit word.
+- **Memory note:** default is `5d52253` (PR #38 carried P-060/P-061/P-062 +
+  the Build OS capability routing); fresh sessions branch from it.
+
+_Appended by the archivist on P-063 close (2026-07-30)._

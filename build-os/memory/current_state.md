@@ -5501,3 +5501,36 @@ _Updated by the archivist on close. **Last advanced on P-062 close (2026-07-30) 
 > **contract-fingerprint guard** candidate · **HAPPY MAN RE-RUN #2** (now
 > unblocked: `git pull` on the user's Mac delivers both fixes + the
 > execution-brief command).
+
+> **★ ADVANCED ON P-063 CLOSE (2026-07-30) at `56b4051` on branch
+> `claude/logic-mix-os-p061-detector-0dvr2t`, tree clean.** P-063
+> (Contract-Surface Fingerprint Guard) is **CLOSED, BOTH GATES GREEN** — the
+> P-023 watch-item is done and **contract drift is now DETECTED**:
+> `contract_fingerprint()` in `cowork.py` = sha256 over the canonical
+> per-command behavioral surface (name, params, side_effect, phase — phase
+> INCLUDED as machine-consumed flow guidance; description/prose EXCLUDED;
+> api_version excluded for circularity), exposed in `describe_contract()`,
+> golden pinned
+> `1e712171d32a9bc240fc1a67c57a63b67accb7ca4086e32dfc035f7f8301442e`,
+> `API_VERSION` **1.1 → 1.2** (additive, P-023's own MINOR rule applied to
+> itself). The tautological `test_api_version_is_present_and_stable` is GONE,
+> replaced by the pair pin `(API_VERSION, fingerprint) == ("1.2", golden)`
+> with the `_REPIN_PROTOCOL` failure message — it fails correctly in BOTH
+> directions. qa GREEN: suite **1477 / 0 / 0** (baseline 1470 + 7), regression
+> **93/93, `critical_failures == []`**, single-commit ladder with code-tree
+> hash identity across `5d52253`/`4386a18`/`f4e26eb` (HEAD-green IS
+> Commit-1-green), scope exactly 3 files (`cowork.py`,
+> `tests/test_cowork_contract.py`, `COWORK_CONTRACT.md`, +240/−12), safety
+> grep clean, non-vacuity reproduced independently. Reviewer **PASS, no
+> must-fix** (single-reviewer, codex absent). **ONE atomic commit `56b4051`**
+> atop set-active `f4e26eb` atop restart `4386a18` atop the NEW default
+> **`5d52253`** (the PR #38 merge — fresh sessions branch from it);
+> `git merge-base HEAD 5d52253` = `5d52253` verified. Receipt:
+> `build-os/receipts/P-063-contract-fingerprint-guard.md`. **NO PACKET IN
+> FLIGHT** — `active_packet.md` cleared. **PR #12 is RESOLVED — CLOSED this
+> session on the user's go.** P-062 residue item 5 (the fingerprint-guard
+> candidate) is RESOLVED. **OPEN USER GATES:** the **merge of P-063** (+ the
+> PR #38-merge-record doc commits on this branch) to default — needs the
+> user's explicit word (coordinator pushes the branch; NO merge without go) —
+> and **HAPPY MAN RE-RUN #2** (user-side, unblocked: analyze, then
+> `execution-brief --dir <out>`).
