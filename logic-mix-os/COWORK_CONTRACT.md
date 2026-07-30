@@ -17,7 +17,8 @@ object unpacked straight into the command's keyword arguments.
 
 ## Stability guarantee
 
-- **Versioned.** `describe_contract` reports an `api_version` (currently `"1.0"`).
+- **Versioned.** `describe_contract` reports an `api_version` (currently `"1.1"` —
+  the P-062 MINOR bump for the additive `render_execution_brief` command).
   Pin it. MAJOR bumps on any breaking change to a command's params, its
   `side_effect`, or its removal; MINOR bumps on additive commands.
 - **Deterministic, JSON out.** Introspection commands are pure: same input, same

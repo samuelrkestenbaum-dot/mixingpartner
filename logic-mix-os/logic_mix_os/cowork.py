@@ -20,11 +20,13 @@ from .constants import IDENTITY_FAMILY
 from .memory import ProjectMemory
 from .pipeline import analyze
 from .renderers.checklist_renderer import render_logic_checklist
+from .renderers.execution_brief_renderer import render_execution_brief
 
 # P-023 — the raw-CLI agent contract is VERSIONED. Bump this (semantic: MAJOR on a
 # breaking change to a command's params/side_effect/removal, MINOR on additive) so
 # Claude Cowork can pin the surface it introspected. Stable string; do not compute.
-API_VERSION = "1.0"
+# P-062 bumped 1.0 -> 1.1 (additive: render_execution_brief, 35 -> 36 commands).
+API_VERSION = "1.1"
 
 
 def build_context(stems=None, manifest=None, memory_dir=None, bounce=None,
@@ -125,6 +127,26 @@ def _update_taste(ctx, label=None, context=None, **k):
     return mem.add_feedback(label, context=context)
 
 
+def _render_execution_brief(ctx, **k):
+    # P-062 — the multi-lens execution brief, in-session. Renders from THIS
+    # context's ProjectAnalysis through the dict-taking core: the fields handed
+    # over are the SAME plain dict/list objects ``pipeline.write_artifacts``
+    # serializes into the artifact files the opt-in CLI path reads
+    # (section_analysis.json, masking_report.json, doctrine_score.json,
+    # expanded_analysis.json, depth_map.json, mix_plan.json), so the in-session
+    # brief and the artifact-dir brief agree byte for byte. Pure read-only
+    # projection: side_effect "none", no disk write.
+    r = _r(ctx)
+    return render_execution_brief({
+        "section_analysis": r.section_analysis,
+        "masking_report": r.masking_report,
+        "doctrine_score": r.doctrine_score,
+        "expanded_analysis": r.expanded,
+        "depth_map": r.depth_map,
+        "mix_plan": r.mix_plan,
+    })
+
+
 def _build_missing_tool(ctx, capability_gap="", **k):
     return {"capability_gap": capability_gap,
             "recommendation": "Spec a Mode-D helper Audio Unit (see bridge/au_helper_plugin_spec.md) "
@@ -187,8 +209,9 @@ _SESSION_FLOW = {
         },
         {
             "phase": "checklist",
-            "purpose": "Export the plan as a Logic-native, human-executable checklist.",
-            "commands": ["render_logic_checklist"],
+            "purpose": "Export the plan as a Logic-native, human-executable checklist "
+                       "and the multi-lens execution brief.",
+            "commands": ["render_logic_checklist", "render_execution_brief"],
         },
         {
             "phase": "validate",
@@ -349,6 +372,7 @@ COMMANDS = {
     "generate_automation_plan": {"desc": "Automation plan", "fn": lambda c, **k: _r(c).mix_plan.get("automation_plan")},
     "compare_to_reference": {"desc": "Reference delta", "fn": lambda c, **k: _r(c).reference_delta or {"note": "no reference supplied"}},
     "render_logic_checklist": {"desc": "Logic checklist (markdown)", "fn": lambda c, **k: render_logic_checklist(_r(c).mix_plan)},
+    "render_execution_brief": {"desc": "Multi-lens execution brief (markdown: six lenses, cross-lens contradictions, execution phases, draft-only copilot block)", "fn": _render_execution_brief},
     "score_mix": {"desc": "Doctrine scores", "fn": lambda c, **k: _r(c).doctrine_score},
     "validate_mix_pass": {"desc": "Scores + stop conditions + warnings", "fn": _validate_mix_pass},
     "suggest_next_pass": {"desc": "Prioritised next-pass moves", "fn": lambda c, **k: _r(c).mix_plan.get("next_pass")},

@@ -22,8 +22,9 @@ def test_command_catalog_is_broad():
                  "run_creative_engine", "run_governance", "map_manipulation_capabilities"]:
         assert name in cmds
     # P-019 added record_mix_pass (32 -> 33); P-020 added describe_session (33 -> 34);
-    # P-023 added describe_contract (34 -> 35).
-    assert len(COMMANDS) == 35
+    # P-023 added describe_contract (34 -> 35); P-062 added render_execution_brief
+    # (35 -> 36, CONSCIOUS).
+    assert len(COMMANDS) == 36
 
 
 def test_commands_return_jsonable(ctx):

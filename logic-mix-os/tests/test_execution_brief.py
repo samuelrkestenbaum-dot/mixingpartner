@@ -235,8 +235,8 @@ def test_collect_facts_from_payloads_low_end_and_width():
             {"severity": "critical", "frequency_range": "full-band (stereo image)"},
         ]},
         "mix_plan": {"automation_plan": [
-            {"section": "c1", "name": "Chorus", "gesture": "g",
-             "moves": ["Widest point of the song"]},
+            {"section": "c1", "name": "Chorus", "gesture": "chorus_bloom",
+             "moves": ["Slightly widen supporting elements"]},
         ]},
     }
     facts = collect_facts(payloads)
@@ -244,6 +244,62 @@ def test_collect_facts_from_payloads_low_end_and_width():
     assert facts["plan_recommends_width"] is True
     assert facts["low_end_motion_score"] == 10.0
     assert "static_low_end_critical_masking" in _fired_ids(facts)
+
+
+def test_mono_rule_silent_on_the_repos_own_narrowing_language():
+    """Reviewer must-fix (P-062): the planners themselves emit NARROWING text
+    containing "width"/"widest" — a mono<70 mix whose only width language says
+    NARROW must NOT trip mono_risk_while_widening (the rule's message claims
+    the plan recommends widening; asserting that here would be false)."""
+    narrowing_plan = {
+        "per_track_actions": [{
+            "track": "Pad",
+            "actions": [{
+                "plugin": "Direction Mixer",
+                # logic_action_generator.py's felt-element narrowing move.
+                "setting": "Narrow stereo width to ~35-50%.",
+                "reason": "Felt/atmospheric element should not occupy the same "
+                          "width as heard elements.",
+                "risk_class": 3,
+            }],
+            "automation": [{
+                "parameter": "width",
+                # mix_planner.py's width_crowding language.
+                "move": "reserve the widest placement for one element",
+                "reason": "Width crowding.",
+            }],
+            "send_reverb": "",
+        }],
+        "next_pass": [{
+            "priority": 3,
+            # next_pass_planner.py's loop/width-control language.
+            "title": "Stereo loop / width control",
+            "detail": "The loop is very wide and sits forward. Narrow to "
+                      "~35-50% or automate width by section.",
+        }],
+    }
+    facts = collect_facts({
+        "doctrine_score": {},
+        "expanded_analysis": {"mono_compatibility": {"mono_score": 55.0}},
+        "mix_plan": narrowing_plan,
+    })
+    assert facts["mono_compatibility_score"] == 55.0
+    assert facts["plan_recommends_width"] is False
+    assert "mono_risk_while_widening" not in _fired_ids(facts)
+
+    # Firing direction stays live: the same mono score with GENUINE widening
+    # text (the chorus_bloom gesture) must still trip the rule.
+    widening_plan = {"automation_plan": [
+        {"section": "c1", "name": "Chorus", "gesture": "chorus_bloom",
+         "moves": ["Slightly widen supporting elements"]},
+    ]}
+    facts = collect_facts({
+        "doctrine_score": {},
+        "expanded_analysis": {"mono_compatibility": {"mono_score": 55.0}},
+        "mix_plan": widening_plan,
+    })
+    assert facts["plan_recommends_width"] is True
+    assert "mono_risk_while_widening" in _fired_ids(facts)
 
 
 def test_no_contradictions_line_when_none_fire():
@@ -428,6 +484,40 @@ def test_cli_execution_brief_missing_dir_is_clean_error(tmp_path, capsys):
     rc = cli.main(["execution-brief", "--dir", str(tmp_path / "nope")])
     assert rc == 2
     assert "Not a directory" in capsys.readouterr().err
+
+
+# --------------------------------------------------------------------------- #
+# Cowork surface (P-062 Commit-2) — the in-session command returns EXACTLY the
+# brief the renderer core produces for the same analysis.
+# --------------------------------------------------------------------------- #
+def test_cowork_command_matches_renderer_core(analyzed):
+    from logic_mix_os.cowork import build_context, run_command
+
+    result = analyzed["simple_vocal_piano_song"]
+    ctx = build_context(result=result)
+    via_cowork = run_command("render_execution_brief", ctx)
+    direct = render_execution_brief({
+        "section_analysis": result.section_analysis,
+        "masking_report": result.masking_report,
+        "doctrine_score": result.doctrine_score,
+        "expanded_analysis": result.expanded,
+        "depth_map": result.depth_map,
+        "mix_plan": result.mix_plan,
+    })
+    assert via_cowork == direct
+    assert COPILOT_HEADING in via_cowork
+    for heading in LENS_HEADINGS:
+        assert heading in via_cowork
+
+
+def test_cowork_command_is_read_only_in_contract():
+    from logic_mix_os.cowork import run_command
+
+    contract = run_command("describe_contract", {"result": None, "memory": None})
+    entry = contract["commands"]["render_execution_brief"]
+    assert entry["side_effect"] == "none"      # pure projection, writes nothing
+    assert entry["phase"] == "checklist"       # exported alongside the checklist
+    assert entry["params"] == []               # no command params beyond context
 
 
 # --------------------------------------------------------------------------- #

@@ -151,10 +151,15 @@ def test_describe_session_output_is_jsonable():
     json.dumps(_describe())  # must not raise
 
 
-def test_registry_count_is_35():
+def test_registry_count_is_36():
     # P-023 added describe_contract (34 -> 35); it is parked in _SESSION_FLOW's
     # auxiliary bucket alongside describe_session, so the completeness invariant
-    # above stays satisfied.
-    assert len(COMMANDS) == 35
+    # above stays satisfied. P-062 added render_execution_brief (35 -> 36,
+    # CONSCIOUS), placed in the "checklist" phase next to render_logic_checklist
+    # — the plan-export step of the flow.
+    assert len(COMMANDS) == 36
     assert "describe_session" in COMMANDS
     assert "describe_contract" in COMMANDS
+    assert "render_execution_brief" in COMMANDS
+    checklist = next(p for p in _SESSION_FLOW["phases"] if p["phase"] == "checklist")
+    assert "render_execution_brief" in checklist["commands"]

@@ -137,9 +137,13 @@ _HIGH_STATIC = 70
 _LOW_DYNAMIC = 40
 
 # Width-recommendation keywords for the mono-vs-widening rule (deliberately
-# narrow: only unambiguous widening language; "stereo" alone is excluded
-# because "narrow stereo image" is the OPPOSITE move).
-_WIDTH_KEYWORDS = ("widen", "wider", "widest", "width", "mid-side", "mid/side")
+# narrow: only unambiguous WIDENING language). Reviewer-fixed (P-062): the
+# repo's own planners emit NARROWING text containing "width"/"widest"
+# ("Narrow stereo width to ~35-50%.", "reserve the widest placement for one
+# element"), so those two are EXCLUDED — as is bare "stereo" ("narrow stereo
+# image" is the opposite move). Genuine widening plans still trip "widen"
+# (e.g. the chorus_bloom gesture's "Slightly widen supporting elements").
+_WIDTH_KEYWORDS = ("widen", "wider", "mid-side", "mid/side")
 
 
 @dataclass(frozen=True)

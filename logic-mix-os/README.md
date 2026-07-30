@@ -398,7 +398,7 @@ a fifth profile joins the comparison without a code change.
 | `memory-show --memory-dir` | Mix-pass history, taste profile, ledger size |
 | `feedback --memory-dir --label` | Record taste feedback → taste profile |
 | `album --projects DIR` | Album-level coherence across songs |
-| `cowork --list` / `cowork --name CMD` | Claude Cowork command surface (35 commands) |
+| `cowork --list` / `cowork --name CMD` | Claude Cowork command surface (36 commands) |
 | `export-actions --plan --format json\|applescript\|shortcuts` | Bridge export |
 | `bridge-dryrun --plan [--review-mode]` | Simulate applying actions (never executes) |
 | `regression [--fixtures] [--update-golden]` | Golden-output + doctrine regression |
@@ -571,7 +571,7 @@ the UI. All of the following are implemented and tested:
 - **Source-aware auditors (§19–21)** — live / synth-MIDI / sampler / loop.
 - **Logic bridge (§41–42)** — action export, AppleScript/Shortcuts codegen,
   dry-run executor (**never executes** here), helper-AU spec.
-- **Cowork command surface (§43)** — 35 bounded commands.
+- **Cowork command surface (§43)** — 36 bounded commands.
 - **UI (§50)** — local self-contained HTML dashboard + terminal `status`.
 
 ### What remains environment-bound
