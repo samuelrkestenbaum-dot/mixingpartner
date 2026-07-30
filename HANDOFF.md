@@ -43,6 +43,39 @@ against git ancestry and the GitHub PR ledger, not chat memory._
 
 ## Thread A — Logic Mix OS
 
+### ★ P-062 — Multi-Lens Execution Brief (CLOSED 2026-07-30, dual-green)
+
+The "from every angle" planning surface, built on the user's direction after the
+Manus discussion (Manus = orchestration harness over Claude; the harness was
+encoded as a **deterministic artifact** rather than wiring any hosted LLM into
+the engine — P-025/P-031 policy: measurements decide, language explains, LLM =
+draft-only).
+
+- **What it is:** `execution-brief` — opt-in CLI (`--dir <artifacts>`) + the 36th
+  cowork registry command. Six lenses quoting artifact numbers verbatim, five
+  deterministic cross-lens contradiction rules, the mix plan re-cut into five
+  execution phases (gain/static → masking carves → space/depth →
+  section/automation → creative), and a fenced DRAFT-ONLY host-synthesis prompt
+  block for any LLM copilot. `write_artifacts` untouched — corpus byte-identical
+  **by construction** (the 30-file/16-tree pins never moved).
+- **Commits:** `3e7ccc9` (renderer + CLI + tests, green in isolation 1467/0) +
+  `3a7144f` (cowork surface 35→36, `API_VERSION` 1.0→1.1 per P-023's own rule,
+  reviewer must-fix folded in by amend — nothing had been pushed, Commit-1
+  untouched).
+- **Gates:** QA GREEN (suite **1470/0/0**, regression 93/93, independent detached
+  Commit-1 isolation, two count-conservation mutations proven red, determinism
+  sha-proven). Reviewer **fix-then-pass → pass**: caught `_WIDTH_KEYWORDS`
+  containing "width"/"widest", which appear in the repo's own *narrowing* planner
+  strings — the mono rule could have asserted "the plan recommends widening" when
+  the plan says narrow. Fixed to `("widen","wider","mid-side","mid/side")` +
+  a silent-direction test. Single-reviewer both rounds (codex absent).
+- **Receipt:** `build-os/receipts/P-062-multi-lens-execution-brief.md`.
+- **Use on Happy Man:** after `analyze`, run
+  `python3 -m logic_mix_os.cli execution-brief --dir <out dir>` — or request it
+  in a Cowork session.
+
+### The original two real-audio bugs (both halves now fixed)
+
 The engine ran on a real 49-track song ("Happy Man") and real audio exposed two
 bugs the synthetic fixtures could not:
 
@@ -168,6 +201,10 @@ is already at `7ef50e8` and clean** — ready when called.
 2. **Merge P-061 to default?** ✓ CLOSED 2026-07-26 (dual-green, receipt written);
    **the merge itself is a separate, still-open gate.** It sits on top of P-060,
    so merging P-060 first (or both together) is the natural sequence.
+   - **P-062 now stacks on top as well** (closed 2026-07-30, dual-green). Three
+     closed packets — P-060, P-061, P-062 — plus the Thread B config update all
+     sit on this branch awaiting the user's merge word; a single PR carrying the
+     branch is the natural unit.
 3. **Orchestrator update** — isolated PR to default, or folded into the merge?
 4. **PR #12 is still OPEN against the abandoned `main` base** ("Hardening Packet
    11 — Typed LogicActionPayload Contract"). The only open PR on the repo; PRs
