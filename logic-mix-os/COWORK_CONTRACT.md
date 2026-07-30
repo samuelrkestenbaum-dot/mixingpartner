@@ -17,16 +17,26 @@ object unpacked straight into the command's keyword arguments.
 
 ## Stability guarantee
 
-- **Versioned.** `describe_contract` reports an `api_version` (currently `"1.1"` —
-  the P-062 MINOR bump for the additive `render_execution_brief` command).
+- **Versioned.** `describe_contract` reports an `api_version` (currently `"1.2"` —
+  the P-063 MINOR bump for the additive `contract_fingerprint` field).
   Pin it. MAJOR bumps on any breaking change to a command's params, its
-  `side_effect`, or its removal; MINOR bumps on additive commands.
+  `side_effect`, or its removal; MINOR bumps on additive changes.
+- **Fingerprinted.** `describe_contract` also reports a `contract_fingerprint`:
+  a sha256 hex over a canonical JSON serialization of the **behavioral surface**
+  — per command (sorted by name): `name`, `params` (from the real handler
+  signature), `side_effect`, and `phase`. Prose (`purpose`) is excluded, so
+  wording tweaks do not move it; `api_version` is excluded to keep the protocol
+  non-circular. Any surface change moves the hash. **Bump-and-re-pin protocol:**
+  when the pinned pair in `tests/test_cowork_contract.py` goes red, the contract
+  surface changed — bump `API_VERSION` (MAJOR breaking / MINOR additive), re-pin
+  the fingerprint golden, and update the version stated here.
 - **Deterministic, JSON out.** Introspection commands are pure: same input, same
   bytes. Every command's output is JSON-serializable.
 - **Self-describing — do not reverse-engineer.** Two introspection commands are
   the source of truth:
-  - **`describe_contract`** — the full contract: `api_version`, the `invocation`
-    pattern, and per command `{purpose, phase, params, side_effect}`. `params`
+  - **`describe_contract`** — the full contract: `api_version`,
+    `contract_fingerprint`, the `invocation` pattern, and per command
+    `{purpose, phase, params, side_effect}`. `params`
     is derived from the real handler signature (via `inspect.signature`), so it
     cannot drift from the code. `side_effect` is an honest, declared
     classification (see below).

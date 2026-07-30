@@ -6,7 +6,8 @@ instead of reverse-engineering an ad-hoc CLI. ``describe_contract`` returns a pu
 deterministic JSON document::
 
     {
-      "api_version": "1.1",
+      "api_version": "1.2",
+      "contract_fingerprint": "<sha256 hex of the canonical behavioral surface>",
       "invocation": "...",
       "commands": {
         "<name>": {"purpose", "phase", "params", "side_effect"}, ...
@@ -37,7 +38,12 @@ from __future__ import annotations
 import inspect
 import json
 
-from logic_mix_os.cowork import API_VERSION, COMMANDS, run_command
+from logic_mix_os.cowork import (
+    API_VERSION,
+    COMMANDS,
+    contract_fingerprint,
+    run_command,
+)
 
 
 def _contract():
@@ -216,12 +222,23 @@ def test_phase_is_session_flow_phase_or_auxiliary():
 # --------------------------------------------------------------------------- #
 # Versioned + deterministic.
 # --------------------------------------------------------------------------- #
-def test_api_version_is_present_and_stable():
+def test_api_version_is_present_and_coupled_to_the_fingerprint():
+    """P-063 REPLACES the old tautological ``test_api_version_is_present_and_stable``.
+
+    That test pinned the literal to its own value, so it could never detect a
+    change in the contract SURFACE. The version literal is now COUPLED to the
+    surface fingerprint: the two are pinned as a PAIR (below), so a surface
+    change without a version bump — or a version bump without a re-pin — fails
+    loudly with the protocol in the message.
+    """
     contract = _contract()
     assert contract["api_version"] == API_VERSION
-    # P-062: MINOR bump 1.0 -> 1.1 per the registry's own semantic rule
-    # (additive change: render_execution_brief, 35 -> 36 commands).
-    assert isinstance(API_VERSION, str) and API_VERSION == "1.1"
+    assert isinstance(API_VERSION, str)
+    # P-063: MINOR bump 1.1 -> 1.2 (additive: contract_fingerprint field).
+    assert (API_VERSION, contract_fingerprint()) == (
+        PINNED_API_VERSION,
+        PINNED_CONTRACT_FINGERPRINT,
+    ), _REPIN_PROTOCOL
 
 
 def test_invocation_string_is_present():
@@ -238,6 +255,152 @@ def test_describe_contract_is_deterministic():
 
 def test_describe_contract_output_is_jsonable():
     json.dumps(_contract())  # must not raise
+
+
+# --------------------------------------------------------------------------- #
+# P-063 — the contract-surface fingerprint guard.
+#
+# The GOLDEN PAIR below is the drift detector the old version test could not
+# be: any change to the behavioral surface (a command added/removed, a param
+# change, a side_effect reclassification, a phase move) moves the sha256 and
+# fails the pair pin — forcing a CONSCIOUS API_VERSION bump + re-pin. Prose
+# (each command's ``purpose``/description) is EXCLUDED by design: wording
+# tweaks must not re-pin.
+# --------------------------------------------------------------------------- #
+PINNED_API_VERSION = "1.2"
+PINNED_CONTRACT_FINGERPRINT = (
+    "1e712171d32a9bc240fc1a67c57a63b67accb7ca4086e32dfc035f7f8301442e"
+)
+_REPIN_PROTOCOL = (
+    "contract surface changed: bump API_VERSION and re-pin the fingerprint "
+    "(update PINNED_API_VERSION + PINNED_CONTRACT_FINGERPRINT here, "
+    "API_VERSION in logic_mix_os/cowork.py, and the version in "
+    "COWORK_CONTRACT.md — MAJOR on breaking, MINOR on additive)"
+)
+
+
+def _recompute_fingerprint() -> str:
+    """INDEPENDENT recomputation of the documented canonicalization.
+
+    Mirrors the contract's spec without calling ``contract_fingerprint``:
+    sha256 over ``json.dumps(surface, sort_keys=True, separators=(",", ":"))``
+    where surface = per command, sorted by name: name, params (from the real
+    handler signature: name + declared default), side_effect, phase. Purpose
+    is deliberately absent (prose).
+    """
+    import hashlib
+
+    from logic_mix_os.cowork import _SESSION_FLOW, _SIDE_EFFECTS
+
+    phase_of = {}
+    for phase in _SESSION_FLOW["phases"]:
+        for cmd in phase["commands"]:
+            phase_of[cmd] = phase["phase"]
+    for cmd in _SESSION_FLOW["auxiliary"]:
+        phase_of[cmd] = "auxiliary"
+
+    surface = []
+    for name in sorted(COMMANDS):
+        params = []
+        for p in list(inspect.signature(COMMANDS[name]["fn"]).parameters.values())[1:]:
+            if p.kind in (p.VAR_KEYWORD, p.VAR_POSITIONAL):
+                continue
+            entry = {"name": p.name}
+            if p.default is not inspect.Parameter.empty:
+                entry["default"] = p.default
+            params.append(entry)
+        surface.append(
+            {
+                "name": name,
+                "params": params,
+                "side_effect": _SIDE_EFFECTS.get(name, "none"),
+                "phase": phase_of.get(name, "auxiliary"),
+            }
+        )
+    canonical = json.dumps(surface, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def test_fingerprint_and_api_version_are_pinned_as_a_pair():
+    """THE guard: surface fingerprint + version literal, pinned together."""
+    assert (contract_fingerprint(), API_VERSION) == (
+        PINNED_CONTRACT_FINGERPRINT,
+        PINNED_API_VERSION,
+    ), _REPIN_PROTOCOL
+
+
+def test_describe_contract_carries_the_fingerprint():
+    """``describe_contract`` exposes the fingerprint, equal to the function's
+    output AND to an independent recomputation of the canonical serialization.
+    """
+    contract = _contract()
+    assert contract["contract_fingerprint"] == contract_fingerprint()
+    assert contract["contract_fingerprint"] == _recompute_fingerprint()
+
+
+def test_fingerprint_is_deterministic():
+    assert contract_fingerprint() == contract_fingerprint()
+    # sha256 hex: 64 lowercase hex chars.
+    fp = contract_fingerprint()
+    assert len(fp) == 64 and all(c in "0123456789abcdef" for c in fp)
+
+
+def test_fingerprint_moves_when_a_command_is_added(monkeypatch):
+    """NON-VACUITY (a): a synthetic command moves the hash off the golden pin."""
+
+    def _synthetic(ctx, alpha=1, **k):
+        return {"ok": True}
+
+    monkeypatch.setitem(
+        COMMANDS, "synthetic_p063_command", {"desc": "synthetic", "fn": _synthetic}
+    )
+    assert contract_fingerprint() != PINNED_CONTRACT_FINGERPRINT, (
+        "adding a command must move the fingerprint — the pin would go red"
+    )
+
+
+def test_fingerprint_moves_when_a_side_effect_is_reclassified(monkeypatch):
+    """NON-VACUITY (b): reclassifying a side_effect moves the hash."""
+    from logic_mix_os import cowork
+
+    assert cowork._SIDE_EFFECTS.get("detect_masking") is None  # really 'none' today
+    monkeypatch.setitem(cowork._SIDE_EFFECTS, "detect_masking", "writes:history(live)")
+    assert contract_fingerprint() != PINNED_CONTRACT_FINGERPRINT, (
+        "a side_effect reclassification must move the fingerprint"
+    )
+
+
+def test_fingerprint_moves_when_a_phase_moves(monkeypatch):
+    """NON-VACUITY (c): phase IS part of the surface (it drives _SESSION_FLOW
+    placement, which agents consume as flow guidance) — moving a command
+    between phases moves the hash.
+    """
+    import copy
+
+    from logic_mix_os import cowork
+
+    flow = copy.deepcopy(cowork._SESSION_FLOW)
+    moved = False
+    for phase in flow["phases"]:
+        if "detect_masking" in phase["commands"]:
+            phase["commands"].remove("detect_masking")
+            moved = True
+    assert moved
+    flow["auxiliary"] = list(flow["auxiliary"]) + ["detect_masking"]
+    monkeypatch.setattr(cowork, "_SESSION_FLOW", flow)
+    assert contract_fingerprint() != PINNED_CONTRACT_FINGERPRINT, (
+        "a phase move must move the fingerprint"
+    )
+
+
+def test_fingerprint_ignores_prose(monkeypatch):
+    """Description/purpose is EXCLUDED: rewording a desc must NOT re-pin."""
+    meta = dict(COMMANDS["detect_masking"])
+    meta["desc"] = "Completely reworded prose that changes no behavior at all"
+    monkeypatch.setitem(COMMANDS, "detect_masking", meta)
+    assert contract_fingerprint() == PINNED_CONTRACT_FINGERPRINT, (
+        "a wording tweak must NOT move the fingerprint"
+    )
 
 
 # --------------------------------------------------------------------------- #

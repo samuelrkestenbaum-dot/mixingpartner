@@ -13,7 +13,9 @@ Usage::
 
 from __future__ import annotations
 
+import hashlib
 import inspect
+import json
 from typing import Dict, List, Optional
 
 from .constants import IDENTITY_FAMILY
@@ -26,7 +28,11 @@ from .renderers.execution_brief_renderer import render_execution_brief
 # breaking change to a command's params/side_effect/removal, MINOR on additive) so
 # Claude Cowork can pin the surface it introspected. Stable string; do not compute.
 # P-062 bumped 1.0 -> 1.1 (additive: render_execution_brief, 35 -> 36 commands).
-API_VERSION = "1.1"
+# P-063 bumped 1.1 -> 1.2 (additive: the contract_fingerprint field in
+# describe_contract output). The literal is no longer guarded only by itself:
+# tests/test_cowork_contract.py pins (API_VERSION, contract_fingerprint()) as a
+# PAIR — a surface change without a bump, or a bump without a re-pin, fails.
+API_VERSION = "1.2"
 
 
 def build_context(stems=None, manifest=None, memory_dir=None, bounce=None,
@@ -324,6 +330,54 @@ def _contract_params(fn) -> List[Dict]:
     return out
 
 
+def contract_fingerprint() -> str:
+    """sha256 hex over the CANONICAL serialization of the behavioral surface (P-063).
+
+    Closes the P-023 watch-item ("a hash of the contract surface"): ``API_VERSION``
+    is a hand-maintained literal, so on its own it cannot DETECT drift — this
+    fingerprint moves whenever the behavioral surface moves, and the tests pin
+    (fingerprint, API_VERSION) as a pair. Protocol on a red pin: the contract
+    surface changed — bump ``API_VERSION`` (MAJOR on breaking, MINOR on additive)
+    and re-pin the fingerprint in ``tests/test_cowork_contract.py``.
+
+    WHAT IS HASHED — per command, iterated in sorted(name) order, serialized with
+    ``json.dumps(..., sort_keys=True, separators=(",", ":"))`` so the digest is
+    stable across processes by construction (never dict iteration order):
+
+      * name         — the registry key.
+      * params       — the derived signature surface (name + declared default);
+                       param ORDER is kept, it is part of the signature.
+      * side_effect  — the declared classification (live-vs-dead is behavioral).
+      * phase        — INCLUDED (adjudicated): phase is machine-consumed
+                       ``_SESSION_FLOW`` placement that agents read as flow
+                       guidance; moving a command between phases changes what
+                       clients are told to do, so it is behavioral, not prose.
+
+    EXCLUDED (adjudicated):
+
+      * purpose/description — prose; wording tweaks must not force a re-pin.
+      * api_version         — hashing the version into the surface would make
+                              the bump-and-re-pin protocol circular.
+      * invocation          — a fixed template, not per-command behavior; a
+                              change there is a CLI change, guarded elsewhere.
+
+    Pure and deterministic: reads only ``COMMANDS``, the handler signatures,
+    ``_SIDE_EFFECTS`` and ``_SESSION_FLOW``. stdlib only (hashlib/json).
+    """
+    phase_of = _phase_index()
+    surface = [
+        {
+            "name": name,
+            "params": _contract_params(COMMANDS[name]["fn"]),
+            "side_effect": _SIDE_EFFECTS.get(name, "none"),
+            "phase": phase_of.get(name, "auxiliary"),
+        }
+        for name in sorted(COMMANDS)
+    ]
+    canonical = json.dumps(surface, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
 def _describe_contract(ctx, **k):
     """Return the versioned, machine-readable agent contract for this surface.
 
@@ -343,6 +397,7 @@ def _describe_contract(ctx, **k):
         }
     return {
         "api_version": API_VERSION,
+        "contract_fingerprint": contract_fingerprint(),
         "invocation": "python -m logic_mix_os.cli cowork --name <command> --params '<json>'",
         "commands": commands,
     }
